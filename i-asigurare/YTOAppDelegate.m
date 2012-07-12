@@ -8,23 +8,27 @@
 
 #import "YTOAppDelegate.h"
 
-#import "YTOFirstViewController.h"
+#import "YTOAsigurariViewController.h"
 
-#import "YTOSecondViewController.h"
+#import "YTOAlerteViewController.h"
 
 @implementation YTOAppDelegate
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
+@synthesize rcaNavigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    UIViewController *viewController1 = [[YTOFirstViewController alloc] initWithNibName:@"YTOFirstViewController" bundle:nil];
-    UIViewController *viewController2 = [[YTOSecondViewController alloc] initWithNibName:@"YTOSecondViewController" bundle:nil];
+    UIViewController *viewController1 = [[YTOAsigurariViewController alloc] initWithNibName:@"YTOAsigurariViewController" bundle:nil];
+    self.rcaNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController1];
+    self.rcaNavigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    UIViewController *viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:rcaNavigationController, viewController2, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;

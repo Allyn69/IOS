@@ -13,14 +13,20 @@
 		C303226415AEE1AC00E8BED7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C303226215AEE1AC00E8BED7 /* InfoPlist.strings */; };
 		C303226615AEE1AC00E8BED7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226515AEE1AC00E8BED7 /* main.m */; };
 		C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */; };
-		C303226D15AEE1AC00E8BED7 /* YTOFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */; };
+		C303226D15AEE1AC00E8BED7 /* YTOAsigurariViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */; };
 		C303226F15AEE1AC00E8BED7 /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = C303226E15AEE1AC00E8BED7 /* first.png */; };
 		C303227115AEE1AC00E8BED7 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227015AEE1AC00E8BED7 /* first@2x.png */; };
-		C303227415AEE1AC00E8BED7 /* YTOSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */; };
+		C303227415AEE1AC00E8BED7 /* YTOAlerteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303227315AEE1AC00E8BED7 /* YTOAlerteViewController.m */; };
 		C303227615AEE1AC00E8BED7 /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227515AEE1AC00E8BED7 /* second.png */; };
 		C303227815AEE1AC00E8BED7 /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227715AEE1AC00E8BED7 /* second@2x.png */; };
-		C303227B15AEE1AC00E8BED7 /* YTOFirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */; };
-		C303227E15AEE1AC00E8BED7 /* YTOSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */; };
+		C303227B15AEE1AC00E8BED7 /* YTOAsigurariViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227915AEE1AC00E8BED7 /* YTOAsigurariViewController.xib */; };
+		C303227E15AEE1AC00E8BED7 /* YTOAlerteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227C15AEE1AC00E8BED7 /* YTOAlerteViewController.xib */; };
+		C303228715AEE21F00E8BED7 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = C303228515AEE21F00E8BED7 /* logo.png */; };
+		C303228815AEE21F00E8BED7 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303228615AEE21F00E8BED7 /* logo@2x.png */; };
+		C303229C15AEE49800E8BED7 /* YTORCAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303229A15AEE49800E8BED7 /* YTORCAViewController.m */; };
+		C303229D15AEE49800E8BED7 /* YTORCAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303229B15AEE49800E8BED7 /* YTORCAViewController.xib */; };
+		C34C627715AF0469003D88DE /* YTOCalculatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */; };
+		C34C627815AF0469003D88DE /* YTOCalculatorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,22 +34,30 @@
 		C303225915AEE1AC00E8BED7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		C303225B15AEE1AC00E8BED7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		C303226115AEE1AC00E8BED7 /* i-asigurare-Info.plist */ = {isa = PBXFileReference; path = "i-asigurare-Info.plist"; sourceTree = "<group>"; };
+		C303226115AEE1AC00E8BED7 /* i-asigurare-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "i-asigurare-Info.plist"; sourceTree = "<group>"; };
 		C303226315AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C303226515AEE1AC00E8BED7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */ = {isa = PBXFileReference; path = "i-asigurare-Prefix.pch"; sourceTree = "<group>"; };
-		C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */ = {isa = PBXFileReference; path = YTOAppDelegate.h; sourceTree = "<group>"; };
+		C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "i-asigurare-Prefix.pch"; sourceTree = "<group>"; };
+		C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTOAppDelegate.h; sourceTree = "<group>"; };
 		C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAppDelegate.m; sourceTree = "<group>"; };
-		C303226B15AEE1AC00E8BED7 /* YTOFirstViewController.h */ = {isa = PBXFileReference; path = YTOFirstViewController.h; sourceTree = "<group>"; };
-		C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOFirstViewController.m; sourceTree = "<group>"; };
+		C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */ = {isa = PBXFileReference; path = YTOAsigurariViewController.h; sourceTree = "<group>"; };
+		C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAsigurariViewController.m; sourceTree = "<group>"; };
 		C303226E15AEE1AC00E8BED7 /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
 		C303227015AEE1AC00E8BED7 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
-		C303227215AEE1AC00E8BED7 /* YTOSecondViewController.h */ = {isa = PBXFileReference; path = YTOSecondViewController.h; sourceTree = "<group>"; };
-		C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOSecondViewController.m; sourceTree = "<group>"; };
+		C303227215AEE1AC00E8BED7 /* YTOAlerteViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTOAlerteViewController.h; sourceTree = "<group>"; };
+		C303227315AEE1AC00E8BED7 /* YTOAlerteViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAlerteViewController.m; sourceTree = "<group>"; };
 		C303227515AEE1AC00E8BED7 /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
 		C303227715AEE1AC00E8BED7 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
-		C303227A15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOFirstViewController.xib; sourceTree = "<group>"; };
-		C303227D15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOSecondViewController.xib; sourceTree = "<group>"; };
+		C303227A15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOAsigurariViewController.xib; sourceTree = "<group>"; };
+		C303227D15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOAlerteViewController.xib; sourceTree = "<group>"; };
+		C303228515AEE21F00E8BED7 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		C303228615AEE21F00E8BED7 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
+		C303229915AEE49800E8BED7 /* YTORCAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTORCAViewController.h; path = RCA/YTORCAViewController.h; sourceTree = "<group>"; };
+		C303229A15AEE49800E8BED7 /* YTORCAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTORCAViewController.m; path = RCA/YTORCAViewController.m; sourceTree = "<group>"; };
+		C303229B15AEE49800E8BED7 /* YTORCAViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = YTORCAViewController.xib; path = RCA/YTORCAViewController.xib; sourceTree = "<group>"; };
+		C34C627415AF0469003D88DE /* YTOCalculatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOCalculatorViewController.h; sourceTree = "<group>"; };
+		C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOCalculatorViewController.m; sourceTree = "<group>"; };
+		C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCalculatorViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,18 +104,20 @@
 		C303225F15AEE1AC00E8BED7 /* i-asigurare */ = {
 			isa = PBXGroup;
 			children = (
+				C303229815AEE39800E8BED7 /* RCA */,
 				C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */,
 				C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */,
-				C303226B15AEE1AC00E8BED7 /* YTOFirstViewController.h */,
-				C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */,
+				C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */,
+				C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */,
 				C303226E15AEE1AC00E8BED7 /* first.png */,
 				C303227015AEE1AC00E8BED7 /* first@2x.png */,
-				C303227215AEE1AC00E8BED7 /* YTOSecondViewController.h */,
-				C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */,
+				C303227215AEE1AC00E8BED7 /* YTOAlerteViewController.h */,
+				C303227315AEE1AC00E8BED7 /* YTOAlerteViewController.m */,
 				C303227515AEE1AC00E8BED7 /* second.png */,
 				C303227715AEE1AC00E8BED7 /* second@2x.png */,
-				C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */,
-				C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */,
+				C303227915AEE1AC00E8BED7 /* YTOAsigurariViewController.xib */,
+				C303227C15AEE1AC00E8BED7 /* YTOAlerteViewController.xib */,
+				C303228415AEE21400E8BED7 /* images */,
 				C303226015AEE1AC00E8BED7 /* Supporting Files */,
 			);
 			path = "i-asigurare";
@@ -116,6 +132,28 @@
 				C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C303228415AEE21400E8BED7 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				C303228515AEE21F00E8BED7 /* logo.png */,
+				C303228615AEE21F00E8BED7 /* logo@2x.png */,
+			);
+			name = images;
+			sourceTree = "<group>";
+		};
+		C303229815AEE39800E8BED7 /* RCA */ = {
+			isa = PBXGroup;
+			children = (
+				C303229915AEE49800E8BED7 /* YTORCAViewController.h */,
+				C303229A15AEE49800E8BED7 /* YTORCAViewController.m */,
+				C303229B15AEE49800E8BED7 /* YTORCAViewController.xib */,
+				C34C627415AF0469003D88DE /* YTOCalculatorViewController.h */,
+				C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */,
+				C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */,
+			);
+			name = RCA;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,8 +212,12 @@
 				C303227115AEE1AC00E8BED7 /* first@2x.png in Resources */,
 				C303227615AEE1AC00E8BED7 /* second.png in Resources */,
 				C303227815AEE1AC00E8BED7 /* second@2x.png in Resources */,
-				C303227B15AEE1AC00E8BED7 /* YTOFirstViewController.xib in Resources */,
-				C303227E15AEE1AC00E8BED7 /* YTOSecondViewController.xib in Resources */,
+				C303227B15AEE1AC00E8BED7 /* YTOAsigurariViewController.xib in Resources */,
+				C303227E15AEE1AC00E8BED7 /* YTOAlerteViewController.xib in Resources */,
+				C303228715AEE21F00E8BED7 /* logo.png in Resources */,
+				C303228815AEE21F00E8BED7 /* logo@2x.png in Resources */,
+				C303229D15AEE49800E8BED7 /* YTORCAViewController.xib in Resources */,
+				C34C627815AF0469003D88DE /* YTOCalculatorViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,8 +230,10 @@
 			files = (
 				C303226615AEE1AC00E8BED7 /* main.m in Sources */,
 				C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */,
-				C303226D15AEE1AC00E8BED7 /* YTOFirstViewController.m in Sources */,
-				C303227415AEE1AC00E8BED7 /* YTOSecondViewController.m in Sources */,
+				C303226D15AEE1AC00E8BED7 /* YTOAsigurariViewController.m in Sources */,
+				C303227415AEE1AC00E8BED7 /* YTOAlerteViewController.m in Sources */,
+				C303229C15AEE49800E8BED7 /* YTORCAViewController.m in Sources */,
+				C34C627715AF0469003D88DE /* YTOCalculatorViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,20 +248,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */ = {
+		C303227915AEE1AC00E8BED7 /* YTOAsigurariViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C303227A15AEE1AC00E8BED7 /* en */,
 			);
-			name = YTOFirstViewController.xib;
+			name = YTOAsigurariViewController.xib;
 			sourceTree = "<group>";
 		};
-		C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */ = {
+		C303227C15AEE1AC00E8BED7 /* YTOAlerteViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C303227D15AEE1AC00E8BED7 /* en */,
 			);
-			name = YTOSecondViewController.xib;
+			name = YTOAlerteViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -274,6 +318,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
 				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -285,6 +330,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
 				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -309,6 +355,7 @@
 				C303228315AEE1AC00E8BED7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
