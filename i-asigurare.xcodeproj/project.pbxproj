@@ -1,0 +1,316 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C303225A15AEE1AC00E8BED7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C303225915AEE1AC00E8BED7 /* UIKit.framework */; };
+		C303225C15AEE1AC00E8BED7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C303225B15AEE1AC00E8BED7 /* Foundation.framework */; };
+		C303225E15AEE1AC00E8BED7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */; };
+		C303226415AEE1AC00E8BED7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C303226215AEE1AC00E8BED7 /* InfoPlist.strings */; };
+		C303226615AEE1AC00E8BED7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226515AEE1AC00E8BED7 /* main.m */; };
+		C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */; };
+		C303226D15AEE1AC00E8BED7 /* YTOFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */; };
+		C303226F15AEE1AC00E8BED7 /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = C303226E15AEE1AC00E8BED7 /* first.png */; };
+		C303227115AEE1AC00E8BED7 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227015AEE1AC00E8BED7 /* first@2x.png */; };
+		C303227415AEE1AC00E8BED7 /* YTOSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */; };
+		C303227615AEE1AC00E8BED7 /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227515AEE1AC00E8BED7 /* second.png */; };
+		C303227815AEE1AC00E8BED7 /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227715AEE1AC00E8BED7 /* second@2x.png */; };
+		C303227B15AEE1AC00E8BED7 /* YTOFirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */; };
+		C303227E15AEE1AC00E8BED7 /* YTOSecondViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C303225515AEE1AC00E8BED7 /* i-asigurare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "i-asigurare.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C303225915AEE1AC00E8BED7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		C303225B15AEE1AC00E8BED7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		C303226115AEE1AC00E8BED7 /* i-asigurare-Info.plist */ = {isa = PBXFileReference; path = "i-asigurare-Info.plist"; sourceTree = "<group>"; };
+		C303226315AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C303226515AEE1AC00E8BED7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */ = {isa = PBXFileReference; path = "i-asigurare-Prefix.pch"; sourceTree = "<group>"; };
+		C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */ = {isa = PBXFileReference; path = YTOAppDelegate.h; sourceTree = "<group>"; };
+		C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAppDelegate.m; sourceTree = "<group>"; };
+		C303226B15AEE1AC00E8BED7 /* YTOFirstViewController.h */ = {isa = PBXFileReference; path = YTOFirstViewController.h; sourceTree = "<group>"; };
+		C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOFirstViewController.m; sourceTree = "<group>"; };
+		C303226E15AEE1AC00E8BED7 /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
+		C303227015AEE1AC00E8BED7 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
+		C303227215AEE1AC00E8BED7 /* YTOSecondViewController.h */ = {isa = PBXFileReference; path = YTOSecondViewController.h; sourceTree = "<group>"; };
+		C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOSecondViewController.m; sourceTree = "<group>"; };
+		C303227515AEE1AC00E8BED7 /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
+		C303227715AEE1AC00E8BED7 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
+		C303227A15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOFirstViewController.xib; sourceTree = "<group>"; };
+		C303227D15AEE1AC00E8BED7 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOSecondViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C303225215AEE1AC00E8BED7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C303225A15AEE1AC00E8BED7 /* UIKit.framework in Frameworks */,
+				C303225C15AEE1AC00E8BED7 /* Foundation.framework in Frameworks */,
+				C303225E15AEE1AC00E8BED7 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C303224A15AEE1AC00E8BED7 = {
+			isa = PBXGroup;
+			children = (
+				C303225F15AEE1AC00E8BED7 /* i-asigurare */,
+				C303225815AEE1AC00E8BED7 /* Frameworks */,
+				C303225615AEE1AC00E8BED7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C303225615AEE1AC00E8BED7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C303225515AEE1AC00E8BED7 /* i-asigurare.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C303225815AEE1AC00E8BED7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C303225915AEE1AC00E8BED7 /* UIKit.framework */,
+				C303225B15AEE1AC00E8BED7 /* Foundation.framework */,
+				C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C303225F15AEE1AC00E8BED7 /* i-asigurare */ = {
+			isa = PBXGroup;
+			children = (
+				C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */,
+				C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */,
+				C303226B15AEE1AC00E8BED7 /* YTOFirstViewController.h */,
+				C303226C15AEE1AC00E8BED7 /* YTOFirstViewController.m */,
+				C303226E15AEE1AC00E8BED7 /* first.png */,
+				C303227015AEE1AC00E8BED7 /* first@2x.png */,
+				C303227215AEE1AC00E8BED7 /* YTOSecondViewController.h */,
+				C303227315AEE1AC00E8BED7 /* YTOSecondViewController.m */,
+				C303227515AEE1AC00E8BED7 /* second.png */,
+				C303227715AEE1AC00E8BED7 /* second@2x.png */,
+				C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */,
+				C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */,
+				C303226015AEE1AC00E8BED7 /* Supporting Files */,
+			);
+			path = "i-asigurare";
+			sourceTree = "<group>";
+		};
+		C303226015AEE1AC00E8BED7 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C303226115AEE1AC00E8BED7 /* i-asigurare-Info.plist */,
+				C303226215AEE1AC00E8BED7 /* InfoPlist.strings */,
+				C303226515AEE1AC00E8BED7 /* main.m */,
+				C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C303225415AEE1AC00E8BED7 /* i-asigurare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C303228115AEE1AC00E8BED7 /* Build configuration list for PBXNativeTarget "i-asigurare" */;
+			buildPhases = (
+				C303225115AEE1AC00E8BED7 /* Sources */,
+				C303225215AEE1AC00E8BED7 /* Frameworks */,
+				C303225315AEE1AC00E8BED7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "i-asigurare";
+			productName = "i-asigurare";
+			productReference = C303225515AEE1AC00E8BED7 /* i-asigurare.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C303224C15AEE1AC00E8BED7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = YTO;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = C303224F15AEE1AC00E8BED7 /* Build configuration list for PBXProject "i-asigurare" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = C303224A15AEE1AC00E8BED7;
+			productRefGroup = C303225615AEE1AC00E8BED7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C303225415AEE1AC00E8BED7 /* i-asigurare */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C303225315AEE1AC00E8BED7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C303226415AEE1AC00E8BED7 /* InfoPlist.strings in Resources */,
+				C303226F15AEE1AC00E8BED7 /* first.png in Resources */,
+				C303227115AEE1AC00E8BED7 /* first@2x.png in Resources */,
+				C303227615AEE1AC00E8BED7 /* second.png in Resources */,
+				C303227815AEE1AC00E8BED7 /* second@2x.png in Resources */,
+				C303227B15AEE1AC00E8BED7 /* YTOFirstViewController.xib in Resources */,
+				C303227E15AEE1AC00E8BED7 /* YTOSecondViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C303225115AEE1AC00E8BED7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C303226615AEE1AC00E8BED7 /* main.m in Sources */,
+				C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */,
+				C303226D15AEE1AC00E8BED7 /* YTOFirstViewController.m in Sources */,
+				C303227415AEE1AC00E8BED7 /* YTOSecondViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C303226215AEE1AC00E8BED7 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C303226315AEE1AC00E8BED7 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C303227915AEE1AC00E8BED7 /* YTOFirstViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C303227A15AEE1AC00E8BED7 /* en */,
+			);
+			name = YTOFirstViewController.xib;
+			sourceTree = "<group>";
+		};
+		C303227C15AEE1AC00E8BED7 /* YTOSecondViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C303227D15AEE1AC00E8BED7 /* en */,
+			);
+			name = YTOSecondViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C303227F15AEE1AC00E8BED7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		C303228015AEE1AC00E8BED7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C303228215AEE1AC00E8BED7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
+				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		C303228315AEE1AC00E8BED7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
+				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C303224F15AEE1AC00E8BED7 /* Build configuration list for PBXProject "i-asigurare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C303227F15AEE1AC00E8BED7 /* Debug */,
+				C303228015AEE1AC00E8BED7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C303228115AEE1AC00E8BED7 /* Build configuration list for PBXNativeTarget "i-asigurare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C303228215AEE1AC00E8BED7 /* Debug */,
+				C303228315AEE1AC00E8BED7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C303224C15AEE1AC00E8BED7 /* Project object */;
+}
