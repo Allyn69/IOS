@@ -1,5 +1,5 @@
 //
-//  YTOFirstViewController.h
+//  YTODauneRCAViewController.h
 //  i-asigurare
 //
 //  Created by Administrator on 7/12/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface YTOFirstViewController : UIViewController
+@interface YTODauneRCAViewController : UITableViewController
 
 @end

@@ -12,7 +12,6 @@
 		C303225E15AEE1AC00E8BED7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */; };
 		C303226415AEE1AC00E8BED7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C303226215AEE1AC00E8BED7 /* InfoPlist.strings */; };
 		C303226615AEE1AC00E8BED7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226515AEE1AC00E8BED7 /* main.m */; };
-		C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */; };
 		C303226D15AEE1AC00E8BED7 /* YTOAsigurariViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */; };
 		C303226F15AEE1AC00E8BED7 /* first.png in Resources */ = {isa = PBXBuildFile; fileRef = C303226E15AEE1AC00E8BED7 /* first.png */; };
 		C303227115AEE1AC00E8BED7 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303227015AEE1AC00E8BED7 /* first@2x.png */; };
@@ -25,8 +24,87 @@
 		C303228815AEE21F00E8BED7 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C303228615AEE21F00E8BED7 /* logo@2x.png */; };
 		C303229C15AEE49800E8BED7 /* YTORCAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C303229A15AEE49800E8BED7 /* YTORCAViewController.m */; };
 		C303229D15AEE49800E8BED7 /* YTORCAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C303229B15AEE49800E8BED7 /* YTORCAViewController.xib */; };
+		C341368615B042C8004CA7A5 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C341368515B042C8004CA7A5 /* libz.1.2.5.dylib */; };
+		C341369115B0440C004CA7A5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C341369015B0440C004CA7A5 /* QuartzCore.framework */; };
+		C34136ED15B3E3F9004CA7A5 /* CellView_String.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34136EC15B3E3F9004CA7A5 /* CellView_String.xib */; };
+		C34136F615B3EADF004CA7A5 /* YTOAsiguratViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34136F415B3EADF004CA7A5 /* YTOAsiguratViewController.m */; };
+		C34136F715B3EADF004CA7A5 /* YTOAsiguratViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34136F515B3EADF004CA7A5 /* YTOAsiguratViewController.xib */; };
+		C34136F915B3F288004CA7A5 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = C34136F815B3F288004CA7A5 /* checked.png */; };
+		C34136FD15B3FAA7004CA7A5 /* YTONomenclatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34136FB15B3FAA7004CA7A5 /* YTONomenclatorViewController.m */; };
+		C34136FE15B3FAA7004CA7A5 /* YTONomenclatorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34136FC15B3FAA7004CA7A5 /* YTONomenclatorViewController.xib */; };
+		C341370E15B433AE004CA7A5 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C341370D15B433AE004CA7A5 /* libsqlite3.0.dylib */; };
+		C341370F15B433D4004CA7A5 /* Database.m in Sources */ = {isa = PBXBuildFile; fileRef = C341370C15B43368004CA7A5 /* Database.m */; };
+		C341371315B44B36004CA7A5 /* PickerVCSearch.xib in Resources */ = {isa = PBXBuildFile; fileRef = C341371215B44B35004CA7A5 /* PickerVCSearch.xib */; };
+		C341371415B44BE0004CA7A5 /* PickerVCSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = C341371115B44B1F004CA7A5 /* PickerVCSearch.m */; };
+		C341371615B44D89004CA7A5 /* CellView_Nomenclator.xib in Resources */ = {isa = PBXBuildFile; fileRef = C341371515B44D89004CA7A5 /* CellView_Nomenclator.xib */; };
+		C341371915B4653A004CA7A5 /* YTOPersoana.m in Sources */ = {isa = PBXBuildFile; fileRef = C341371815B4653A004CA7A5 /* YTOPersoana.m */; };
+		C341371D15B54E09004CA7A5 /* YTOListaAsiguratiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C341371B15B54E09004CA7A5 /* YTOListaAsiguratiViewController.m */; };
+		C341371E15B54E09004CA7A5 /* YTOListaAsiguratiViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C341371C15B54E09004CA7A5 /* YTOListaAsiguratiViewController.xib */; };
+		C341371F15B5533C004CA7A5 /* vreau_rca.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = C34136FF15B407F1004CA7A5 /* vreau_rca.sqlite */; };
 		C34C627715AF0469003D88DE /* YTOCalculatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */; };
 		C34C627815AF0469003D88DE /* YTOCalculatorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */; };
+		C34C629115AF1C20003D88DE /* YTODauneRCAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34C628F15AF1C1F003D88DE /* YTODauneRCAViewController.m */; };
+		C34C629215AF1C20003D88DE /* YTODauneRCAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34C629015AF1C1F003D88DE /* YTODauneRCAViewController.xib */; };
+		C34C629F15AFF8BE003D88DE /* header-background.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C629D15AFF8BE003D88DE /* header-background.png */; };
+		C34C62A015AFF8BE003D88DE /* header-test.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C629E15AFF8BE003D88DE /* header-test.png */; };
+		C34C62C115B0312F003D88DE /* YTOAsigurariRCAViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C34C62BF15B0312E003D88DE /* YTOAsigurariRCAViewController.m */; };
+		C34C62C215B0312F003D88DE /* YTOAsigurariRCAViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C015B0312F003D88DE /* YTOAsigurariRCAViewController.xib */; };
+		C34C62CC15B03328003D88DE /* asig-calatorie.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C415B03328003D88DE /* asig-calatorie.png */; };
+		C34C62CD15B03328003D88DE /* asig-calatorie@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C515B03328003D88DE /* asig-calatorie@2x.png */; };
+		C34C62CE15B03328003D88DE /* asig-casco.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C615B03328003D88DE /* asig-casco.png */; };
+		C34C62CF15B03328003D88DE /* asig-casco@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C715B03328003D88DE /* asig-casco@2x.png */; };
+		C34C62D015B03328003D88DE /* asig-locuinte.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C815B03328003D88DE /* asig-locuinte.png */; };
+		C34C62D115B03328003D88DE /* asig-locuinte@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C915B03328003D88DE /* asig-locuinte@2x.png */; };
+		C34C62D215B03328003D88DE /* asig-rca.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62CA15B03328003D88DE /* asig-rca.png */; };
+		C34C62D315B03328003D88DE /* asig-rca@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62CB15B03328003D88DE /* asig-rca@2x.png */; };
+		C3D644E215B5709B0033EAD6 /* YTOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */; };
+		C3D644FA15B5860B0033EAD6 /* CellView_Numeric.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D644F915B5860B0033EAD6 /* CellView_Numeric.xib */; };
+		C3D6450615B590090033EAD6 /* YTOAlteleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6450415B590090033EAD6 /* YTOAlteleViewController.m */; };
+		C3D6450715B590090033EAD6 /* YTOAlteleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6450515B590090033EAD6 /* YTOAlteleViewController.xib */; };
+		C3D6451C15B5A30D0033EAD6 /* faq.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451615B5A30D0033EAD6 /* faq.png */; };
+		C3D6451D15B5A30D0033EAD6 /* faq@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451715B5A30D0033EAD6 /* faq@2x.png */; };
+		C3D6451E15B5A30D0033EAD6 /* promotii.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451815B5A30D0033EAD6 /* promotii.png */; };
+		C3D6451F15B5A30D0033EAD6 /* promotii@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451915B5A30D0033EAD6 /* promotii@2x.png */; };
+		C3D6452015B5A30D0033EAD6 /* valabilitate-rca.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451A15B5A30D0033EAD6 /* valabilitate-rca.png */; };
+		C3D6452115B5A30D0033EAD6 /* valabilitate-rca@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6451B15B5A30D0033EAD6 /* valabilitate-rca@2x.png */; };
+		C3D6452815B5B5300033EAD6 /* contact-companii.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452215B5B5300033EAD6 /* contact-companii.png */; };
+		C3D6452915B5B5300033EAD6 /* contact-companii@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452315B5B5300033EAD6 /* contact-companii@2x.png */; };
+		C3D6452A15B5B5300033EAD6 /* termeni.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452415B5B5300033EAD6 /* termeni.png */; };
+		C3D6452B15B5B5300033EAD6 /* termeni@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452515B5B5300033EAD6 /* termeni@2x.png */; };
+		C3D6452C15B5B5300033EAD6 /* trimite-mesaj.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452615B5B5300033EAD6 /* trimite-mesaj.png */; };
+		C3D6452D15B5B5300033EAD6 /* trimite-mesaj@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452715B5B5300033EAD6 /* trimite-mesaj@2x.png */; };
+		C3D6452F15B5B7650033EAD6 /* person@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6452E15B5B7650033EAD6 /* person@2x.png */; };
+		C3D6453115B5B76F0033EAD6 /* person.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6453015B5B76F0033EAD6 /* person.png */; };
+		C3D6453615B6A0C20033EAD6 /* neselectat.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6453215B6A0C20033EAD6 /* neselectat.png */; };
+		C3D6453715B6A0C20033EAD6 /* neselectat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6453315B6A0C20033EAD6 /* neselectat@2x.png */; };
+		C3D6453815B6A0C20033EAD6 /* selectat.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6453415B6A0C20033EAD6 /* selectat.png */; };
+		C3D6453915B6A0C20033EAD6 /* selectat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6453515B6A0C20033EAD6 /* selectat@2x.png */; };
+		C3D6454015B6B7630033EAD6 /* YTOUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6453F15B6B7630033EAD6 /* YTOUtils.m */; };
+		C3D6454415B6BDF10033EAD6 /* CellView_String2.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454315B6BDF10033EAD6 /* CellView_String2.xib */; };
+		C3D6454615B6BF100033EAD6 /* CellView_Numeric2.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454515B6BF100033EAD6 /* CellView_Numeric2.xib */; };
+		C3D6454815B6BF2B0033EAD6 /* CellView_Nomenclator2.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454715B6BF2B0033EAD6 /* CellView_Nomenclator2.xib */; };
+		C3D6454B15B6BFE50033EAD6 /* cel-bg2.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454915B6BFE50033EAD6 /* cel-bg2.png */; };
+		C3D6454C15B6BFE50033EAD6 /* cel-bg2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454A15B6BFE50033EAD6 /* cel-bg2@2x.png */; };
+		C3D6454F15B6C0720033EAD6 /* cel-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454D15B6C0720033EAD6 /* cel-bg.png */; };
+		C3D6455015B6C0720033EAD6 /* cel-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6454E15B6C0720033EAD6 /* cel-bg@2x.png */; };
+		C3D6455315B6CD390033EAD6 /* YTOAutovehicul.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6455215B6CD390033EAD6 /* YTOAutovehicul.m */; };
+		C3D6455715B6E5A80033EAD6 /* YTOAutovehiculViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6455515B6E5A80033EAD6 /* YTOAutovehiculViewController.m */; };
+		C3D6455815B6E5A80033EAD6 /* YTOAutovehiculViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6455615B6E5A80033EAD6 /* YTOAutovehiculViewController.xib */; };
+		C3D6455E15B6F3C50033EAD6 /* YTOListaAutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6455C15B6F3C50033EAD6 /* YTOListaAutoViewController.m */; };
+		C3D6455F15B6F3C50033EAD6 /* YTOListaAutoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6455D15B6F3C50033EAD6 /* YTOListaAutoViewController.xib */; };
+		C3D6456915B7FCCE0033EAD6 /* CellView_StringDouble.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6456815B7FCCD0033EAD6 /* CellView_StringDouble.xib */; };
+		C3D6456F15B8346C0033EAD6 /* KeyValueItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6456E15B832100033EAD6 /* KeyValueItem.m */; };
+		C3D6457915B84B850033EAD6 /* setari-alte-persoane.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457115B84B850033EAD6 /* setari-alte-persoane.png */; };
+		C3D6457A15B84B850033EAD6 /* setari-alte-persoane@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457215B84B850033EAD6 /* setari-alte-persoane@2x.png */; };
+		C3D6457B15B84B850033EAD6 /* setari-locuintele-mele.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457315B84B850033EAD6 /* setari-locuintele-mele.png */; };
+		C3D6457C15B84B850033EAD6 /* setari-locuintele-mele@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457415B84B850033EAD6 /* setari-locuintele-mele@2x.png */; };
+		C3D6457D15B84B850033EAD6 /* setari-masinile-mele.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457515B84B850033EAD6 /* setari-masinile-mele.png */; };
+		C3D6457E15B84B850033EAD6 /* setari-masinile-mele@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457615B84B850033EAD6 /* setari-masinile-mele@2x.png */; };
+		C3D6457F15B84B850033EAD6 /* setari-profilul-meu.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457715B84B850033EAD6 /* setari-profilul-meu.png */; };
+		C3D6458015B84B850033EAD6 /* setari-profilul-meu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3D6457815B84B850033EAD6 /* setari-profilul-meu@2x.png */; };
+		C3D6458415B84BCF0033EAD6 /* YTOSetariViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3D6458215B84BCA0033EAD6 /* YTOSetariViewController.m */; };
+		C3D6458515B84BCF0033EAD6 /* YTOSetariViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6458315B84BCD0033EAD6 /* YTOSetariViewController.xib */; };
+		C3D6458715B84CA00033EAD6 /* CellView_Setari.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3D6458615B84C9F0033EAD6 /* CellView_Setari.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,7 +118,7 @@
 		C303226715AEE1AC00E8BED7 /* i-asigurare-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "i-asigurare-Prefix.pch"; sourceTree = "<group>"; };
 		C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTOAppDelegate.h; sourceTree = "<group>"; };
 		C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAppDelegate.m; sourceTree = "<group>"; };
-		C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */ = {isa = PBXFileReference; path = YTOAsigurariViewController.h; sourceTree = "<group>"; };
+		C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YTOAsigurariViewController.h; sourceTree = "<group>"; };
 		C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YTOAsigurariViewController.m; sourceTree = "<group>"; };
 		C303226E15AEE1AC00E8BED7 /* first.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = first.png; sourceTree = "<group>"; };
 		C303227015AEE1AC00E8BED7 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
@@ -55,9 +133,102 @@
 		C303229915AEE49800E8BED7 /* YTORCAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YTORCAViewController.h; path = RCA/YTORCAViewController.h; sourceTree = "<group>"; };
 		C303229A15AEE49800E8BED7 /* YTORCAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = YTORCAViewController.m; path = RCA/YTORCAViewController.m; sourceTree = "<group>"; };
 		C303229B15AEE49800E8BED7 /* YTORCAViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = YTORCAViewController.xib; path = RCA/YTORCAViewController.xib; sourceTree = "<group>"; };
+		C341368515B042C8004CA7A5 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		C341369015B0440C004CA7A5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C34136EC15B3E3F9004CA7A5 /* CellView_String.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_String.xib; sourceTree = "<group>"; };
+		C34136F315B3EADF004CA7A5 /* YTOAsiguratViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOAsiguratViewController.h; sourceTree = "<group>"; };
+		C34136F415B3EADF004CA7A5 /* YTOAsiguratViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOAsiguratViewController.m; sourceTree = "<group>"; };
+		C34136F515B3EADF004CA7A5 /* YTOAsiguratViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAsiguratViewController.xib; sourceTree = "<group>"; };
+		C34136F815B3F288004CA7A5 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checked.png; sourceTree = "<group>"; };
+		C34136FA15B3FAA7004CA7A5 /* YTONomenclatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTONomenclatorViewController.h; sourceTree = "<group>"; };
+		C34136FB15B3FAA7004CA7A5 /* YTONomenclatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTONomenclatorViewController.m; sourceTree = "<group>"; };
+		C34136FC15B3FAA7004CA7A5 /* YTONomenclatorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTONomenclatorViewController.xib; sourceTree = "<group>"; };
+		C34136FF15B407F1004CA7A5 /* vreau_rca.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = vreau_rca.sqlite; sourceTree = "<group>"; };
+		C341370B15B43368004CA7A5 /* Database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
+		C341370C15B43368004CA7A5 /* Database.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Database.m; sourceTree = "<group>"; };
+		C341370D15B433AE004CA7A5 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		C341371015B44B1E004CA7A5 /* PickerVCSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PickerVCSearch.h; sourceTree = "<group>"; };
+		C341371115B44B1F004CA7A5 /* PickerVCSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PickerVCSearch.m; sourceTree = "<group>"; };
+		C341371215B44B35004CA7A5 /* PickerVCSearch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PickerVCSearch.xib; sourceTree = "<group>"; };
+		C341371515B44D89004CA7A5 /* CellView_Nomenclator.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_Nomenclator.xib; sourceTree = "<group>"; };
+		C341371715B4653A004CA7A5 /* YTOPersoana.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOPersoana.h; sourceTree = "<group>"; };
+		C341371815B4653A004CA7A5 /* YTOPersoana.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOPersoana.m; sourceTree = "<group>"; };
+		C341371A15B54E09004CA7A5 /* YTOListaAsiguratiViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOListaAsiguratiViewController.h; sourceTree = "<group>"; };
+		C341371B15B54E09004CA7A5 /* YTOListaAsiguratiViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOListaAsiguratiViewController.m; sourceTree = "<group>"; };
+		C341371C15B54E09004CA7A5 /* YTOListaAsiguratiViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAsiguratiViewController.xib; sourceTree = "<group>"; };
 		C34C627415AF0469003D88DE /* YTOCalculatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOCalculatorViewController.h; sourceTree = "<group>"; };
 		C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOCalculatorViewController.m; sourceTree = "<group>"; };
 		C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCalculatorViewController.xib; sourceTree = "<group>"; };
+		C34C628E15AF1C1F003D88DE /* YTODauneRCAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTODauneRCAViewController.h; sourceTree = "<group>"; };
+		C34C628F15AF1C1F003D88DE /* YTODauneRCAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTODauneRCAViewController.m; sourceTree = "<group>"; };
+		C34C629015AF1C1F003D88DE /* YTODauneRCAViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTODauneRCAViewController.xib; sourceTree = "<group>"; };
+		C34C629D15AFF8BE003D88DE /* header-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header-background.png"; sourceTree = "<group>"; };
+		C34C629E15AFF8BE003D88DE /* header-test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header-test.png"; sourceTree = "<group>"; };
+		C34C62BE15B0312E003D88DE /* YTOAsigurariRCAViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOAsigurariRCAViewController.h; sourceTree = "<group>"; };
+		C34C62BF15B0312E003D88DE /* YTOAsigurariRCAViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOAsigurariRCAViewController.m; sourceTree = "<group>"; };
+		C34C62C015B0312F003D88DE /* YTOAsigurariRCAViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAsigurariRCAViewController.xib; sourceTree = "<group>"; };
+		C34C62C415B03328003D88DE /* asig-calatorie.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-calatorie.png"; sourceTree = "<group>"; };
+		C34C62C515B03328003D88DE /* asig-calatorie@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-calatorie@2x.png"; sourceTree = "<group>"; };
+		C34C62C615B03328003D88DE /* asig-casco.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-casco.png"; sourceTree = "<group>"; };
+		C34C62C715B03328003D88DE /* asig-casco@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-casco@2x.png"; sourceTree = "<group>"; };
+		C34C62C815B03328003D88DE /* asig-locuinte.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-locuinte.png"; sourceTree = "<group>"; };
+		C34C62C915B03328003D88DE /* asig-locuinte@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-locuinte@2x.png"; sourceTree = "<group>"; };
+		C34C62CA15B03328003D88DE /* asig-rca.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-rca.png"; sourceTree = "<group>"; };
+		C34C62CB15B03328003D88DE /* asig-rca@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-rca@2x.png"; sourceTree = "<group>"; };
+		C3D644F915B5860B0033EAD6 /* CellView_Numeric.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_Numeric.xib; sourceTree = "<group>"; };
+		C3D6450315B590080033EAD6 /* YTOAlteleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOAlteleViewController.h; sourceTree = "<group>"; };
+		C3D6450415B590090033EAD6 /* YTOAlteleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOAlteleViewController.m; sourceTree = "<group>"; };
+		C3D6450515B590090033EAD6 /* YTOAlteleViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAlteleViewController.xib; sourceTree = "<group>"; };
+		C3D6451615B5A30D0033EAD6 /* faq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = faq.png; sourceTree = "<group>"; };
+		C3D6451715B5A30D0033EAD6 /* faq@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "faq@2x.png"; sourceTree = "<group>"; };
+		C3D6451815B5A30D0033EAD6 /* promotii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = promotii.png; sourceTree = "<group>"; };
+		C3D6451915B5A30D0033EAD6 /* promotii@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "promotii@2x.png"; sourceTree = "<group>"; };
+		C3D6451A15B5A30D0033EAD6 /* valabilitate-rca.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "valabilitate-rca.png"; sourceTree = "<group>"; };
+		C3D6451B15B5A30D0033EAD6 /* valabilitate-rca@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "valabilitate-rca@2x.png"; sourceTree = "<group>"; };
+		C3D6452215B5B5300033EAD6 /* contact-companii.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-companii.png"; sourceTree = "<group>"; };
+		C3D6452315B5B5300033EAD6 /* contact-companii@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "contact-companii@2x.png"; sourceTree = "<group>"; };
+		C3D6452415B5B5300033EAD6 /* termeni.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = termeni.png; sourceTree = "<group>"; };
+		C3D6452515B5B5300033EAD6 /* termeni@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "termeni@2x.png"; sourceTree = "<group>"; };
+		C3D6452615B5B5300033EAD6 /* trimite-mesaj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trimite-mesaj.png"; sourceTree = "<group>"; };
+		C3D6452715B5B5300033EAD6 /* trimite-mesaj@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trimite-mesaj@2x.png"; sourceTree = "<group>"; };
+		C3D6452E15B5B7650033EAD6 /* person@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "person@2x.png"; sourceTree = "<group>"; };
+		C3D6453015B5B76F0033EAD6 /* person.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = person.png; sourceTree = "<group>"; };
+		C3D6453215B6A0C20033EAD6 /* neselectat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = neselectat.png; sourceTree = "<group>"; };
+		C3D6453315B6A0C20033EAD6 /* neselectat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "neselectat@2x.png"; sourceTree = "<group>"; };
+		C3D6453415B6A0C20033EAD6 /* selectat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = selectat.png; sourceTree = "<group>"; };
+		C3D6453515B6A0C20033EAD6 /* selectat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "selectat@2x.png"; sourceTree = "<group>"; };
+		C3D6453E15B6B7630033EAD6 /* YTOUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOUtils.h; sourceTree = "<group>"; };
+		C3D6453F15B6B7630033EAD6 /* YTOUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOUtils.m; sourceTree = "<group>"; };
+		C3D6454315B6BDF10033EAD6 /* CellView_String2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_String2.xib; sourceTree = "<group>"; };
+		C3D6454515B6BF100033EAD6 /* CellView_Numeric2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_Numeric2.xib; sourceTree = "<group>"; };
+		C3D6454715B6BF2B0033EAD6 /* CellView_Nomenclator2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_Nomenclator2.xib; sourceTree = "<group>"; };
+		C3D6454915B6BFE50033EAD6 /* cel-bg2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cel-bg2.png"; sourceTree = "<group>"; };
+		C3D6454A15B6BFE50033EAD6 /* cel-bg2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cel-bg2@2x.png"; sourceTree = "<group>"; };
+		C3D6454D15B6C0720033EAD6 /* cel-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cel-bg.png"; sourceTree = "<group>"; };
+		C3D6454E15B6C0720033EAD6 /* cel-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cel-bg@2x.png"; sourceTree = "<group>"; };
+		C3D6455115B6CD380033EAD6 /* YTOAutovehicul.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOAutovehicul.h; sourceTree = "<group>"; };
+		C3D6455215B6CD390033EAD6 /* YTOAutovehicul.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOAutovehicul.m; sourceTree = "<group>"; };
+		C3D6455415B6E5A80033EAD6 /* YTOAutovehiculViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOAutovehiculViewController.h; sourceTree = "<group>"; };
+		C3D6455515B6E5A80033EAD6 /* YTOAutovehiculViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOAutovehiculViewController.m; sourceTree = "<group>"; };
+		C3D6455615B6E5A80033EAD6 /* YTOAutovehiculViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAutovehiculViewController.xib; sourceTree = "<group>"; };
+		C3D6455B15B6F3C50033EAD6 /* YTOListaAutoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOListaAutoViewController.h; sourceTree = "<group>"; };
+		C3D6455C15B6F3C50033EAD6 /* YTOListaAutoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOListaAutoViewController.m; sourceTree = "<group>"; };
+		C3D6455D15B6F3C50033EAD6 /* YTOListaAutoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAutoViewController.xib; sourceTree = "<group>"; };
+		C3D6456815B7FCCD0033EAD6 /* CellView_StringDouble.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_StringDouble.xib; sourceTree = "<group>"; };
+		C3D6456D15B832100033EAD6 /* KeyValueItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyValueItem.h; sourceTree = "<group>"; };
+		C3D6456E15B832100033EAD6 /* KeyValueItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyValueItem.m; sourceTree = "<group>"; };
+		C3D6457115B84B850033EAD6 /* setari-alte-persoane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-alte-persoane.png"; sourceTree = "<group>"; };
+		C3D6457215B84B850033EAD6 /* setari-alte-persoane@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-alte-persoane@2x.png"; sourceTree = "<group>"; };
+		C3D6457315B84B850033EAD6 /* setari-locuintele-mele.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-locuintele-mele.png"; sourceTree = "<group>"; };
+		C3D6457415B84B850033EAD6 /* setari-locuintele-mele@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-locuintele-mele@2x.png"; sourceTree = "<group>"; };
+		C3D6457515B84B850033EAD6 /* setari-masinile-mele.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-masinile-mele.png"; sourceTree = "<group>"; };
+		C3D6457615B84B850033EAD6 /* setari-masinile-mele@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-masinile-mele@2x.png"; sourceTree = "<group>"; };
+		C3D6457715B84B850033EAD6 /* setari-profilul-meu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-profilul-meu.png"; sourceTree = "<group>"; };
+		C3D6457815B84B850033EAD6 /* setari-profilul-meu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "setari-profilul-meu@2x.png"; sourceTree = "<group>"; };
+		C3D6458115B84BC90033EAD6 /* YTOSetariViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YTOSetariViewController.h; sourceTree = "<group>"; };
+		C3D6458215B84BCA0033EAD6 /* YTOSetariViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YTOSetariViewController.m; sourceTree = "<group>"; };
+		C3D6458315B84BCD0033EAD6 /* YTOSetariViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOSetariViewController.xib; sourceTree = "<group>"; };
+		C3D6458615B84C9F0033EAD6 /* CellView_Setari.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CellView_Setari.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +236,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C341370E15B433AE004CA7A5 /* libsqlite3.0.dylib in Frameworks */,
+				C341369115B0440C004CA7A5 /* QuartzCore.framework in Frameworks */,
+				C341368615B042C8004CA7A5 /* libz.1.2.5.dylib in Frameworks */,
 				C303225A15AEE1AC00E8BED7 /* UIKit.framework in Frameworks */,
 				C303225C15AEE1AC00E8BED7 /* Foundation.framework in Frameworks */,
 				C303225E15AEE1AC00E8BED7 /* CoreGraphics.framework in Frameworks */,
@@ -94,6 +268,9 @@
 		C303225815AEE1AC00E8BED7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C341370D15B433AE004CA7A5 /* libsqlite3.0.dylib */,
+				C341369015B0440C004CA7A5 /* QuartzCore.framework */,
+				C341368515B042C8004CA7A5 /* libz.1.2.5.dylib */,
 				C303225915AEE1AC00E8BED7 /* UIKit.framework */,
 				C303225B15AEE1AC00E8BED7 /* Foundation.framework */,
 				C303225D15AEE1AC00E8BED7 /* CoreGraphics.framework */,
@@ -104,19 +281,29 @@
 		C303225F15AEE1AC00E8BED7 /* i-asigurare */ = {
 			isa = PBXGroup;
 			children = (
+				C341370015B4320E004CA7A5 /* Business Objects */,
+				C34136EB15B3E3CC004CA7A5 /* Layout */,
+				C34136F215B3EAA1004CA7A5 /* Common */,
 				C303229815AEE39800E8BED7 /* RCA */,
 				C303226815AEE1AC00E8BED7 /* YTOAppDelegate.h */,
 				C303226915AEE1AC00E8BED7 /* YTOAppDelegate.m */,
+				C3D6458115B84BC90033EAD6 /* YTOSetariViewController.h */,
+				C3D6458215B84BCA0033EAD6 /* YTOSetariViewController.m */,
 				C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */,
 				C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */,
-				C303226E15AEE1AC00E8BED7 /* first.png */,
-				C303227015AEE1AC00E8BED7 /* first@2x.png */,
 				C303227215AEE1AC00E8BED7 /* YTOAlerteViewController.h */,
 				C303227315AEE1AC00E8BED7 /* YTOAlerteViewController.m */,
+				C3D6450315B590080033EAD6 /* YTOAlteleViewController.h */,
+				C3D6450415B590090033EAD6 /* YTOAlteleViewController.m */,
+				C303226E15AEE1AC00E8BED7 /* first.png */,
+				C303227015AEE1AC00E8BED7 /* first@2x.png */,
 				C303227515AEE1AC00E8BED7 /* second.png */,
 				C303227715AEE1AC00E8BED7 /* second@2x.png */,
+				C3D6458315B84BCD0033EAD6 /* YTOSetariViewController.xib */,
 				C303227915AEE1AC00E8BED7 /* YTOAsigurariViewController.xib */,
 				C303227C15AEE1AC00E8BED7 /* YTOAlerteViewController.xib */,
+				C3D6450515B590090033EAD6 /* YTOAlteleViewController.xib */,
+				C34136FF15B407F1004CA7A5 /* vreau_rca.sqlite */,
 				C303228415AEE21400E8BED7 /* images */,
 				C303226015AEE1AC00E8BED7 /* Supporting Files */,
 			);
@@ -137,8 +324,24 @@
 		C303228415AEE21400E8BED7 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C3D6457015B84B790033EAD6 /* setari */,
+				C3D6453215B6A0C20033EAD6 /* neselectat.png */,
+				C3D6453315B6A0C20033EAD6 /* neselectat@2x.png */,
+				C3D6453415B6A0C20033EAD6 /* selectat.png */,
+				C3D6453515B6A0C20033EAD6 /* selectat@2x.png */,
+				C3D6453015B5B76F0033EAD6 /* person.png */,
+				C3D6452E15B5B7650033EAD6 /* person@2x.png */,
+				C3D6454D15B6C0720033EAD6 /* cel-bg.png */,
+				C3D6454E15B6C0720033EAD6 /* cel-bg@2x.png */,
+				C3D6454915B6BFE50033EAD6 /* cel-bg2.png */,
+				C3D6454A15B6BFE50033EAD6 /* cel-bg2@2x.png */,
+				C3D6450815B593E10033EAD6 /* tab-altele */,
+				C34C62C315B0331F003D88DE /* produse */,
+				C34C629D15AFF8BE003D88DE /* header-background.png */,
+				C34C629E15AFF8BE003D88DE /* header-test.png */,
 				C303228515AEE21F00E8BED7 /* logo.png */,
 				C303228615AEE21F00E8BED7 /* logo@2x.png */,
+				C34136F815B3F288004CA7A5 /* checked.png */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -152,8 +355,136 @@
 				C34C627415AF0469003D88DE /* YTOCalculatorViewController.h */,
 				C34C627515AF0469003D88DE /* YTOCalculatorViewController.m */,
 				C34C627615AF0469003D88DE /* YTOCalculatorViewController.xib */,
+				C34C62BE15B0312E003D88DE /* YTOAsigurariRCAViewController.h */,
+				C34C62BF15B0312E003D88DE /* YTOAsigurariRCAViewController.m */,
+				C34C62C015B0312F003D88DE /* YTOAsigurariRCAViewController.xib */,
+				C34C628E15AF1C1F003D88DE /* YTODauneRCAViewController.h */,
+				C34C628F15AF1C1F003D88DE /* YTODauneRCAViewController.m */,
+				C34C629015AF1C1F003D88DE /* YTODauneRCAViewController.xib */,
 			);
 			name = RCA;
+			sourceTree = "<group>";
+		};
+		C34136EB15B3E3CC004CA7A5 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				C34136EC15B3E3F9004CA7A5 /* CellView_String.xib */,
+				C3D6454315B6BDF10033EAD6 /* CellView_String2.xib */,
+				C3D6456815B7FCCD0033EAD6 /* CellView_StringDouble.xib */,
+				C3D644F915B5860B0033EAD6 /* CellView_Numeric.xib */,
+				C3D6454515B6BF100033EAD6 /* CellView_Numeric2.xib */,
+				C341371515B44D89004CA7A5 /* CellView_Nomenclator.xib */,
+				C3D6454715B6BF2B0033EAD6 /* CellView_Nomenclator2.xib */,
+				C3D6458615B84C9F0033EAD6 /* CellView_Setari.xib */,
+				C34136FA15B3FAA7004CA7A5 /* YTONomenclatorViewController.h */,
+				C34136FB15B3FAA7004CA7A5 /* YTONomenclatorViewController.m */,
+				C34136FC15B3FAA7004CA7A5 /* YTONomenclatorViewController.xib */,
+				C341371015B44B1E004CA7A5 /* PickerVCSearch.h */,
+				C341371115B44B1F004CA7A5 /* PickerVCSearch.m */,
+				C341371215B44B35004CA7A5 /* PickerVCSearch.xib */,
+			);
+			name = Layout;
+			sourceTree = "<group>";
+		};
+		C34136F215B3EAA1004CA7A5 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				C3D6455A15B6F3B00033EAD6 /* autovehicul */,
+				C3D6455915B6F3A20033EAD6 /* asigurat */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		C341370015B4320E004CA7A5 /* Business Objects */ = {
+			isa = PBXGroup;
+			children = (
+				C341370B15B43368004CA7A5 /* Database.h */,
+				C341370C15B43368004CA7A5 /* Database.m */,
+				C3D6456D15B832100033EAD6 /* KeyValueItem.h */,
+				C3D6456E15B832100033EAD6 /* KeyValueItem.m */,
+				C341371715B4653A004CA7A5 /* YTOPersoana.h */,
+				C341371815B4653A004CA7A5 /* YTOPersoana.m */,
+				C3D6455115B6CD380033EAD6 /* YTOAutovehicul.h */,
+				C3D6455215B6CD390033EAD6 /* YTOAutovehicul.m */,
+				C3D6453E15B6B7630033EAD6 /* YTOUtils.h */,
+				C3D6453F15B6B7630033EAD6 /* YTOUtils.m */,
+			);
+			name = "Business Objects";
+			sourceTree = "<group>";
+		};
+		C34C62C315B0331F003D88DE /* produse */ = {
+			isa = PBXGroup;
+			children = (
+				C34C62C415B03328003D88DE /* asig-calatorie.png */,
+				C34C62C515B03328003D88DE /* asig-calatorie@2x.png */,
+				C34C62C615B03328003D88DE /* asig-casco.png */,
+				C34C62C715B03328003D88DE /* asig-casco@2x.png */,
+				C34C62C815B03328003D88DE /* asig-locuinte.png */,
+				C34C62C915B03328003D88DE /* asig-locuinte@2x.png */,
+				C34C62CA15B03328003D88DE /* asig-rca.png */,
+				C34C62CB15B03328003D88DE /* asig-rca@2x.png */,
+			);
+			name = produse;
+			sourceTree = "<group>";
+		};
+		C3D6450815B593E10033EAD6 /* tab-altele */ = {
+			isa = PBXGroup;
+			children = (
+				C3D6452215B5B5300033EAD6 /* contact-companii.png */,
+				C3D6452315B5B5300033EAD6 /* contact-companii@2x.png */,
+				C3D6452415B5B5300033EAD6 /* termeni.png */,
+				C3D6452515B5B5300033EAD6 /* termeni@2x.png */,
+				C3D6452615B5B5300033EAD6 /* trimite-mesaj.png */,
+				C3D6452715B5B5300033EAD6 /* trimite-mesaj@2x.png */,
+				C3D6451615B5A30D0033EAD6 /* faq.png */,
+				C3D6451715B5A30D0033EAD6 /* faq@2x.png */,
+				C3D6451815B5A30D0033EAD6 /* promotii.png */,
+				C3D6451915B5A30D0033EAD6 /* promotii@2x.png */,
+				C3D6451A15B5A30D0033EAD6 /* valabilitate-rca.png */,
+				C3D6451B15B5A30D0033EAD6 /* valabilitate-rca@2x.png */,
+			);
+			name = "tab-altele";
+			sourceTree = "<group>";
+		};
+		C3D6455915B6F3A20033EAD6 /* asigurat */ = {
+			isa = PBXGroup;
+			children = (
+				C34136F315B3EADF004CA7A5 /* YTOAsiguratViewController.h */,
+				C34136F415B3EADF004CA7A5 /* YTOAsiguratViewController.m */,
+				C34136F515B3EADF004CA7A5 /* YTOAsiguratViewController.xib */,
+				C341371A15B54E09004CA7A5 /* YTOListaAsiguratiViewController.h */,
+				C341371B15B54E09004CA7A5 /* YTOListaAsiguratiViewController.m */,
+				C341371C15B54E09004CA7A5 /* YTOListaAsiguratiViewController.xib */,
+			);
+			name = asigurat;
+			sourceTree = "<group>";
+		};
+		C3D6455A15B6F3B00033EAD6 /* autovehicul */ = {
+			isa = PBXGroup;
+			children = (
+				C3D6455415B6E5A80033EAD6 /* YTOAutovehiculViewController.h */,
+				C3D6455515B6E5A80033EAD6 /* YTOAutovehiculViewController.m */,
+				C3D6455615B6E5A80033EAD6 /* YTOAutovehiculViewController.xib */,
+				C3D6455B15B6F3C50033EAD6 /* YTOListaAutoViewController.h */,
+				C3D6455C15B6F3C50033EAD6 /* YTOListaAutoViewController.m */,
+				C3D6455D15B6F3C50033EAD6 /* YTOListaAutoViewController.xib */,
+			);
+			name = autovehicul;
+			sourceTree = "<group>";
+		};
+		C3D6457015B84B790033EAD6 /* setari */ = {
+			isa = PBXGroup;
+			children = (
+				C3D6457115B84B850033EAD6 /* setari-alte-persoane.png */,
+				C3D6457215B84B850033EAD6 /* setari-alte-persoane@2x.png */,
+				C3D6457315B84B850033EAD6 /* setari-locuintele-mele.png */,
+				C3D6457415B84B850033EAD6 /* setari-locuintele-mele@2x.png */,
+				C3D6457515B84B850033EAD6 /* setari-masinile-mele.png */,
+				C3D6457615B84B850033EAD6 /* setari-masinile-mele@2x.png */,
+				C3D6457715B84B850033EAD6 /* setari-profilul-meu.png */,
+				C3D6457815B84B850033EAD6 /* setari-profilul-meu@2x.png */,
+			);
+			name = setari;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -218,6 +549,66 @@
 				C303228815AEE21F00E8BED7 /* logo@2x.png in Resources */,
 				C303229D15AEE49800E8BED7 /* YTORCAViewController.xib in Resources */,
 				C34C627815AF0469003D88DE /* YTOCalculatorViewController.xib in Resources */,
+				C34C629215AF1C20003D88DE /* YTODauneRCAViewController.xib in Resources */,
+				C34C629F15AFF8BE003D88DE /* header-background.png in Resources */,
+				C34C62A015AFF8BE003D88DE /* header-test.png in Resources */,
+				C34C62C215B0312F003D88DE /* YTOAsigurariRCAViewController.xib in Resources */,
+				C34C62CC15B03328003D88DE /* asig-calatorie.png in Resources */,
+				C34C62CD15B03328003D88DE /* asig-calatorie@2x.png in Resources */,
+				C34C62CE15B03328003D88DE /* asig-casco.png in Resources */,
+				C34C62CF15B03328003D88DE /* asig-casco@2x.png in Resources */,
+				C34C62D015B03328003D88DE /* asig-locuinte.png in Resources */,
+				C34C62D115B03328003D88DE /* asig-locuinte@2x.png in Resources */,
+				C34C62D215B03328003D88DE /* asig-rca.png in Resources */,
+				C34C62D315B03328003D88DE /* asig-rca@2x.png in Resources */,
+				C34136ED15B3E3F9004CA7A5 /* CellView_String.xib in Resources */,
+				C34136F715B3EADF004CA7A5 /* YTOAsiguratViewController.xib in Resources */,
+				C34136F915B3F288004CA7A5 /* checked.png in Resources */,
+				C34136FE15B3FAA7004CA7A5 /* YTONomenclatorViewController.xib in Resources */,
+				C341371315B44B36004CA7A5 /* PickerVCSearch.xib in Resources */,
+				C341371615B44D89004CA7A5 /* CellView_Nomenclator.xib in Resources */,
+				C341371E15B54E09004CA7A5 /* YTOListaAsiguratiViewController.xib in Resources */,
+				C341371F15B5533C004CA7A5 /* vreau_rca.sqlite in Resources */,
+				C3D644FA15B5860B0033EAD6 /* CellView_Numeric.xib in Resources */,
+				C3D6450715B590090033EAD6 /* YTOAlteleViewController.xib in Resources */,
+				C3D6451C15B5A30D0033EAD6 /* faq.png in Resources */,
+				C3D6451D15B5A30D0033EAD6 /* faq@2x.png in Resources */,
+				C3D6451E15B5A30D0033EAD6 /* promotii.png in Resources */,
+				C3D6451F15B5A30D0033EAD6 /* promotii@2x.png in Resources */,
+				C3D6452015B5A30D0033EAD6 /* valabilitate-rca.png in Resources */,
+				C3D6452115B5A30D0033EAD6 /* valabilitate-rca@2x.png in Resources */,
+				C3D6452815B5B5300033EAD6 /* contact-companii.png in Resources */,
+				C3D6452915B5B5300033EAD6 /* contact-companii@2x.png in Resources */,
+				C3D6452A15B5B5300033EAD6 /* termeni.png in Resources */,
+				C3D6452B15B5B5300033EAD6 /* termeni@2x.png in Resources */,
+				C3D6452C15B5B5300033EAD6 /* trimite-mesaj.png in Resources */,
+				C3D6452D15B5B5300033EAD6 /* trimite-mesaj@2x.png in Resources */,
+				C3D6452F15B5B7650033EAD6 /* person@2x.png in Resources */,
+				C3D6453115B5B76F0033EAD6 /* person.png in Resources */,
+				C3D6453615B6A0C20033EAD6 /* neselectat.png in Resources */,
+				C3D6453715B6A0C20033EAD6 /* neselectat@2x.png in Resources */,
+				C3D6453815B6A0C20033EAD6 /* selectat.png in Resources */,
+				C3D6453915B6A0C20033EAD6 /* selectat@2x.png in Resources */,
+				C3D6454415B6BDF10033EAD6 /* CellView_String2.xib in Resources */,
+				C3D6454615B6BF100033EAD6 /* CellView_Numeric2.xib in Resources */,
+				C3D6454815B6BF2B0033EAD6 /* CellView_Nomenclator2.xib in Resources */,
+				C3D6454B15B6BFE50033EAD6 /* cel-bg2.png in Resources */,
+				C3D6454C15B6BFE50033EAD6 /* cel-bg2@2x.png in Resources */,
+				C3D6454F15B6C0720033EAD6 /* cel-bg.png in Resources */,
+				C3D6455015B6C0720033EAD6 /* cel-bg@2x.png in Resources */,
+				C3D6455815B6E5A80033EAD6 /* YTOAutovehiculViewController.xib in Resources */,
+				C3D6455F15B6F3C50033EAD6 /* YTOListaAutoViewController.xib in Resources */,
+				C3D6456915B7FCCE0033EAD6 /* CellView_StringDouble.xib in Resources */,
+				C3D6457915B84B850033EAD6 /* setari-alte-persoane.png in Resources */,
+				C3D6457A15B84B850033EAD6 /* setari-alte-persoane@2x.png in Resources */,
+				C3D6457B15B84B850033EAD6 /* setari-locuintele-mele.png in Resources */,
+				C3D6457C15B84B850033EAD6 /* setari-locuintele-mele@2x.png in Resources */,
+				C3D6457D15B84B850033EAD6 /* setari-masinile-mele.png in Resources */,
+				C3D6457E15B84B850033EAD6 /* setari-masinile-mele@2x.png in Resources */,
+				C3D6457F15B84B850033EAD6 /* setari-profilul-meu.png in Resources */,
+				C3D6458015B84B850033EAD6 /* setari-profilul-meu@2x.png in Resources */,
+				C3D6458515B84BCF0033EAD6 /* YTOSetariViewController.xib in Resources */,
+				C3D6458715B84CA00033EAD6 /* CellView_Setari.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,12 +619,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3D6456F15B8346C0033EAD6 /* KeyValueItem.m in Sources */,
+				C3D644E215B5709B0033EAD6 /* YTOAppDelegate.m in Sources */,
+				C341371415B44BE0004CA7A5 /* PickerVCSearch.m in Sources */,
+				C341370F15B433D4004CA7A5 /* Database.m in Sources */,
 				C303226615AEE1AC00E8BED7 /* main.m in Sources */,
-				C303226A15AEE1AC00E8BED7 /* YTOAppDelegate.m in Sources */,
 				C303226D15AEE1AC00E8BED7 /* YTOAsigurariViewController.m in Sources */,
 				C303227415AEE1AC00E8BED7 /* YTOAlerteViewController.m in Sources */,
 				C303229C15AEE49800E8BED7 /* YTORCAViewController.m in Sources */,
 				C34C627715AF0469003D88DE /* YTOCalculatorViewController.m in Sources */,
+				C34C629115AF1C20003D88DE /* YTODauneRCAViewController.m in Sources */,
+				C34C62C115B0312F003D88DE /* YTOAsigurariRCAViewController.m in Sources */,
+				C34136F615B3EADF004CA7A5 /* YTOAsiguratViewController.m in Sources */,
+				C34136FD15B3FAA7004CA7A5 /* YTONomenclatorViewController.m in Sources */,
+				C341371915B4653A004CA7A5 /* YTOPersoana.m in Sources */,
+				C341371D15B54E09004CA7A5 /* YTOListaAsiguratiViewController.m in Sources */,
+				C3D6450615B590090033EAD6 /* YTOAlteleViewController.m in Sources */,
+				C3D6454015B6B7630033EAD6 /* YTOUtils.m in Sources */,
+				C3D6455315B6CD390033EAD6 /* YTOAutovehicul.m in Sources */,
+				C3D6455715B6E5A80033EAD6 /* YTOAutovehiculViewController.m in Sources */,
+				C3D6455E15B6F3C50033EAD6 /* YTOListaAutoViewController.m in Sources */,
+				C3D6458415B84BCF0033EAD6 /* YTOSetariViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -315,10 +721,12 @@
 		C303228215AEE1AC00E8BED7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
 				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -327,10 +735,12 @@
 		C303228315AEE1AC00E8BED7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
 				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.2;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

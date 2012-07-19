@@ -43,7 +43,7 @@
 
 - (IBAction)showRCAView:(id)sender
 {
-    YTORCAViewController * aView = [[YTORCAViewController alloc] init];
+    YTOCalculatorViewController * aView = [[YTOCalculatorViewController alloc] init];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
 }

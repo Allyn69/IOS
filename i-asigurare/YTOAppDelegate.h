@@ -14,9 +14,13 @@
 }
 
 @property (strong, nonatomic) UIWindow *window;
-
 @property (strong, nonatomic) UITabBarController *tabBarController;
-
+@property (nonatomic, strong) UINavigationController * setariNavigationController;
 @property (nonatomic, strong) UINavigationController * rcaNavigationController;
+@property (nonatomic, strong) UINavigationController * alteleNavigationController;
+
+- (void) writeNewDatabaseCopy;
+- (void) copyDatabaseIfNeeded;
+- (NSString *) getDBPath;
 
 @end

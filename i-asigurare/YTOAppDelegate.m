@@ -7,30 +7,46 @@
 //
 
 #import "YTOAppDelegate.h"
-
+#import "YTOUtils.h"
+#import "YTOSetariViewController.h"
 #import "YTOAsigurariViewController.h"
-
 #import "YTOAlerteViewController.h"
+#import "YTOAlteleViewController.h"
 
 @implementation YTOAppDelegate
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
+@synthesize setariNavigationController;
 @synthesize rcaNavigationController;
+@synthesize alteleNavigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    UIViewController *viewController0 = [[YTOSetariViewController alloc] initWithNibName:@"YTOSetariViewController" bundle:nil];
+    self.setariNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController0];
+    self.setariNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+    
     UIViewController *viewController1 = [[YTOAsigurariViewController alloc] initWithNibName:@"YTOAsigurariViewController" bundle:nil];
     self.rcaNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController1];
-    self.rcaNavigationController.navigationBar.barStyle = UIBarStyleBlack;
-    
+    self.rcaNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+
+   // self.tabBarController.tabBar.tintColor = [self colorFromHexString:@"#4a4a4a"];
     UIViewController *viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
+    
+    UIViewController *viewController3 = [[YTOAlteleViewController alloc] initWithNibName:@"YTOAlteleViewController" bundle:nil];
+    self.alteleNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController3];
+    self.alteleNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+    
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:rcaNavigationController, viewController2, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:setariNavigationController,rcaNavigationController, viewController2, alteleNavigationController, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
+    
+    [self copyDatabaseIfNeeded];
+    
     return YES;
 }
 
@@ -74,5 +90,65 @@
 {
 }
 */
+
+#pragma SQLITE Stuff
+- (void) copyDatabaseIfNeeded {
+	
+	//Using NSFileManager we can perform many file system operations.
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError *error;
+	NSString *dbPath = [self getDBPath];
+	BOOL success = [fileManager fileExistsAtPath:dbPath]; 
+	
+	NSUserDefaults * def = [NSUserDefaults standardUserDefaults];
+	NSDictionary* infoDict = [[NSBundle mainBundle] infoDictionary];
+	NSString* versionPlist = [infoDict objectForKey:@"CFBundleVersion"];
+	
+	if(!success) {
+		
+		NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"vreau_rca.sqlite"];
+		success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+		
+		if (!success) 
+			NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+	}
+	else {
+		NSString * versionApp = [def objectForKey:@"VersionApp"];
+		if (![versionPlist isEqualToString:versionApp]) {
+			[def setObject:versionPlist forKey:@"VersionApp"];		
+			[self writeNewDatabaseCopy];
+		}
+	}
+}
+
+- (void) writeNewDatabaseCopy {
+	
+	//Using NSFileManager we can perform many file system operations.
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSError *error;
+	NSString *dbPath = [self getDBPath];
+	[fileManager removeItemAtPath:dbPath error:NULL];
+	BOOL success = [fileManager fileExistsAtPath:dbPath]; 
+	
+	if(!success) {
+		
+		NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"vreau_rca.sqlite"];
+		success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
+		
+		if (!success) 
+			NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+	}	
+}
+
+- (NSString *) getDBPath {
+	
+	//Search for standard documents using NSSearchPathForDirectoriesInDomains
+	//First Param = Searching the documents directory
+	//Second Param = Searching the Users directory and not the System
+	//Expand any tildes and identify home directories.
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
+	NSString *documentsDir = [paths objectAtIndex:0];
+	return [documentsDir stringByAppendingPathComponent:@"vreau_rca.sqlite"];
+}
 
 @end

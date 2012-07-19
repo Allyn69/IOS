@@ -9,15 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "YTOAppDelegate.h"
 #import "YTOCalculatorViewController.h"
+#import "YTOAsigurariRCAViewController.h"
+#import "YTODauneRCAViewController.h"
 
 @interface YTORCAViewController : UIViewController
 {
-    YTOCalculatorViewController * calculatorViewController;
-}
 
-@property (nonatomic, retain) YTOCalculatorViewController * calculatorViewController;
+}
 
 - (IBAction) showCalculator:(id)sender;
 - (IBAction) showListaAsigurari:(id)sender;
-
+- (IBAction) showDaune:(id)sender;
 @end

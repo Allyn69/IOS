@@ -35,7 +35,7 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIButton" id="205598784">
+					<object class="IBUIButton" id="874137181">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 25}, {280, 37}}</string>
@@ -48,7 +48,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Comanda / Tarife</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="422202977">
+						<object class="NSColor" key="IBUIHighlightedTitleColor" id="641807541">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
@@ -56,21 +56,21 @@
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<object class="NSColor" key="IBUINormalTitleShadowColor" id="821432472">
+						<object class="NSColor" key="IBUINormalTitleShadowColor" id="992121169">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="610055701">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="547093550">
 							<int key="type">2</int>
 							<double key="pointSize">15</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="412255930">
+						<object class="NSFont" key="IBUIFont" id="627562321">
 							<string key="NSName">Helvetica-Bold</string>
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUIButton" id="248989637">
+					<object class="IBUIButton" id="991806193">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 90}, {280, 37}}</string>
@@ -83,16 +83,16 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Asigurarile Mele</string>
-						<reference key="IBUIHighlightedTitleColor" ref="422202977"/>
+						<reference key="IBUIHighlightedTitleColor" ref="641807541"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="821432472"/>
-						<reference key="IBUIFontDescription" ref="610055701"/>
-						<reference key="IBUIFont" ref="412255930"/>
+						<reference key="IBUINormalTitleShadowColor" ref="992121169"/>
+						<reference key="IBUIFontDescription" ref="547093550"/>
+						<reference key="IBUIFont" ref="627562321"/>
 					</object>
-					<object class="IBUIButton" id="676246063">
+					<object class="IBUIButton" id="27066755">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 158}, {280, 37}}</string>
@@ -105,16 +105,16 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Daune / Notificari</string>
-						<reference key="IBUIHighlightedTitleColor" ref="422202977"/>
+						<reference key="IBUIHighlightedTitleColor" ref="641807541"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="821432472"/>
-						<reference key="IBUIFontDescription" ref="610055701"/>
-						<reference key="IBUIFont" ref="412255930"/>
+						<reference key="IBUINormalTitleShadowColor" ref="992121169"/>
+						<reference key="IBUIFontDescription" ref="547093550"/>
+						<reference key="IBUIFont" ref="627562321"/>
 					</object>
-					<object class="IBUIButton" id="694005762">
+					<object class="IBUIButton" id="977717265">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{20, 220}, {280, 37}}</string>
@@ -127,20 +127,20 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Conditii</string>
-						<reference key="IBUIHighlightedTitleColor" ref="422202977"/>
+						<reference key="IBUIHighlightedTitleColor" ref="641807541"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="821432472"/>
-						<reference key="IBUIFontDescription" ref="610055701"/>
-						<reference key="IBUIFont" ref="412255930"/>
+						<reference key="IBUINormalTitleShadowColor" ref="992121169"/>
+						<reference key="IBUIFontDescription" ref="547093550"/>
+						<reference key="IBUIFont" ref="627562321"/>
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 64}, {320, 367}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="205598784"/>
+				<reference key="NSNextKeyView" ref="874137181"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
 					<bytes key="NSWhite">MQA</bytes>
@@ -170,11 +170,29 @@
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">showCalculator:</string>
-						<reference key="source" ref="205598784"/>
+						<reference key="source" ref="874137181"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">19</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">showListaAsigurari:</string>
+						<reference key="source" ref="991806193"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">20</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">showDaune:</string>
+						<reference key="source" ref="27066755"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">21</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -189,10 +207,10 @@
 						<int key="objectID">1</int>
 						<reference key="object" ref="191373211"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="205598784"/>
-							<reference ref="248989637"/>
-							<reference ref="676246063"/>
-							<reference ref="694005762"/>
+							<reference ref="874137181"/>
+							<reference ref="991806193"/>
+							<reference ref="27066755"/>
+							<reference ref="977717265"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -209,22 +227,22 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">15</int>
-						<reference key="object" ref="205598784"/>
+						<reference key="object" ref="874137181"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">16</int>
-						<reference key="object" ref="248989637"/>
+						<reference key="object" ref="991806193"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">17</int>
-						<reference key="object" ref="676246063"/>
+						<reference key="object" ref="27066755"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">18</int>
-						<reference key="object" ref="694005762"/>
+						<reference key="object" ref="977717265"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -244,24 +262,32 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">19</int>
+			<int key="maxID">21</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">YTORCAViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">showCalculator:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">showCalculator:</string>
-						<object class="IBActionInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="showCalculator:">id</string>
+						<string key="showDaune:">id</string>
+						<string key="showListaAsigurari:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="showCalculator:">
 							<string key="name">showCalculator:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-					</object>
+						<object class="IBActionInfo" key="showDaune:">
+							<string key="name">showDaune:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showListaAsigurari:">
+							<string key="name">showListaAsigurari:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/YTORCAViewController.h</string>

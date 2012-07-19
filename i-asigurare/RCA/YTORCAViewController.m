@@ -14,7 +14,6 @@
 
 @implementation YTORCAViewController
 
-@synthesize calculatorViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,4 +49,17 @@
     [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
 }
 
+- (IBAction) showListaAsigurari:(id)sender
+{
+    YTOAsigurariRCAViewController * aView = [[YTOAsigurariRCAViewController alloc] init];
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+}
+
+- (IBAction) showDaune:(id)sender 
+{
+    YTODauneRCAViewController * aView = [[YTODauneRCAViewController alloc] init];
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [appDelegate.rcaNavigationController pushViewController:aView animated:YES];    
+}
 @end
