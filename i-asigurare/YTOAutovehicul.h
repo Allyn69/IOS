@@ -35,18 +35,28 @@
 @property (nonatomic, retain) NSString * tipInregistrare;
 @property (nonatomic, retain) NSString * autoNouInregistrat;
 @property (nonatomic, retain) NSString * inLeasing;
+@property (nonatomic, retain) NSString * firmaLeasing;
 @property int                            nrKm;
+@property (nonatomic, retain) NSString * cascoLa;
 @property (nonatomic, retain) NSString * idFirmaLeasing;
 @property (nonatomic, retain) NSString * idProprietar;
+@property (nonatomic, retain) NSString * idImage;
 @property (nonatomic, retain) NSDate   * _dataCreare;                     
 
 @property BOOL _isDirty;
 
 - (void) addAutovehicul;
-- (void) updateAutovehicul:(YTOAutovehicul *)a;
+- (void) updateAutovehicul;
+- (void) deleteAutovehicul;
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern;
++ (YTOAutovehicul *) getAutovehiculByProprietar:(NSString *)_idProprietar;
 + (NSMutableArray*)Masini;
 
 - (id)initWithGuid:(NSString*)guid;
+- (NSString *) toJSON;
+- (void) fromJSON:(NSString *)p;
+
+- (BOOL) isValidForRCA;
+- (float) CompletedPercent;
 
 @end

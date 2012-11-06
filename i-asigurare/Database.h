@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 #import "YTOPersoana.h"
+#import "KeyValueItem.h"
 
 @interface Database : NSObject
 
@@ -17,7 +18,7 @@
 +(NSMutableArray*)MarciAuto;
 +(NSMutableArray*)Judete;
 +(NSMutableArray*)Localitati:(NSString*)judet;
-
++(NSMutableArray*)CoduriCaen;
 // Altele
 +(NSString*)getDBPath;
 

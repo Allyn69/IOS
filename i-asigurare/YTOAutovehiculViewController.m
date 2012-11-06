@@ -9,8 +9,10 @@
 #import "YTOAutovehiculViewController.h"
 #import "YTOAppDelegate.h"
 #import "Database.h"
-#import "YTOUtils.h"
 #import "KeyValueItem.h"
+#import "YTOCalculatorViewController.h"
+#import "YTOListaAutoViewController.h"
+#import "YTOImage.h"
 
 @interface YTOAutovehiculViewController ()
 
@@ -18,7 +20,8 @@
 
 @implementation YTOAutovehiculViewController
 
-@synthesize autovehicul;
+@synthesize autovehicul, controller;
+@synthesize _nomenclatorNrItems, _nomenclatorSelIndex, _nomenclatorTip;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,15 +45,29 @@
        
     if (!autovehicul) {
         autovehicul = [[YTOAutovehicul alloc] initWithGuid:[YTOUtils GenerateUUID]];
+        // set default values
+        [self setCategorieAuto:1];
+        [self setSubcategorieAuto:@"Autoturism"];
+        [self setDestinatieAuto:@"interes-personal"];
+        [self setTipCombustibil:@"benzina"];
+        [self setNrLocuri:5];
+        [self setInLeasing:@"nu"];
+        
+        YTOPersoana * proprietar = [YTOPersoana Proprietar];
+        if (proprietar)
+        {
+            [self setJudet:proprietar.judet];
+            [self setLocalitate:proprietar.localitate];
+        }
     }
     else {
         [self load:autovehicul];
     }
-
 }
 
 - (void) viewWillDisappear:(BOOL)animated
 {
+    [self doneEditing];
     [self save];
 }
 
@@ -79,25 +96,20 @@
 {
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 10;
+    if ([autovehicul.inLeasing isEqualToString:@"da"])
+        return 18;
+    return 17;
 }
-
-//- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:@"CellView_String"];
-//    if (cell == nil) {
-//        // Create a temporary UIViewController to instantiate the custom cell.
-//        UIViewController *temporaryController = [[UIViewController alloc] initWithNibName:@"CellView_String" bundle:nil];
-//        // Grab a pointer to the custom cell.
-//        cell = (YTOCellView_String *)temporaryController.view;
-//        // Release the temporary UIViewController.
-//    }
-//    
-//    return cell;
-//}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 67;
+    if (indexPath.row == 0)
+        return 78;
+    else if (indexPath.row == 3 || indexPath.row == 13 || indexPath.row == 14)
+        return 100;
+    else if (indexPath.row == 15)
+        return 47;
+    return 60;
 }
 
 -(CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section
@@ -107,24 +119,33 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell;
-    if (indexPath.row == 0) cell = cellMarca;
-    else if (indexPath.row == 1) cell = cellModelNrInmatriculare;
-    else if (indexPath.row == 2) cell =  cellJudetLocalitate;
-    else if (indexPath.row == 3) cell = cellSubcategorieAuto;
-    else if (indexPath.row == 4) cell = cellSerieSasiuCiv;
-    else if (indexPath.row == 5) cell = cellCm3Putere;
-    else if (indexPath.row == 6) cell = cellNrLocuriMasaMaxima;
-    else if (indexPath.row == 7) cell = cellAnFabricatie;
-    else if (indexPath.row == 8) cell = cellDestinatieAuto;
-    else  cell = cellCombustibil;
+    if (indexPath.row == 0)       cell = cellAutoHeader;
+    else if (indexPath.row == 1)  cell = cellMarcaAuto;
+    else if (indexPath.row == 2)  cell = cellModelAuto;
+    else if (indexPath.row == 3)  cell = cellSubcategorieAuto;
+    else if (indexPath.row == 4)  cell =  cellJudetLocalitate;
+    else if (indexPath.row == 5)  cell = cellNrInmatriculare;
+    else if (indexPath.row == 6)  cell = cellSerieSasiu;
+    else if (indexPath.row == 7)  cell = cellCm3;
+    else if (indexPath.row == 8)  cell = cellPutere;
+    else if (indexPath.row == 9)  cell = cellNrLocuri;
+    else if (indexPath.row == 10) cell = cellMasaMaxima;
+    else if (indexPath.row == 11) cell = cellAnFabricatie;
+    else if (indexPath.row == 12) cell = cellSerieCiv;
+    else if (indexPath.row == 13) cell = cellDestinatieAuto;
+    else if (indexPath.row == 14) cell = cellCombustibil;
+    else if (indexPath.row == 15) cell = cellInLeasing;
+    else if (indexPath.row == 16 && [autovehicul.inLeasing isEqualToString:@"da"]) cell = cellLeasingFirma;
+    else return cellSC;
     
-    if (indexPath.row % 2 == 0) {
-        CGRect frame = CGRectMake(0, 0, 320, 66);  
+    if (indexPath.row % 2 != 0) {
+        CGRect frame = CGRectMake(0, 0, 320, cell.frame.size.height);
         UIView *bgColor = [[UIView alloc] initWithFrame:frame];  
         [cell addSubview:bgColor];  
         [cell sendSubviewToBack:bgColor];
-        bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#e6e6e6"];
+        bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#fafafa"];
     }
+
     return cell;
 }
 
@@ -170,48 +191,40 @@
 #pragma mark - Table view delegate
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     [self doneEditing];
-    if (indexPath.row == 0) {
+    if (indexPath.row == 1) {
         [self showListaMarciAuto:indexPath];
     }    
-    else if (indexPath.row == 2) {
+    else if (indexPath.row == 4) {
         [self showListaJudete:indexPath];
     }
 }
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-    if (indexPath.row == 0) {
-        [self doneEditing];
+    [self doneEditing];
+    
+    if (indexPath.row == 1) {
         [self showListaMarciAuto:indexPath];
     }    
-    else if (indexPath.row == 2) {
-        [self doneEditing];
+    else if (indexPath.row == 4) {
         [self showListaJudete:indexPath];
     }
     else if (indexPath.row == 3)
     {
-        [self doneEditing];
-        [self showListaCategoriiAuto];
+//        _nomenclatorTip = kCategoriiAuto;
+//        [self showNomenclator];
     }
-    else if (indexPath.row == 8)
+    else if (indexPath.row == 13)
     {
-        [self doneEditing];
-        [self showListaDestinatieAuto:indexPath];        
+        _nomenclatorTip = kDestinatieAuto;
+        [self showNomenclator];
     }
-    else if (indexPath.row == 9)
+    else if (indexPath.row == 14)
     {
-        [self doneEditing];
-        [self showListaTipCombustibil:indexPath];
+//        _nomenclatorTip = kTipCombustibil;
+//        [self showNomenclator];
     }
-    else
-    {
+    else {
         UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
         UITextField * txt = (UITextField *)[cell viewWithTag:2];
         activeTextField = txt;
@@ -225,10 +238,41 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row != 0 || indexPath.row != 2)
+    if (indexPath.row != 0 || indexPath.row != 1 || indexPath.row != 4 || indexPath.row != 3 || indexPath.row != 13 || indexPath.row != 14)
     {
         [self addBarButton];
     }
+
+    if (indexPath.row == 2)     // Model Auto
+        [self showTooltip:@"Introdu modelul auto. Ex. Logan, Golf, Astra"];
+    if (indexPath.row == 5)     // Nr Inmatriculare
+      [self showTooltip:@"Daca masina este in vederea inmatricularii, introduceti -."];
+    else if (indexPath.row == 6)     // Serie Sasiu
+      [self showTooltip:@"Introdu corect seria de sasiu pentru obtinerea tarifelor RCA reale. Vezi talon pozitia E (model nou) sau pozitia 3 (model vechi)."];
+    else if (indexPath.row == 7)     // Cm3
+    {
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" cm3" withString:@""];
+        [self showTooltip:@"Vezi certificat inmatriculare pozitia P.1 (model nou) sau pozitia 17 (model vechi)."];
+    }
+    else if (indexPath.row == 8)    // Putere
+    {
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" kW" withString:@""];
+        [self showTooltip:@"Vezi certificat inmatriculare pozitia P.2 (model nou) sau pozitia 17 (model vechi)."];
+    }
+    else if (indexPath.row == 9)     // Numar Locuri
+      [self showTooltip:@"Vezi certificat inmatriculare pozitia S.1 (model nou) sau pozitia 13 (model vechi)."];
+    else if (indexPath.row == 10)    // Masa maxima
+    {
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" Kg" withString:@""];        
+        [self showTooltip:@"Vezi certificat inmatriculare pozitia F.1 (model nou) sau pozitia 11 (model vechi)."];
+    }
+    else if (indexPath.row == 11)    // An fabricatie
+       [self showTooltip:@"Vezi certificat inmatriculare pozitia B (model nou) sau pozitia 15 (model vechi)."];
+    else if (indexPath.row == 12)   // Serie CIV
+      [self showTooltip:@"Vezi certificat inmatriculare pozitia X (model nou) sau pozitia 4 (model vechi)."];
+    
+    else if (indexPath.row == 16) // Denumire Firma Leasing
+      [self showTooltip:@"Daca masina este in leasing, introdu numele firmei de leasing."];  
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField 
@@ -242,58 +286,145 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
-	tableView.contentInset = UIEdgeInsetsMake(0, 0, 210, 0);
-	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+	tableView.contentInset = UIEdgeInsetsMake(64, 0, 210, 0);
+	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
 	return YES;
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField 
 {
-    
 	if(activeTextField == textField)
 	{
+        [self textFieldDidEndEditing:activeTextField];
 		activeTextField = nil;
 	}
     
 	[textField resignFirstResponder];
-	btnDone.enabled = NO;
+	[self deleteBarButton];
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 	return YES;
 }
 
+// facem la serie sasiu validare pentru caracterele i, o, etc. ?
+//- (BOOL)textField:(UITextField *)theTextField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string 
+//{
+//    NSCharacterSet *myCharSet = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+//    for (int i = 0; i < [string length]; i++) {
+//        unichar c = [string characterAtIndex:i];
+//        if (![myCharSet characterIsMember:c]) {
+//            return NO;
+//        }
+//    }
+//    
+//    return NO;
+//}
+
 -(void)textFieldDidEndEditing:(UITextField *)textField {
+    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+
+    [self hideTooltip];
     
+//    [self setModel:textField.text];
+    
+    if (indexPath.row == 2) // Model auto
+        [self setModel:textField.text];
+    else if (indexPath.row == 5)     // Nr Inmatriculare
+        [self setNrInmatriculare:textField.text];
+    else if (indexPath.row == 6)     // Serie Sasiu
+        [self setSerieSasiu:textField.text];
+    else if (indexPath.row == 7)     // Cm3
+        [self setCm3:[textField.text intValue]];
+    else if (indexPath.row == 8)    // Putere
+        [self setPutere:[textField.text intValue]];
+    else if (indexPath.row == 9)     // Numar Locuri
+        [self setNrLocuri:[textField.text intValue]];
+    else if (indexPath.row == 10)    // Masa maxima
+        [self setMasaMaxima:[textField.text intValue]];
+    else if (indexPath.row == 11)    // An fabricatie
+        [self setAnFabricatie:[textField.text intValue]];
+    else if (indexPath.row == 12)   // Serie CIV
+        [self setSerieCIV:textField.text];
+    else if (indexPath.row == 16)   // Firma Leasing
+        [self setNumeFirmaLeasing:textField.text];
 }
 
 - (void) save
 {
     if (goingBack)
     {
-//        asigurat.nume = ((UITextField *)[cellNume viewWithTag:2]).text;
-//        asigurat.codUnic = ((UITextField *)[cellCodUnic viewWithTag:2]).text;
-//        asigurat.judet = ((UILabel *)[cellJudet viewWithTag:2]).text;
-//        asigurat.localitate = ((UILabel *)[cellLocalitate viewWithTag:2]).text;        
-//        asigurat.adresa = ((UITextField *)[cellAdresa viewWithTag:2]).text;
-//        
-//        if (asigurat.nume.length > 0 && asigurat.codUnic.length > 0 && asigurat.judet.length > 0
-//            && asigurat.localitate.length > 0 && asigurat.adresa.length > 0)
-//        {
-//            if (asigurat._isDirty)
-//                [asigurat updatePersoana:asigurat];
-//            else
-//                [asigurat addPersoana:asigurat];
-//        }
+        if (autovehicul._isDirty)
+        {
+            [autovehicul updateAutovehicul];
+        }
+        else {
+//            if (autovehicul.marcaAuto.length > 0 && autovehicul.modelAuto.length > 0 && autovehicul.nrInmatriculare 
+//                && autovehicul.judet.length > 0 && autovehicul.localitate.length > 0 && autovehicul.categorieAuto > 0
+//                && autovehicul.subcategorieAuto.length > 0 && autovehicul.serieSasiu.length > 0 && autovehicul.serieCiv.length > 0)
+//            {
+                [autovehicul addAutovehicul];
+            
+            //}
+        }
+        
     }
+}
+
+- (void) btnSave_Clicked
+{
+    //[self doneEditing];
+    if (activeTextField)
+    {
+        [activeTextField resignFirstResponder];
+    }
+    [self save];
+    
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+    {
+        // selecteaza masina si ma duce direct in ecranul de calculator
+        YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+        [parent setAutovehicul:autovehicul];
+        [self.navigationController popToViewController:parent animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
+    {
+        YTOListaAutoViewController * parent = (YTOListaAutoViewController *)self.controller;
+        [parent reloadData];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void) btnCancel_Clicked
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) load:(YTOAutovehicul *)a
 {
-//    ((UITextField *)[cellNume viewWithTag:2]).text = a.nume;
-//    ((UITextField *)[cellCodUnic viewWithTag:2]).text = a.codUnic;
-//    ((UILabel *)[cellJudet viewWithTag:2]).text = a.judet;
-//    ((UILabel *)[cellLocalitate viewWithTag:2]).text = a.localitate;
-//    ((UITextField *)[cellAdresa viewWithTag:2]).text = a.adresa;
+    [self setMarca:a.marcaAuto];
+    [self setModel:a.modelAuto];
+    [self setNrInmatriculare:a.nrInmatriculare];
+    [self setJudet:a.judet];
+    [self setLocalitate:a.localitate];
+    [self setCategorieAuto:a.categorieAuto];
+    [self setSubcategorieAuto:a.subcategorieAuto];
+    [self setSerieSasiu:a.serieSasiu];
+    [self setSerieCIV:a.serieCiv];
+    [self setCm3:a.cm3];
+    [self setPutere:a.putere];
+    [self setMasaMaxima:a.masaMaxima];
+    [self setNrLocuri:a.nrLocuri];
+    [self setAnFabricatie:a.anFabricatie];
+    [self setDestinatieAuto:a.destinatieAuto];
+    [self setTipCombustibil:a.combustibil];
+    [self setInLeasing:a.inLeasing];
+    [self setNumeFirmaLeasing:a.firmaLeasing];
+    if (a.idImage && a.idImage.length > 0)
+    {
+        YTOImage *objImage = [YTOImage getImage:a.idImage];
+        [self setImage:objImage.image];
+    }
 }
 
 
@@ -311,12 +442,164 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
+    
+  //  [vwKeyboardAddon setHidden:NO];
 }
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
+    
+    [vwKeyboardAddon setHidden:YES];
 }
 
 #pragma YTO Nomenclator
+- (void) showNomenclator
+{
+    [vwNomenclator setHidden:NO];
+    UILabel * lblTitle = (UILabel *)[vwNomenclator viewWithTag:1];
+    UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
+    NSMutableArray * listOfItems;
+    _nomenclatorNrItems = 0;
+    int rows = 0;
+    int cols =0;
+    int selectedItemIndex = 0;
+    if (_nomenclatorTip == kCategoriiAuto)
+    {
+        [lblTitle setText:@"Selecteaza categoria auto"];
+        listOfItems = categoriiAuto;
+        _nomenclatorNrItems = categoriiAuto.count;
+        selectedItemIndex = [YTOUtils getKeyList:categoriiAuto forValue:autovehicul.subcategorieAuto];
+    }
+    else if (_nomenclatorTip == kDestinatieAuto)
+    {
+        [lblTitle setText:@"Selecteaza destinatia auto"];
+        listOfItems = destinatiiAuto;
+        _nomenclatorNrItems = destinatiiAuto.count;
+        selectedItemIndex = [YTOUtils getKeyList:destinatiiAuto forValue:autovehicul.destinatieAuto];
+    }
+    else if (_nomenclatorTip == kTipCombustibil)
+    {
+        [lblTitle setText:@"Selecteaza tipul de combustibil"];
+        listOfItems = tipCombustibil;
+        _nomenclatorNrItems = tipCombustibil.count;
+        selectedItemIndex = [YTOUtils getKeyList:tipCombustibil forValue:autovehicul.combustibil];
+    }
+    [scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    for (int i=0; i<listOfItems.count; i++) {
+        if (i != 0 && i%3==0)
+        {
+            rows++;
+            cols = 0;
+        }
+        KeyValueItem * item = (KeyValueItem *)[listOfItems objectAtIndex:i];
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.tag = 100 + i;
+        [button setImage:[UIImage imageNamed:@"neselectat.png"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"selectat-rca.png"] forState:UIControlStateSelected];
+        [button addTarget:self
+                   action:@selector(btnNomenclator_Clicked:)
+         forControlEvents:UIControlEventTouchDown];
+        button.titleLabel.font = [UIFont fontWithName:@"Arial" size:12];
+        button.titleLabel.numberOfLines = 0;
+        button.titleLabel.lineBreakMode = UILineBreakModeWordWrap;
+        button.clipsToBounds = YES;
+        UILabel * lbl = [[UILabel alloc] init];
+        if (cols == 0)
+        {
+            button.frame = CGRectMake(20, rows * 70, 67, 65);
+        }
+        else if (cols == 1)
+        {
+            button.frame = CGRectMake(cols*105, rows * 70, 67, 65);
+        }
+        else
+        {
+            button.frame = CGRectMake(cols*95, rows * 70, 67, 65);
+        }
+        lbl.frame = CGRectMake(1, 5, 67, 34);
+        lbl.backgroundColor = [UIColor clearColor];
+        lbl.numberOfLines = 0;
+        [lbl setTextAlignment:UITextAlignmentCenter];
+        lbl.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl.font = [UIFont fontWithName:@"Arial" size:12];
+        lbl.text = [[item.value stringByReplacingOccurrencesOfString:@"/" withString:@"/ "] stringByReplacingOccurrencesOfString:@"-" withString:@" - "];
+        cols++;
+        [button addSubview:lbl];
+        if (i == selectedItemIndex)
+            [button setSelected:YES];
+        [scrollView addSubview:button];
+    }
+    
+    float height = [listOfItems count]/3.0;
+    [scrollView  setContentSize:CGSizeMake(279, height * 75)];
+}
+
+- (IBAction) hideNomenclator
+{
+    [vwNomenclator setHidden:YES];
+}
+
+- (IBAction) btnNomenclator_Clicked:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL checkboxSelected = btn.selected;
+    checkboxSelected = !checkboxSelected;
+    if (!btn.selected)
+        [btn setSelected:checkboxSelected];
+    
+    UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
+    for (int i=100; i<=100+_nomenclatorNrItems; i++) {
+        
+        UIButton * _btn = (UIButton *)[scrollView viewWithTag:i];
+        if (btn.tag != i)
+            [_btn setSelected:NO];
+    }
+    
+    if (_nomenclatorTip == kCategoriiAuto)
+    {
+        KeyValueItem * item = (KeyValueItem *)[categoriiAuto objectAtIndex:btn.tag-100];
+        [self setCategorieAuto:item.parentKey];
+        [self setSubcategorieAuto:item.value];
+        
+        // punem default cateva valori daca se adauga o masina noua
+        if (!autovehicul._isDirty)
+        {
+            if (item.parentKey == 1) { // pentru Autoturism
+                [self setNrLocuri:5];
+            }
+            if (item.parentKey == 3) { // pentru Autovehicul-transport-persoane
+                [self setTipCombustibil:@"motorina"];
+            }
+            if (item.parentKey == 4) { // pentru Autovehicul-transport-marfa
+                [self setTipCombustibil:@"motorina"];
+            }
+            if (item.parentKey == 5) { // pentru Autotractor
+                [self setTipCombustibil:@"motorina"];
+            }
+            if (item.parentKey == 6) { // pentru Tractor-rutier
+                [self setTipCombustibil:@"motorina"];
+            }
+            if (item.parentKey == 7) { // pentru Motociclete
+                [self setNrLocuri:2];
+                [self setTipCombustibil:@"benzina"];
+            }
+            if (item.parentKey == 8) { // pentru Remorca/Semiremorca/Rulota
+                [self setTipCombustibil:@"fara"];
+            }
+        }
+        
+    }
+    else if (_nomenclatorTip == kDestinatieAuto)
+    {
+        KeyValueItem * item = (KeyValueItem *)[destinatiiAuto objectAtIndex:btn.tag-100];
+        [self setDestinatieAuto:item.value];
+    }
+    else if (_nomenclatorTip == kTipCombustibil)
+    {
+        KeyValueItem * item = (KeyValueItem *)[tipCombustibil objectAtIndex:btn.tag-100];
+        [self setTipCombustibil:item.value];
+    }
+}
+
 -(void)nomenclatorChosen:(KeyValueItem *)item rowIndex:(NSIndexPath *)index forView:(YTONomenclatorViewController *)view
 {
     if (view.nomenclator == kCategoriiAuto)
@@ -332,16 +615,17 @@
     {
         [self setDestinatieAuto:item.value];
     }
+     goingBack = YES;
 }
 
 #pragma Picker View Nomenclator
 -(void)chosenIndexAfterSearch:(NSString*)selected rowIndex:(NSIndexPath *)indexPath  forView:(PickerVCSearch *)vwSearch {
     
-    if (indexPath.row == 0) // MARCA
+    if (indexPath.row == 1) // MARCA
     {
         [self setMarca:selected];
     }
-    if (indexPath.row == 2) // JUDET + LOCALITATE
+    if (indexPath.row == 4) // JUDET + LOCALITATE
     {
         if (vwSearch.nomenclator == kJudete) {
             [self setJudet:selected];
@@ -353,69 +637,130 @@
     goingBack = YES;
 }
 
+#pragma Action Sheet 
+-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0)
+    {
+        UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        [self presentModalViewController:picker animated:YES];
+    }
+    else if (buttonIndex == 1) {
+        UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentModalViewController:picker animated:YES];
+    }
+}
+
 - (void) initCells {
     NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellJudetLocalitate = [topLevelObjectsJudet objectAtIndex:0];
-    [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE AUTOVEHICUL"];
+    [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE TALON"];
     [YTOUtils setCellFormularStyle:cellJudetLocalitate];
 
-    NSArray *topLevelObjectsSubcategorie = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
-    cellSubcategorieAuto = [topLevelObjectsSubcategorie objectAtIndex:0];
-    [(UILabel *)[cellSubcategorieAuto viewWithTag:1] setText:@"CATEGORIE AUTOVEHICUL"];
-    [YTOUtils setCellFormularStyle:cellSubcategorieAuto];
+    NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellAutoHeader" owner:self options:nil];
+    cellAutoHeader = [topLevelObjectsHeader objectAtIndex:0];
+    UILabel * lblCell = (UILabel *)[cellAutoHeader viewWithTag:2];
+    UIButton * btnImage = (UIButton *)[cellAutoHeader viewWithTag:5];
+    [btnImage addTarget:self action:@selector(chooseImage) forControlEvents:UIControlEventTouchUpInside];
+    lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     
     NSArray *topLevelObjectsMarca = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
-    cellMarca = [topLevelObjectsMarca objectAtIndex:0];
-    [(UILabel *)[cellMarca viewWithTag:1] setText:@"MARCA AUTO"];
-    [YTOUtils setCellFormularStyle:cellMarca];
+    cellMarcaAuto = [topLevelObjectsMarca objectAtIndex:0];
+    [(UILabel *)[cellMarcaAuto viewWithTag:1] setText:@"MARCA AUTO"];
+    [YTOUtils setCellFormularStyle:cellMarcaAuto];
     
-    NSArray *topLevelObjectsModel = [[NSBundle mainBundle] loadNibNamed:@"CellView_StringDouble" owner:self options:nil];
-    cellModelNrInmatriculare = [topLevelObjectsModel objectAtIndex:0];
-    [(UILabel *)[cellModelNrInmatriculare viewWithTag:1] setText:@"MODEL AUTO"];
-    [(UITextField *)[cellModelNrInmatriculare viewWithTag:2] setPlaceholder:@"ex. Logan/Clio, etc."];
-    [(UILabel *)[cellModelNrInmatriculare viewWithTag:3] setText:@"NUMAR INMATRICULARE"];
-    [(UITextField *)[cellModelNrInmatriculare viewWithTag:4] setPlaceholder:@"ex. B01ABC"];
-    [YTOUtils setCellFormularStyle:cellModelNrInmatriculare];
+    NSArray *topLevelObjectsModel = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellModelAuto = [topLevelObjectsModel objectAtIndex:0];
+    [(UILabel *)[cellModelAuto viewWithTag:1] setText:@"MODEL AUTO"];
+    [(UITextField *)[cellModelAuto viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+    [YTOUtils setCellFormularStyle:cellModelAuto];     
     
-    NSArray *topLevelObjectsSasiu = [[NSBundle mainBundle] loadNibNamed:@"CellView_StringDouble" owner:self options:nil];
-    cellSerieSasiuCiv = [topLevelObjectsSasiu objectAtIndex:0];
-    [(UILabel *)[cellSerieSasiuCiv viewWithTag:1] setText:@"SERIE SASIU"];
-    [(UITextField *)[cellSerieSasiuCiv viewWithTag:2] setPlaceholder:@"poz. Y"];
-    [(UILabel *)[cellSerieSasiuCiv viewWithTag:3] setText:@"SERIE TALON"];
-    [(UITextField *)[cellSerieSasiuCiv viewWithTag:4] setPlaceholder:@"poz. X"];    
-    [YTOUtils setCellFormularStyle:cellSerieSasiuCiv]; 
+//    NSArray *topLevelObjectsSubcategorie = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
+//    cellSubcategorieAuto = [topLevelObjectsSubcategorie objectAtIndex:0];
+//    [(UILabel *)[cellSubcategorieAuto viewWithTag:1] setText:@"CATEGORIE AUTOVEHICUL"];
+//    [YTOUtils setCellFormularStyle:cellSubcategorieAuto];
     
-    NSArray *topLevelObjectsCm3 = [[NSBundle mainBundle] loadNibNamed:@"CellView_StringDouble" owner:self options:nil];
-    cellCm3Putere = [topLevelObjectsCm3 objectAtIndex:0];
-    [(UILabel *)[cellCm3Putere viewWithTag:1] setText:@"CM3"];
-    [(UITextField *)[cellCm3Putere viewWithTag:2] setPlaceholder:@"ex.1590"];
-    [(UILabel *)[cellCm3Putere viewWithTag:3] setText:@"PUTERE(kW)"];
-    [(UITextField *)[cellCm3Putere viewWithTag:4] setPlaceholder:@"ex.67"];    
-    [YTOUtils setCellFormularStyle:cellCm3Putere];
+    NSArray *topLevelObjectsNrInmatriculare = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellNrInmatriculare = [topLevelObjectsNrInmatriculare objectAtIndex:0];
+//    [(UILabel *)[cellModelNrInmatriculare viewWithTag:1] setText:@"MODEL AUTO"];
+//    [(UITextField *)[cellModelNrInmatriculare viewWithTag:2] setPlaceholder:@"ex. Logan/Clio, etc."];
+    [(UILabel *)[cellNrInmatriculare viewWithTag:1] setText:@"NR. INMATRICULARE"];
+   // [(UITextField *)[cellNrInmatriculare viewWithTag:2] setPlaceholder:@"ex. B01ABC"];
+    [(UITextField *)[cellNrInmatriculare viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+    [YTOUtils setCellFormularStyle:cellNrInmatriculare];
     
-    NSArray *topLevelObjectsNrLocuri = [[NSBundle mainBundle] loadNibNamed:@"CellView_StringDouble" owner:self options:nil];
-    cellNrLocuriMasaMaxima = [topLevelObjectsNrLocuri objectAtIndex:0];
-    [(UILabel *)[cellNrLocuriMasaMaxima viewWithTag:1] setText:@"NUMAR LOCURI"];
-    [(UITextField *)[cellNrLocuriMasaMaxima viewWithTag:2] setPlaceholder:@"ex. 5"];
-    [(UILabel *)[cellNrLocuriMasaMaxima viewWithTag:3] setText:@"MASA MAXIMA"];
-    [(UITextField *)[cellNrLocuriMasaMaxima viewWithTag:4] setPlaceholder:@"ex. 1670"];
-    [YTOUtils setCellFormularStyle:cellNrLocuriMasaMaxima];
+    NSArray *topLevelObjectsSasiu = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellSerieSasiu = [topLevelObjectsSasiu objectAtIndex:0];
+    [(UILabel *)[cellSerieSasiu viewWithTag:1] setText:@"SERIE SASIU"];
+    [(UITextField *)[cellSerieSasiu viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+   // [(UITextField *)[cellSerieSasiu viewWithTag:2] setPlaceholder:@"poz. E sau poz. 3"];
+    [YTOUtils setCellFormularStyle:cellSerieSasiu]; 
+    
+    NSArray *topLevelObjectsCm3 = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
+    cellCm3 = [topLevelObjectsCm3 objectAtIndex:0];
+    [(UILabel *)[cellCm3 viewWithTag:1] setText:@"CM3"];
+//    [(UITextField *)[cellCm3 viewWithTag:2] setPlaceholder:@"ex.1590"];
+    [(UITextField *)[cellCm3 viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+    [YTOUtils setCellFormularStyle:cellCm3];
+    
+    NSArray *topLevelObjectsPutere = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
+    cellPutere = [topLevelObjectsPutere objectAtIndex:0];
+    [(UILabel *)[cellPutere viewWithTag:1] setText:@"Putere (kW)"];
+  //  [(UITextField *)[cellPutere viewWithTag:2] setPlaceholder:@"ex.75"];
+    [(UITextField *)[cellPutere viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+    [YTOUtils setCellFormularStyle:cellPutere];
+    
+    NSArray *topLevelObjectsNrLocuri = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
+    cellNrLocuri = [topLevelObjectsNrLocuri objectAtIndex:0];
+    [(UILabel *)[cellNrLocuri viewWithTag:1] setText:@"NUMAR LOCURI"];
+    //[(UITextField *)[cellNrLocuri viewWithTag:2] setPlaceholder:@"ex. 5"];
+    [(UITextField *)[cellNrLocuri viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+    [YTOUtils setCellFormularStyle:cellNrLocuri];
+    
+    NSArray *topLevelObjectsMasaMaxima = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
+    cellMasaMaxima = [topLevelObjectsMasaMaxima objectAtIndex:0];
+    [(UILabel *)[cellMasaMaxima viewWithTag:1] setText:@"MASA MAXIMA (kg)"];
+    //[(UITextField *)[cellMasaMaxima viewWithTag:2] setPlaceholder:@"ex. 1600"];
+    [(UITextField *)[cellMasaMaxima viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+    [YTOUtils setCellFormularStyle:cellMasaMaxima];
     
     NSArray *topLevelObjectsAnFabr = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellAnFabricatie = [topLevelObjectsAnFabr objectAtIndex:0];
     [(UILabel *)[cellAnFabricatie viewWithTag:1] setText:@"AN FABRICATIE"];
-    [(UITextField *)[cellAnFabricatie viewWithTag:2] setPlaceholder:@""];
+    [(UITextField *)[cellAnFabricatie viewWithTag:2] setPlaceholder:@""];    
+    [(UITextField *)[cellAnFabricatie viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellAnFabricatie];     
     
-    NSArray *topLevelObjectsDestinatie = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
-    cellDestinatieAuto = [topLevelObjectsDestinatie objectAtIndex:0];
-    [(UILabel *)[cellDestinatieAuto viewWithTag:1] setText:@"DESTINATIE AUTO"];
-    [YTOUtils setCellFormularStyle:cellDestinatieAuto];    
+    NSArray *topLevelObjectsCiv = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellSerieCiv = [topLevelObjectsCiv objectAtIndex:0];
+    [(UILabel *)[cellSerieCiv viewWithTag:1] setText:@"SERIE TALON"];
+    //[(UITextField *)[cellSerieCiv viewWithTag:2] setPlaceholder:@"poz. X"];
+    [YTOUtils setCellFormularStyle:cellSerieCiv]; 
     
-    NSArray *topLevelObjectsCombustibil = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
-    cellCombustibil = [topLevelObjectsCombustibil objectAtIndex:0];
-    [(UILabel *)[cellCombustibil viewWithTag:1] setText:@"COMBUSTIBIL"];
-    [YTOUtils setCellFormularStyle:cellCombustibil];
+    NSArray *topLevelObjectsInLeasing = [[NSBundle mainBundle] loadNibNamed:@"CellView_DaNu" owner:self options:nil];
+    cellInLeasing = [topLevelObjectsInLeasing objectAtIndex:0];
+    [(UILabel *)[cellInLeasing viewWithTag:6] setText:@"AUTO IN LEASING ?"];
+    [YTOUtils setCellFormularStyle:cellLeasingFirma];
+    UIButton * btnLeasingDa = (UIButton *)[cellInLeasing viewWithTag:1];
+    [btnLeasingDa addTarget:self action:@selector(btnInLeasing_Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * btnLeasingNu = (UIButton *)[cellInLeasing viewWithTag:2];
+    [btnLeasingNu addTarget:self action:@selector(btnInLeasing_Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    NSArray *topLevelObjectsFirmaLeasing = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellLeasingFirma = [topLevelObjectsFirmaLeasing objectAtIndex:0];
+    [(UILabel *)[cellLeasingFirma viewWithTag:1] setText:@"DENUMIRE FIRMA LEASING"];
+    [(UITextField *)[cellLeasingFirma viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+    
+    NSArray *topLevelObjectsSC = [[NSBundle mainBundle] loadNibNamed:@"CellSalveazaRenunt" owner:self options:nil];
+    cellSC = [topLevelObjectsSC objectAtIndex:0];
+    UIButton * btnSave = (UIButton *)[cellSC viewWithTag:1];    
+    UIButton * btnCancel = (UIButton *)[cellSC viewWithTag:2];        
+    [btnSave addTarget:self action:@selector(btnSave_Clicked) forControlEvents:UIControlEventTouchUpInside];
+    [btnCancel addTarget:self action:@selector(btnCancel_Clicked) forControlEvents:UIControlEventTouchUpInside];    
 }
 
 - (void) showListaMarciAuto:(NSIndexPath *)index;
@@ -427,6 +772,47 @@
     actionPicker.delegate = self;
     actionPicker.titlu = @"Marci Auto";
     [self presentModalViewController:actionPicker animated:YES];
+}
+
+- (IBAction) selectMarcaAuto
+{
+    
+}
+
+- (IBAction) chooseImage
+{
+    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera])
+    {
+        UIActionSheet * menu = [[UIActionSheet alloc] initWithTitle:@"Sursa imaginii" delegate:self cancelButtonTitle:@"Renunt" destructiveButtonTitle:nil otherButtonTitles:@"Camera", @"Album", nil];
+        
+//        [menu showInView:self.view];
+        [menu showFromTabBar:self.tabBarController.tabBar];
+    }
+    else {
+        UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+        picker.delegate = self;
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        [self presentModalViewController:picker animated:YES];
+    }
+}
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    //UIImage * selectedImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    UIImage * originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+
+    YTOImage * img = [[YTOImage alloc] initWithGuid:[YTOUtils GenerateUUID]];
+    img.image = [YTOUtils scaleImage:originalImage maxWidth:320 maxHeight:480];
+    
+    [img addImage];
+    autovehicul.idImage = img.idIntern;
+    [self setImage:img.image];
+    
+    [picker dismissModalViewControllerAnimated:YES];
+}
+- (void) imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [picker dismissModalViewControllerAnimated:YES];
 }
 
 - (void) showListaJudete:(NSIndexPath *)index;
@@ -441,17 +827,17 @@
     [self presentModalViewController:actionPicker animated:YES];
 }
 
-- (void) showListaCategoriiAuto
-{
-    goingBack = NO;
-    YTONomenclatorViewController * actionPicker = [[YTONomenclatorViewController alloc]initWithNibName:@"YTONomenclatorViewController" bundle:nil];
-    actionPicker.listOfItems = categoriiAuto;
-    //actionPicker._indexPath = index;
-    actionPicker.nomenclator = kCategoriiAuto;
-    actionPicker.delegate = self;
-    //actionPicker.titlu = @"Judete";
-    [self presentModalViewController:actionPicker animated:YES];    
-}
+//- (void) showListaCategoriiAuto
+//{
+//    goingBack = NO;
+//    YTONomenclatorViewController * actionPicker = [[YTONomenclatorViewController alloc]initWithNibName:@"YTONomenclatorViewController" bundle:nil];
+//    actionPicker.listOfItems = categoriiAuto;
+//    //actionPicker._indexPath = index;
+//    actionPicker.nomenclator = kCategoriiAuto;
+//    actionPicker.delegate = self;
+//    //actionPicker.titlu = @"Judete";
+//    [self presentModalViewController:actionPicker animated:YES];    
+//}
 
 - (void) showListaDestinatieAuto:(NSIndexPath *)index
 {
@@ -475,6 +861,84 @@
     actionPicker.delegate = self;
     //actionPicker.titlu = @"Judete";
     [self presentModalViewController:actionPicker animated:YES];
+}
+
+-(IBAction)checkboxSelected:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL checkboxSelected = btn.selected;
+    checkboxSelected = !checkboxSelected;
+
+    if (btn.tag  == 1) {
+        [self setCategorieAuto:1];
+        [self setSubcategorieAuto:@"Autoturism"];
+    }
+    else if (btn.tag == 2)
+    {
+        [self setCategorieAuto:1];
+        [self setSubcategorieAuto:@"Autoturism-de-teren"];
+    }
+    else if (btn.tag == 3) {
+        [self setCategorieAuto:7];
+        if ([((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text isEqualToString:@"Motocicleta"])
+            [self setSubcategorieAuto:@"Motocicleta"];
+        else
+            [self setSubcategorieAuto:((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text];
+    }
+    else {
+        _nomenclatorTip = kCategoriiAuto;
+        [self showNomenclator];
+    }
+}
+
+- (IBAction)checkboxCombustibilSelected:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL checkboxSelected = btn.selected;
+    checkboxSelected = !checkboxSelected;
+
+    if (btn.tag  == 1) {
+        [self setTipCombustibil:@"benzina"];
+    }
+    else if (btn.tag == 2)
+    {
+        [self setTipCombustibil:@"motorina"];
+    }
+    else if (btn.tag == 3) {
+        if ([((UILabel *)[cellCombustibil viewWithTag:33]).text isEqualToString:@"gpl"])
+            [self setTipCombustibil:@"gpl"];
+        else
+            [self setTipCombustibil:((UILabel *)[cellCombustibil viewWithTag:33]).text];
+    }
+    else {
+        _nomenclatorTip = kTipCombustibil;
+        [self showNomenclator];
+    }
+}
+
+- (IBAction)checkboxDestinatieSelected:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL checkboxSelected = btn.selected;
+    checkboxSelected = !checkboxSelected;
+    
+    if (btn.tag  == 1) {
+        [self setDestinatieAuto:@"interes-personal"];
+    }
+    else if (btn.tag == 2)
+    {
+        [self setDestinatieAuto:@"distributie-marfa"];
+    }
+    else if (btn.tag == 3) {
+        if ([((UILabel *)[cellDestinatieAuto viewWithTag:33]).text isEqualToString:@"taxi"])
+            [self setDestinatieAuto:@"taxi"];
+        else
+            [self setDestinatieAuto:((UILabel *)[cellCombustibil viewWithTag:33]).text];
+    }
+    else {
+        _nomenclatorTip = kDestinatieAuto;
+        [self showNomenclator];
+    }
 }
 
 - (void) loadCategorii {
@@ -699,6 +1163,8 @@
 
 - (NSString *) getLocatie
 {
+    if ([self getJudet].length == 0 && [self getLocalitate].length ==0)
+        return @"";
     return [NSString stringWithFormat:@"%@, %@", [self getJudet], [self getLocalitate]];
 }
 
@@ -708,8 +1174,9 @@
 }
 - (void) setMarca:(NSString *)marca
 {
-    UILabel * lbl = (UILabel *)[cellMarca viewWithTag:2];
+    UILabel * lbl = (UILabel *)[cellMarcaAuto viewWithTag:2];
     lbl.text = marca;
+//   ((UIImageView *)[cellAutoHeader viewWithTag:3]).image = [YTOUtils getImageForValue:[NSString stringWithFormat:@"%@.png", marca]];
     autovehicul.marcaAuto = marca;
 }
 
@@ -719,7 +1186,7 @@
 }
 - (void) setModel:(NSString *)model
 {
-    UITextField * txt = (UITextField *)[cellModelNrInmatriculare viewWithTag:2];
+    UITextField * txt = (UITextField *)[cellModelAuto viewWithTag:2];
     txt.text = model;
     autovehicul.modelAuto = model;    
 }
@@ -730,8 +1197,15 @@
 }
 - (void) setNrInmatriculare:(NSString *)numar
 {
-    UITextField * txt = (UITextField *)[cellModelNrInmatriculare viewWithTag:4];
-    txt.text = numar;
+    UITextField * txt = (UITextField *)[cellNrInmatriculare viewWithTag:2];
+    txt.text = [numar uppercaseString];
+//    if (numar.length < 6 || numar.length > 7)
+//    {    
+//        [(UILabel *)[cellNrInmatriculare viewWithTag:20] setHidden:NO];
+//    }
+//    else {
+//        [(UILabel *)[cellNrInmatriculare viewWithTag:20] setHidden:YES];
+//    }
     autovehicul.nrInmatriculare = numar;
 }
 
@@ -741,7 +1215,7 @@
 }
 - (void) setSerieSasiu:(NSString *)serie
 {
-    UITextField * txt = (UITextField *)[cellSerieSasiuCiv viewWithTag:2];
+    UITextField * txt = (UITextField *)[cellSerieSasiu viewWithTag:2];
     txt.text = serie;
     autovehicul.serieSasiu = serie;    
 }
@@ -752,9 +1226,9 @@
 }
 - (void) setSerieCIV:(NSString *)serie
 {
-    UITextField * txt = (UITextField *)[cellSerieSasiuCiv viewWithTag:4];
+    UITextField * txt = (UITextField *)[cellSerieCiv viewWithTag:2];
     txt.text = serie;
-    autovehicul.serieSasiu = serie;    
+    autovehicul.serieCiv = serie;    
 }
 
 - (int) getNrLocuri
@@ -763,7 +1237,7 @@
 }
 - (void) setNrLocuri:(int)numar
 {
-    UITextField * txt = (UITextField *)[cellNrLocuriMasaMaxima viewWithTag:2];
+    UITextField * txt = (UITextField *)[cellNrLocuri viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%d", numar];
     autovehicul.nrLocuri = numar;        
 }
@@ -774,8 +1248,8 @@
 }
 - (void) setMasaMaxima:(int)masa
 {
-    UITextField * txt = (UITextField *)[cellSerieSasiuCiv viewWithTag:4];
-    txt.text = [NSString stringWithFormat:@"%d", masa];
+    UITextField * txt = (UITextField *)[cellMasaMaxima viewWithTag:2];
+    txt.text = [NSString stringWithFormat:@"%d Kg", masa];
     autovehicul.masaMaxima = masa;            
 }
      
@@ -794,8 +1268,23 @@
 }
 - (void) setSubcategorieAuto:(NSString *)subcategorie
 {
-    UILabel * lbl = (UILabel *)[cellSubcategorieAuto viewWithTag:2];
-    lbl.text = subcategorie;
+    // resetez butoanele selectate
+    ((UIButton *)[cellSubcategorieAuto viewWithTag:1]).selected = ((UIButton *)[cellSubcategorieAuto viewWithTag:2]).selected =
+        ((UIButton *)[cellSubcategorieAuto viewWithTag:3]).selected = ((UIButton *)[cellSubcategorieAuto viewWithTag:4]).selected = NO;
+    
+    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+    if ([subcategorie isEqualToString:@"Autoturism"])
+        ((UIButton *)[cellSubcategorieAuto viewWithTag:1]).selected = YES;
+    else if ([subcategorie isEqualToString:@"Autoturism-de-teren"])
+        ((UIButton *)[cellSubcategorieAuto viewWithTag:2]).selected = YES;
+    else if ([subcategorie isEqualToString:@"Motocicleta"]) {
+        ((UIButton *)[cellSubcategorieAuto viewWithTag:3]).selected = YES;
+        ((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text = subcategorie;
+    }
+    else {
+        ((UIButton *)[cellSubcategorieAuto viewWithTag:3]).selected = YES;
+        ((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text = subcategorie;
+    }
     autovehicul.subcategorieAuto = subcategorie;
 }
          
@@ -805,9 +1294,24 @@
 }
 - (void) setTipCombustibil:(NSString *)s
 {
-    UILabel * txt = (UILabel *)[cellCombustibil viewWithTag:2];
-    txt.text = s;
-    autovehicul.combustibil = s; 
+    ((UIButton *)[cellCombustibil viewWithTag:1]).selected = ((UIButton *)[cellCombustibil viewWithTag:2]).selected =
+    ((UIButton *)[cellCombustibil viewWithTag:3]).selected = ((UIButton *)[cellCombustibil viewWithTag:4]).selected = NO;
+    
+    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+    if ([s isEqualToString:@"benzina"])
+        ((UIButton *)[cellCombustibil viewWithTag:1]).selected = YES;
+    else if ([s isEqualToString:@"motorina"])
+        ((UIButton *)[cellCombustibil viewWithTag:2]).selected = YES;
+    else if ([s isEqualToString:@"gpl"]) {
+        ((UILabel *)[cellCombustibil viewWithTag:33]).text = s;
+        ((UIButton *)[cellCombustibil viewWithTag:3]).selected = YES;
+    }
+    else {
+        ((UILabel *)[cellCombustibil viewWithTag:33]).text = s;
+        ((UIButton *)[cellCombustibil viewWithTag:3]).selected = YES;
+    }
+    
+    autovehicul.combustibil = s;
 }
 
 - (NSString *) getDestinatieAuto
@@ -816,8 +1320,124 @@
 }
 - (void) setDestinatieAuto:(NSString *)s
 {
-    UILabel * txt = (UILabel *)[cellDestinatieAuto viewWithTag:2];
-    txt.text = s;
-    autovehicul.destinatieAuto = s;     
+    // resetez butoanele selectate
+    ((UIButton *)[cellDestinatieAuto viewWithTag:1]).selected = ((UIButton *)[cellDestinatieAuto viewWithTag:2]).selected =
+    ((UIButton *)[cellDestinatieAuto viewWithTag:3]).selected = ((UIButton *)[cellDestinatieAuto viewWithTag:4]).selected = NO;
+    
+    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+    if ([s isEqualToString:@"interes-personal"])
+        ((UIButton *)[cellDestinatieAuto viewWithTag:1]).selected = YES;
+    else if ([s isEqualToString:@"distributie-marfa"])
+        ((UIButton *)[cellDestinatieAuto viewWithTag:2]).selected = YES;
+    else if ([s isEqualToString:@"taxi"]) {
+        ((UIButton *)[cellDestinatieAuto viewWithTag:3]).selected = YES;
+        ((UILabel *)[cellDestinatieAuto viewWithTag:33]).text = s;
+    }
+    else {
+        ((UIButton *)[cellDestinatieAuto viewWithTag:3]).selected = YES;
+        ((UILabel *)[cellDestinatieAuto viewWithTag:33]).text = s;
+    }
+    autovehicul.destinatieAuto = s;
 }
+
+- (int) getCm3
+{
+    return autovehicul.cm3;
+}
+- (void) setCm3:(int)v
+{
+    if (v != 0)
+    {
+        UITextField * txt = (UITextField *)[cellCm3 viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d cm3", v];
+    }
+    autovehicul.cm3 = v;
+}
+
+- (int) getPutere
+{
+    return autovehicul.putere;
+}
+- (void) setPutere:(int)v
+{
+    if (v != 0)
+    {
+        UITextField * txt = (UITextField *)[cellPutere viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d kW", v];
+    }
+    autovehicul.putere = v;
+}
+
+- (int) getAnFabricatie
+{
+    return autovehicul.anFabricatie;
+}
+- (void) setAnFabricatie:(int)v
+{
+    if (v != 0)
+    {
+        UITextField * txt = (UITextField *)[cellAnFabricatie viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d", v];
+    }
+    autovehicul.anFabricatie = v;
+}
+
+- (void) setInLeasing:(NSString *)v
+{
+    UILabel *lblDA = (UILabel *)[cellInLeasing viewWithTag:3];
+    UILabel *lblNU = (UILabel *)[cellInLeasing viewWithTag:4];
+    UIImageView * img = (UIImageView *)[cellInLeasing viewWithTag:5];
+    
+    if ([v isEqualToString:@"nu"])
+    {
+        img.image = [UIImage imageNamed:@"da-nu-nu-rca.png"];
+        lblDA.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblNU.textColor = [UIColor whiteColor];
+        autovehicul.inLeasing = @"nu";
+    }
+    else if ([v isEqualToString:@"da"])
+    {
+        img.image = [UIImage imageNamed:@"da-nu-da-rca.png"];
+        lblNU.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblDA.textColor = [UIColor whiteColor];
+        autovehicul.inLeasing = @"da";
+    }
+}
+
+- (void) setNumeFirmaLeasing:(NSString *)v
+{
+    UITextField * txt = (UITextField *)[cellLeasingFirma viewWithTag:2];
+    txt.text = v;
+    autovehicul.firmaLeasing = v;
+}
+
+- (void) showTooltip:(NSString *)tooltip
+{
+    [vwTooltip setHidden:NO];
+    lblTootlip.text = tooltip;
+}
+- (void) hideTooltip
+{
+    [vwTooltip setHidden:YES];
+    lblTootlip.text = @"";    
+}
+
+- (void) setImage:(UIImage *)img   
+{
+    UIButton * btnImg = (UIButton *)[cellAutoHeader viewWithTag:5];
+    [btnImg setImage:img forState:UIControlStateNormal];
+    btnImg.imageView.contentMode = UIViewContentModeScaleAspectFit;
+}
+
+#pragma CELL LEASING
+- (void) btnInLeasing_Clicked:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL leasing = btn.tag == 1;
+    
+    [self setInLeasing:leasing ? @"da" : @"nu"];
+    
+    [tableView reloadData];
+}
+
 @end

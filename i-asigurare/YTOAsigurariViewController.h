@@ -8,9 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import "YTOCalculatorViewController.h"
+#import "YTOCalatorieViewController.h"
+#import "YTOLocuintaViewController.h"
+#import "YTOCASCOViewController.h"
 
-@interface YTOAsigurariViewController : UIViewController
+@interface YTOAsigurariViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+{
+    IBOutlet UITableView * tableView;
 
-- (IBAction)showRCAView:(id)sender;
+    UITableViewCell * cellHeader;
+    UITableViewCell * cellAsigurareRca;
+    UITableViewCell * cellAsigurareCalatorie;
+    UITableViewCell * cellAsigurareLocuinta;
+    UITableViewCell * cellAsigurareCasco;
+}
+
+- (void)showRCAView;
+- (void)showCalatorieView;
+- (void)showLocuintaView;
+- (void)showCascoView;
 
 @end

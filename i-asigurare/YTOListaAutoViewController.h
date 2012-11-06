@@ -12,11 +12,14 @@
 {
     IBOutlet UITableView * tableView;
     NSMutableArray * listaMasini;
+    IBOutlet UIView * vwEmpty;
+    
+    BOOL editingMode;
 }
 
 @property (nonatomic, retain) UIViewController * controller;
 
 - (IBAction)adaugaAutovehicul:(id)sender;
-
+- (void) reloadData;
 
 @end

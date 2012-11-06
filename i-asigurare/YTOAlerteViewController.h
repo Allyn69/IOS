@@ -8,6 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface YTOAlerteViewController : UIViewController
+@interface YTOAlerteViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+{
+    IBOutlet UIView          * vwEmpty;
+    IBOutlet UITableView     * tableView;
+    NSMutableArray           * listAlerte;
+}
+
+@property (nonatomic, retain) UIViewController * controller;
+
+- (IBAction)adaugaAlerta:(id)sender;
+- (void) reloadData;
+- (void) verifyViewMode;
 
 @end

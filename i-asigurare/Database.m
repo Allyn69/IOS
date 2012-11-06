@@ -89,6 +89,32 @@ static sqlite3 *database = nil;
     return localitati;
 }
 
++(NSMutableArray*)CoduriCaen
+{
+    NSMutableArray * coduriCaen = [[NSMutableArray alloc] initWithArray:nil];
+    
+    if (sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK) {
+		NSString * sqlstring = @"SELECT CodCaen, Nume FROM CodCaen";
+		const char *sql = [sqlstring UTF8String];
+		sqlite3_stmt *selectstmt;
+		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
+			
+			while(sqlite3_step(selectstmt) == SQLITE_ROW) {
+                
+                KeyValueItem * item = [[KeyValueItem alloc] init];
+				item.value = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 0)];
+				item.value2 = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 1)];  
+                
+				[coduriCaen addObject:item];
+			}
+		}
+	}
+    
+	sqlite3_close(database);
+    
+    return coduriCaen;    
+}
+
 + (NSString*)getDBPath
 {
 //    NSString * db = [[NSBundle mainBundle] pathForResource:@"vreau_rca" ofType:@"sqlite"];

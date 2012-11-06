@@ -34,14 +34,24 @@
 @property (nonatomic, retain) NSString * alteBoli;
 @property (nonatomic, retain) NSString * boliDefinitive;
 @property (nonatomic, retain) NSString * stareSanatate;
-
+@property (nonatomic, retain) NSString * telefon;
+@property (nonatomic, retain) NSString * email;
+@property (nonatomic, retain) NSString * proprietar;
 @property BOOL _isDirty;
 
-- (void) addPersoana:(YTOPersoana *)p;
-- (void) updatePersoana:(YTOPersoana *)p;
+- (void) addPersoana;
+- (void) updatePersoana;
+- (void) deletePersoana;
 + (YTOPersoana *) getPersoana:(NSString *)_idIntern;
-+ (NSMutableArray*)Persoane;
++ (YTOPersoana *) getPersoanaByCodUnic:(NSString *)_codUnic;
++ (YTOPersoana *) Proprietar;
++ (YTOPersoana *) ProprietarPJ;
+- (NSMutableArray*)getPersoane;
++ (NSMutableArray*)AltePersoane;
++ (NSMutableArray*)PersoaneFizice;
 
 - (id)initWithGuid:(NSString*)guid;
-
+- (NSString *) toJSON;
+- (void) fromJSON:(NSString *)p;
+- (void) refresh;
 @end

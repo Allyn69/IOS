@@ -7,6 +7,8 @@
 //
 
 #import "YTOPersoana.h"
+#import "YTOAppDelegate.h"
+#import "YTOObiectAsigurat.h"
 #import "Database.h"
 
 @implementation YTOPersoana
@@ -34,6 +36,9 @@
 @synthesize alteBoli;
 @synthesize boliDefinitive;
 @synthesize stareSanatate;
+@synthesize telefon;
+@synthesize email;
+@synthesize proprietar;
 
 @synthesize _isDirty;
 
@@ -41,173 +46,236 @@
 {
     self = [super init];
     self.idIntern = guid;
-    
+
     return self;
 }
 
-- (void) addPersoana:(YTOPersoana *)p
+- (void) addPersoana
 {
-    sqlite3 *database;
-    sqlite3_stmt *addStmt = nil;
-    
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
-    {
-        
-        if(addStmt == nil) {
-            const char *sql = "INSERT INTO PERSOANA (IdIntern, Nume, CodUnic, Judet, Localitate, Adresa, TipPersoana, Casatorit, CopiiMinori, Pensionar, NrBugetari, DataPermis, CodCaen, HandicapLocomotor, SerieAct, ElevStudent, BoliNeuro, BoliCardio, BoliInterne, BoliAparatRespirator, AlteBoli, BoliDefinitive, StareSanatate) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            if(sqlite3_prepare_v2(database, sql, -1, &addStmt, NULL) != SQLITE_OK)
-                NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
-        }
-        
-        sqlite3_bind_text(addStmt, 1, [idIntern UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 2, [nume UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 3, [codUnic UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 4, [judet UTF8String], -1, SQLITE_TRANSIENT);    
-        sqlite3_bind_text(addStmt, 5, [localitate UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 6, [adresa UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 7, [tipPersoana UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 8, [casatorit UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 9, [copiiMinori UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 10, [pensionar UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(addStmt, 11, [nrBugetari UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(addStmt, 12, [dataPermis UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(addStmt, 13, [codCaen UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 14, [handicapLocomotor UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(addStmt, 15, [serieAct UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(addStmt, 16, [elevStudent UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 17, [boliNeuro UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(addStmt, 18, [boliCardio UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(addStmt, 19, [boliInterne UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(addStmt, 20, [boliAparatRespirator UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(addStmt, 21, [alteBoli UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(addStmt, 22, [boliDefinitive UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(addStmt, 23, [stareSanatate UTF8String], -1, SQLITE_TRANSIENT);                        
-        
-        if(SQLITE_DONE != sqlite3_step(addStmt))
-            NSAssert1(0, @"Error while inserting data. '%s'", sqlite3_errmsg(database));
-        else {
-            sqlite3_finalize(addStmt);
-            sqlite3_close(database);
-        }
-        
-    }
+    YTOObiectAsigurat * persoana = [[YTOObiectAsigurat alloc] init];
+    persoana.IdIntern = self.idIntern;
+    persoana.TipObiect = 1;
+    persoana.JSONText = [self toJSON];
+    [persoana addObiectAsigurat];
+    self._isDirty = YES;
+    [self refresh];
 }
 
-- (void) updatePersoana:(YTOPersoana *)p
+- (void) updatePersoana
 {
-    sqlite3 *database;
-    sqlite3_stmt *updateStmt = nil;
+    YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
+    ob.JSONText = [self toJSON];
+    [ob updateObiectAsigurat];
     
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
-    {
-        
-        if(updateStmt == nil) {
-            NSString *update = [NSString stringWithFormat:@"UPDATE PERSOANA SET Nume = ?, CodUnic = ?, Judet = ?, Localitate = ?, Adresa = ?, TipPersoana = ?, Casatorit = ?, CopiiMinori = ?, Pensionar = ?, NrBugetari = ?, DataPermis = ?, CodCaen = ?, HandicapLocomotor = ?, SerieAct = ?, ElevStudent = ?, BoliNeuro = ?, BoliCardio = ?, BoliInterne = ?, BoliAparatRespirator = ?, AlteBoli = ?, BoliDefinitive = ?, StareSanatate = ? WHERE IdIntern='%@'", p.idIntern];
-            
-            if(sqlite3_prepare_v2(database, [update UTF8String], -1, &updateStmt, NULL) != SQLITE_OK)
-                NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
-        }
-        
-        sqlite3_bind_text(updateStmt, 1, [nume UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 2, [codUnic UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 3, [judet UTF8String], -1, SQLITE_TRANSIENT);    
-        sqlite3_bind_text(updateStmt, 4, [localitate UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 5, [adresa UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 6, [tipPersoana UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 7, [casatorit UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 8, [copiiMinori UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 9, [pensionar UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(updateStmt, 10, [nrBugetari UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(updateStmt, 11, [dataPermis UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(updateStmt, 12, [codCaen UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 13, [handicapLocomotor UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(updateStmt, 14, [serieAct UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(updateStmt, 15, [elevStudent UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 16, [boliNeuro UTF8String], -1, SQLITE_TRANSIENT);        
-        sqlite3_bind_text(updateStmt, 17, [boliCardio UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(updateStmt, 18, [boliInterne UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(updateStmt, 19, [boliAparatRespirator UTF8String], -1, SQLITE_TRANSIENT);                
-        sqlite3_bind_text(updateStmt, 20, [alteBoli UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(updateStmt, 21, [boliDefinitive UTF8String], -1, SQLITE_TRANSIENT);                        
-        sqlite3_bind_text(updateStmt, 22, [stareSanatate UTF8String], -1, SQLITE_TRANSIENT);                        
-        
-        if(SQLITE_DONE != sqlite3_step(updateStmt))
-            NSAssert1(0, @"Error while updating data. '%s'", sqlite3_errmsg(database));
-        else {
-            sqlite3_finalize(updateStmt);
-            sqlite3_close(database);
-        }
-        
-    }
+    [self refresh];
+}
+
+- (void) deletePersoana
+{
+    YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
+    ob.JSONText = [self toJSON];
+    [ob deleteObiectAsigurat];
 }
 
 + (YTOPersoana *) getPersoana:(NSString *)_idIntern 
 {
-    sqlite3 *database;
-    sqlite3_stmt *selectStmt = nil;
+    YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:_idIntern];
     
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
+    if (ob.JSONText)
     {
-        
-        
-        NSString *select = [NSString stringWithFormat:@"SELECT IdIntern, Nume, CodUnic, Judet, Localitate, Adresa, TipPersoana, Casatorit, CopiiMinori, Pensionar, NrBugetari, DataPermis, CodCaen, HandicapLocomotor, SerieAct, ElevStudent, BoliNeuro, BoliCardio, BoliInterne, BoliAparatRespirator, AlteBoli, BoliDefinitive, StareSanatate FROM PERSOANA WHERE IdIntern='%@'", _idIntern];
-        
-        YTOPersoana *p = [[YTOPersoana alloc] init];
-        if(sqlite3_prepare_v2(database, [select UTF8String], -1, &selectStmt, NULL) == SQLITE_OK) {
-            
-            if (sqlite3_step(selectStmt) == SQLITE_ROW)
-            {
-                p._isDirty = YES;
-                
-                p.idIntern =  [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 0)];
-                p.nume = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 1)];
-                p.codUnic = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 2)];
-                p.judet = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 3)];
-                p.localitate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 4)];
-                p.adresa = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 5)];
-                // to do next props
-                // ..
-            }
-            sqlite3_finalize(selectStmt);
-        }
-        sqlite3_close(database);
+        YTOPersoana * p = [[YTOPersoana alloc] init];
+        [p fromJSON:ob.JSONText];
+        p.idIntern = _idIntern;
+    
         return p;
     }
     return nil;
 }
 
-+ (NSMutableArray*)Persoane 
++ (YTOPersoana *) getPersoanaByCodUnic:(NSString *)_codUnic
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    NSMutableArray * list = [appDelegate Persoane];
+    for (int i=0; i<list.count; i++) {
+        YTOPersoana * p = [list objectAtIndex:i];
+        if ([p.codUnic isEqualToString:_codUnic]) {
+            return p;
+        }
+    }
+    return nil;
+}
+
+- (NSMutableArray*)getPersoane 
 {
     NSMutableArray * _list = [[NSMutableArray alloc] init];
-    sqlite3 *database;
-    sqlite3_stmt *selectstmt = nil;
     
-    if (sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"SELECT IdIntern, Nume, CodUnic, Judet, Localitate, Adresa FROM PERSOANA";
-		const char *sql = [sqlstring UTF8String];
-
-		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
-			
-			while(sqlite3_step(selectstmt) == SQLITE_ROW) {
-                
-                YTOPersoana * persoana = [[YTOPersoana alloc] init];
-                
-                persoana.idIntern = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 0)];
-				persoana.nume = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 1)];
-                persoana.codUnic = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 2)];
-                persoana.judet = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 3)];
-                persoana.localitate = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 4)];
-                persoana.adresa = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 5)];
-                
-				[_list addObject:persoana];
-			}
-		}
-        sqlite3_finalize(selectstmt);
-	}
-
-	sqlite3_close(database);
+    NSMutableArray * jsonList = [YTOObiectAsigurat getListaByTipObiect:1];
+    
+    for (int i=0; i<jsonList.count; i++) {        
+        YTOObiectAsigurat * ob = (YTOObiectAsigurat *)[jsonList objectAtIndex:i];
+        
+        YTOPersoana * p = [[YTOPersoana alloc] init];
+        [p fromJSON:ob.JSONText];
+        p.idIntern = ob.IdIntern;
+        
+        if(p)
+            [_list addObject:p];
+    }
     
     return _list;
 }
 
++ (NSMutableArray*)AltePersoane 
+{
+    NSMutableArray * _list = [[NSMutableArray alloc] init];
+    
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableArray * listPersoane = [appDelegate Persoane];
+    
+    for (int i=0; i<listPersoane.count; i++) {        
+        YTOPersoana * p = [listPersoane objectAtIndex:i];
+        
+        if(![p.proprietar isEqualToString:@"da"])
+            [_list addObject:p];
+    }
+    
+    return _list;
+}
+
++ (NSMutableArray*)PersoaneFizice
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableArray * list = [appDelegate Persoane];
+    NSMutableArray * listPF = [[NSMutableArray alloc] init];
+    
+    for (int i=0; i<list.count; i++) {
+        YTOPersoana * p = [list objectAtIndex:i];
+        if ([p.tipPersoana isEqualToString:@"fizica"]) {
+            [listPF addObject:p];
+        }
+    }
+    
+    return listPF;
+}
+
++ (YTOPersoana *) Proprietar
+{
+    YTOPersoana * p = nil;
+    
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableArray * list = [appDelegate Persoane];
+    for (int i=0; i<list.count; i++) {
+        YTOPersoana * p = [list objectAtIndex:i];
+        if ([p.proprietar isEqualToString:@"da"] && [p.tipPersoana isEqualToString:@"fizica"]) {
+            return p;
+        }
+    }
+    p = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
+    p.tipPersoana = @"fizica";
+    p.proprietar = @"da";
+    
+    return p;
+}
+
++ (YTOPersoana *) ProprietarPJ
+{
+    YTOPersoana * p = nil;
+    
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableArray * list = [appDelegate Persoane];
+    for (int i=0; i<list.count; i++) {
+        YTOPersoana * p = [list objectAtIndex:i];
+        if ([p.proprietar isEqualToString:@"da"] && [p.tipPersoana isEqualToString:@"juridica"]) {
+            return p;
+        }
+    }
+    
+    p = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
+    p.tipPersoana = @"juridica";
+    p.proprietar = @"da";
+    
+    return p;
+}
+
+- (NSString *) toJSON
+{
+    NSError * error;
+    
+    NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                           self.nume, @"nume_asigurat",
+                           (self.codUnic ? self.codUnic : @""), @"cod_unic",
+                           (self.judet ? self.judet : @""), @"judet",
+                           (self.localitate ? self.localitate : @""), @"localitate",
+                           (self.adresa ? self.adresa : @""), @"adresa",
+                           (self.tipPersoana ? self.tipPersoana : @""), @"tip_persoana",
+                           (self.casatorit ? self.casatorit : @""), @"casatorit",
+                           (self.copiiMinori ? self.copiiMinori : @""), @"copii_minori",
+                           (self.pensionar ? self.pensionar : @""), @"pensionar",
+                           (self.nrBugetari ? self.nrBugetari : @""), @"nr_bugetari",
+                           (self.dataPermis ? self.dataPermis : @""), @"data_permis",
+                           (self.codCaen ? self.codCaen : @""), @"cod_caen",
+                           (self.handicapLocomotor ? self.handicapLocomotor : @""), @"handicap",
+                           (self.serieAct ? self.serieAct : @""), @"serie_act",
+                           (self.elevStudent ? self.elevStudent : @""), @"elev",
+                           (self.boliNeuro ? self.boliNeuro : @""), @"boli_neuro",
+                           (self.boliCardio ? self.boliCardio : @""), @"boli_cardio",
+                           (self.boliInterne ? self.boliInterne : @""), @"boli_interne",
+                           (self.boliAparatRespirator ? self.boliAparatRespirator : @""), @"boli_aparat_respirator",
+                           (self.alteBoli ? self.alteBoli : @""), @"alte_boli",
+                           (self.boliDefinitive ? self.boliDefinitive : @""), @"boli_definitive",
+                           (self.stareSanatate ? self.stareSanatate : @""), @"stare_sanatate", 
+                           (self.telefon ? self.telefon : @""), @"telefon",
+                           (self.email ? self.email : @""), @"email",                           
+                           (self.proprietar ? self.proprietar : @"nu"), @"proprietar",
+                           nil];
+
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict 
+                                                       options:NSJSONWritingPrettyPrinted error:&error];
+    NSString * text = [[NSString alloc] initWithData:jsonData                                        
+                                            encoding:NSUTF8StringEncoding];
+    
+    return text;
+}
+
+- (void) fromJSON:(NSString *)p
+{
+    NSError * err = nil;
+    NSData *data = [p dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary * item = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
+    
+    self.nume = [item objectForKey:@"nume_asigurat"];
+    self.codUnic = [item objectForKey:@"cod_unic"];
+    self.judet = [item objectForKey:@"judet"];
+    self.localitate = [item objectForKey:@"localitate"];
+    self.adresa = [item objectForKey:@"adresa"];
+    self.tipPersoana = [item objectForKey:@"tip_persoana"];
+    self.casatorit = [item objectForKey:@"casatorit"];
+    self.copiiMinori = [item objectForKey:@"copii_minori"];
+    self.pensionar = [item objectForKey:@"pensionar"];
+    self.nrBugetari = [item objectForKey:@"nr_bugetari"];
+    self.dataPermis = [item objectForKey:@"data_permis"];
+    self.codCaen = [item objectForKey:@"cod_caen"];
+    self.handicapLocomotor = [item objectForKey:@"handicap"];
+    self.serieAct = [item objectForKey:@"serie_act"];
+    self.elevStudent = [item objectForKey:@"elev"];
+    self.boliNeuro = [item objectForKey:@"boli_neuro"];
+    self.boliCardio = [item objectForKey:@"boli_cardio"];
+    self.boliInterne = [item objectForKey:@"boli_interne"];
+    self.boliAparatRespirator = [item objectForKey:@"boli_aparat_respirator"];
+    self.alteBoli = [item objectForKey:@"alte_boli"];
+    self.boliDefinitive = [item objectForKey:@"boli_definitive"];
+    self.stareSanatate = [item objectForKey:@"stare_sanatate"];
+    self.telefon = [item objectForKey:@"telefon"];
+    self.email = [item objectForKey:@"email"];
+    self.proprietar = [item objectForKey:@"proprietar"];
+    
+    self._isDirty = YES;
+}
+
+- (void) refresh
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate refreshPersoane];
+}
 @end

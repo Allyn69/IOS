@@ -16,13 +16,14 @@
 
 @implementation YTONomenclatorViewController
 @synthesize listOfItems;
-@synthesize delegate, nomenclator;
+@synthesize delegate, nomenclator, titlu;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = titlu;
+        self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
 }
@@ -59,6 +60,7 @@
     }
     
     [scrollView  setContentSize:CGSizeMake(320, [listOfItems count]/3 * 81)];
+    
 }
 
 - (void)btn_selected:(id)sender

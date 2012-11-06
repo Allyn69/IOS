@@ -8,14 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KeyValueItem : NSObject {
+@interface KeyValueItem : NSObject<NSCoding> {
     NSInteger parentKey;
     NSInteger key;
     NSString * value;
+    NSString * value2;
 }
 
 @property (nonatomic) NSInteger parentKey;
 @property (nonatomic) NSInteger key;
 @property (nonatomic, copy) NSString * value;
+@property (nonatomic, copy) NSString * value2;
 
 @end

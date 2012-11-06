@@ -10,14 +10,20 @@
 #import "YTOAppDelegate.h"
 #import "YTOCalculatorViewController.h"
 #import "YTOAutovehiculViewController.h"
+#import "YTOSetariViewController.h"
+#import "YTOValabilitateRCAViewController.h"
 #import "Database.h"
 #import "YTOUtils.h"
+#import "YTOImage.h"
+#import "YTOFormAlertaViewController.h"
 
 @interface YTOListaAutoViewController ()
 
 @end
 
 @implementation YTOListaAutoViewController
+
+@synthesize controller;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -34,6 +40,25 @@
     [super viewDidLoad];
 
     listaMasini = [YTOAutovehicul Masini];
+    
+    ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#009145"];
+    ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
+    
+    [self verifyViewMode];
+}
+
+- (void) verifyViewMode
+{
+    if (listaMasini.count == 0)
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+        [vwEmpty setHidden:NO];
+    }
+    else if ([controller isKindOfClass:[YTOSetariViewController class]])
+    {
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+    }
 }
 
 - (void)viewDidUnload
@@ -79,7 +104,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return 66;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -90,15 +115,43 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    cell.textLabel.font = [UIFont fontWithName:@"Myriad Pro" size:20];
-    cell.textLabel.textColor = [YTOUtils colorFromHexString:@"#3e3e3e"];
-    cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:@"#888888"];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Myriad Pro" size:16];
-    cell.imageView.image = [UIImage imageNamed:@"person.png"];
+    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:20];
+    cell.textLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:16];
+    YTOAutovehicul * a = (YTOAutovehicul *)[listaMasini objectAtIndex:indexPath.row];
+    if (a.idImage && a.idImage.length > 0)
+    {
+        YTOImage *objImage = [YTOImage getImage:a.idImage];
+        cell.imageView.image = objImage.image;
+        cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    }
+    else
+        cell.imageView.image = [UIImage imageNamed:@"marca-auto.png"];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabel.text = [((YTOAutovehicul *)[listaMasini objectAtIndex:indexPath.row]).marcaAuto uppercaseString];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", ((YTOAutovehicul *)[listaMasini objectAtIndex:indexPath.row]).modelAuto, ((YTOAutovehicul *)[listaMasini objectAtIndex:indexPath.row]).nrInmatriculare];
+    cell.textLabel.text = [a.marcaAuto uppercaseString];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
     
+    if (indexPath.row % 2 != 0) {
+        CGRect frame = CGRectMake(0, 0, 320, 60);
+        UIView *bgColor = [[UIView alloc] initWithFrame:frame];
+        [cell addSubview:bgColor];
+        [cell sendSubviewToBack:bgColor];
+        bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#fafafa"];
+    }
+    
+    UIProgressView *progressv = [[UIProgressView alloc] initWithFrame:CGRectMake(8, 56, 47, 9)];
+    float completedPercent =[a CompletedPercent];
+    [progressv setProgress:completedPercent];
+    progressv.progressTintColor = [YTOUtils colorFromHexString:ColorVerde];
+    progressv.alpha=0.6;
+
+    UILabel * lblPercent = [[UILabel alloc] initWithFrame:CGRectMake(8, 46, 47, 30)];
+    lblPercent.font = [UIFont fontWithName:@"Arial" size:9]; lblPercent.textAlignment = UITextAlignmentCenter;
+    lblPercent.text = [[NSString stringWithFormat:@"%.0f", completedPercent*100] stringByAppendingString:@" %"];
+    lblPercent.backgroundColor = [UIColor clearColor];
+    [cell addSubview:progressv];
+    [cell addSubview:lblPercent];
     return cell;
 }
 
@@ -145,29 +198,121 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-    
     YTOAutovehicul * masina = [listaMasini objectAtIndex:indexPath.row];
-    //YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
-    //aView.asigurat = persoana;
     
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-    [parent setAutovehicul:masina];
-    [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+    {
+        YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+        
+        // TRUE -  Daca masina este valida, se poate
+        //         folosi pentru calculatia RCA
+        // FALSE - Se incarca formularul de masina, iar la
+        //         salvare, se afiseaza calculatorul RCA
+        if ([masina isValidForRCA])
+        {
+            [parent setAutovehicul:masina];
+            [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+        }
+        else 
+        {
+            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            aView.controller = self.controller;
+            aView.autovehicul = masina;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];        
+        }
+    }
+    else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+    {
+        YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+        aView.controller = self;
+        aView.autovehicul = masina;
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
+    }
+    else if ([self.controller isKindOfClass:[YTOValabilitateRCAViewController class]])
+    {
+        YTOValabilitateRCAViewController * parent = (YTOValabilitateRCAViewController *)self.controller;
+        [parent setAutovehicul:masina];
+        [appDelegate.alteleNavigationController popViewControllerAnimated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOFormAlertaViewController class]])
+    {
+        YTOFormAlertaViewController * parent = (YTOFormAlertaViewController*)self.controller;
+        [parent setAutovehicul:masina];
+        [appDelegate.alerteNavigationController popViewControllerAnimated:YES];
+    }
 }
 
-- (IBAction)adaugaPersoana:(id)sender
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        YTOAutovehicul * masina = [listaMasini objectAtIndex:indexPath.row];
+        [masina deleteAutovehicul];
+        [self reloadData];
+    }
+}
+
+- (IBAction)adaugaAutovehicul:(id)sender
+{
+    editingMode = NO;
+     [tableView setEditing:NO];
+    
     YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+    {
+        aView.controller = (YTOCalculatorViewController *)self.controller;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+    {
+        aView.controller = self;
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
+    }
+    else if ([self.controller isKindOfClass:[YTOValabilitateRCAViewController class]])
+    {
+        aView.controller = self;
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+    }
 }
 
+- (void) reloadData
+{
+    listaMasini = [YTOAutovehicul Masini];
+    if (listaMasini.count > 0)
+    {
+        [vwEmpty setHidden:YES];    
+        if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+        {
+            YTOSetariViewController * parent = (YTOSetariViewController *)self.controller;
+            [parent reloadData];
+        }
+    }
+    [tableView reloadData];
+    [self verifyViewMode];    
+}
+
+- (void) callEditItems
+{
+    if (!editingMode)
+    {
+        editingMode = YES;
+        [tableView setEditing:YES];
+        UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                                       style:UIBarButtonItemStylePlain
+                                                                      target:self
+                                                                      action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnDone;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+    }
+    else
+    {
+        editingMode = NO;
+        [tableView setEditing:NO];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
+}
 @end

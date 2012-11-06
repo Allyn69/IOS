@@ -10,34 +10,54 @@
 #import "PickerVCSearch.h"
 #import "YTONomenclatorViewController.h"
 #import "YTOAutovehicul.h"
+#import "YTOUtils.h"
 
-@interface YTOAutovehiculViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PickerVCSearchDelegate, YTONomenclatorDelegate>
+@interface YTOAutovehiculViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PickerVCSearchDelegate, YTONomenclatorDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
     IBOutlet UITableView * tableView;
     UITextField * activeTextField;
     IBOutlet UIBarButtonItem * btnDone;
+    IBOutlet UIView * vwTooltip;
+    IBOutlet UILabel * lblTootlip;
+
+    IBOutlet UIView *   vwKeyboardAddon;
+    IBOutlet UIView *   vwNomenclator;
     YTOAutovehicul * autovehicul;
     BOOL goingBack;
     NSMutableArray * categoriiAuto;
     NSMutableArray * tipCombustibil;
     NSMutableArray * destinatiiAuto;
-    
-    UITableViewCell * cellJudetLocalitate;
-    UITableViewCell * cellSubcategorieAuto;
-    UITableViewCell * cellMarca;
-    UITableViewCell * cellModelNrInmatriculare;
-    UITableViewCell * cellSerieSasiuCiv;
-    UITableViewCell * cellCm3Putere;
-    UITableViewCell * cellNrLocuriMasaMaxima;
-    UITableViewCell * cellAnFabricatie;
-    UITableViewCell * cellDestinatieAuto;
-    UITableViewCell * cellCombustibil;
-    UITableViewCell * cellAutoNouInregistrat;
-    UITableViewCell * cellInLeasing;
 
+    UITableViewCell * cellAutoHeader;
+    UITableViewCell * cellMarcaAuto;
+    UITableViewCell * cellModelAuto;
+    UITableViewCell * cellJudetLocalitate;
+    IBOutlet UITableViewCell * cellSubcategorieAuto;
+    UITableViewCell * cellNrInmatriculare;
+    UITableViewCell * cellSerieSasiu;
+    UITableViewCell * cellCm3;
+    UITableViewCell * cellPutere;
+    UITableViewCell * cellNrLocuri;
+    UITableViewCell * cellMasaMaxima;
+    UITableViewCell * cellAnFabricatie;
+    UITableViewCell * cellSerieCiv;
+    IBOutlet UITableViewCell * cellDestinatieAuto;
+    IBOutlet UITableViewCell * cellCombustibil;
+    UITableViewCell * cellInLeasing;
+    UITableViewCell * cellLeasingFirma;
+    UITableViewCell * cellSC;
 }
 
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;
+@property (nonatomic, retain) UIViewController * controller;
+
+@property int _nomenclatorNrItems;
+@property int _nomenclatorSelIndex;
+@property (readwrite) Nomenclatoare _nomenclatorTip;
+
+- (IBAction) selectMarcaAuto;
+- (IBAction) chooseImage;
+
 - (void) initCells;
 - (void) showListaMarciAuto:(NSIndexPath *)index;
 - (void) showListaJudete:(NSIndexPath *)index;
@@ -46,14 +66,26 @@
 - (void) addBarButton;
 - (void) deleteBarButton;
 - (void) save;
+- (void) btnSave_Clicked;
+- (void) btnCancel_Clicked;
 - (void) load:(YTOAutovehicul *)a;
 - (void) loadCategorii;
 - (void) loadTipCombustibil;
 - (void) loadDestinatieAuto;
 
+- (IBAction)checkboxSelected:(id)sender;
+- (IBAction)checkboxCombustibilSelected:(id)sender;
+- (IBAction)checkboxDestinatieSelected:(id)sender;
+
+- (void) showNomenclator;
+- (IBAction) hideNomenclator;
+
+- (void) showTooltip:(NSString *)tooltip;
+- (void) hideTooltip;
 // PROPRIETATI
 - (NSString *) getJudet;
 - (void) setJudet:(NSString *)judet;
+- (void) setLocalitate:(NSString *)localitate;
 - (NSString *) getLocalitate;
 - (NSString *) getLocatie;
 
@@ -89,4 +121,16 @@
 
 - (NSString *) getDestinatieAuto;
 - (void) setDestinatieAuto:(NSString *)s;
+
+- (int) getCm3;
+- (void) setCm3:(int)v;
+
+- (int) getPutere;
+- (void) setPutere:(int)v;
+
+- (int) getAnFabricatie;
+- (void) setAnFabricatie:(int)v;
+- (void) setInLeasing:(NSString *)v;
+- (void) setNumeFirmaLeasing:(NSString *)v;
+- (void) setImage:(UIImage *)img;
 @end

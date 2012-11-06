@@ -9,6 +9,9 @@
 #import "YTOAlteleViewController.h"
 #import "YTOAppDelegate.h"
 #import "YTOUtils.h"
+#import "YTOValabilitateRCAViewController.h"
+#import "YTOTrimiteMesajViewController.h"
+#import "YTOFAQViewController.h"
 
 @interface YTOAlteleViewController ()
 
@@ -21,7 +24,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Altele", @"Altele");
-        self.tabBarItem.image = [UIImage imageNamed:@"second"];
+        self.tabBarItem.image = [UIImage imageNamed:@"menu-altele.png"];
     }
     return self;
 }
@@ -155,13 +158,23 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (indexPath.row == 1)
+    {
+        YTOTrimiteMesajViewController * aView = [[YTOTrimiteMesajViewController alloc] init];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+    }
+    else if (indexPath.row == 2)
+    {
+        YTOFAQViewController * aView = [[YTOFAQViewController alloc] init];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+    }
+    else if (indexPath.row == 4)
+    {
+        YTOValabilitateRCAViewController * aView = [[YTOValabilitateRCAViewController alloc] init];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+
+    }
 }
 
 @end

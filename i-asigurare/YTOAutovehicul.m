@@ -7,6 +7,7 @@
 //
 
 #import "YTOAutovehicul.h"
+#import "YTOObiectAsigurat.h"
 #import "Database.h"
 
 @implementation YTOAutovehicul
@@ -35,189 +36,260 @@
 @synthesize tipInregistrare;
 @synthesize autoNouInregistrat;
 @synthesize inLeasing;
+@synthesize firmaLeasing;
 @synthesize nrKm;
+@synthesize cascoLa;
 @synthesize idFirmaLeasing;
 @synthesize idProprietar;
+@synthesize idImage;
 @synthesize _dataCreare;
 
 @synthesize _isDirty;
-
-
-//idIntern, judet, localitate, categorieAuto, subcategorieAuto, nrInmatriculare, serieSasiu, marcaAuto, modelAuto, cm3, nrLocuri, masaMaxima, putere, anFabricatie, destinatieAuto, marimeParc, serieCiv, dauneInUltimulAn, aniFaraDaune, culoare, combustibil, tipInregistrare, autoNouInregistrat, inLeasing, nrKm, idFirmaLeasing, idProprietar
 
 - (id)initWithGuid:(NSString*)guid
 {
     self = [super init];
     self.idIntern = guid;
+    self._dataCreare = [NSDate date];
     
     return self;
 }
 
 - (void) addAutovehicul
 {
-    sqlite3 *database;
-    sqlite3_stmt *addStmt = nil;
-    
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
-    {
-        
-        if(addStmt == nil) {
-            const char *sql = "INSERT INTO AUTOVEHICUL (IdIntern, Judet, Localitate, CategorieAuto, SubcategorieAuto, NrInmatriculare, SerieSasiu, MarcaAuto, ModelAuto, Cm3, NrLocuri, MasaMaxima, Putere, AnFabricatie, DestinatieAuto, MarimeParc, SerieCiv, DauneInUltimulAn, AniFaraDaune, Culoare, Combustibil, TipInregistrare, AutoNouInregistrat, InLeasing, NrKm, IdFirmaLeasing, IdProprietar, _dataCreare) Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getDate())";
-            if(sqlite3_prepare_v2(database, sql, -1, &addStmt, NULL) != SQLITE_OK)
-                NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
-        }
-        
-        sqlite3_bind_text(addStmt, 1, [idIntern UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 2, [judet UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(addStmt, 3, [localitate UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(addStmt, 4, categorieAuto);
-        sqlite3_bind_text(addStmt, 5, [subcategorieAuto UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 6, [nrInmatriculare UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(addStmt, 7, [serieSasiu UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(addStmt, 8, [marcaAuto UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(addStmt, 9, [modelAuto UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(addStmt, 10, cm3); 
-        sqlite3_bind_int(addStmt, 11, nrLocuri); 
-        sqlite3_bind_int(addStmt, 12, masaMaxima); 
-        sqlite3_bind_int(addStmt, 13, putere); 
-        sqlite3_bind_int(addStmt, 14, anFabricatie);
-        sqlite3_bind_text(addStmt, 15, [destinatieAuto UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(addStmt, 16, marimeParc); 
-        sqlite3_bind_text(addStmt, 17, [serieCiv UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(addStmt, 18, dauneInUltimulAn);
-        sqlite3_bind_int(addStmt, 19, aniFaraDaune); 
-        sqlite3_bind_text(addStmt, 20, [culoare UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 21, [combustibil UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 22, [tipInregistrare UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 23, [autoNouInregistrat UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(addStmt, 24, [inLeasing UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(addStmt, 25, nrKm);
-        sqlite3_bind_text(addStmt, 26, [idFirmaLeasing UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(addStmt, 27, [idProprietar UTF8String], -1, SQLITE_TRANSIENT);                       
-        
-        if(SQLITE_DONE != sqlite3_step(addStmt))
-            NSAssert1(0, @"Error while inserting data. '%s'", sqlite3_errmsg(database));
-        else {
-            sqlite3_finalize(addStmt);
-            sqlite3_close(database);
-        }
-        
-    }
+    YTOObiectAsigurat * autovehicul = [[YTOObiectAsigurat alloc] init];
+    autovehicul.IdIntern = self.idIntern;
+    autovehicul.TipObiect = 2;
+    autovehicul.JSONText = [self toJSON];
+    [autovehicul addObiectAsigurat];
+    self._isDirty = YES;
 }
 
-- (void) updateAutovehicul:(YTOAutovehicul *)a 
+- (void) updateAutovehicul
 {
-    sqlite3 *database;
-    sqlite3_stmt *updateStmt = nil;
-    
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
-    {
-        
-        if(updateStmt == nil) {
-            NSString *update = [NSString stringWithFormat:@"UPDATE AUTOVEHICUL SET Judet = ?, Localitate = ?, CategorieAuto = ?, SubcategorieAuto = ?, NrInmatriculare = ?, SerieSasiu = ?, MarcaAuto = ?, ModelAuto = ?, Cm3 = ?, NrLocuri = ?, MasaMaxima = ?, Putere = ?, AnFabricatie = ?, DestinatieAuto = ?, MarimeParc = ?, SerieCiv = ?, DauneInUltimulAn = ?, AniFaraDaune = ?, Culoare = ?, Combustibil = ?, TipInregistrare = ?, AutoNouInregistrat = ?, InLeasing = ?, NrKm = ?, IdFirmaLeasing = ?, IdProprietar = ? WHERE IdIntern='%@'", a.idIntern];
-            
-            if(sqlite3_prepare_v2(database, [update UTF8String], -1, &updateStmt, NULL) != SQLITE_OK)
-                NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
-        }
-        
-        sqlite3_bind_text(updateStmt, 1, [judet UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(updateStmt, 2, [localitate UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(updateStmt, 3, categorieAuto);
-        sqlite3_bind_text(updateStmt, 4, [subcategorieAuto UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 5, [nrInmatriculare UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(updateStmt, 6, [serieSasiu UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(updateStmt, 7, [marcaAuto UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(updateStmt, 8, [modelAuto UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(updateStmt, 9, cm3); 
-        sqlite3_bind_int(updateStmt, 10, nrLocuri); 
-        sqlite3_bind_int(updateStmt, 11, masaMaxima); 
-        sqlite3_bind_int(updateStmt, 12, putere); 
-        sqlite3_bind_int(updateStmt, 13, anFabricatie);
-        sqlite3_bind_text(updateStmt, 14, [destinatieAuto UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(updateStmt, 15, marimeParc); 
-        sqlite3_bind_text(updateStmt, 16, [serieCiv UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(updateStmt, 17, dauneInUltimulAn);
-        sqlite3_bind_int(updateStmt, 18, aniFaraDaune); 
-        sqlite3_bind_text(updateStmt, 19, [culoare UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 20, [combustibil UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 21, [tipInregistrare UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 22, [autoNouInregistrat UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(updateStmt, 23, [inLeasing UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_int(updateStmt, 24, nrKm);
-        sqlite3_bind_text(updateStmt, 25, [idFirmaLeasing UTF8String], -1, SQLITE_TRANSIENT); 
-        sqlite3_bind_text(updateStmt, 26, [idProprietar UTF8String], -1, SQLITE_TRANSIENT);                       
-        
-        if(SQLITE_DONE != sqlite3_step(updateStmt))
-            NSAssert1(0, @"Error while updating data. '%s'", sqlite3_errmsg(database));
-        else {
-            sqlite3_finalize(updateStmt);
-            sqlite3_close(database);
-        }
-        
-    }
+    YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
+    ob.JSONText = [self toJSON];
+    [ob updateObiectAsigurat];
+}
+
+- (void) deleteAutovehicul
+{
+    YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
+    ob.JSONText = [self toJSON];
+    [ob deleteObiectAsigurat];
 }
 
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern
 {
-    sqlite3 *database;
-    sqlite3_stmt *selectStmt = nil;
-    
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
-    {
-        
-        
-        NSString *select = [NSString stringWithFormat:@"SELECT IdIntern, Judet, Localitate, CategorieAuto, SubcategorieAuto, NrInmatriculare, SerieSasiu, MarcaAuto, ModelAuto, Cm3, NrLocuri, MasaMaxima, Putere, AnFabricatie, DestinatieAuto, MarimeParc, SerieCiv, DauneInUltimulAn, AniFaraDaune, Culoare, Combustibil, TipInregistrare, AutoNouInregistrat, InLeasing, NrKm, IdFirmaLeasing, IdProprietar, _dataCreare FROM AUTOVEHICUL WHERE IdIntern='%@'", _idIntern];
-        
-        YTOAutovehicul *a = [[YTOAutovehicul alloc] init];
-        if(sqlite3_prepare_v2(database, [select UTF8String], -1, &selectStmt, NULL) == SQLITE_OK) {
-            
-            if (sqlite3_step(selectStmt) == SQLITE_ROW)
-            {
-                a._isDirty = YES;
-                
-                a.idIntern =  [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectStmt, 0)];
-                
-                // to do next props
-                // ..
-            }
-            sqlite3_finalize(selectStmt);
-        }
-        sqlite3_close(database);
-        return a;
+    NSMutableArray * list = [YTOAutovehicul Masini];
+    for (int i=0; i<list.count; i++) {
+        YTOAutovehicul * _auto = [list objectAtIndex:i];
+        if ([_auto.idIntern isEqualToString:_idIntern])
+            return _auto;
     }
-    return nil;
+    return  nil;
+}
+
++ (YTOAutovehicul *) getAutovehiculByProprietar:(NSString *)_idProprietar
+{
+    NSMutableArray * list = [YTOAutovehicul Masini];
+    for (int i=0; i<list.count; i++) {
+        YTOAutovehicul * _auto = [list objectAtIndex:i];
+        if ([_auto.idProprietar isEqualToString:_idProprietar])
+            return _auto;
+    }
+    return  nil;
 }
 
 + (NSMutableArray*)Masini
 {
     NSMutableArray * _list = [[NSMutableArray alloc] init];
-    sqlite3 *database;
-    sqlite3_stmt *selectstmt = nil;
     
-    if (sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"SELECT IdIntern, Judet, Localitate, CategorieAuto, SubcategorieAuto, NrInmatriculare, SerieSasiu, MarcaAuto, ModelAuto, Cm3, NrLocuri, MasaMaxima, Putere, AnFabricatie, DestinatieAuto, MarimeParc, SerieCiv, DauneInUltimulAn, AniFaraDaune, Culoare, Combustibil, TipInregistrare, AutoNouInregistrat, InLeasing, NrKm, IdFirmaLeasing, IdProprietar, _dataCreare FROM AUTOVEHICUL";
-		const char *sql = [sqlstring UTF8String];
+    NSMutableArray * jsonList = [YTOObiectAsigurat getListaByTipObiect:2];
+    
+    for (int i=0; i<jsonList.count; i++) {        
+        YTOObiectAsigurat * ob = (YTOObiectAsigurat *)[jsonList objectAtIndex:i];
         
-		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
-			
-			while(sqlite3_step(selectstmt) == SQLITE_ROW) {
-                
-                YTOAutovehicul *a = [[YTOAutovehicul alloc] init];
-                
-                a.idIntern =  [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(selectstmt, 0)];
-				// to do next props
-                // ..
-                
-				[_list addObject:a];
-			}
-		}
-        sqlite3_finalize(selectstmt);
-	}
-    
-	sqlite3_close(database);
+        YTOAutovehicul * p = [[YTOAutovehicul alloc] init];
+        [p fromJSON:ob.JSONText];
+        p.idIntern = ob.IdIntern;
+        
+        if(p)
+            [_list addObject:p];
+    }
     
     return _list;
 }
 
+- (NSString *) toJSON
+{
+    NSError * error;
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *dateString=[dateFormat stringFromDate:self._dataCreare];
+    
+    NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                           (self.judet ? self.judet : @""), @"judet",
+                           (self.localitate ? self.localitate : @""), @"localitate",
+                           [NSNumber numberWithInt: self.categorieAuto], @"categorie_auto",
+                           (self.subcategorieAuto ? self.subcategorieAuto : @""), @"subcategorie_auto",
+                           (self.nrInmatriculare ? self.nrInmatriculare : @""), @"nr_inmatriculare",
+                           (self.serieSasiu ? self.serieSasiu : @""), @"serie_sasiu",
+                           (self.marcaAuto ? self.marcaAuto : @""), @"marca_auto",
+                           (self.modelAuto ? self.modelAuto : @""), @"model_auto",
+                           [NSNumber numberWithInt: self.cm3], @"cm3",
+                           [NSNumber numberWithInt: self.nrLocuri], @"nr_locuri",
+                           [NSNumber numberWithInt: self.masaMaxima], @"masa_maxima",
+                           [NSNumber numberWithInt: self.putere], @"putere",
+                           [NSNumber numberWithInt: self.anFabricatie], @"an_fabricatie",
+                           (self.destinatieAuto ? self.destinatieAuto : @""), @"destinatie_auto",
+                           [NSNumber numberWithInt: self.marimeParc], @"marime_parc",
+                           (self.serieCiv ? self.serieCiv : @""), @"serie_civ",
+                           [NSNumber numberWithInt: self.dauneInUltimulAn], @"daune_ultim_an",
+                           [NSNumber numberWithInt: self.aniFaraDaune], @"ani_fara_daune",
+                           (self.culoare ? self.culoare : @""), @"culoare",
+                           (self.combustibil ? self.combustibil : @""), @"combustibil",
+                           (self.tipInregistrare ? self.tipInregistrare : @""), @"tip_inregistrare",
+                           (self.autoNouInregistrat ? self.autoNouInregistrat : @""), @"auto_nou_inregistrat",
+                           (self.inLeasing ? self.inLeasing : @""), @"in_leasing",
+                           (self.firmaLeasing ? self.firmaLeasing : @""), @"firma_leasing",
+                           [NSNumber numberWithInt: self.nrKm], @"nr_km",
+                           (self.cascoLa ? self.cascoLa : @""), @"casco",
+                           (self.idFirmaLeasing ? self.idFirmaLeasing : @""), @"id_firma_leasing",
+                           (self.idProprietar ? self.idProprietar : @""), @"id_proprietar",
+                           (self.idImage ? self.idImage : @""), @"id_image",
+                           dateString, @"data_creare",
+                           nil];
+    
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict 
+                                                       options:NSJSONWritingPrettyPrinted error:&error];
+    NSString * text = [[NSString alloc] initWithData:jsonData                                        
+                                            encoding:NSUTF8StringEncoding];
+    
+    return text;
+}
+
+- (void) fromJSON:(NSString *)p
+{
+    NSError * err = nil;
+    NSData *data = [p dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary * item = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
+    
+    self.judet = [item objectForKey:@"judet"];
+    self.localitate = [item objectForKey:@"localitate"];
+    self.categorieAuto = [[item objectForKey:@"categorie_auto"] intValue];
+    self.subcategorieAuto = [item objectForKey:@"subcategorie_auto"];
+    self.nrInmatriculare = [item objectForKey:@"nr_inmatriculare"];
+    self.serieSasiu = [item objectForKey:@"serie_sasiu"];
+    self.marcaAuto = [item objectForKey:@"marca_auto"];
+    self.modelAuto = [item objectForKey:@"model_auto"];
+    self.cm3 = [[item objectForKey:@"cm3"] intValue];
+    self.nrLocuri = [[item objectForKey:@"nr_locuri"] intValue];
+    self.masaMaxima = [[item objectForKey:@"masa_maxima"] intValue];
+    self.putere = [[item objectForKey:@"putere"] intValue];
+    self.anFabricatie = [[item objectForKey:@"an_fabricatie"] intValue];
+    self.destinatieAuto = [item objectForKey:@"destinatie_auto"];
+    self.marimeParc = [[item objectForKey:@"marime_parc"] intValue];
+    self.serieCiv = [item objectForKey:@"serie_civ"];
+    self.dauneInUltimulAn = [[item objectForKey:@"daune_ultim_an"] intValue];
+    self.aniFaraDaune = [[item objectForKey:@"ani_fara_daune"] intValue];
+    self.culoare = [item objectForKey:@"culoare"];
+    self.combustibil = [item objectForKey:@"combustibil"];
+    self.tipInregistrare = [item objectForKey:@"tip_inregistrare"];
+    self.autoNouInregistrat = [item objectForKey:@"auto_nou_inregistrat"];
+    self.inLeasing = [item objectForKey:@"in_leasing"];
+    self.firmaLeasing = [item objectForKey:@"firma_leasing"];
+    self.nrKm = [[item objectForKey:@"nr_km"] intValue];
+    self.cascoLa = [item objectForKey:@"casco"];
+    self.idFirmaLeasing = [item objectForKey:@"id_firma_leasing"];
+    self.idProprietar = [item objectForKey:@"id_proprietar"];
+    self.idImage = [item objectForKey:@"id_image"];
+    
+    NSString * dataString = [item objectForKey:@"data_creare"];
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
+    self._dataCreare = [dateFormat dateFromString:dataString];
+    
+    self._isDirty = YES;
+}
+
+- (BOOL) isValidForRCA
+{
+    BOOL valid = YES;
+    
+    if (!self.judet || self.judet.length == 0)
+        valid = NO;
+    if (!self.localitate || self.localitate.length == 0)
+        valid = NO;
+    if (self.categorieAuto == 0)
+        valid = NO;
+    if (!self.subcategorieAuto || self.subcategorieAuto.length == 0)
+        valid = NO;
+    if (!self.nrInmatriculare || self.nrInmatriculare.length == 0)
+        valid = NO;
+    if (!self.serieSasiu || self.serieSasiu.length == 0)
+        valid = NO;
+    if (!self.marcaAuto || self.marcaAuto.length == 0)
+        valid = NO;
+    if (self.categorieAuto == 0 || (self.categorieAuto != 8 && self.cm3 == 0))
+        valid = NO;
+    if (self.categorieAuto == 0 || (self.categorieAuto != 8 && self.nrLocuri == 0))
+        valid = NO;        
+    if (self.masaMaxima == 0)
+        valid = NO;
+    if (self.putere == 0)
+        valid = NO;
+    if (self.anFabricatie == 0)
+        valid = NO;
+    
+    return valid;
+}
+
+- (float) CompletedPercent
+{
+    int numarCampuri = 12;
+    float campuriCompletate = 0;
+    
+    if (self.judet && self.judet.length > 0)
+        campuriCompletate ++;
+    if (self.localitate && self.localitate.length > 0)
+        campuriCompletate ++;
+    if (self.categorieAuto > 0)
+        campuriCompletate ++;
+    if (self.subcategorieAuto && self.subcategorieAuto.length > 0)
+        campuriCompletate ++;
+    if (self.nrInmatriculare && self.nrInmatriculare.length > 0)
+        campuriCompletate ++;
+    if (self.serieSasiu && self.serieSasiu.length > 0)
+        campuriCompletate ++;
+    if (self.marcaAuto && self.marcaAuto.length > 0)
+        campuriCompletate ++;
+    if (self.categorieAuto != 8 && self.cm3 > 0)
+        campuriCompletate ++;
+    else
+        campuriCompletate ++;
+    
+    if (self.categorieAuto != 8 && self.nrLocuri > 0)
+        campuriCompletate ++;
+    else
+        campuriCompletate ++;
+    
+    if (self.masaMaxima > 0)
+        campuriCompletate ++;
+    if (self.putere > 0)
+        campuriCompletate ++;
+    if (self.anFabricatie > 0)
+        campuriCompletate ++;
+    
+    if ([self.inLeasing isEqualToString:@"da"]) {
+        numarCampuri = 13;
+        if (self.firmaLeasing && self.firmaLeasing.length > 0)
+            campuriCompletate++;
+    }
+    
+    return campuriCompletate/numarCampuri;
+}
 
 @end

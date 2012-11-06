@@ -25,5 +25,6 @@
 @property (nonatomic, retain) NSMutableArray * listOfItems;
 @property (nonatomic, retain) id<YTONomenclatorDelegate> delegate;
 @property (readwrite) Nomenclatoare nomenclator;
+@property (nonatomic, retain) NSString * titlu;
 
 @end
