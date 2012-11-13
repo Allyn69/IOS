@@ -451,7 +451,7 @@
 - (void) showNomenclator
 {
     [vwNomenclator setHidden:NO];
-    UILabel * lblTitle = (UILabel *)[vwNomenclator viewWithTag:1];
+   // UILabel * lblTitle = (UILabel *)[vwNomenclator viewWithTag:1];
     UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
     NSMutableArray * listOfItems;
     _nomenclatorNrItems = 0;

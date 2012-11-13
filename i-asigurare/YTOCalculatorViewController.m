@@ -202,7 +202,9 @@
     else if (indexPath.row == 6)
     {
         BOOL isOK = YES;
-        if (!masina)
+        
+        // Daca nu a fost selectata masina sau datele masinii nu sunt complete
+        if (!masina || ![masina isValidForRCA])
         {
             UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
             lblCell.textColor = [UIColor redColor];
@@ -218,6 +220,7 @@
             lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         }
         
+        // Daca nu a fost selectata persoana sau datele persoanei nu sunt complete
         if (!asigurat || asigurat.idIntern.length == 0)
         {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
@@ -406,15 +409,21 @@
     {
         asigurat.tipPersoana = @"fizica";
         
+        stepperAnMinimPermis.minimumValue = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
+        stepperAnMinimPermis.maximumValue = [YTOUtils getAnCurent];
+        
         if (asigurat.dataPermis.length == 0)
         {
-            stepperAnMinimPermis.minimumValue = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
-            stepperAnMinimPermis.maximumValue = [YTOUtils getAnCurent];
             stepperAnMinimPermis.value = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
             [self setAnPermis:stepperAnMinimPermis.value];
         }
-        else 
-            [self setAnPermis:[asigurat.dataPermis intValue]];
+        else
+        {
+            if (asigurat.dataPermis.length == 4)
+                [self setAnPermis:[asigurat.dataPermis intValue]];
+            else
+                [self setAnPermis:[YTOUtils getAnFromDate:[YTOUtils getDateFromString:asigurat.dataPermis withFormat:@"yyyy-MM-dd"]]];
+        }
         
         if (asigurat.nrBugetari.length == 0)
             [self setNrBugetari:0];
@@ -450,6 +459,7 @@
         
         [self setCodCaen:asigurat.codCaen];
     }
+    
     if (asigurat.idIntern.length > 0 && ![asigurat.idIntern isEqualToString:masina.idProprietar])
     {
         YTOAutovehicul * _auto = [YTOAutovehicul getAutovehiculByProprietar:a.idIntern];
@@ -469,8 +479,9 @@
     {
         lblCell.text = a.marcaAuto;
         ((UILabel *)[cellMasina viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
-       // UIImageView * img = (UIImageView *)[cellMasina viewWithTag:3];
-       // img.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", a.marcaAuto]];
+
+        if (a.cascoLa && ![a.cascoLa isEqualToString:@""])
+            [self setCompanieCasco:a.cascoLa];
     }
     masina = a;
     [self setCompanieCasco:masina.cascoLa];
@@ -536,11 +547,6 @@
 
 - (IBAction)calculeaza
 {
-//    YTOCustomPopup * popup = [[YTOCustomPopup alloc] init];
-//    [popup showAlert:@"Confirmare comanda" withMessage:@"Comanda a fost inregistrata" andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
-//    
-//    return;
-
     if (asigurat && masina)
     {
         oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
@@ -650,9 +656,22 @@
 
 - (void) setAnPermis:(int)k
 {
- //   asigurat.dataPermis = [NSString stringWithFormat:@"%d", k];
     UILabel * lbl = (UILabel *)[cellPF viewWithTag:6];
-    lbl.text = [NSString stringWithFormat:@"%d", k];    
+    lbl.text = [NSString stringWithFormat:@"%d", k];
+    
+    NSDate * azi = [NSDate date];
+    int anCurent = [YTOUtils getAnFromDate:azi];
+    
+    // Daca anul in care si-a luat permisul este anul curent, pun luna si ziua de ieri
+    // Altfel pun default 1 noiembrie + an
+    if (anCurent == k)
+    {
+        asigurat.dataPermis = [YTOUtils formatDate:[azi dateByAddingTimeInterval: -86400.0] withFormat:@"yyyy-MM-dd"];
+    }
+    else
+    {
+        asigurat.dataPermis = [NSString stringWithFormat:@"%d-11-01", k];
+    }
 }
 
 - (void) setCompanieCasco:(NSString*)v
@@ -660,20 +679,27 @@
     ((UIButton *)[cellAsiguratCasco   viewWithTag:1]).selected = ((UIButton *)[cellAsiguratCasco viewWithTag:2]).selected =
     ((UIButton *)[cellAsiguratCasco viewWithTag:3]).selected = ((UIButton *)[cellAsiguratCasco viewWithTag:4]).selected = NO;
     
-    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
-    if ([v isEqualToString:@"Allianz"])
-        ((UIButton *)[cellAsiguratCasco viewWithTag:1]).selected = YES;
-    else if ([v isEqualToString:@"Omniasig"])
-        ((UIButton *)[cellAsiguratCasco viewWithTag:2]).selected = YES;
-    else if ([v isEqualToString:@"Generali"]) {
-        ((UILabel *)[cellAsiguratCasco viewWithTag:33]).text = v;
-        ((UIButton *)[cellAsiguratCasco viewWithTag:3]).selected = YES;
+    // Daca compania nu este deja selectata, o selectam
+    // altfel o deselectam
+    if (![v isEqualToString:@""])
+    {
+        // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+        if ([v isEqualToString:@"Allianz"])
+            ((UIButton *)[cellAsiguratCasco viewWithTag:1]).selected = YES;
+        else if ([v isEqualToString:@"Omniasig"])
+            ((UIButton *)[cellAsiguratCasco viewWithTag:2]).selected = YES;
+        else if ([v isEqualToString:@"Generali"]) {
+            ((UILabel *)[cellAsiguratCasco viewWithTag:33]).text = v;
+            ((UIButton *)[cellAsiguratCasco viewWithTag:3]).selected = YES;
+        }
+        else if (v.length > 0) {
+            ((UILabel *)[cellAsiguratCasco viewWithTag:33]).text = v;
+            ((UIButton *)[cellAsiguratCasco viewWithTag:3]).selected = YES;
+        }
+        masina.cascoLa = v;
     }
-    else if (v.length > 0) {
-        ((UILabel *)[cellAsiguratCasco viewWithTag:33]).text = v;
-        ((UIButton *)[cellAsiguratCasco viewWithTag:3]).selected = YES;
-    }
-    masina.cascoLa = v;
+    else
+        masina.cascoLa = @"";
 }
 
 #pragma vwNomenclator
@@ -716,7 +742,7 @@
     _nomenclatorNrItems = 0;
     int rows = 0;
     int cols =0;
-    int selectedItemIndex = 0;
+    int selectedItemIndex = -1;
     if (_nomenclatorTip == kCompaniiAsigurare)
     {
         listaCompanii = [YTOUtils GETCompaniiAsigurare];
@@ -787,8 +813,8 @@
     UIButton * btn = (UIButton *)sender;
     BOOL checkboxSelected = btn.selected;
     checkboxSelected = !checkboxSelected;
-    if (!btn.selected)
-        [btn setSelected:checkboxSelected];
+    
+    [btn setSelected:checkboxSelected];
     
     UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
     for (int i=100; i<=100+_nomenclatorNrItems; i++) {
@@ -800,8 +826,13 @@
     
     if (_nomenclatorTip == kCompaniiAsigurare)
     {
-        KeyValueItem * item = (KeyValueItem *)[listaCompanii objectAtIndex:btn.tag-100];
-        [self setCompanieCasco:item.value];
+        if (checkboxSelected == NO)
+            [self setCompanieCasco:@""];
+        else
+        {
+            KeyValueItem * item = (KeyValueItem *)[listaCompanii objectAtIndex:btn.tag-100];
+            [self setCompanieCasco:item.value];
+        }
     }
 }
 

@@ -129,7 +129,7 @@
     else if (indexPath.row == 3)
     {
         YTOFinalizareCalatorieViewController * aView = [[YTOFinalizareCalatorieViewController alloc] init];
-        aView.asigurat = (YTOPersoana *)[listAsigurati objectAtIndex:0];
+        aView.listAsigurati = listAsigurati;
         aView.oferta = oferta;
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
     }

@@ -7,6 +7,7 @@
 //
 
 #import "YTOComenziViewController.h"
+#import "YTOAsigurareViewController.h"
 
 @interface YTOComenziViewController ()
 
@@ -18,7 +19,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = NSLocalizedString(@"Lista asigurari", @"Lista asigurari");
     }
     return self;
 }
@@ -28,7 +29,26 @@
     [super viewDidLoad];
     list = [YTOOferta Oferte];
     
+    [self  verifyViewMode];
+    ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#6f6e6e"];
+    ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
+    
     // Do any additional setup after loading the view from its nib.
+}
+
+- (void) verifyViewMode
+{
+    if (list.count == 0)
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+        [vwEmpty setHidden:NO];
+    }
+    else
+    {
+        [vwEmpty setHidden:YES];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+    }
 }
 
 - (void)viewDidUnload
@@ -44,6 +64,11 @@
 }
 
 #pragma mark - Table view data source
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return  55;
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -71,7 +96,7 @@
     YTOOferta * oferta = [list objectAtIndex:indexPath.row];
 
     cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, oferta.moneda];
+    cell.textLabel.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
     cell.detailTextLabel.text = oferta.numeAsigurare;
     
     cell.textLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
@@ -90,55 +115,68 @@
     return cell;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    YTOOferta * oferta = [list objectAtIndex:indexPath.row];
+    YTOAsigurareViewController * aView = [[YTOAsigurareViewController alloc] init];
+    aView.asigurare = oferta;
+    [self.navigationController pushViewController:aView animated:YES];
+}
+
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        YTOOferta * asigurare = [list objectAtIndex:indexPath.row];
+        [asigurare deleteOferta];
+        [self reloadData];
+    }
+}
+
+- (IBAction)addAsigurare:(id)sender
+{
+    YTOAsigurareViewController * aView = [[YTOAsigurareViewController alloc] init];
+    [self.navigationController pushViewController:aView animated:YES];
+}
+
+- (void) reloadData
+{
+    list = [YTOOferta Oferte];
+    if (list.count > 0)
+    {
+        [vwEmpty setHidden:YES];
+//        if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+//        {
+//            YTOSetariViewController * parent = (YTOSetariViewController *)self.controller;
+//            [parent reloadData];
+//        }
+    }
+    [tableView reloadData];
+    [self verifyViewMode];
+}
+
+- (void) callEditItems
+{
+    if (!editingMode)
+    {
+        editingMode = YES;
+        [tableView setEditing:YES];
+        UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnDone;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+    }
+    else
+    {
+        editingMode = NO;
+        [tableView setEditing:NO];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
 }
 @end

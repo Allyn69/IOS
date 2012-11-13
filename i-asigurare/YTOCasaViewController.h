@@ -32,6 +32,8 @@
     IBOutlet UILabel * lblTootlip;
     
     NSMutableArray * structuriRezistenta;
+    
+    float percentCompletedOnLoad;
 }
 
 @property BOOL goingBack;

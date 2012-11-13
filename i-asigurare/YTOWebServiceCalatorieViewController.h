@@ -41,7 +41,6 @@
 @property (nonatomic, retain) YTOOferta *       oferta;
 
 - (IBAction)calculeazaRCADupaAltaDurata;
-- (NSString *) getJsonPersoane:(NSMutableArray *) list;
 - (void) calculCalatorie;
 - (NSString *) XmlRequest;
 - (void) startLoadingAnimantion;

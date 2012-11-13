@@ -12,7 +12,14 @@
 @interface YTOComenziViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;
-    NSMutableArray * list;
+    NSMutableArray       * list;
+    
+    IBOutlet UIView      * vwEmpty;
+    BOOL editingMode;    
 }
+
+- (void) verifyViewMode;
+- (void) reloadData;
+- (IBAction)addAsigurare:(id)sender;
 
 @end

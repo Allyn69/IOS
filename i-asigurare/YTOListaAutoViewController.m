@@ -56,7 +56,16 @@
     }
     else if ([controller isKindOfClass:[YTOSetariViewController class]])
     {
-        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        [vwEmpty setHidden:YES];
+
+        UIBarButtonItem *btnEdit;
+        if (editingMode)
+            btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(callEditItems)];
+        else
+            btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
     }
 }
@@ -132,7 +141,7 @@
     cell.textLabel.text = [a.marcaAuto uppercaseString];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
     
-    if (indexPath.row % 2 != 0) {
+    if (indexPath.row % 2 != 0 && indexPath.row != 0) {
         CGRect frame = CGRectMake(0, 0, 320, 60);
         UIView *bgColor = [[UIView alloc] initWithFrame:frame];
         [cell addSubview:bgColor];

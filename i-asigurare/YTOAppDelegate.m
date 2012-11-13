@@ -55,8 +55,11 @@
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     
+    [self showTooltip];
     //[self.window addSubview: [viewWelcome view]];
-  //   [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+  
+    // stergem badge-urile cand intra in aplicatie..indiferent
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
     
     [self copyDatabaseIfNeeded];
     
@@ -449,4 +452,48 @@
         }
     }
 }
+
+- (void) showTooltip
+{
+    indexTooltip = 0;
+    listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1.png",@"tooltip2.png", @"tooltip3.png", nil];
+    
+    viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    img.tag = 1;
+    [img setImage:[UIImage imageNamed:@"tooltip1.png"]];
+    [viewTooltip addSubview:img];
+    
+    UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnClose.tag = 2;
+    btnClose.frame = CGRectMake(16, 397, 67, 37);
+    [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+    [viewTooltip addSubview:btnClose];
+    
+    UIButton * btnNext = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnNext.frame = CGRectMake(95, 397, 67, 37);
+    [btnNext addTarget:self action:@selector(nextTooltip) forControlEvents:UIControlEventTouchUpInside];
+    [viewTooltip addSubview:btnNext];
+    
+    [self.window addSubview:viewTooltip];
+}
+
+- (void)nextTooltip
+{
+    indexTooltip++;
+    if (indexTooltip == 2)
+    {
+        UIButton * btnClose = (UIButton *)[viewTooltip viewWithTag:2];
+        btnClose.frame = CGRectMake(245, 397, 67, 37);
+    }
+    UIImageView * img = (UIImageView *)[viewTooltip viewWithTag:1];
+    img.image = [UIImage imageNamed:[listImgTooltip objectAtIndex:indexTooltip]];
+    
+}
+
+- (void) closeTooltip
+{
+    [viewTooltip removeFromSuperview];
+}
+
 @end

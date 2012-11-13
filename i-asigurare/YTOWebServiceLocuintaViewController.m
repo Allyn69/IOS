@@ -7,6 +7,7 @@
 //
 
 #import "YTOWebServiceLocuintaViewController.h"
+#import "YTOSumarLocuintaViewController.h"
 
 @interface YTOWebServiceLocuintaViewController ()
 
@@ -15,12 +16,13 @@
 @implementation YTOWebServiceLocuintaViewController
 
 @synthesize responseData, listTarife, oferta;
+@synthesize locuinta, asigurat;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = NSLocalizedString(@"Produse asigurare", @"Produse asigurare");
     }
     return self;
 }
@@ -58,52 +60,52 @@
                       "<CallCalculLocuinta xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
-                      "<id_intern>adssad232222</id_intern>"
-                      "<nume_asigurat>Andi Aparaschivei</nume_asigurat>"
-                      "<cod_unic>1840509070069</cod_unic>"
-                      "<telefon>0740271799</telefon>"
-                      "<email>andi@i-tom.ro</email>"
+                      "<id_intern>%@</id_intern>"
+                      "<nume_asigurat>%@</nume_asigurat>"
+                      "<cod_unic>%@</cod_unic>"
+                      "<telefon>%@</telefon>"
+                      "<email>%@</email>"
                       "<data_inceput>%@</data_inceput>"
                       "<durata_asigurare>12</durata_asigurare>"
-                      "<moneda>eur</moneda>"
+                      "<moneda>%@</moneda>"
                       "<numar_rate>1</numar_rate>"
                       "<asigurat_paid>neasigurat</asigurat_paid>"
                       "<nr_polita_paid></nr_polita_paid>"
                       "<limita_paid></limita_paid>"
                       "<asigurat_locuinta>neasigurat</asigurat_locuinta>"
                       "<nr_polita_incendiu></nr_polita_incendiu>"
-                      "<tip_persoana>fizica</tip_persoana>"
+                      "<tip_persoana>%@</tip_persoana>"
                       "<calitate_asigurat>proprietar</calitate_asigurat>"
                       "<pensionar>nu</pensionar>"
                       "<grad_handicap>nu</grad_handicap>"
-                      "<judet>Bucuresti</judet>"
-                      "<localitate>Sector-2</localitate>"
+                      "<judet>%@</judet>"
+                      "<localitate>%@</localitate>"
                       "<tip_strada>Strada</tip_strada>"
-                      "<strada>Stefan cel Mare</strada>"
+                      "<strada>%@</strada>"
                       "<nr_strada>2</nr_strada>"
                       "<cod_strada>021177</cod_strada>"
                       "<etaj>2</etaj>"
                       "<bloc>A</bloc>"
                       "<scara>A</scara>"
                       "<apartament>12</apartament>"
-                      "<mod_evaluare>valoare-reala</mod_evaluare>"
-                      "<sa_locuinta>260000</sa_locuinta>"
+                      "<mod_evaluare>%@</mod_evaluare>"
+                      "<sa_locuinta>%d</sa_locuinta>"
                       "<sa_bunuri_generale>0</sa_bunuri_generale>"
                       "<sa_bunuri_de_valoare>0</sa_bunuri_de_valoare>"
-                      "<sa_raspundere_civila>4000</sa_raspundere_civila>"
+                      "<sa_raspundere_civila>%d</sa_raspundere_civila>"
                       "<sa_spargere_geamuri>0</sa_spargere_geamuri>"
                       "<sa_centrala_termica>0</sa_centrala_termica>"
                       "<tip_geam>termopan</tip_geam>"
                       "<vechime_centrala>0</vechime_centrala>"
                       "<clauza_furt_bunuri>nu</clauza_furt_bunuri>"
                       "<clauza_apa_conducta>nu</clauza_apa_conducta>"
-                      "<tip_cladire>apartament-in-bloc</tip_cladire>"
-                      "<structura_rezistenta>beton-armat</structura_rezistenta>"
-                      "<regim_inaltime>11</regim_inaltime>"
-                      "<nr_camere>2</nr_camere>"
-                      "<an_constructie>2007</an_constructie>"
-                      "<suprafata_utila>60</suprafata_utila>"
-                      "<nr_locatari>2</nr_locatari>"
+                      "<tip_cladire>%@</tip_cladire>"
+                      "<structura_rezistenta>%@</structura_rezistenta>"
+                      "<regim_inaltime>%d</regim_inaltime>"
+                      "<nr_camere>%d</nr_camere>"
+                      "<an_constructie>%d</an_constructie>"
+                      "<suprafata_utila>%d</suprafata_utila>"
+                      "<nr_locatari>%d</nr_locatari>"
                       "<are_teren>nu</are_teren>"
                       "<alarma>nu</alarma>"
                       "<detectie_incendiu>da</detectie_incendiu>"
@@ -111,12 +113,20 @@
                       "<paza>da</paza>"
                       "<locuit_permanent>da</locuit_permanent>"
                       "<zona_izolata>nu</zona_izolata>"
-                      "<udid>adasdasdad</udid>"
-                      "<platforma>string</platforma>"
+                      "<udid>%@</udid>"
+                      "<platforma>%@</platforma>"
                       "</CallCalculLocuinta>"
                       "</soap:Body>"
                       "</soap:Envelope>",
-                    [formatter stringFromDate:oferta.dataInceput]];
+                      locuinta.idIntern, asigurat.nume, asigurat.codUnic, asigurat.telefon, asigurat.email,
+                      [formatter stringFromDate:oferta.dataInceput],oferta.moneda,
+                      asigurat.tipPersoana,
+                      locuinta.judet, locuinta.localitate, asigurat.adresa, locuinta.modEvaluare,
+                      locuinta.sumaAsigurata, locuinta.sumaAsigurataRC, locuinta.tipLocuinta, locuinta.structuraLocuinta,
+                      locuinta.regimInaltime, locuinta.nrCamere, locuinta.anConstructie, locuinta.suprafataUtila,
+                      locuinta.nrLocatari,
+                      [[UIDevice currentDevice] uniqueIdentifier],
+                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
     return xml;
 }
 
@@ -208,6 +218,15 @@
         
         for(NSDictionary *item in jsonArray) {
             cotatie = [[CotatieLocuinta alloc] init];
+            NSString * eroare_ws = [item objectForKey:@"Eroare_ws"];
+            if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
+            {
+                NSLog(@"%@",eroare_ws);
+                // to do popup generic
+                [vwLoading setHidden:YES];
+                [self stopLoadingAnimantion];
+                return;
+            }
             cotatie.cod = [item objectForKey:@"Cod"];
             cotatie.prima = [item objectForKey:@"Prima"];
             cotatie.companie = [item objectForKey:@"Companie"];
@@ -329,11 +348,16 @@
     CotatieLocuinta * c = (CotatieLocuinta *)[listTarife objectAtIndex:indexPath.row];
 
     [cell setLogo:[NSString stringWithFormat:@"%@.jpg", [c.companie lowercaseString]]];
-    [cell setPrima:[NSString stringWithFormat:@"%.2f  lei", [c.prima floatValue]]];
+    [cell setPrima:[NSString stringWithFormat:@"%.2f  %@", [c.prima floatValue], [oferta.moneda uppercaseString]]];
     [cell setCol1:c.fransiza andLabel:@"Fransiza"];
     [cell setCol2:c.riscApaConducta andLabel:@"Acop. apa conducta"];
     [cell setCol3:c.riscFurt andLabel:@"Acop. furt"];
     [cell setCol4:c.saRaspundere andLabel:@"Rasp. civila"];
+    
+    cell.btnComanda.tag = indexPath.row;
+    
+    [cell.btnComanda addTarget:self action:@selector(btnComandaAsigurare_Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
@@ -382,38 +406,39 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    cotatie.cod = [item objectForKey:@"Cod"];
-//    cotatie.prima = [item objectForKey:@"Prima"];
-//    cotatie.companie = [item objectForKey:@"Companie"];
-//    cotatie.sumaAsigurata = [item objectForKey:@"SumaAsigurata"];
-//    cotatie.moneda = [item objectForKey:@"Moneda"];
-//    cotatie.fransiza = [item objectForKey:@"Fransiza"];
-//    cotatie.tipProdus = [item objectForKey:@"TipProdus"];
-//    cotatie.saBunuriValoare = [item objectForKey:@"SABunuriValoare"];
-//    cotatie.saBunuriGenerale = [item objectForKey:@"SABunuriGenerale"];
-//    cotatie.saRaspundere = [item objectForKey:@"SARaspundere"];
-//    cotatie.riscFurt = [item objectForKey:@"RiscFurt"];
-//    cotatie.riscApaConducta = [item objectForKey:@"RiscApaConducta"];
-//    cotatie.linkConditii = [item objectForKey:@"LinkConditii"];
-    CotatieLocuinta * _cotatie = [listTarife objectAtIndex:indexPath.row];
+    
+}
+
+- (void) btnComandaAsigurare_Clicked:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    
+    CotatieLocuinta * _cotatie = [listTarife objectAtIndex:btn.tag];
     
     oferta.companie = _cotatie.companie;
     oferta.prima = [_cotatie.prima floatValue];
     oferta.codOferta = _cotatie.cod;
-    oferta.moneda = _cotatie.moneda;
-    
-    //  to do key value items
-    
-    if (!oferta._isDirty)
-        [oferta addOferta];
-    else
-        [oferta updateOferta];
-    
-    //    
-    //    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    //    [delegate.rcaNavigationController pushViewController:aView animated:YES];
-}
+    oferta.durataAsigurare = 12;
 
+    [oferta setLocuintaSA:_cotatie.sumaAsigurata];
+    [oferta setLocuintaFransiza:_cotatie.fransiza];
+    [oferta setLocuintaTipProdus:_cotatie.tipProdus];
+    [oferta setLocuintaSABunuriValoare:_cotatie.saBunuriValoare];
+    [oferta setLocuintaSABunuriGenerale:_cotatie.saBunuriGenerale];
+    [oferta setLocuintaSARaspundere:_cotatie.saRaspundere];
+    [oferta setLocuintaRiscFurt:_cotatie.riscFurt];
+    [oferta setLocuintaRiscApa:_cotatie.riscApaConducta];
+    [oferta setLocuintaConditii:_cotatie.linkConditii];
+    
+    YTOSumarLocuintaViewController * aView = [[YTOSumarLocuintaViewController alloc] init];
+    aView.oferta = oferta;
+    aView.cotatie = _cotatie;
+    aView.asigurat = asigurat;
+    aView.locuinta = locuinta;
+    
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate.rcaNavigationController pushViewController:aView animated:YES];
+}
 
 
 - (void) startLoadingAnimantion

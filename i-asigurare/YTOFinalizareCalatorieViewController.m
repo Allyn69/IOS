@@ -15,14 +15,14 @@
 
 @implementation YTOFinalizareCalatorieViewController
 
-@synthesize oferta, asigurat, masina;
+@synthesize oferta, listAsigurati;
 @synthesize responseData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.title = NSLocalizedString(@"Finalizare comanda", @"Finalizare comanda");
     }
     return self;
 }
@@ -33,11 +33,16 @@
     // Do any additional setup after loading the view from its nib.
     [self initCells];
 
-    [self setJudet:asigurat.judet];
-    [self setLocalitate:asigurat.localitate];
-    [self setAdresa:asigurat.adresa];
-    [self setTelefon:asigurat.telefon];
-    [self setEmail:asigurat.email];
+
+    for (int i=0; i<listAsigurati.count; i++) {
+        YTOPersoana * pers = [listAsigurati objectAtIndex:i];
+        if (pers.serieAct && ![pers.serieAct isEqualToString:@""])
+            [self setSerieAct:pers.serieAct forIndex:i];
+    }
+    [self setTipPlata:@"online"];
+    [self setTelefon:telefonLivrare];
+    [self setEmail:emailLivrare];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,16 +55,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 5;
+    // returnez numarul de asigurati + telefon + email + buton de finalizare
+    return listAsigurati.count + 3;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -70,10 +72,15 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell;
-    if (indexPath.row == 0) cell = cellJudetLocalitate;
-    else if (indexPath.row == 1) cell = cellAdresa;
-    else if (indexPath.row == 2) cell = cellTelefon;
-    else if (indexPath.row == 3) cell = cellEmail;
+    
+    int indexAfter = listAsigurati.count-1;
+    
+    if (indexPath.row < listAsigurati.count)
+    {
+        cell = (UITableViewCell *)[listCells objectAtIndex:indexPath.row];
+    }
+    else if (indexPath.row == (indexAfter+1)) cell = cellTelefon;
+    else if (indexPath.row == (indexAfter+2)) cell = cellEmail;
     else cell = cellCalculeaza;
     
     if (indexPath.row % 2 == 0) {
@@ -87,51 +94,9 @@
     return cell;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        [self showListaJudete:indexPath];
-    }
-    else if (indexPath.row == 4)
+    if (indexPath.row == listAsigurati.count + 2)
     {
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
     }
@@ -140,27 +105,16 @@
 #pragma mark TEXTFIELD
 - (void) textFieldDidBeginEditing:(UITextField *)textField
 {
-    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
-    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
-    
-    if (indexPath.row != 0)
-    {
-        [self addBarButton];
-    }
+    [self addBarButton];
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-	if(activeTextField != nil)
-	{
-		//[self saveTextField];
-	}
-    
 	activeTextField = textField;
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
-	tableView.contentInset = UIEdgeInsetsMake(64, 0, 210, 0);
+	tableView.contentInset = UIEdgeInsetsMake(0, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
 	return YES;
@@ -181,10 +135,23 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    //    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
-    //    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+
+    int indexAfter = listAsigurati.count-1;
     
-    //    [self setModel:textField.text];
+    if (indexPath.row < listAsigurati.count)
+    {
+        [self setSerieAct:textField.text forIndex:indexPath.row];
+    }
+    else if(indexPath.row == (indexAfter+1))
+    {
+        [self setTelefon:textField.text];
+    }
+    else if (indexPath.row == (indexAfter + 2))
+    {
+        [self setEmail:textField.text];
+    }
 }
 
 -(IBAction) doneEditing
@@ -201,8 +168,6 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
-    
-    //  [vwKeyboardAddon setHidden:NO];
 }
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
@@ -211,16 +176,17 @@
 #pragma Others
 - (void) initCells
 {
-    NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
-    cellJudetLocalitate = [topLevelObjectsJudet objectAtIndex:0];
-    [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE LIVRARE"];
-    [YTOUtils setCellFormularStyle:cellJudetLocalitate];
-    
-    NSArray *topLevelObjectsAdresa = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
-    cellAdresa = [topLevelObjectsAdresa objectAtIndex:0];
-    [(UILabel *)[cellAdresa viewWithTag:1] setText:@"STRADA, NUMAR, BLOC"];
-    [(UITextField *)[cellAdresa viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
-    [YTOUtils setCellFormularStyle:cellAdresa];
+    listCells = [[NSMutableArray alloc] init];
+    for (int i=0; i<listAsigurati.count; i++) {
+        YTOPersoana * asigurat = [listAsigurati objectAtIndex:i];
+        NSArray *topLevelObjectAsigurat = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+        UITableViewCell * cell = [topLevelObjectAsigurat objectAtIndex:0];
+        [(UILabel *)[cell viewWithTag:1] setText:[NSString stringWithFormat:@"%@", [asigurat.nume uppercaseString]]];
+        //[(UITextField *)[cell viewWithTag:2] setPlaceholder:@"Serie/Numar act"];
+        [(UITextField *)[cell viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+        [YTOUtils setCellFormularStyle:cell];
+        [listCells addObject:cell];
+    }
     
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
@@ -245,51 +211,13 @@
     lblCellC.text = @"COMANDA";
 }
 
-- (void) showListaJudete:(NSIndexPath *)index
+- (void) setSerieAct:(NSString *)serie forIndex:(int)index
 {
-    goingBack = NO;
-    PickerVCSearch * actionPicker = [[PickerVCSearch alloc]initWithNibName:@"PickerVCSearch" bundle:nil];
-    actionPicker.listOfItems = [[NSMutableArray alloc] initWithArray:[Database Judete]];
-    actionPicker._indexPath = index;
-    actionPicker.nomenclator = kJudete;
-    actionPicker.delegate = self;
-    actionPicker.titlu = @"Judete";
-    [self presentModalViewController:actionPicker animated:YES];
+    YTOPersoana * asigurat = [listAsigurati objectAtIndex:index];
+    asigurat.serieAct = serie;
+    UITextField * txt = (UITextField *)[(UITableViewCell*)[listCells objectAtIndex:index] viewWithTag:2];
+    txt.text = serie;
 }
-
-#pragma Picker View Nomenclator
--(void)chosenIndexAfterSearch:(NSString*)selected rowIndex:(NSIndexPath *)indexPath  forView:(PickerVCSearch *)vwSearch {
-    if (indexPath.row == 0) // JUDET + LOCALITATE
-    {
-        if (vwSearch.nomenclator == kJudete) {
-            [self setJudet:selected];
-        }
-        else {
-            [self setLocalitate:selected];
-        }
-    }
-    goingBack = YES;
-}
-
-- (void) setJudet:(NSString *)judet
-{
-    judetLivrare = judet;
-}
-
-- (void) setLocalitate:(NSString *)localitate
-{
-    localitateLivrare = localitate;
-    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
-    lbl.text = [[judetLivrare stringByAppendingString:@","] stringByAppendingString:localitateLivrare];
-}
-
-- (void) setAdresa:(NSString *)adresa
-{
-    adresaLivrare = adresa;
-    UITextField * txt = (UITextField *)[cellAdresa viewWithTag:2];
-    txt.text = adresa;
-}
-
 - (void) setEmail:(NSString *)email
 {
     emailLivrare = email;
@@ -304,25 +232,147 @@
     txt.text = telefon;
 }
 
+- (void) setTipPlata:(NSString *)p
+{
+    if ([p isEqualToString:@"online"])
+        modPlata = 3;
+}
 
-#pragma mark UIAlertView
--(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 100) {
-        //        NSString * q = [NSString stringWithFormat:@"numar_oferta=%@&email=%@&nume=%@&adresa=%@&localitate=%@&judet=%@&telefon=%@&codProdus=%@&valoare=%.2f&companie=%@&udid=%@", setari.idOferta, self.person.Email, self.person.Nume, self.person.Strada, self.localitate,self.judet,self.person.Telefon,
-        //                        @"RCA", tarifRCA.primaInt, tarifRCA.nume, [[UIDevice currentDevice] uniqueIdentifier]];
-        //        NSLog(@"%@",q);
-        //        NSString * urlAltString = [NSString stringWithFormat:@"%@?%@",[appDelegate kPaymentUrl], q];
-        //        NSString * urlString = [urlAltString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        //        NSURL * url = [NSURL URLWithString:urlString];
-        //
-        //        if(buttonIndex == 1)
-        //        {
-        //            [[UIApplication sharedApplication] openURL:url];
-        //
-        //        }
-    }
+#pragma mark Consume WebService
+
+- (NSString *) XmlRequest
+{
+    NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<CallInregistrareComanda xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<oferta_prima>%.2f</oferta_prima>"
+                      "<oferta_companie>%@</oferta_companie>"
+                      "<oferta_produs>%@</oferta_produs>"
+                      "<oferta_cod>%@</oferta_cod>"
+                      "<datainceput>%@</datainceput>"
+                      "<jsonPersoane>%@</jsonPersoane>"
+                      "<email>%@</email>"
+                      "<telefon>%@</telefon>"
+                      "<mod_plata>%d</mod_plata>"
+                      "<udid>%@</udid>"
+                      "<platforma>%@</platforma>"
+                      "<sendEmail>1</sendEmail>"
+                      "</CallInregistrareComanda>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      oferta.prima, oferta.companie, oferta.numeAsigurare, oferta.codOferta, [YTOUtils formatDate:oferta.dataInceput withFormat:@"yyyy-MM-dd"],
+                      [YTOPersoana getJsonPersoane:listAsigurati],
+                      emailLivrare, telefonLivrare, modPlata,
+                      [[UIDevice currentDevice] uniqueIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+    return xml;
+}
+
+- (IBAction) callInregistrareComanda {
+    [self showCustomLoading];
+    self.navigationItem.hidesBackButton = YES;
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
     
-    [self dismissModalViewControllerAnimated:YES];
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:15.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/CallInregistrareComanda" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+    self.navigationItem.hidesBackButton = NO;
+    [self hideCustomLoading];
+	//to do parseXML
+	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+	
+    // daca este pentru plata ONLINE
+	if (succes && modPlata == 3) {
+        [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:3];
+    }
+    else if (succes) {
+        if (idOferta == nil || [idOferta isEqualToString:@""])
+            [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:YES withButtonIndex:2];
+        else {
+            oferta.idExtern = [idOferta intValue];
+            
+            if (!oferta._isDirty)
+                [oferta addOferta];
+            else
+                [oferta updateOferta];
+            
+            [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:1];
+        }
+	}
+	else {
+        [self showCustomAlert:@"Finalizare comanda" withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:4];
+	}
+    
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+	
+    [self hideCustomLoading];
+    [self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
+}
+
+#pragma mark NSXMLParser Methods
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	if ([elementName isEqualToString:@"NumarComanda"]) {
+		idOferta = currentElementValue;
+		if (idOferta.length > 0)
+		{
+			//setari.idOferta = idOferta;
+			//[appDelegate salveazaSetari];
+		}
+	}
+	else if ([elementName isEqualToString:@"MesajComanda"]) {
+		responseMessage = [NSString stringWithString:currentElementValue];
+	}
+    
+	currentElementValue = nil;
+}
+
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if(!currentElementValue)
+		currentElementValue = [[NSMutableString alloc] initWithString:string];
+	else
+		[currentElementValue appendString:string];
 }
 
 - (void) showCustomLoading
@@ -360,13 +410,12 @@
     [vwCustomAlert setHidden:YES];
     if (btn.tag == 1)
         [self.navigationController popToRootViewControllerAnimated:YES];
-    else if (btn.tag == 2)
+    else if (btn.tag == 3)
     {
         // to do plata ONLINE
     }
-   // else if (btn.tag == 100)
-   //     [self callInregistrareComanda];
-    
+    else if (btn.tag == 100)
+        [self callInregistrareComanda];
 }
 
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index

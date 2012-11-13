@@ -130,8 +130,8 @@
                       masina.serieSasiu,
                       masina.cascoLa,
                       masina.localitate, 
-                      @"2002-09-05", // data permis
-                      @"nu", 
+                      asigurat.dataPermis,
+                      @"nu", // auto nou inmatriculat??
                       0, 
                       masina.cm3, 
                       masina.putere, 
@@ -150,7 +150,7 @@
                       [[UIDevice currentDevice] uniqueIdentifier],
                       masina.idIntern,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                      @"01", //self.CodCaen,
+                      ([asigurat.tipPersoana isEqualToString:@"juridica"] ? asigurat.codCaen : @"01"),
                       masina.categorieAuto,
                       masina.subcategorieAuto,
                       masina.serieCiv,

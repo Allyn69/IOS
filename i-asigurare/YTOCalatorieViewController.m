@@ -296,6 +296,15 @@
         if (btn.tag != i)
             [_btn setSelected:NO];
     }
+    
+    if (btn.tag == 1)
+        [self setSumaAsigurata:@"5.000-eur"];
+    else if (btn.tag == 2)
+        [self setSumaAsigurata:@"10.000-eur"];
+    else if (btn.tag == 3)
+        [self setSumaAsigurata:@"30.000-eur"];
+    else if (btn.tag == 4)
+        [self setSumaAsigurata:@"50.000-eur"];
 }
 
 - (IBAction)nrZileStepper_Changed:(id)sender

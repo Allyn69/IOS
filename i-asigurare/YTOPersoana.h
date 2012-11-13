@@ -54,4 +54,6 @@
 - (NSString *) toJSON;
 - (void) fromJSON:(NSString *)p;
 - (void) refresh;
++ (NSString *) getJsonPersoane:(NSMutableArray *) list;
+
 @end

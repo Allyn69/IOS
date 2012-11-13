@@ -46,6 +46,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{103, 48}, {135, 21}}</string>
 								<reference key="NSSuperview" ref="377443809"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="801544369"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -82,6 +83,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{227, 3}, {68, 68}}</string>
 								<reference key="NSSuperview" ref="377443809"/>
+								<reference key="NSWindow"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">5</int>
@@ -110,8 +112,9 @@
 							<object class="IBUIImageView" id="159205668">
 								<reference key="NSNextResponder" ref="377443809"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 11}, {189, 52}}</string>
+								<string key="NSFrameSize">{320, 68}</string>
 								<reference key="NSSuperview" ref="377443809"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="264837386"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<int key="IBUITag">4</int>
@@ -123,8 +126,9 @@
 								</object>
 							</object>
 						</array>
-						<string key="NSFrameSize">{300, 74}</string>
+						<string key="NSFrameSize">{320, 74}</string>
 						<reference key="NSSuperview" ref="577798035"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="159205668"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -140,11 +144,11 @@
 				</array>
 				<string key="NSFrameSize">{320, 75}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="377443809"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISelectionStyle">0</int>
-				<int key="IBUIAccessoryType">1</int>
 				<reference key="IBUIContentView" ref="377443809"/>
 			</object>
 		</array>
@@ -219,7 +223,7 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="NS.key.0">text-header-persoana.png</string>
-			<string key="NS.object.0">{189, 52}</string>
+			<string key="NS.object.0">{320, 68}</string>
 		</object>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>

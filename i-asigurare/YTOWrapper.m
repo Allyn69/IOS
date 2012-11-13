@@ -50,7 +50,7 @@
 
 + (void) saveAutoFromSetari:(Setari *)setari
 {
-    YTOAutovehicul * masina = [[YTOAutovehicul alloc] initWithGuid:[YTOUtils GenerateUUID]];
+  //  YTOAutovehicul * masina = [[YTOAutovehicul alloc] initWithGuid:[YTOUtils GenerateUUID]];
 }
 
 @end

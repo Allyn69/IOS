@@ -12,6 +12,7 @@
 #import "YTOValabilitateRCAViewController.h"
 #import "YTOTrimiteMesajViewController.h"
 #import "YTOFAQViewController.h"
+#import "YTOTermeniViewController.h"
 
 @interface YTOAlteleViewController ()
 
@@ -167,13 +168,19 @@
     else if (indexPath.row == 2)
     {
         YTOFAQViewController * aView = [[YTOFAQViewController alloc] init];
+        aView.navigationItem.title = @"Intrebari frecvente";
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 4)
     {
         YTOValabilitateRCAViewController * aView = [[YTOValabilitateRCAViewController alloc] init];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
-
+    }
+    else if (indexPath.row == 5)
+    {
+        YTOTermeniViewController * aView = [[YTOTermeniViewController alloc] init];
+        aView.navigationItem.title = @"Termeni si conditii";
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];        
     }
 }
 

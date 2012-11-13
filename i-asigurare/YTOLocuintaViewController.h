@@ -33,6 +33,7 @@
 - (IBAction)btnModeEvaluare_Clicked:(id)sender;
 
 - (void) initCells;
+- (void) initCustomValues;
 - (void) addBarButton;
 - (void) deleteBarButton;
 

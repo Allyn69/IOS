@@ -78,79 +78,33 @@
     YTOPersoana * pers1 = (YTOPersoana *)[listAsigurati objectAtIndex:0];
     
     NSString * xml = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-        "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-        "<soap:Body>"
-            "<CallCalculTravel xmlns=\"http://tempuri.org/\">"
-            "<user>vreaurca</user>"
-            "<password>123</password>"
-            "<tip_persoana>fizica</tip_persoana>"
-            "<udid>%@</udid>"
-            "<data_inceput>%@</data_inceput>"
-            "<tranzit>%@</tranzit>"
-            "<numar_zile>%d</numar_zile>"
-            "<tara_destinatie>%@</tara_destinatie>"
-            "<nationalitate>Romania</nationalitate>"
-            "<program_asigurare>%@</program_asigurare>"
-            "<scop_calatorie>%@</scop_calatorie>"
-            "<tip_calatorie>familie</tip_calatorie>"
-            "<jsonPersoane>%@</jsonPersoane>"
-            "<judet>%@</judet>"
-            "<localitate>%@</localitate>"
-            "<platforma>%@</platforma>"
-            "</CallCalculTravel>"
-        "</soap:Body>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<CallCalculTravel xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<tip_persoana>fizica</tip_persoana>"
+                      "<udid>%@</udid>"
+                      "<data_inceput>%@</data_inceput>"
+                      "<tranzit>%@</tranzit>"
+                      "<numar_zile>%d</numar_zile>"
+                      "<tara_destinatie>%@</tara_destinatie>"
+                      "<nationalitate>Romania</nationalitate>"
+                      "<program_asigurare>%@</program_asigurare>"
+                      "<scop_calatorie>%@</scop_calatorie>"
+                      "<tip_calatorie>%@</tip_calatorie>"
+                      "<jsonPersoane>%@</jsonPersoane>"
+                      "<judet>%@</judet>"
+                      "<localitate>%@</localitate>"
+                      "<platforma>%@</platforma>"
+                      "</CallCalculTravel>"
+                      "</soap:Body>"
                       "</soap:Envelope>",[[UIDevice currentDevice] uniqueIdentifier],
                       [formatter stringFromDate:dataInceput],
                       [oferta CalatorieTranzit],
-                      oferta.durataAsigurare, taraDestinatie, sumaAsigurata, scopCalatorie, [self getJsonPersoane:listAsigurati], pers1.judet, pers1.localitate,
+                      oferta.durataAsigurare, taraDestinatie, sumaAsigurata, scopCalatorie, (listAsigurati.count == 1 ? @"individual" : @"grup"), [YTOPersoana getJsonPersoane:listAsigurati], pers1.judet, pers1.localitate,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
     return xml;
-}
-
-- (NSString *) getJsonPersoane:(NSMutableArray *) list
-{
-    NSString * jsonText = @"[";
-    for (int i=0; i<listAsigurati.count; i++) {
-        YTOPersoana * p = (YTOPersoana *)[listAsigurati objectAtIndex:i];
-        
-        NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                               @"buna", @"stare_sanatate", 
-                               p.alteBoli, @"alte_boli",
-                               p.boliInterne, @"boli_interne",
-                               p.boliNeuro, @"boli_neuro",
-                               p.handicapLocomotor, @"grad_invaliditate",
-                               p.boliDefinitive, @"boli_definitive",
-                               p.boliAparatRespirator, @"boli_aparat_respirator",
-                               p.boliCardio, @"boli_cardio",
-                               @"28", @"varsta",
-                               p.elevStudent, @"elev",
-                               @"nu", @"sport_agrement",
-                               @"0", @"sa_bagaje",
-                               @"0", @"sa_echipament",
-                               p.nume, @"nume_asigurat",
-                               p.codUnic, @"cod_unic",
-                               p.adresa, @"adresa",
-                               p.idIntern, @"id_intern",
-                               p.judet, @"judet",
-                               p.localitate, @"localitate",
-                               nil];
-        
-        NSError * error;
-
-        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict 
-                                                           options:NSJSONWritingPrettyPrinted error:&error];
-        NSString * text = [[NSString alloc] initWithData:jsonData                                        
-                                                encoding:NSUTF8StringEncoding];
-        if (i == listAsigurati.count-1)
-            jsonText = [YTOUtils append:jsonText, text, nil];
-        else
-            jsonText = [YTOUtils append:jsonText, text, @",", nil];
-    }
-    jsonText = [YTOUtils append:jsonText, @"]", nil];
-    
-    //NSLog(@"%@", jsonText);
-    
-    return jsonText;
 }
 
 - (IBAction)calculeazaRCADupaAltaDurata
@@ -162,8 +116,8 @@
     [vwLoading setHidden:NO];
     [self startLoadingAnimantion];
     
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

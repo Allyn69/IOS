@@ -28,7 +28,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Calculator", @"Calculator");
-        self.tabBarItem.image = [UIImage imageNamed:@"menu-asigurari.png"];
     }
     return self;
 }
@@ -38,12 +37,7 @@
     [super viewDidLoad];
 
     [self initCells];
-    
-    oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
-    [self setModEvaluare:@"valoare-reala"];
-    _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
-    [self setDataInceput:_DataInceput];
-    //lblDataInceput.text = [YTOUtils formatDate:_DataInceput withFormat:@"dd.MM.yyyy"];
+    [self initCustomValues];
 }
 
 - (void)viewDidUnload
@@ -56,6 +50,22 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void) initCustomValues
+{
+    oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
+    oferta.moneda = @"eur";
+    [self setModEvaluare:@"valoare-reala"];
+    
+    YTOPersoana * prop = [YTOPersoana Proprietar];
+    if (prop)
+    {
+        [self setAsigurat:prop];
+    }
+    
+    _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
+    [self setDataInceput:_DataInceput];
 }
 
 #pragma mark - Table view data source
@@ -147,7 +157,7 @@
     if (indexPath.row == 1)
     {
         [self doneEditing];
-        // Daca exista masini salvate, afisam lista
+        // Daca exista locuinte salvate, afisam lista
         if ([YTOLocuinta Locuinte].count > 0)
         {
             YTOListaLocuinteViewController * aView = [[YTOListaLocuinteViewController alloc] init];
@@ -184,10 +194,15 @@
         oferta.tipAsigurare = 3;
         oferta.idAsigurat = asigurat.idIntern;
         oferta.obiecteAsigurate = [[NSMutableArray alloc] initWithObjects:locuinta.idIntern, nil];
-        oferta.numeAsigurare = [NSString stringWithFormat:@"Asigurare Locuinta, pentru %@, %d mp, %d RON", locuinta.tipLocuinta, locuinta.suprafataUtila, locuinta.sumaAsigurata];
+        oferta.numeAsigurare = [NSString stringWithFormat:@"Asigurare Locuinta, pentru %@, %d mp, %d %@", locuinta.tipLocuinta, locuinta.suprafataUtila, locuinta.sumaAsigurata, [oferta.moneda uppercaseString]];
+        
+        locuinta.idProprietar = asigurat.idIntern;
+        [locuinta updateLocuinta];
         
         YTOWebServiceLocuintaViewController * aView = [[YTOWebServiceLocuintaViewController alloc] init];
         aView.oferta = oferta;
+        aView.locuinta = locuinta;
+        aView.asigurat = asigurat;
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
 }
@@ -201,8 +216,9 @@
     if (indexPath.row == 4 || indexPath.row == 5)
     {
         [self addBarButton];
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" EUR" withString:@""];
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" LEI" withString:@""];
     }
-    
     // to do - [self showTooltip];
 }
 
@@ -242,12 +258,6 @@
         [self setSumaAsigurata:textField.text];
     else if (indexPath.row == 5)
         [self setSumaAsigurataRC:textField.text];
-//    else if (indexPath.row == 6)
-//        [self setEtaj:[textField.text intValue]];
-//    else if (indexPath.row == 7)
-//        [self setAnConstructie:[textField.text intValue]];
-//    else if (indexPath.row == 9)
-//        [self setSuprafata:[textField.text intValue]];
 }
 
 #pragma Methods
@@ -297,14 +307,14 @@
     
     NSArray *topLevelObjectsSA = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellSumaAsigurata = [topLevelObjectsSA objectAtIndex:0];
-    [(UILabel *)[cellSumaAsigurata viewWithTag:1] setText:@"Suma Asigurata"];
+    [(UILabel *)[cellSumaAsigurata viewWithTag:1] setText:@"Suma Asigurata (EUR)"];
 //    [(UITextField *)[cellSumaAsigurata viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellSumaAsigurata viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellSumaAsigurata];
     
     NSArray *topLevelObjectsSARC = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellSumaAsigurataRC = [topLevelObjectsSARC objectAtIndex:0];
-    [(UILabel *)[cellSumaAsigurataRC viewWithTag:1] setText:@"Suma Asigurata Raspundere Civila"];
+    [(UILabel *)[cellSumaAsigurataRC viewWithTag:1] setText:@"Suma Asigurata Raspundere Civila (EUR)"];
     //    [(UITextField *)[cellSumaAsigurataRC viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellSumaAsigurataRC viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellSumaAsigurataRC];
@@ -365,6 +375,16 @@
     lblCellP.text = a.tipLocuinta;
     ((UILabel *)[cellLocuinta viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@, %d mp", a.judet, a.localitate, a.suprafataUtila];
     locuinta = a;
+    
+    if (![locuinta.modEvaluare isEqualToString:@""])
+        [self setModEvaluare:locuinta.modEvaluare];
+    else [self setModEvaluare:@"valoare-reala"];
+    
+    if (locuinta.sumaAsigurata > 0)
+        [self setSumaAsigurata:[NSString stringWithFormat:@"%d",locuinta.sumaAsigurata]];
+    if (locuinta.sumaAsigurataRC > 0)
+        [self setSumaAsigurataRC:[NSString stringWithFormat:@"%d",locuinta.sumaAsigurataRC]];
+    
     if (locuinta.idProprietar.length > 0 && ![locuinta.idProprietar isEqualToString:asigurat.idIntern])
     {
         YTOPersoana * prop = [YTOPersoana getPersoana:locuinta.idProprietar];
@@ -383,12 +403,12 @@
 - (void) setSumaAsigurata:(NSString *)p
 {
     locuinta.sumaAsigurata = [p intValue];
-    [(UITextField *)[cellSumaAsigurata viewWithTag:2] setText:[NSString stringWithFormat:@"%.2f RON", [p floatValue]]];
+    [(UITextField *)[cellSumaAsigurata viewWithTag:2] setText:[NSString stringWithFormat:@"%.2f %@", [p floatValue], [oferta.moneda uppercaseString]]];
 }
 - (void) setSumaAsigurataRC:(NSString *)p
 {
     locuinta.sumaAsigurataRC = [p intValue];
-    [(UITextField *)[cellSumaAsigurataRC viewWithTag:2] setText:[NSString stringWithFormat:@"%.2f RON", [p floatValue]]];
+    [(UITextField *)[cellSumaAsigurataRC viewWithTag:2] setText:[NSString stringWithFormat:@"%.2f %@", [p floatValue], [oferta.moneda uppercaseString]]];
 }
 
 - (IBAction)btnModeEvaluare_Clicked:(id)sender
@@ -404,6 +424,14 @@
         if (btn.tag != i)
             [_btn setSelected:NO];
     }
+    if (btn.tag == 1)
+        [self setModEvaluare:@"valoare-reala"];
+    else if (btn.tag == 2)
+        [self setModEvaluare:@"valoare-piata"];
+    else if (btn.tag == 3)
+        [self setModEvaluare:@"evaluare-banca"];
+    else if (btn.tag == 4)
+        [self setModEvaluare:@"valoare-inlocuire"];
 }
 
 - (void) setModEvaluare:(NSString *)p

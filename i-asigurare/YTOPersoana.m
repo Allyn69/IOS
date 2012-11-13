@@ -278,4 +278,49 @@
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate refreshPersoane];
 }
+
++ (NSString *) getJsonPersoane:(NSMutableArray *) list
+{
+    NSString * jsonText = @"[";
+    for (int i=0; i<list.count; i++) {
+        YTOPersoana * p = (YTOPersoana *)[list objectAtIndex:i];
+        
+        NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+                               @"buna", @"stare_sanatate",
+                               p.alteBoli, @"alte_boli",
+                               p.boliInterne, @"boli_interne",
+                               p.boliNeuro, @"boli_neuro",
+                               p.handicapLocomotor, @"grad_invaliditate",
+                               p.boliDefinitive, @"boli_definitive",
+                               p.boliAparatRespirator, @"boli_aparat_respirator",
+                               p.boliCardio, @"boli_cardio",
+                               @"28", @"varsta",
+                               p.elevStudent, @"elev",
+                               @"nu", @"sport_agrement",
+                               @"0", @"sa_bagaje",
+                               @"0", @"sa_echipament",
+                               p.nume, @"nume_asigurat",
+                               p.codUnic, @"cod_unic",
+                               p.adresa, @"adresa",
+                               p.idIntern, @"id_intern",
+                               p.judet, @"judet",
+                               p.localitate, @"localitate",
+                               p.serieAct, @"pasaport_ci",
+                               nil];
+        
+        NSError * error;
+        
+        NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                           options:NSJSONWritingPrettyPrinted error:&error];
+        NSString * text = [[NSString alloc] initWithData:jsonData
+                                                encoding:NSUTF8StringEncoding];
+        if (i == list.count-1)
+            jsonText = [YTOUtils append:jsonText, text, nil];
+        else
+            jsonText = [YTOUtils append:jsonText, text, @",", nil];
+    }
+    jsonText = [YTOUtils append:jsonText, @"]", nil];
+    
+    return jsonText;
+}
 @end

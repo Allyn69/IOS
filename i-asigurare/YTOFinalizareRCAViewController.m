@@ -24,7 +24,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Finalizare comanda", @"Finalizare comanda");
-        self.tabBarItem.image = [UIImage imageNamed:@"menu-asigurari.png"];
     }
     return self;
 }
@@ -195,6 +194,7 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
+    // to do !
 //    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
 //    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
@@ -361,7 +361,7 @@
 - (NSString *) XmlRequest
 {    
     NSDictionary * infoDict = (NSDictionary *)[(NSMutableArray *)oferta.detaliiAsigurare objectAtIndex:0];
-    NSString * bonusMalus = [NSString stringWithFormat:@"%@: %@", [infoDict objectForKey:@"Key"], [infoDict objectForKey:@"Value"]];
+    NSString * bonusMalus = [NSString stringWithFormat:@"Bonus/Malus: %@", [infoDict objectForKey:@"BonusMalus"]];
     
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 							 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
@@ -435,12 +435,13 @@
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
 	
-	if (succes && modPlata == 2) {
-        [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:2];
+    // daca este pentru plata ONLINE
+	if (succes && modPlata == 3) {
+        [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:3];
     }
     else if (succes) {
         if (idOferta == nil || [idOferta isEqualToString:@""])
-            [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:YES withButtonIndex:3];
+            [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:YES withButtonIndex:2];
         else {
             oferta.idExtern = [idOferta intValue];
             
@@ -453,7 +454,7 @@
         }
 	}
 	else {
-        [self showCustomAlert:@"Finalizare comanda RCA" withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:3];
+        [self showCustomAlert:@"Finalizare comanda RCA" withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:4];
 	}
    
 }
@@ -465,7 +466,7 @@
 //	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 //	[alertView show];
     [self hideCustomLoading];
-    [self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:3];
+    [self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
 }
 
 #pragma mark NSXMLParser Methods
@@ -563,7 +564,7 @@
     }
     else if (btn.tag == 11)
         [self.navigationController popToRootViewControllerAnimated:YES];
-    else if (btn.tag == 2)
+    else if (btn.tag == 3)
     {
         // to do plata ONLINE
     }

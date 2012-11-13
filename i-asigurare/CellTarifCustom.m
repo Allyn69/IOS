@@ -124,9 +124,9 @@
         UILabel * lblDunga = [[UILabel alloc] initWithFrame:CGRectMake(0, 69, 320, 1)];
         lblDunga.backgroundColor = [YTOUtils colorFromHexString:@"#dcdcdc"];
         
-        UIButton *btnAlegePrima = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnAlegePrima.frame = CGRectMake(215, 5, 104, 40);
-        [btnAlegePrima setImage:[UIImage imageNamed:@"adauga-in-cos.png"] forState:UIControlStateNormal];
+        btnComanda = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnComanda.frame = CGRectMake(215, 5, 104, 40);
+        [btnComanda setImage:[UIImage imageNamed:@"adauga-in-cos.png"] forState:UIControlStateNormal];
         
         UILabel * lblAlegePrima = [[UILabel alloc] initWithFrame:CGRectMake(250, 5, 65, 34)];
         lblAlegePrima.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:12];
@@ -147,7 +147,7 @@
         [self.contentView addSubview:lblCol4];
         [self.contentView addSubview:imgSport];
         [self.contentView addSubview:lblDunga];
-        [self.contentView addSubview:btnAlegePrima];
+        [self.contentView addSubview:btnComanda];
         [self.contentView addSubview:lblAlegePrima];
     }
     return self;

@@ -33,6 +33,7 @@
 -(id)initWithGuid:(NSString*)guid;
 - (void) addOferta;
 - (void) updateOferta;
+- (void) deleteOferta;
 + (YTOOferta *) getOferta:(NSString *)idIntern;
 + (NSMutableArray *) Oferte;
 
@@ -51,5 +52,26 @@
 - (void)setCalatorieDestinatie:(NSString *)value;
 - (void)setCalatorieTranzit:(NSString *)value;
 - (void)setCalatorieProgram:(NSString *)value;
+
+// LOCUINTA key-values
+- (NSString *)LocuintaSumaAsigurata;
+- (NSString *)LocuintaFransiza;
+- (NSString *)LocuintaTipProdus;
+- (NSString *)LocuintaSABunuriValoare;
+- (NSString *)LocuintaSABunuriGenerale;
+- (NSString *)LocuintaSARaspundere;
+- (NSString *)LocuintaRiscFurt;
+- (NSString *)LocuintaRiscApa;
+- (NSString *)LocuintaConditii;
+
+- (void) setLocuintaSA:(NSString *)value;
+- (void) setLocuintaFransiza:(NSString *)value;
+- (void) setLocuintaTipProdus:(NSString *)value;
+- (void) setLocuintaSABunuriValoare:(NSString *)value;
+- (void) setLocuintaSABunuriGenerale:(NSString *)value;
+- (void) setLocuintaSARaspundere:(NSString *)value;
+- (void) setLocuintaRiscFurt:(NSString *)value;
+- (void) setLocuintaRiscApa:(NSString *)value;
+- (void) setLocuintaConditii:(NSString *)value;
 
 @end

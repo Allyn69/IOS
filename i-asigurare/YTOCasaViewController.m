@@ -57,6 +57,7 @@
             [self setLocalitate:proprietar.localitate];
             [self setAdresa:proprietar.adresa];
         }
+        percentCompletedOnLoad = [locuinta CompletedPercent];
     }
     else {
         [self load:locuinta];
@@ -282,8 +283,12 @@
             if (locuinta._isDirty)
                 [locuinta updateLocuinta];
             else
-                [locuinta addLocuinta];
-            
+            {
+                NSLog(@"%.2f", [locuinta CompletedPercent]);
+                if ([locuinta CompletedPercent] > percentCompletedOnLoad)
+                    [locuinta addLocuinta];
+            }
+        
         
         //}
     }

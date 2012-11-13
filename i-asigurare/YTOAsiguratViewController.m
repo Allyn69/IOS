@@ -372,7 +372,9 @@
     else if (asigurat._isDirty)
         [asigurat updatePersoana];
     else
+    {
         [asigurat addPersoana];
+    }
 }
 
 - (void) btnSave_Clicked
@@ -467,16 +469,16 @@
     {
         UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
         imgTextHeader.image = [UIImage imageNamed:@"text-header-profil.png"];
-        UIButton * btn = (UIButton *)[cellAsigurat viewWithTag:5];
-        [btn setBackgroundImage:[UIImage imageNamed:@"icon-foto-person-profil.png"] forState:UIControlStateNormal];
+        //UIButton * btn = (UIButton *)[cellAsigurat viewWithTag:5];
+        //[btn setBackgroundImage:[UIImage imageNamed:@"icon-foto-person-profil.png"] forState:UIControlStateNormal];
         lblDespreMine.text = @"Despre mine";
         lblFirmaMea.text = @"Firma mea";
         imgTipPersoana.image = [UIImage imageNamed:@"profil-pf.png"];
     }
     else
     {
-        UIButton * btn = (UIButton *)[cellAsigurat viewWithTag:5];
-        [btn setBackgroundImage:[UIImage imageNamed:@"icon-foto-person.png"] forState:UIControlStateNormal];
+        //UIButton * btn = (UIButton *)[cellAsigurat viewWithTag:5];
+        //[btn setBackgroundImage:[UIImage imageNamed:@"icon-foto-person.png"] forState:UIControlStateNormal];
         lblDespreMine.text = @"Persoana fizica";
         lblFirmaMea.text = @"Persoana juridica";
         imgTipPersoana.image = [UIImage imageNamed:@"persoana-pf.png"];

@@ -17,10 +17,15 @@
     IBOutlet UITableView * tableView;
 
     UITableViewCell * cellHeader;
+    
     UITableViewCell * cellAsigurareRca;
     UITableViewCell * cellAsigurareCalatorie;
     UITableViewCell * cellAsigurareLocuinta;
     UITableViewCell * cellAsigurareCasco;
+    
+    UITableViewCell * cellRow1;
+    UITableViewCell * cellRow2;
+    UITableViewCell * cellFooter;
 }
 
 - (void)showRCAView;

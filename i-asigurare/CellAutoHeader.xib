@@ -45,6 +45,8 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{227, 3}, {68, 68}}</string>
 								<reference key="NSSuperview" ref="844918565"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">5</int>
@@ -63,10 +65,6 @@
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MC41AA</bytes>
 								</object>
-								<object class="NSCustomResource" key="IBUINormalImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">icon-foto.png</string>
-								</object>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<int key="type">2</int>
 									<double key="pointSize">15</double>
@@ -80,8 +78,9 @@
 							<object class="IBUIImageView" id="85701368">
 								<reference key="NSNextResponder" ref="844918565"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{20, 11}, {189, 52}}</string>
+								<string key="NSFrameSize">{320, 68}</string>
 								<reference key="NSSuperview" ref="844918565"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="872561949"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -92,8 +91,9 @@
 								</object>
 							</object>
 						</array>
-						<string key="NSFrameSize">{300, 74}</string>
+						<string key="NSFrameSize">{320, 74}</string>
 						<reference key="NSSuperview" ref="858352818"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="85701368"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
@@ -109,11 +109,11 @@
 				</array>
 				<string key="NSFrameSize">{320, 75}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="844918565"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISelectionStyle">0</int>
-				<int key="IBUIAccessoryType">1</int>
 				<reference key="IBUIContentView" ref="844918565"/>
 			</object>
 		</array>
@@ -178,10 +178,10 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="icon-foto.png">{72, 72}</string>
-			<string key="text-header-masina.png">{189, 52}</string>
-		</dictionary>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">text-header-masina.png</string>
+			<string key="NS.object.0">{320, 68}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>

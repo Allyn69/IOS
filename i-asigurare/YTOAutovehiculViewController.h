@@ -28,24 +28,28 @@
     NSMutableArray * tipCombustibil;
     NSMutableArray * destinatiiAuto;
 
-    UITableViewCell * cellAutoHeader;
-    UITableViewCell * cellMarcaAuto;
-    UITableViewCell * cellModelAuto;
-    UITableViewCell * cellJudetLocalitate;
+    UITableViewCell          * cellAutoHeader;
+    IBOutlet UITableViewCell * cellInfoAlerte;
+    UITableViewCell          * cellMarcaAuto;
+    UITableViewCell          * cellModelAuto;
+    UITableViewCell          * cellJudetLocalitate;
     IBOutlet UITableViewCell * cellSubcategorieAuto;
-    UITableViewCell * cellNrInmatriculare;
-    UITableViewCell * cellSerieSasiu;
-    UITableViewCell * cellCm3;
-    UITableViewCell * cellPutere;
-    UITableViewCell * cellNrLocuri;
-    UITableViewCell * cellMasaMaxima;
-    UITableViewCell * cellAnFabricatie;
-    UITableViewCell * cellSerieCiv;
+    UITableViewCell          * cellNrInmatriculare;
+    UITableViewCell          * cellSerieSasiu;
+    UITableViewCell          * cellCm3;
+    UITableViewCell          * cellPutere;
+    UITableViewCell          * cellNrLocuri;
+    UITableViewCell          * cellMasaMaxima;
+    UITableViewCell          * cellAnFabricatie;
+    UITableViewCell          * cellSerieCiv;
     IBOutlet UITableViewCell * cellDestinatieAuto;
     IBOutlet UITableViewCell * cellCombustibil;
-    UITableViewCell * cellInLeasing;
-    UITableViewCell * cellLeasingFirma;
-    UITableViewCell * cellSC;
+    UITableViewCell          * cellInLeasing;
+    UITableViewCell          * cellLeasingFirma;
+    UITableViewCell          * cellSC;
+    
+    float percentCompletedOnLoad;
+    BOOL  selectatInfoMasina;
 }
 
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;
@@ -76,6 +80,7 @@
 - (IBAction)checkboxSelected:(id)sender;
 - (IBAction)checkboxCombustibilSelected:(id)sender;
 - (IBAction)checkboxDestinatieSelected:(id)sender;
+- (IBAction)btnInfoAlerte_OnClick:(id)sender;
 
 - (void) showNomenclator;
 - (IBAction) hideNomenclator;

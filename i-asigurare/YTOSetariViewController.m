@@ -69,8 +69,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 6;
 }
 
@@ -81,14 +79,12 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0)
-        return 35;
+        return 38;
     return 60;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return 1;
 }
 
@@ -182,6 +178,18 @@
         cell = cellComenzileMele;
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-asigurarile-mele.png"];
         ((UILabel *)[cell viewWithTag:2]).text = @"ASIGURARILE MELE";
+        
+        NSMutableArray * asigurari = [YTOOferta Oferte];
+        if (asigurari.count > 0)
+        {
+            ((UILabel *)[cell viewWithTag:3]).text = [NSString stringWithFormat:@"%d %@", asigurari.count, (asigurari.count == 1 ? @"asigurare" : @"asigurari" )];
+            ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#4b4b4b"];
+        }
+        else
+        {
+            ((UILabel *)[cell viewWithTag:3]).text = @"0 asigurari";
+            ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#b3b3b3"];
+        }
     }
     cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     return cell;
@@ -269,8 +277,8 @@
 - (void) initCells
 {
     cellHeader = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 35)];
-    UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 59)];
-    imgHeader.image = [UIImage imageNamed:@"logo.png"];
+    UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 68)];
+    imgHeader.image = [UIImage imageNamed:@"header-first-screen.png"];
     [cellHeader addSubview:imgHeader];
     
     NSArray *topLevelObjects1 = [[NSBundle mainBundle] loadNibNamed:@"CellView_Setari" owner:self options:nil];
@@ -463,6 +471,11 @@
             proprietar.codUnic = [jsonItem objectForKey:@"CodUnic"];
             proprietar.telefon = [jsonItem objectForKey:@"Telefon"];
             proprietar.email =[jsonItem objectForKey:@"Email"];
+            proprietar.judet = [jsonItem objectForKey:@"JudetDR"];
+            proprietar.localitate = [jsonItem objectForKey:@"LocalitateDR"];
+            proprietar.adresa = [jsonItem objectForKey:@"Strada"];
+            
+            //NSLog(@"%@", [jsonItem objectForKey:@"DataPermisDR"]);
             
             if (!proprietar._isDirty)
                 [proprietar addPersoana];

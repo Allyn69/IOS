@@ -30,7 +30,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Lista locuinte", @"Lista locuinte");
-        self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
 }
@@ -56,7 +55,15 @@
     }
     else if ([controller isKindOfClass:[YTOSetariViewController class]])
     {
-        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        [vwEmpty setHidden:YES];
+        UIBarButtonItem *btnEdit;
+        if (editingMode)
+            btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(callEditItems)];
+        else
+            btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
     }
 }
@@ -69,8 +76,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -82,30 +87,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return listaLocuinte.count;
 }
-
-//- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:@"CellView_String"];
-//    if (cell == nil) {
-//        // Create a temporary UIViewController to instantiate the custom cell.
-//        UIViewController *temporaryController = [[UIViewController alloc] initWithNibName:@"CellView_String" bundle:nil];
-//        // Grab a pointer to the custom cell.
-//        cell = (YTOCellView_String *)temporaryController.view;
-//        // Release the temporary UIViewController.
-//    }
-//    
-//    return cell;
-//}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -130,7 +118,7 @@
     cell.textLabel.text = loc.tipLocuinta;
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@, %d mp", loc.judet, loc.localitate, loc.suprafataUtila];
     
-    if (indexPath.row % 2 != 0) {
+    if (indexPath.row % 2 != 0 && indexPath.row != 0) {
         CGRect frame = CGRectMake(0, 0, 320, 60);
         UIView *bgColor = [[UIView alloc] initWithFrame:frame];
         [cell addSubview:bgColor];

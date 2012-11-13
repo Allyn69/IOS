@@ -98,6 +98,30 @@
     }
 }
 
+- (void) deleteOferta
+{
+    sqlite3 *database;
+    sqlite3_stmt *deleteStmt = nil;
+    
+    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK)
+    {
+        
+        if(deleteStmt == nil) {
+            NSString *delete = [NSString stringWithFormat:@"DELETE FROM Oferta WHERE IdIntern='%@'", self.idIntern];
+            
+            if(sqlite3_prepare_v2(database, [delete UTF8String], -1, &deleteStmt, NULL) != SQLITE_OK)
+                NSAssert1(0, @"Error while creating delete statement. '%s'", sqlite3_errmsg(database));
+        }
+        
+        if(SQLITE_DONE != sqlite3_step(deleteStmt))
+            NSAssert1(0, @"Error while deleting data. '%s'", sqlite3_errmsg(database));
+        else {
+            sqlite3_finalize(deleteStmt);
+            sqlite3_close(database);
+        }
+    }
+}
+
 + (YTOOferta *) getOferta:(NSString *)idIntern
 {
     YTOOferta * oferta = [[YTOOferta alloc] init];
@@ -261,6 +285,97 @@
 - (void)setCalatorieProgram:(NSString *)value
 {
     [self.detaliiAsigurare setObject:value forKey:@"SumaAsigurata"];
+}
+
+#pragma LOCUINTA
+- (NSString *)LocuintaSumaAsigurata
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"SumaAsigurata"];
+    return x;
+}
+- (void) setLocuintaSA:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"SumaAsigurata"];
+}
+
+- (NSString *)LocuintaFransiza
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"Fransiza"];
+    return x;
+}
+- (void) setLocuintaFransiza:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"Fransiza"];
+}
+
+- (NSString *)LocuintaTipProdus
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"TipProdus"];
+    return x;
+}
+- (void) setLocuintaTipProdus:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"TipProdus"];
+}
+
+- (NSString *)LocuintaSABunuriValoare
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"SABunuriValoare"];
+    return x;
+}
+- (void) setLocuintaSABunuriValoare:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"SABunuriValoare"];
+}
+
+- (NSString *)LocuintaSABunuriGenerale
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"SABunuriGenerale"];
+    return x;
+}
+- (void) setLocuintaSABunuriGenerale:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"SABunuriGenerale"];
+}
+
+- (NSString *)LocuintaSARaspundere
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"SARaspundere"];
+    return x;
+}
+- (void) setLocuintaSARaspundere:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"SARaspundere"];
+}
+
+- (NSString *)LocuintaRiscFurt
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"RiscFurt"];
+    return x;
+}
+- (void) setLocuintaRiscFurt:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"RiscFurt"];
+}
+
+- (NSString *)LocuintaRiscApa
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"RiscApaConducta"];
+    return x;
+}
+- (void) setLocuintaRiscApa:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"RiscApaConducta"];
+}
+
+- (NSString *)LocuintaConditii
+{
+    NSString * x = [self.detaliiAsigurare objectForKey:@"LinkConditii"];
+    return x;
+}
+- (void) setLocuintaConditii:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"LinkConditii"];
 }
 
 @end

@@ -46,6 +46,7 @@ static NSString * ColorOrange = @"#f15a24";
 + (NSDate *) getDataSfarsitPolita:(NSDate *)dataInceput andDurataInLuni:(int)durata;
 + (NSDate *) getDataSfarsitPolita:(NSDate *)dataInceput andDurataInZile:(int)durata;
 + (int) getAnCurent;
++ (int) getAnFromDate:(NSDate *)date;
 + (NSString *) append:(id) first, ...;
 + (UIImage *)scaleImage:(UIImage *) image maxWidth:(float) maxWidth maxHeight:(float) maxHeight;
 
@@ -54,5 +55,7 @@ static NSString * ColorOrange = @"#f15a24";
 
 + (NSMutableArray *) GETCompaniiAsigurare;
 + (NSMutableArray *) GETTipAlertaList;
+
++ (NSString *) getHTMLWithStyle:(NSString *)html;
 
 @end

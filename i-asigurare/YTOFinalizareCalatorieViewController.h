@@ -10,7 +10,6 @@
 #import "PickerVCSearch.h"
 #import "YTOOferta.h"
 #import "YTOPersoana.h"
-#import "YTOAutovehicul.h"
 
 @interface YTOFinalizareCalatorieViewController : UIViewController<NSXMLParserDelegate, UIAlertViewDelegate,UITableViewDelegate, UITableViewDataSource, PickerVCSearchDelegate>
 {
@@ -28,18 +27,16 @@
     
     BOOL goingBack;
     
-    NSString * judetLivrare;
-    NSString * localitateLivrare;
-    NSString * adresaLivrare;
+    NSMutableArray * listCells;
     NSString * telefonLivrare;
     NSString * emailLivrare;
     int modPlata;
     
-   	NSMutableData * capturedCharactes;
+   	NSMutableData   * capturedCharactes;
 	NSMutableString * currentElementValue;
-	NSString    * responseMessage;
-	NSString	* idOferta;
-	NSString    * mesajFinal;
+	NSString        * responseMessage;
+	NSString        * idOferta;
+	NSString        * mesajFinal;
     
     IBOutlet UIImageView * imgError;
     IBOutlet UIView      * vwCustomAlert;
@@ -51,17 +48,15 @@
     IBOutlet UILabel     * lblCustomAlertNO;
 }
 
-@property (nonatomic, retain) YTOOferta *       oferta;
-@property (nonatomic, retain) YTOPersoana *     asigurat;
-@property (nonatomic, retain) YTOAutovehicul *  masina;
-@property (nonatomic, retain) NSMutableData * responseData;
+@property (nonatomic, retain) YTOOferta         * oferta;
+@property (nonatomic, retain) NSMutableArray    * listAsigurati;
+@property (nonatomic, retain) NSMutableData     * responseData;
 
 - (void) initCells;
 - (void) addBarButton;
 - (void) deleteBarButton;
-- (void) setJudet:(NSString *)judet;
-- (void) setLocalitate:(NSString *)localitate;
-- (void) setAdresa:(NSString *)adresa;
+
+- (void) setSerieAct:(NSString *)serie forIndex:(int)index;
 - (void) setEmail:(NSString *)email;
 - (void) setTelefon:(NSString *)telefon;
 - (void) showListaJudete:(NSIndexPath *)index;

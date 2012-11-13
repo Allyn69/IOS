@@ -73,7 +73,15 @@
     }
     else if ([controller isKindOfClass:[YTOSetariViewController class]])
     {
-        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        [vwEmpty setHidden:YES];
+        UIBarButtonItem *btnEdit;
+        if (editingMode)
+            btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(callEditItems)];
+        else
+            btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
     }
 }
@@ -178,7 +186,7 @@
     cell.textLabel.text = [p.nume uppercaseString];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", p.judet, p.localitate];
     
-    if (indexPath.row % 2 != 0) {
+    if (indexPath.row % 2 != 0 && indexPath.row != 0) {
         CGRect frame = CGRectMake(0, 0, 320, 60);
         UIView *bgColor = [[UIView alloc] initWithFrame:frame];
         [cell addSubview:bgColor];
@@ -188,45 +196,6 @@
     
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 
@@ -241,19 +210,37 @@
            
            thisCell.accessoryType = UITableViewCellAccessoryCheckmark;
            //add object in an array
-           [listaAsiguratiSelectati addObject:p];
-           [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", indexPath.row]];
-           
-           [vwInfoCalatorie setHidden:NO];
-           activePersoana = p;
-           [lblPersoanaActiva setText:[NSString stringWithFormat:@"Despre %@", p.nume]];
-           [self loadInfoCalatorie];
+
+           BOOL exista = NO;
+           for (int i=0; i< listaAsiguratiSelectati.count; i++)
+           {
+               YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
+               if ([ps.idIntern isEqualToString:p.idIntern])
+                   exista = YES;
+               break;
+           }
+           if (!exista)
+           {
+               [listaAsiguratiSelectati addObject:p];
+               [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+               
+               [vwInfoCalatorie setHidden:NO];
+               activePersoana = p;
+               [lblPersoanaActiva setText:[NSString stringWithFormat:@"Despre %@", p.nume]];
+               [self loadInfoCalatorie];
+           }
        }
        else{
            
            thisCell.accessoryType = UITableViewCellAccessoryNone;
            //remove the object at the index from array
-           [listaAsiguratiSelectati removeObject:p];
+           for (int i=0; i< listaAsiguratiSelectati.count; i++)
+           {
+               YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
+               if ([ps.idIntern isEqualToString:p.idIntern])
+                   [listaAsiguratiSelectati removeObjectAtIndex:i];
+               break;
+           }
            [listAsiguratiIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
        }
    }

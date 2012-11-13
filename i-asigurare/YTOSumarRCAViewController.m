@@ -23,7 +23,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Sumar RCA", @"Sumar RCA");
-        self.tabBarItem.image = [UIImage imageNamed:@"menu-asigurari.png"];
     }
     return self;
 }

@@ -38,7 +38,10 @@
     [super viewDidLoad];
 
     goingBack = YES;
+    selectatInfoMasina = YES;
+    
     [self initCells];
+    
     [self loadCategorii];
     [self loadTipCombustibil];
     [self loadDestinatieAuto];
@@ -59,6 +62,8 @@
             [self setJudet:proprietar.judet];
             [self setLocalitate:proprietar.localitate];
         }
+        
+        percentCompletedOnLoad = [autovehicul CompletedPercent];
     }
     else {
         [self load:autovehicul];
@@ -97,17 +102,19 @@
     //#warning Incomplete method implementation.
     // Return the number of rows in the section.
     if ([autovehicul.inLeasing isEqualToString:@"da"])
-        return 18;
-    return 17;
+        return 19;
+    return 18;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0)
         return 78;
-    else if (indexPath.row == 3 || indexPath.row == 13 || indexPath.row == 14)
+    else if (indexPath.row == 1)
+        return 30;
+    else if (indexPath.row == 4 || indexPath.row == 14 || indexPath.row == 15)
         return 100;
-    else if (indexPath.row == 15)
+    else if (indexPath.row == 16)
         return 47;
     return 60;
 }
@@ -120,22 +127,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell * cell;
     if (indexPath.row == 0)       cell = cellAutoHeader;
-    else if (indexPath.row == 1)  cell = cellMarcaAuto;
-    else if (indexPath.row == 2)  cell = cellModelAuto;
-    else if (indexPath.row == 3)  cell = cellSubcategorieAuto;
-    else if (indexPath.row == 4)  cell =  cellJudetLocalitate;
-    else if (indexPath.row == 5)  cell = cellNrInmatriculare;
-    else if (indexPath.row == 6)  cell = cellSerieSasiu;
-    else if (indexPath.row == 7)  cell = cellCm3;
-    else if (indexPath.row == 8)  cell = cellPutere;
-    else if (indexPath.row == 9)  cell = cellNrLocuri;
-    else if (indexPath.row == 10) cell = cellMasaMaxima;
-    else if (indexPath.row == 11) cell = cellAnFabricatie;
-    else if (indexPath.row == 12) cell = cellSerieCiv;
-    else if (indexPath.row == 13) cell = cellDestinatieAuto;
-    else if (indexPath.row == 14) cell = cellCombustibil;
-    else if (indexPath.row == 15) cell = cellInLeasing;
-    else if (indexPath.row == 16 && [autovehicul.inLeasing isEqualToString:@"da"]) cell = cellLeasingFirma;
+    else if (indexPath.row == 1)  cell = cellInfoAlerte;
+    else if (indexPath.row == 2)  cell = cellMarcaAuto;
+    else if (indexPath.row == 3)  cell = cellModelAuto;
+    else if (indexPath.row == 4)  cell = cellSubcategorieAuto;
+    else if (indexPath.row == 5)  cell =  cellJudetLocalitate;
+    else if (indexPath.row == 6)  cell = cellNrInmatriculare;
+    else if (indexPath.row == 7)  cell = cellSerieSasiu;
+    else if (indexPath.row == 8)  cell = cellCm3;
+    else if (indexPath.row == 9)  cell = cellPutere;
+    else if (indexPath.row == 10)  cell = cellNrLocuri;
+    else if (indexPath.row == 11) cell = cellMasaMaxima;
+    else if (indexPath.row == 12) cell = cellAnFabricatie;
+    else if (indexPath.row == 13) cell = cellSerieCiv;
+    else if (indexPath.row == 14) cell = cellDestinatieAuto;
+    else if (indexPath.row == 15) cell = cellCombustibil;
+    else if (indexPath.row == 16) cell = cellInLeasing;
+    else if (indexPath.row == 17 && [autovehicul.inLeasing isEqualToString:@"da"]) cell = cellLeasingFirma;
     else return cellSC;
     
     if (indexPath.row % 2 != 0) {
@@ -149,52 +157,13 @@
     return cell;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 #pragma mark - Table view delegate
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
     [self doneEditing];
-    if (indexPath.row == 1) {
+    if (indexPath.row == 2) {
         [self showListaMarciAuto:indexPath];
     }    
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 5) {
         [self showListaJudete:indexPath];
     }
 }
@@ -203,23 +172,23 @@
 {
     [self doneEditing];
     
-    if (indexPath.row == 1) {
+    if (indexPath.row == 2) {
         [self showListaMarciAuto:indexPath];
     }    
-    else if (indexPath.row == 4) {
+    else if (indexPath.row == 5) {
         [self showListaJudete:indexPath];
     }
-    else if (indexPath.row == 3)
+    else if (indexPath.row == 4)
     {
 //        _nomenclatorTip = kCategoriiAuto;
 //        [self showNomenclator];
     }
-    else if (indexPath.row == 13)
+    else if (indexPath.row == 14)
     {
         _nomenclatorTip = kDestinatieAuto;
         [self showNomenclator];
     }
-    else if (indexPath.row == 14)
+    else if (indexPath.row == 15)
     {
 //        _nomenclatorTip = kTipCombustibil;
 //        [self showNomenclator];
@@ -238,40 +207,40 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row != 0 || indexPath.row != 1 || indexPath.row != 4 || indexPath.row != 3 || indexPath.row != 13 || indexPath.row != 14)
+    if (indexPath.row != 0 || indexPath.row != 2 || indexPath.row != 4 || indexPath.row != 5 || indexPath.row != 14 || indexPath.row != 15)
     {
         [self addBarButton];
     }
 
-    if (indexPath.row == 2)     // Model Auto
+    if (indexPath.row == 3)     // Model Auto
         [self showTooltip:@"Introdu modelul auto. Ex. Logan, Golf, Astra"];
-    if (indexPath.row == 5)     // Nr Inmatriculare
+    if (indexPath.row == 6)     // Nr Inmatriculare
       [self showTooltip:@"Daca masina este in vederea inmatricularii, introduceti -."];
-    else if (indexPath.row == 6)     // Serie Sasiu
+    else if (indexPath.row == 7)     // Serie Sasiu
       [self showTooltip:@"Introdu corect seria de sasiu pentru obtinerea tarifelor RCA reale. Vezi talon pozitia E (model nou) sau pozitia 3 (model vechi)."];
-    else if (indexPath.row == 7)     // Cm3
+    else if (indexPath.row == 8)     // Cm3
     {
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" cm3" withString:@""];
         [self showTooltip:@"Vezi certificat inmatriculare pozitia P.1 (model nou) sau pozitia 17 (model vechi)."];
     }
-    else if (indexPath.row == 8)    // Putere
+    else if (indexPath.row == 9)    // Putere
     {
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" kW" withString:@""];
         [self showTooltip:@"Vezi certificat inmatriculare pozitia P.2 (model nou) sau pozitia 17 (model vechi)."];
     }
-    else if (indexPath.row == 9)     // Numar Locuri
+    else if (indexPath.row == 10)     // Numar Locuri
       [self showTooltip:@"Vezi certificat inmatriculare pozitia S.1 (model nou) sau pozitia 13 (model vechi)."];
-    else if (indexPath.row == 10)    // Masa maxima
+    else if (indexPath.row == 11)    // Masa maxima
     {
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" Kg" withString:@""];        
         [self showTooltip:@"Vezi certificat inmatriculare pozitia F.1 (model nou) sau pozitia 11 (model vechi)."];
     }
-    else if (indexPath.row == 11)    // An fabricatie
+    else if (indexPath.row == 12)    // An fabricatie
        [self showTooltip:@"Vezi certificat inmatriculare pozitia B (model nou) sau pozitia 15 (model vechi)."];
-    else if (indexPath.row == 12)   // Serie CIV
+    else if (indexPath.row == 13)   // Serie CIV
       [self showTooltip:@"Vezi certificat inmatriculare pozitia X (model nou) sau pozitia 4 (model vechi)."];
     
-    else if (indexPath.row == 16) // Denumire Firma Leasing
+    else if (indexPath.row == 17) // Denumire Firma Leasing
       [self showTooltip:@"Daca masina este in leasing, introdu numele firmei de leasing."];  
 }
 
@@ -328,25 +297,25 @@
     
 //    [self setModel:textField.text];
     
-    if (indexPath.row == 2) // Model auto
+    if (indexPath.row == 3) // Model auto
         [self setModel:textField.text];
-    else if (indexPath.row == 5)     // Nr Inmatriculare
+    else if (indexPath.row == 6)     // Nr Inmatriculare
         [self setNrInmatriculare:textField.text];
-    else if (indexPath.row == 6)     // Serie Sasiu
+    else if (indexPath.row == 7)     // Serie Sasiu
         [self setSerieSasiu:textField.text];
-    else if (indexPath.row == 7)     // Cm3
+    else if (indexPath.row == 8)     // Cm3
         [self setCm3:[textField.text intValue]];
-    else if (indexPath.row == 8)    // Putere
+    else if (indexPath.row == 9)    // Putere
         [self setPutere:[textField.text intValue]];
-    else if (indexPath.row == 9)     // Numar Locuri
+    else if (indexPath.row == 10)     // Numar Locuri
         [self setNrLocuri:[textField.text intValue]];
-    else if (indexPath.row == 10)    // Masa maxima
+    else if (indexPath.row == 11)    // Masa maxima
         [self setMasaMaxima:[textField.text intValue]];
-    else if (indexPath.row == 11)    // An fabricatie
+    else if (indexPath.row == 12)    // An fabricatie
         [self setAnFabricatie:[textField.text intValue]];
-    else if (indexPath.row == 12)   // Serie CIV
+    else if (indexPath.row == 13)   // Serie CIV
         [self setSerieCIV:textField.text];
-    else if (indexPath.row == 16)   // Firma Leasing
+    else if (indexPath.row == 17)   // Firma Leasing
         [self setNumeFirmaLeasing:textField.text];
 }
 
@@ -359,15 +328,9 @@
             [autovehicul updateAutovehicul];
         }
         else {
-//            if (autovehicul.marcaAuto.length > 0 && autovehicul.modelAuto.length > 0 && autovehicul.nrInmatriculare 
-//                && autovehicul.judet.length > 0 && autovehicul.localitate.length > 0 && autovehicul.categorieAuto > 0
-//                && autovehicul.subcategorieAuto.length > 0 && autovehicul.serieSasiu.length > 0 && autovehicul.serieCiv.length > 0)
-//            {
+            if ([autovehicul CompletedPercent] > percentCompletedOnLoad)
                 [autovehicul addAutovehicul];
-            
-            //}
         }
-        
     }
 }
 
@@ -621,11 +584,11 @@
 #pragma Picker View Nomenclator
 -(void)chosenIndexAfterSearch:(NSString*)selected rowIndex:(NSIndexPath *)indexPath  forView:(PickerVCSearch *)vwSearch {
     
-    if (indexPath.row == 1) // MARCA
+    if (indexPath.row == 2) // MARCA
     {
         [self setMarca:selected];
     }
-    if (indexPath.row == 4) // JUDET + LOCALITATE
+    if (indexPath.row == 5) // JUDET + LOCALITATE
     {
         if (vwSearch.nomenclator == kJudete) {
             [self setJudet:selected];
@@ -656,6 +619,7 @@
 }
 
 - (void) initCells {
+    
     NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellJudetLocalitate = [topLevelObjectsJudet objectAtIndex:0];
     [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE TALON"];
@@ -664,8 +628,8 @@
     NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellAutoHeader" owner:self options:nil];
     cellAutoHeader = [topLevelObjectsHeader objectAtIndex:0];
     UILabel * lblCell = (UILabel *)[cellAutoHeader viewWithTag:2];
-    UIButton * btnImage = (UIButton *)[cellAutoHeader viewWithTag:5];
-    [btnImage addTarget:self action:@selector(chooseImage) forControlEvents:UIControlEventTouchUpInside];
+    //UIButton * btnImage = (UIButton *)[cellAutoHeader viewWithTag:5];
+    //[btnImage addTarget:self action:@selector(chooseImage) forControlEvents:UIControlEventTouchUpInside];
     lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     
     NSArray *topLevelObjectsMarca = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
@@ -1438,6 +1402,32 @@
     [self setInLeasing:leasing ? @"da" : @"nu"];
     
     [tableView reloadData];
+}
+
+#pragma INFO || ALERTE
+- (IBAction)btnInfoAlerte_OnClick:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL esteInfoMasina = btn.tag == 1;
+    
+    UILabel *lblInfoMasina = (UILabel *)[cellInfoAlerte viewWithTag:3];
+    UILabel *lblAlerte = (UILabel *)[cellInfoAlerte viewWithTag:4];
+    UIImageView * imgInfoAlerte = (UIImageView *)[cellInfoAlerte viewWithTag:5];
+    
+    if (!esteInfoMasina)
+    {
+        selectatInfoMasina = NO;
+        lblInfoMasina.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblAlerte.textColor = [UIColor whiteColor];
+        imgInfoAlerte.image = [UIImage imageNamed:@"selectat-dreapta-masina.png"];
+    }
+    else
+    {
+        selectatInfoMasina = YES;
+        lblInfoMasina.textColor = [UIColor whiteColor];
+        lblAlerte.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        imgInfoAlerte.image = [UIImage imageNamed:@"selectat-stanga-masina.png"];
+    }
 }
 
 @end

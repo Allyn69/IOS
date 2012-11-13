@@ -145,7 +145,7 @@
         for(NSDictionary *json in jsonArray) {
             NSString * status = [json objectForKey:@"status"];
             NSString * mesaj = [json objectForKey:@"mesaj"];
-            NSString * dataExpirare =[json objectForKey:@"data-expirare"];
+        //    NSString * dataExpirare =[json objectForKey:@"data-expirare"];
             
             if ([status isEqualToString:@"0"])
                 [self showPopup:@"Polita nu a fost gasita!" withDescription:mesaj];

@@ -11,6 +11,8 @@
 #import "YTOOferta.h"
 #import "CotatieLocuinta.h"
 #import "CellTarifCustom.h"
+#import "YTOLocuinta.h"
+#import "YTOPersoana.h"
 
 @interface YTOWebServiceLocuintaViewController : UIViewController<NSXMLParserDelegate,UITableViewDataSource, UITableViewDelegate>
 {
@@ -29,9 +31,11 @@
 }
 
 //@property (nonatomic, retain) CotatieCalatorie * cotatie;
-@property (nonatomic, retain) NSMutableArray * listTarife;
-@property (nonatomic, retain) NSMutableData * responseData;
-@property (nonatomic, retain) YTOOferta *       oferta;
+@property (nonatomic, retain) NSMutableArray    * listTarife;
+@property (nonatomic, retain) NSMutableData     * responseData;
+@property (nonatomic, retain) YTOOferta         * oferta;
+@property (nonatomic, retain) YTOLocuinta       * locuinta;
+@property (nonatomic, retain) YTOPersoana       * asigurat;
 
 - (void) calculLocuinta;
 - (NSString *) XmlRequest;

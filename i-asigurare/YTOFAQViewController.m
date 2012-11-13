@@ -80,7 +80,7 @@
 {
     YTOFaq * faq = (YTOFaq *)[listFAQ objectAtIndex:indexPath.row];
     YTOWebViewController * aView = [[YTOWebViewController alloc] init];
-    NSString * html = [NSString stringWithFormat:@"<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.0//EN\" \"http://www.wapforum.org/DTD/xhtml-mobile10.dtd\"><html><head></head><body style='font-family:Arial; font-size:.9em; color:#464646;'><h2>%@</h2>%@</body></html>",faq.Intrebare, faq.Raspuns];
+    NSString * html = [YTOUtils getHTMLWithStyle:[NSString stringWithFormat:@"<h2>%@</h2>%@",faq.Intrebare, faq.Raspuns]];
     aView.title = faq.Intrebare;
     aView.HTMLContent = html;
     [self.navigationController pushViewController:aView animated:YES];
@@ -107,8 +107,8 @@
     [self showLoading];
     
     self.navigationItem.hidesBackButton = YES;
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
-//	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
+    NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

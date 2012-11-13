@@ -1078,11 +1078,16 @@
 					<string key="className">YTOFormAlertaViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="btnNomenclator_Clicked:">id</string>
 						<string key="checkboxRataSelected:">id</string>
 						<string key="checkboxSelected:">id</string>
 						<string key="hideNomenclator">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="btnNomenclator_Clicked:">
+							<string key="name">btnNomenclator_Clicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="checkboxRataSelected:">
 							<string key="name">checkboxRataSelected:</string>
 							<string key="candidateClassName">id</string>

@@ -12,7 +12,10 @@
 
 @interface YTOAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 {
-    NSMutableArray * _persoane; 
+    NSMutableArray * _persoane;
+    UIView * viewTooltip;
+    int indexTooltip;
+    NSMutableArray * listImgTooltip;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -26,6 +29,7 @@
 - (void) copyDatabaseIfNeeded;
 - (NSString *) getDBPath;
 
+- (void) showTooltip;
 - (void) refreshPersoane;
 - (NSMutableArray *) Persoane;
 - (void) syncDataFromOldVersion;

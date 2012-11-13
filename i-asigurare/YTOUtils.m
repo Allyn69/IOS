@@ -106,6 +106,14 @@
     return [dateComponents year];
 }
 
++ (int) getAnFromDate:(NSDate *)date
+{
+    NSDate * data = date;
+    NSCalendar *cal = [NSCalendar currentCalendar];
+    NSDateComponents *components = [cal components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:data];
+    return [components year];
+}
+
 + (NSString *) append:(id) first, ...
 {
     NSString * result = @"";
@@ -296,4 +304,11 @@
     list = [[NSMutableArray alloc] initWithObjects:c1,c2,c3,c4,c5,c6, nil];
     return  list;
 }
+
++ (NSString *) getHTMLWithStyle:(NSString *)html
+{
+    NSString * htmlPage = [NSString stringWithFormat:@"<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.0//EN\" \"http://www.wapforum.org/DTD/xhtml-mobile10.dtd\"><html><head></head><body style='font-family:Arial; font-size:.9em; color:#464646;'>%@</body></html>", html];
+    return htmlPage;
+}
+
 @end
