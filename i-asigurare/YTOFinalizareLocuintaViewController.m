@@ -323,8 +323,8 @@
 - (IBAction) callInregistrareComanda {
     [self showCustomLoading];
     self.navigationItem.hidesBackButton = YES;
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
+	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -367,11 +367,8 @@
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
 	
-    // daca este pentru plata ONLINE
-	if (succes && modPlata == 3) {
-        [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:3];
-    }
-    else if (succes) {
+
+    if (succes) {
         if (idOferta == nil || [idOferta isEqualToString:@""])
             [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:YES withButtonIndex:2];
         else {
@@ -382,7 +379,11 @@
             else
                 [oferta updateOferta];
             
-            [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:1];
+            // daca este pentru plata ONLINE
+            if (succes && modPlata == 3) {
+                [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:3];
+            }
+            else [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:1];
         }
 	}
 	else {
@@ -425,31 +426,12 @@
 		[currentElementValue appendString:string];
 }
 
-#pragma mark UIAlertView
--(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 100) {
-        //        NSString * q = [NSString stringWithFormat:@"numar_oferta=%@&email=%@&nume=%@&adresa=%@&localitate=%@&judet=%@&telefon=%@&codProdus=%@&valoare=%.2f&companie=%@&udid=%@", setari.idOferta, self.person.Email, self.person.Nume, self.person.Strada, self.localitate,self.judet,self.person.Telefon,
-        //                        @"RCA", tarifRCA.primaInt, tarifRCA.nume, [[UIDevice currentDevice] uniqueIdentifier]];
-        //        NSLog(@"%@",q);
-        //        NSString * urlAltString = [NSString stringWithFormat:@"%@?%@",[appDelegate kPaymentUrl], q];
-        //        NSString * urlString = [urlAltString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-        //        NSURL * url = [NSURL URLWithString:urlString];
-        //
-        //        if(buttonIndex == 1)
-        //        {
-        //            [[UIApplication sharedApplication] openURL:url];
-        //
-        //        }
-    }
-    
-    [self dismissModalViewControllerAnimated:YES];
-}
-
 - (void) showCustomLoading
 {
     [self hideCustomLoading];
     [vwLoading setHidden:NO];
 }
+
 - (IBAction) hideCustomLoading
 {
     [vwLoading setHidden:YES];
@@ -489,7 +471,25 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
-        // to do plata ONLINE
+        //NSString * url = [NSString stringWithFormat:@"http://192.168.1.176:8082/pre-pay.aspx?numar_oferta=%@"
+        NSString * url = [NSString stringWithFormat:@"https://api.i-business.ro/MaAsigurApiTest/pre-pay.aspx?numar_oferta=%@"
+                          "&email=%@"
+                          "&nume=%@"
+                          "&adresa=%@"
+                          "&localitate=%@"
+                          "&judet=%@"
+                          "&telefon=%@"
+                          "&codProdus=%@"
+                          "&valoare=%.2f"
+                          "&companie=%@"
+                          "&udid=%@"
+                          "&moneda=eur",
+                          idOferta, emailLivrare, asigurat.nume, asigurat.adresa, asigurat.localitate, asigurat.judet, telefonLivrare,
+                          @"Locuinta", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
+        
+        NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+        [[UIApplication sharedApplication] openURL:nsURL];
+
     }
     else if (btn.tag == 100)
         [self callInregistrareComanda];

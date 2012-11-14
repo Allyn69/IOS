@@ -192,6 +192,7 @@
         else {
             YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
             aView.controller = self;
+            aView.proprietar = YES;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
     }
@@ -361,7 +362,12 @@
 
 - (void) initCustomValues
 {
+    // Incarc proprietarul PF
     YTOPersoana * prop = [YTOPersoana Proprietar];
+    // Daca nu exista proprietar PF, incerc sa incarc propriertar PJ
+    if (!prop)
+        prop  = [YTOPersoana ProprietarPJ];
+    
     if (prop)
     {
         [self setAsigurat:prop];
@@ -371,6 +377,7 @@
     [self setDataInceput:_DataInceput];
     _Durata = @"6";
 }
+
 - (void) showCoduriCaen:(NSIndexPath *)index
 {
     //goingBack = NO;
@@ -402,12 +409,17 @@
 {
     UILabel * lblCellP = ((UILabel *)[cellProprietar viewWithTag:2]);
     lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];    
-    lblCellP.text = a.nume;
-    ((UILabel *)[cellProprietar viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.codUnic, a.judet];
+
+    if (a.nume)
+        lblCellP.text = a.nume;
+    if (a.codUnic && a.judet)
+        ((UILabel *)[cellProprietar viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.codUnic, a.judet];
     asigurat = a;
-    if (asigurat.codUnic.length == 13)
+    
+    if (asigurat.codUnic.length == 13 && [asigurat.tipPersoana isEqualToString:@"fizica"])
     {
-        asigurat.tipPersoana = @"fizica";
+        // ?? nu cred ca mai trebuie
+        //asigurat.tipPersoana = @"fizica";
         
         stepperAnMinimPermis.minimumValue = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
         stepperAnMinimPermis.maximumValue = [YTOUtils getAnCurent];
@@ -452,8 +464,10 @@
             [self setHandicap:[asigurat.handicapLocomotor isEqualToString:@"da"]];
         
     }
-    else {
-        asigurat.tipPersoana = @"juridica";
+    else if (asigurat.codUnic.length > 0 && [asigurat.tipPersoana isEqualToString:@"juridica"]) {
+        // nu cred ca mai trebuie ??
+        //asigurat.tipPersoana = @"juridica";
+        
         if (asigurat.codCaen.length == 0)
             asigurat.codCaen = @"01";
         
@@ -508,6 +522,7 @@
     else [self setHandicap:checkboxSelected];
 }
 
+/*
 - (IBAction)chkTipPersoana_Selected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
@@ -515,7 +530,7 @@
         [self setPersoanaFizica:YES];
     else
         [self setPersoanaFizica:NO];
-}
+}*/
 
 - (IBAction)dateStepper_Changed:(id)sender
 {

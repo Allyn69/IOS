@@ -40,6 +40,9 @@
 - (NSString *) toJSON;
 - (void) fromJSON:(NSString *)p;
 
+// RCA key-values
+- (NSString *) RCABonusMalus;
+- (void) setRCABonusMalus:(NSString *)value;
 
 
 // CALATORIE key-values

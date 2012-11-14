@@ -37,8 +37,10 @@
 @property (nonatomic, retain) UIViewController * controller;
 @property BOOL                                   proprietar;
 @property BOOL                                   persoanaFizica;
+
 - (IBAction)checkboxSelected:(id)sender;
 - (IBAction)btnTipPersoana_OnClick:(id)sender;
+
 - (void) addBarButton;
 - (void) deleteBarButton;
 - (void) save;

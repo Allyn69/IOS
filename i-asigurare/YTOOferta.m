@@ -243,6 +243,17 @@
     self._isDirty = YES; 
 }
 
+#pragma RCA
+- (NSString *) RCABonusMalus
+{
+    NSString * bm = [self.detaliiAsigurare objectForKey:@"BonusMalus"];
+    return bm;
+}
+
+- (void) setRCABonusMalus:(NSString *)value
+{
+    [self.detaliiAsigurare setObject:value forKey:@"BonusMalus"];
+}
 
 #pragma CALATORIE
 

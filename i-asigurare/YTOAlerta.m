@@ -53,6 +53,57 @@
     [ob deleteObiectAsigurat];
 }
 
++ (YTOAlerta *) getAlerta:(NSString *)_idIntern
+{
+    NSMutableArray * list = [YTOAlerta Alerte];
+    for (int i=0; i<list.count; i++) {
+        YTOAlerta * _alerta = [list objectAtIndex:i];
+        if ([_alerta.idIntern isEqualToString:_idIntern])
+            return _alerta;
+    }
+    return  nil;
+}
+
++ (YTOAlerta *) getAlerta:(NSString *)_idIntern forType:(int)tip
+{
+    NSMutableArray * list = [YTOAlerta Alerte];
+    for (int i=0; i<list.count; i++) {
+        YTOAlerta * _alerta = [list objectAtIndex:i];
+        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == tip)
+            return _alerta;
+    }
+    return  nil;
+}
+
++ (YTOAlerta *) getAlertaRCA:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:1];
+}
++ (YTOAlerta *) getAlertaITP:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:2];
+}
++ (YTOAlerta *) getAlertaRovinieta:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:3];
+}
++ (YTOAlerta *) getAlertaCasco:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:4];
+}
++ (YTOAlerta *) getAlertaLocuinta:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:5];
+}
++ (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:6];
+}
++ (YTOAlerta *) getAlertaRataLocuinta:(NSString *)_idIntern
+{
+    return [self getAlerta:_idIntern forType:7];
+}
+
 + (NSMutableArray*)Alerte
 {
     NSMutableArray * _list = [[NSMutableArray alloc] init];
@@ -76,6 +127,34 @@
     [_list sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
     return _list;
+}
+
++ (int)GetNrAlerteScadente
+{
+    int count=0;
+    NSMutableArray * list = [YTOAlerta Alerte];
+    NSDate * peste4zile = [NSDate date];
+    for (int i=0; i<list.count; i++)
+    {
+        YTOAlerta * alerta = [list objectAtIndex:i];
+        
+        NSDate *fromDate;
+        NSDate *toDate;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&fromDate
+                     interval:NULL forDate:peste4zile];
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&toDate
+                     interval:NULL forDate:alerta.dataAlerta];
+        
+        NSDateComponents *difference = [calendar components:NSDayCalendarUnit
+                                                   fromDate:fromDate toDate:toDate options:0];
+        
+        //NSLog(@"%d",[difference day]);
+        if ([difference day] < 5)
+            count++;
+    }
+    return count;
 }
 
 - (NSString *) toJSON

@@ -27,9 +27,11 @@
     NSMutableArray * categoriiAuto;
     NSMutableArray * tipCombustibil;
     NSMutableArray * destinatiiAuto;
-
+    
+    // CELLS COMUNE
     UITableViewCell          * cellAutoHeader;
     IBOutlet UITableViewCell * cellInfoAlerte;
+    // CELLS PENTRU INFO MASINA
     UITableViewCell          * cellMarcaAuto;
     UITableViewCell          * cellModelAuto;
     UITableViewCell          * cellJudetLocalitate;
@@ -47,6 +49,12 @@
     UITableViewCell          * cellInLeasing;
     UITableViewCell          * cellLeasingFirma;
     UITableViewCell          * cellSC;
+    // CELLS PENTRU ALERTE MASINA
+    UITableViewCell          * cellExpirareRCA;
+    UITableViewCell          * cellExpirareITP;
+    UITableViewCell          * cellExpirareRovinieta;
+    UITableViewCell          * cellExpirareCASCO;
+    UITableViewCell          * cellExpirareRataCASCO;
     
     float percentCompletedOnLoad;
     BOOL  selectatInfoMasina;
@@ -138,4 +146,7 @@
 - (void) setInLeasing:(NSString *)v;
 - (void) setNumeFirmaLeasing:(NSString *)v;
 - (void) setImage:(UIImage *)img;
+
+- (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave;
+
 @end

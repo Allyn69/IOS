@@ -13,6 +13,7 @@
 #import "YTOAlerteViewController.h"
 #import "YTOAlteleViewController.h"
 #import "YTOWelcomeViewController.h"
+#import "YTOAlerta.h"
 
 @implementation YTOAppDelegate
 
@@ -51,6 +52,8 @@
     
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:setariNavigationController, rcaNavigationController, alerteNavigationController, alteleNavigationController, nil];
+    
+    [self setAlerteBadge];
     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
@@ -494,6 +497,15 @@
 - (void) closeTooltip
 {
     [viewTooltip removeFromSuperview];
+}
+
+- (void) setAlerteBadge
+{
+    int nrAlerte = [YTOAlerta GetNrAlerteScadente];
+    if (nrAlerte>0)
+        [[[self.tabBarController.tabBar items] objectAtIndex:2] setBadgeValue:[NSString stringWithFormat:@"%d", nrAlerte]];
+    else
+        [[[self.tabBarController.tabBar items] objectAtIndex:2] setBadgeValue:nil];
 }
 
 @end

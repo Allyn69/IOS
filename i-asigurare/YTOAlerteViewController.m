@@ -33,11 +33,13 @@
     return self;
 }
 							
-- (void)viewDidLoad
+- (void) viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
     listAlerte = [YTOAlerta Alerte];
     [self verifyViewMode];
 }
@@ -53,6 +55,7 @@
     {
         [tableView setHidden:NO];
         [vwEmpty setHidden:YES];
+        [tableView reloadData];
     }
 }
 
@@ -132,7 +135,7 @@
     
     if (alerta.idObiect)
     {
-        if (alerta.tipAlerta == 5)
+        if (alerta.tipAlerta == 5 || alerta.tipAlerta == 7)
             locuinta = [YTOLocuinta getLocuinta:alerta.idObiect];
         else
             masina = [YTOAutovehicul getAutovehicul:alerta.idObiect];
@@ -149,39 +152,46 @@
     if (alerta.tipAlerta == 1) // RCA
     {
         detaliu = @"expirare polita";
-        val = masina ? masina.nrInmatriculare : @"";
-        img = [UIImage imageNamed:@"alerte-bulina-verde-rca.png"];
+        val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
+        img = [UIImage imageNamed:@"icon-alerta-rca.png"];
     }
     else if (alerta.tipAlerta == 2) // ITP
     {
         detaliu = @"expirare ITP";
-        val = masina ? masina.nrInmatriculare : @"";
-        img = [UIImage imageNamed:@"alerte-bulina-albastru-generic.png"];
+        val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
+        img = [UIImage imageNamed:@"icon-alerta-itp.png"];
     }
     else if (alerta.tipAlerta == 3) // Rovinieta
     {
         detaliu = @"expirare Rovinieta";
-        val = masina ? masina.nrInmatriculare : @"";
-        img = [UIImage imageNamed:@"alerte-bulina-albastru-generic.png"];
+        val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
+        img = [UIImage imageNamed:@"icon-alerta-rovinieta.png"];
     }
     else if (alerta.tipAlerta == 4) // CASCO
     {
-        detaliu = @"casco";
-        val = masina ? masina.nrInmatriculare : @"";
-        img = [UIImage imageNamed:@"alerte-bulina-portocaliu-casco.png"];
+        detaliu = @"asigurare casco";
+        val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
+        img = [UIImage imageNamed:@"icon-alerta-casco.png"];
     }
     else if (alerta.tipAlerta == 5) // Locuinta
     {
         detaliu = @"locuinta";
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
-        img = [UIImage imageNamed:@"alerte-bulina-albastru-locuinta.png"];
+        img = [UIImage imageNamed:@"icon-alerta-locuinta.png"];
     }
-    else
+    else if (alerta.tipAlerta == 6)
     {
-        detaliu = @"plata rata";
-        val = @"340 lei";
-        img = [UIImage imageNamed:@"alerte-bulina-portocaliu-generic.png"];        
+        detaliu = @"rata casco";
+        val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
+        img = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
     }
+    else if (alerta.tipAlerta == 7)
+    {
+        detaliu = @"rata locuinta";
+        val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
+        img = [UIImage imageNamed:@"icon-alerta-rata-locuinta.png"];
+    }
+    
     [cell setDetaliuAlerta:detaliu];
     [cell setNumar:val];
     [cell setAlertaImage:img];
@@ -232,11 +242,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    /*
     YTOFormAlertaViewController * aView = [[YTOFormAlertaViewController alloc] init];
     aView.controller = self;
     aView.alerta = [listAlerte objectAtIndex:indexPath.section];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.alerteNavigationController pushViewController:aView animated:YES];
+     */
 }
 
 

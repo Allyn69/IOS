@@ -53,6 +53,8 @@
     IBOutlet UIActivityIndicatorView * loading;
     IBOutlet UIImageView * imgLoading;
     IBOutlet UIButton    * btnClosePopup;
+    
+    BOOL saveAsigurat;
 }
 
 @property (nonatomic, retain) YTOOferta *       oferta;

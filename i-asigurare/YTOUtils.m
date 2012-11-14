@@ -299,9 +299,14 @@
     KeyValueItem * c6 = [[KeyValueItem alloc] init];
     c6.parentKey = 1;
     c6.key = 6;
-    c6.value = @"Altceva";
+    c6.value = @"Rata CASCO";
     
-    list = [[NSMutableArray alloc] initWithObjects:c1,c2,c3,c4,c5,c6, nil];
+    KeyValueItem * c7 = [[KeyValueItem alloc] init];
+    c7.parentKey = 1;
+    c7.key = 7;
+    c7.value = @"Rata Locuinta";
+    
+    list = [[NSMutableArray alloc] initWithObjects:c1,c2,c3,c4,c5,c6,c7, nil];
     return  list;
 }
 

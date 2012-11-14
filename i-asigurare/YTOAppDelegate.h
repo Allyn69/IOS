@@ -33,5 +33,6 @@
 - (void) refreshPersoane;
 - (NSMutableArray *) Persoane;
 - (void) syncDataFromOldVersion;
+- (void) setAlerteBadge;
 
 @end

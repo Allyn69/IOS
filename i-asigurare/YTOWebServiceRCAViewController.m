@@ -569,7 +569,7 @@
     oferta.numeAsigurare = @"Asigurare RCA";
     oferta.moneda = @"RON";
     oferta.codOferta = tarif.codOferta;
-    [oferta.detaliiAsigurare setObject:tarif.clasa_bm forKey:@"BonusMalus"];
+    [oferta setRCABonusMalus:tarif.clasa_bm];
     
     YTOSumarRCAViewController * aView = [[YTOSumarRCAViewController alloc] init];
     aView.masina = masina;

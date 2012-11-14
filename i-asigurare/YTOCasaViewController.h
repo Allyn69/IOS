@@ -10,30 +10,39 @@
 #import "PickerVCSearch.h"
 #import "YTOLocuinta.h"
 
-@interface YTOCasaViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, PickerVCSearchDelegate>
+@interface YTOCasaViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, PickerVCSearchDelegate, UIActionSheetDelegate>
 {
-    IBOutlet UITableView *      tableView;
-    IBOutlet UIView *           vwNomenclator;
-    UITableViewCell *           cellHeader;
-    UITableViewCell *           cellJudetLocalitate;
-    UITableViewCell *           cellAdresa;
-    IBOutlet UITableViewCell *  cellTipLocuinta;
-    UITableViewCell *           cellStructura;
-    UITableViewCell *           cellInaltime;
-    UITableViewCell *           cellEtaj;
-    UITableViewCell *           cellAnConstructie;
-    UITableViewCell *           cellNrCamere;
-    UITableViewCell *           cellSuprafata;
-    UITableViewCell *           cellNrLocatari;
-    UITableViewCell *           cellDescriereLocuinta;
-    UITableViewCell *           cellSC;
-    UITextField * activeTextField;
-    IBOutlet UIView * vwTooltip;
-    IBOutlet UILabel * lblTootlip;
+    IBOutlet UITableView        * tableView;
+    IBOutlet UIView             * vwNomenclator;
     
-    NSMutableArray * structuriRezistenta;
+    // CELL COMUNE
+    UITableViewCell             * cellHeader;
+    IBOutlet UITableViewCell    * cellInfoAlerte;
+    // CELL PENTRU INFO LOCUINTA
+    UITableViewCell             * cellJudetLocalitate;
+    UITableViewCell             * cellAdresa;
+    IBOutlet UITableViewCell    * cellTipLocuinta;
+    UITableViewCell             * cellStructura;
+    UITableViewCell             * cellInaltime;
+    UITableViewCell             * cellEtaj;
+    UITableViewCell             * cellAnConstructie;
+    UITableViewCell             * cellNrCamere;
+    UITableViewCell             * cellSuprafata;
+    UITableViewCell             * cellNrLocatari;
+    UITableViewCell             * cellDescriereLocuinta;
+    UITableViewCell             * cellSC;
+    //CELLS PENTRU ALERTE LOCUINTA
+    UITableViewCell             * cellExpirareLoc;
+    UITableViewCell             * cellExpirareRataLoc;
+    
+    UITextField         * activeTextField;
+    IBOutlet UIView     * vwTooltip;
+    IBOutlet UILabel    * lblTootlip;
+    
+    NSMutableArray      * structuriRezistenta;
     
     float percentCompletedOnLoad;
+    BOOL  selectatInfoLocuinta;
 }
 
 @property BOOL goingBack;
@@ -54,6 +63,8 @@
 - (IBAction)nrCamere_Changed:(id)sender;
 - (IBAction)nrLocatari_Changed:(id)sender;
 - (IBAction)btnTipLocuinta_Clicked:(id)sender;
+- (IBAction)btnInfoAlerte_OnClick:(id)sender;
+
 - (void) showListaJudete:(NSIndexPath *)index;
 - (void) showStructuraRezistenta:(NSIndexPath *)index;
 - (void) showListaDescriereLocuinta:(NSIndexPath *)index;
@@ -81,5 +92,5 @@
 - (void) setNrCamere:(int)p;
 - (void) setSuprafata:(int)p;
 - (void) setNrLocatari:(int)p;
-
+- (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave;
 @end

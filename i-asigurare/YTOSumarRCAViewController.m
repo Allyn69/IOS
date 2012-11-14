@@ -46,8 +46,7 @@
         lblPrima.text = [NSString stringWithFormat:@"%.2f RON", oferta.prima];
         imgCompanie.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
         lblDurata.text = [NSString stringWithFormat:@"Durata %d luni", oferta.durataAsigurare];
-        NSDictionary * infoDict = oferta.detaliiAsigurare;
-        lblBonusMalus.text = [NSString stringWithFormat:@"Bonus/Malus: %@", [infoDict objectForKey:@"BonusMalus"]];
+        lblBonusMalus.text = [NSString stringWithFormat:@"Bonus/Malus: %@", [oferta RCABonusMalus]];
     }
     // Do any additional setup after loading the view from its nib.
 }

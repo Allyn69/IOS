@@ -9,6 +9,8 @@
 #import "YTOFinalizareRCAViewController.h"
 #import "YTOUtils.h"
 #import "Database.h"
+#import "YTOWebViewController.h"
+#import "YTOAppDelegate.h"
 
 @interface YTOFinalizareRCAViewController ()
 
@@ -46,8 +48,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -60,15 +60,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return 6;
 }
 
@@ -99,45 +95,6 @@
     
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -194,11 +151,13 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    // to do !
-//    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
-//    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    //    [self setModel:textField.text];
+    if (indexPath.row == 2)
+        [self setTelefon:textField.text];
+    else if (indexPath.row == 3)
+        [self setEmail:textField.text];
 }
 
 -(IBAction) doneEditing
@@ -215,9 +174,8 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
-    
-    //  [vwKeyboardAddon setHidden:NO];
 }
+
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
 }
@@ -307,6 +265,11 @@
 - (void) setEmail:(NSString *)email
 {
     emailLivrare = email;
+    if (asigurat.email == nil || [asigurat.email isEqualToString:@"null"])
+    {
+        asigurat.email = email;
+        saveAsigurat = YES;
+    }
     UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
     txt.text = email;
 }
@@ -314,6 +277,12 @@
 - (void) setTelefon:(NSString *)telefon
 {
     telefonLivrare = telefon;
+    if (asigurat.telefon == nil || [asigurat.telefon isEqualToString:@"null"])
+    {
+        asigurat.telefon = telefon;
+        saveAsigurat = YES;
+    }
+    
     UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
     txt.text = telefon;
 }
@@ -359,10 +328,9 @@
 #pragma mark Consume WebService
 
 - (NSString *) XmlRequest
-{    
-    NSDictionary * infoDict = (NSDictionary *)[(NSMutableArray *)oferta.detaliiAsigurare objectAtIndex:0];
-    NSString * bonusMalus = [NSString stringWithFormat:@"Bonus/Malus: %@", [infoDict objectForKey:@"BonusMalus"]];
-    
+{
+    NSString * bonusMalus = [NSString stringWithFormat:@"Bonus/Malus: %@", [oferta RCABonusMalus]];
+
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 							 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
 							 "<soap:Body>"
@@ -435,11 +403,7 @@
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
 	
-    // daca este pentru plata ONLINE
-	if (succes && modPlata == 3) {
-        [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:3];
-    }
-    else if (succes) {
+    if (succes) {
         if (idOferta == nil || [idOferta isEqualToString:@""])
             [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:YES withButtonIndex:2];
         else {
@@ -450,10 +414,20 @@
             else
                 [oferta updateOferta];
             
-            [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:1];
+            // in cazul in care nu avea telefon sau email introdus,
+            // salvam aceste valori
+            if (saveAsigurat)
+                [asigurat updatePersoana];
+            
+            // daca este pentru plata ONLINE
+            if (modPlata == 3) {
+                [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:3];
+            }
+            else [self showCustomAlert:@"Finalizare comanda RCA" withDescription:responseMessage withError:NO withButtonIndex:1];
         }
 	}
-	else {
+	else
+    {
         [self showCustomAlert:@"Finalizare comanda RCA" withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:4];
 	}
    
@@ -493,26 +467,6 @@
 		currentElementValue = [[NSMutableString alloc] initWithString:string];
 	else
 		[currentElementValue appendString:string];
-}
-
-#pragma mark UIAlertView
--(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if (alertView.tag == 100) {
-//        NSString * q = [NSString stringWithFormat:@"numar_oferta=%@&email=%@&nume=%@&adresa=%@&localitate=%@&judet=%@&telefon=%@&codProdus=%@&valoare=%.2f&companie=%@&udid=%@", setari.idOferta, self.person.Email, self.person.Nume, self.person.Strada, self.localitate,self.judet,self.person.Telefon,
-//                        @"RCA", tarifRCA.primaInt, tarifRCA.nume, [[UIDevice currentDevice] uniqueIdentifier]];
-//        NSLog(@"%@",q);
-//        NSString * urlAltString = [NSString stringWithFormat:@"%@?%@",[appDelegate kPaymentUrl], q];
-//        NSString * urlString = [urlAltString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
-//        NSURL * url = [NSURL URLWithString:urlString];
-//        
-//        if(buttonIndex == 1)
-//        {
-//            [[UIApplication sharedApplication] openURL:url];
-//            
-//        }
-    }
-
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void) showCustomLoading
@@ -566,7 +520,28 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
-        // to do plata ONLINE
+        //NSString * url = [NSString stringWithFormat:@"http://192.168.1.176:8082/pre-pay.aspx?numar_oferta=%@"
+        NSString * url = [NSString stringWithFormat:@"https://api.i-business.ro/MaAsigurApiTest/pre-pay.aspx?numar_oferta=%@"
+                     "&email=%@"
+                     "&nume=%@"
+                     "&adresa=%@"
+                     "&localitate=%@"
+                     "&judet=%@"
+                     "&telefon=%@"
+                     "&codProdus=%@"
+                     "&valoare=%.2f"
+                     "&companie=%@"
+                     "&udid=%@",
+                     idOferta, emailLivrare, asigurat.nume, asigurat.adresa, asigurat.localitate, asigurat.judet, telefonLivrare,
+                     @"RCA", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
+        
+        NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+        [[UIApplication sharedApplication] openURL:nsURL];
+        
+        //YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+        //aView.URL = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        //YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+        //[delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if (btn.tag == 100)
         [self callInregistrareComanda];

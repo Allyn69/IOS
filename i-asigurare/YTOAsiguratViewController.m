@@ -43,9 +43,15 @@
     [self initCells];
     [self initLabels:persoanaFizica];
     
+    // Verific daca view-ul este pentru contul meu
     if (proprietar)
     {
         asigurat = [YTOPersoana Proprietar];
+    }
+    // Daca exista proprietar, incarc, altfel caut si in proprietar pj
+    if (proprietar && !asigurat)
+    {
+        asigurat = [YTOPersoana ProprietarPJ];
     }
     
     if (!asigurat) {
@@ -57,10 +63,18 @@
         asigurat.pensionar = @"nu";
         asigurat.handicapLocomotor = @"nu";
         asigurat.proprietar = (proprietar ? @"da" : @"nu");
+        asigurat.nrBugetari = 0;
         // .. do to
     }
     else {
-        [self load:asigurat];
+        if ([asigurat.tipPersoana isEqualToString:@"juridica"])
+        {
+            // Simulez click-ul pe PJ, dupa care se face load:asigurat din btnTipPersoana_OnClick
+            UIButton * btn = (UIButton *)[cellTipPersoana viewWithTag:2];
+            [self btnTipPersoana_OnClick:btn];
+        }
+        else
+            [self load:asigurat];
     }    
 }
 
@@ -111,6 +125,14 @@
         }
         else
             asigurat = [YTOPersoana Proprietar];
+        
+        // Daca nu exista proprietar PF sau PJ, initializez..
+        if (!asigurat)
+        {
+            asigurat = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
+            asigurat.tipPersoana = persoanaFizica ? @"fizica" : @"juridica";
+            asigurat.proprietar = @"da";
+        }
         
         if (asigurat.telefon.length == 0 && telefon.length > 0)
             asigurat.telefon = telefon;
@@ -193,45 +215,6 @@
     
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
@@ -406,6 +389,12 @@
 
 - (void) load:(YTOPersoana *)a
 {
+//    if ([a.tipPersoana isEqualToString:@"juridica"])
+//    {
+//        UIButton * btn = (UIButton *)[cellTipPersoana viewWithTag:2];
+//        [self btnTipPersoana_OnClick:btn];
+//    }
+    
     [self setNume:a.nume];
     [self setcodUnic:a.codUnic];
     [self setJudet:a.judet];

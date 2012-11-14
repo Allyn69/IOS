@@ -31,6 +31,7 @@
     // Do any additional setup after loading the view from its nib.
     if (URL && ![URL isEqualToString:@""])
     {
+        NSLog(@"%@", URL);
         NSURL * url = [[NSURL alloc] initWithString:URL];
         NSURLRequest * req = [[NSURLRequest alloc] initWithURL:url];
         webView.delegate = self;
@@ -50,7 +51,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    [self showLoading];
+   // [self showLoading];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -60,6 +61,7 @@
 
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    NSLog(@"didFailLoadWithError: %@", [error localizedDescription]);
     [self showPopupWithTitle:@"Conexiune esuata" andDescription:@"Pagina nu este disponibila. Verificati conexiunea la internet."];
     goBack = YES;
 }

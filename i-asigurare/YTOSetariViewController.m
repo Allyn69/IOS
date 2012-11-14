@@ -100,7 +100,14 @@
         cell = cellProfilulMeu;
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-profilul-meu.png"];
         ((UILabel *)[cell viewWithTag:2]).text = @"PROFILUL MEU";
+
+        // Incarc proprietar PF, daca nu exista incarcam proprietar PJ
         YTOPersoana * proprietar = [YTOPersoana Proprietar];
+        if (!proprietar)
+        {
+            proprietar = [YTOPersoana ProprietarPJ];
+        }
+        
         if (proprietar && proprietar.nume.length > 0)
         {
             ((UILabel *)[cell viewWithTag:3]).text = proprietar.nume;
@@ -194,45 +201,6 @@
     cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 
@@ -464,13 +432,21 @@
             YTOPersoana * proprietar = [YTOPersoana Proprietar];
             if (!proprietar)
             {
-                proprietar = [[YTOPersoana alloc] init];
+                proprietar = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
                 proprietar.proprietar = @"da";
             }
             proprietar.nume = [jsonItem objectForKey:@"Nume"];
             proprietar.codUnic = [jsonItem objectForKey:@"CodUnic"];
-            proprietar.telefon = [jsonItem objectForKey:@"Telefon"];
-            proprietar.email =[jsonItem objectForKey:@"Email"];
+            if (proprietar.codUnic.length == 13)
+                proprietar.tipPersoana = @"fizica";
+            else if (proprietar.codUnic.length > 0)
+                proprietar.tipPersoana = @"juridica";
+            
+            NSString * tel = [jsonItem objectForKey:@"Telefon"];
+            proprietar.telefon = tel ? tel : @"";
+            
+            NSString * eml = [jsonItem objectForKey:@"Email"];
+            proprietar.email = eml ? eml : @"";
             proprietar.judet = [jsonItem objectForKey:@"JudetDR"];
             proprietar.localitate = [jsonItem objectForKey:@"LocalitateDR"];
             proprietar.adresa = [jsonItem objectForKey:@"Strada"];

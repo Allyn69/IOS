@@ -171,9 +171,6 @@
             return p;
         }
     }
-    p = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
-    p.tipPersoana = @"fizica";
-    p.proprietar = @"da";
     
     return p;
 }
@@ -190,10 +187,6 @@
             return p;
         }
     }
-    
-    p = [[YTOPersoana alloc] initWithGuid:[YTOUtils GenerateUUID]];
-    p.tipPersoana = @"juridica";
-    p.proprietar = @"da";
     
     return p;
 }
