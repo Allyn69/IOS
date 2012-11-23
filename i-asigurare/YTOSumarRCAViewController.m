@@ -65,10 +65,10 @@
 
 - (IBAction)showFinalizareRCA:(id)sender
 {
-    if (!oferta._isDirty)
-        [oferta addOferta];
-    else
-        [oferta updateOferta];
+//    if (!oferta._isDirty)
+//        [oferta addOferta];
+//    else
+//        [oferta updateOferta];
     
     YTOFinalizareRCAViewController * aView = [[YTOFinalizareRCAViewController alloc] init];
     aView.asigurat = asigurat;

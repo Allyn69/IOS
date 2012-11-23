@@ -32,6 +32,12 @@
     IBOutlet UIView  *      vwPopup;
     IBOutlet UILabel *      lblPopupTitle;
     IBOutlet UILabel *      lblPopupDescription;
+    
+    IBOutlet UIImageView * imgSA;
+    IBOutlet UILabel     * lbl5k;
+    IBOutlet UILabel     * lbl10k;
+    IBOutlet UILabel     * lbl30k;
+    IBOutlet UILabel     * lbl50k;
 }
 
 @property (nonatomic, retain) CotatieCalatorie * cotatie;
@@ -40,7 +46,6 @@
 @property (nonatomic, retain) NSMutableData * responseData;
 @property (nonatomic, retain) YTOOferta *       oferta;
 
-- (IBAction)calculeazaRCADupaAltaDurata;
 - (void) calculCalatorie;
 - (NSString *) XmlRequest;
 - (void) startLoadingAnimantion;
@@ -48,4 +53,6 @@
 
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
 - (IBAction)hidePopup:(id)sender;
+- (IBAction)calculeazaDupaAltaSA:(id)sender;
+
 @end

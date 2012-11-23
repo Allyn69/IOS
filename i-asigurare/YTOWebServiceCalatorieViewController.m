@@ -73,6 +73,7 @@
     
     NSString * scopCalatorie = [oferta CalatorieScop];
     taraDestinatie = [oferta CalatorieDestinatie];
+
     NSString * sumaAsigurata = [oferta CalatorieProgram];
     
     YTOPersoana * pers1 = (YTOPersoana *)[listAsigurati objectAtIndex:0];
@@ -107,8 +108,20 @@
     return xml;
 }
 
-- (IBAction)calculeazaRCADupaAltaDurata
+- (IBAction)calculeazaDupaAltaSA:(id)sender
 {
+    UIButton * btn = (UIButton *)sender;
+    
+    // Daca SA=5.000 eur
+    if (btn.tag == 1)
+        [oferta setCalatorieProgram:@"5.000-eur"];
+    else if (btn.tag == 2)
+        [oferta setCalatorieProgram:@"10.000-eur"];
+    else if (btn.tag == 3)
+        [oferta setCalatorieProgram:@"30.000-eur"];
+    else if (btn.tag == 4)
+        [oferta setCalatorieProgram:@"50.000-eur"];
+    [listTarife removeAllObjects];
     [self calculCalatorie];
 }
 
@@ -116,8 +129,33 @@
     [vwLoading setHidden:NO];
     [self startLoadingAnimantion];
     
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
+    if ([[oferta CalatorieProgram] isEqualToString:@"5.000-eur"])
+    {
+        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-5000.png"];
+        lbl10k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl5k.textColor = [UIColor whiteColor];
+    }
+    else if ([[oferta CalatorieProgram] isEqualToString:@"10.000-eur"])
+    {
+        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-10000.png"];
+        lbl5k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl10k.textColor = [UIColor whiteColor];
+    }
+    else if ([[oferta CalatorieProgram] isEqualToString:@"30.000-eur"])
+    {
+        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-30000.png"];
+        lbl5k.textColor = lbl10k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl30k.textColor = [UIColor whiteColor];
+    }
+    else if ([[oferta CalatorieProgram] isEqualToString:@"50.000-eur"])
+    {
+        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-50000.png"];
+        lbl5k.textColor = lbl10k.textColor = lbl30k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl50k.textColor = [UIColor whiteColor];
+    }
+    
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -231,20 +269,16 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [NSString stringWithFormat:@"%d %@, %d zile in %@", listAsigurati.count, (listAsigurati.count == 1 ? @"asigurare" : @"asigurari"), oferta.durataAsigurare, taraDestinatie];
+    return [NSString stringWithFormat:@"%d %@, %d zile in %@", listAsigurati.count, (listAsigurati.count == 1 ? @"persoana" : @"persoane"), oferta.durataAsigurare, taraDestinatie];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return listTarife.count;
 }
 
@@ -271,45 +305,6 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 

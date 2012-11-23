@@ -224,6 +224,7 @@
     {
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         for (int i = 0; i < listValoriMultipleIndecsi.count; i++) {
+            
             NSUInteger num = [[listValoriMultipleIndecsi objectAtIndex:i] intValue];
             
             if (num == indexPath.row) {
@@ -247,7 +248,7 @@
     
     if (nomenclator == kDescriereLocuinta)
     {
-        //NSString * p = [listOfItems objectAtIndex:indexPath.row];
+        NSString * esteBifat = @"";
         
         UITableViewCell *thisCell = [tv cellForRowAtIndexPath:indexPath];
         if (thisCell.accessoryType == UITableViewCellAccessoryNone) {
@@ -255,12 +256,48 @@
             thisCell.accessoryType = UITableViewCellAccessoryCheckmark;
             //add object in an array
             [listValoriMultipleIndecsi addObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+            esteBifat = @"da";
         }
         else{
             
             thisCell.accessoryType = UITableViewCellAccessoryNone;
             //remove the object at the index from array
             [listValoriMultipleIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+            esteBifat = @"nu";
+        }
+        
+        YTOCasaViewController * view = (YTOCasaViewController *)self.delegate;
+        
+        switch (indexPath.row) {
+            case 0:
+                [view setAlarma:esteBifat];
+                break;
+            case 1:
+                [view setGrilajeGeam:esteBifat];
+                break;
+            case 2:
+                [view setDetectieIncendiu:esteBifat];
+                break;
+            case 3:
+                [view setPaza:esteBifat];
+                break;
+            case 4:
+                [view setZonaIzolata:esteBifat];
+                break;
+            case 5:
+                [view setLocuitPermananet:esteBifat];
+                break;
+            case 6:
+                [view setClauzaFurtBunuri:esteBifat];
+                break;
+            case 7:
+                [view setClauzaApaConducta:esteBifat];
+                break;
+            case 8:
+                [view setTeren:esteBifat];
+                break;
+            default:
+                break;
         }
     }
     else 

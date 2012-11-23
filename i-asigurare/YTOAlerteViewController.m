@@ -40,7 +40,10 @@
 
 - (void) viewWillAppear:(BOOL)animated
 {
-    listAlerte = [YTOAlerta Alerte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    listAlerte = [delegate Alerte];
+    
     [self verifyViewMode];
 }
 
@@ -135,7 +138,7 @@
     
     if (alerta.idObiect)
     {
-        if (alerta.tipAlerta == 5 || alerta.tipAlerta == 7)
+        if (alerta.tipAlerta == 6 || alerta.tipAlerta == 8)
             locuinta = [YTOLocuinta getLocuinta:alerta.idObiect];
         else
             masina = [YTOAutovehicul getAutovehicul:alerta.idObiect];
@@ -167,25 +170,25 @@
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rovinieta.png"];
     }
-    else if (alerta.tipAlerta == 4) // CASCO
+    else if (alerta.tipAlerta == 5) // CASCO
     {
         detaliu = @"asigurare casco";
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-casco.png"];
     }
-    else if (alerta.tipAlerta == 5) // Locuinta
+    else if (alerta.tipAlerta == 6) // Locuinta
     {
         detaliu = @"locuinta";
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
         img = [UIImage imageNamed:@"icon-alerta-locuinta.png"];
     }
-    else if (alerta.tipAlerta == 6)
+    else if (alerta.tipAlerta == 7)
     {
         detaliu = @"rata casco";
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
     }
-    else if (alerta.tipAlerta == 7)
+    else if (alerta.tipAlerta == 8)
     {
         detaliu = @"rata locuinta";
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
@@ -256,7 +259,10 @@
 
 - (void) reloadData
 {
-    listAlerte = [YTOAlerta Alerte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    listAlerte = [delegate Alerte];
+    
     if (listAlerte.count > 0)
     {
         [vwEmpty setHidden:YES];

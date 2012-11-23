@@ -14,6 +14,7 @@
 #import "YTOAlteleViewController.h"
 #import "YTOWelcomeViewController.h"
 #import "YTOAlerta.h"
+#import "YTOUserDefaults.h"
 
 @implementation YTOAppDelegate
 
@@ -53,12 +54,14 @@
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:setariNavigationController, rcaNavigationController, alerteNavigationController, alteleNavigationController, nil];
     
+    
     [self setAlerteBadge];
     
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     
-    [self showTooltip];
+    if ([YTOUserDefaults IsFirstTime])
+        [self showTooltip];
     //[self.window addSubview: [viewWelcome view]];
   
     // stergem badge-urile cand intra in aplicatie..indiferent
@@ -360,11 +363,6 @@
     va aparea in 30 sec."];
 }
 
-- (void) refreshPersoane
-{
-    _persoane = nil;
-}
-
 - (NSMutableArray *) Persoane
 {
     YTOPersoana * p = [[YTOPersoana alloc] init];
@@ -373,15 +371,50 @@
     return _persoane;
 }
 
+- (NSMutableArray *) Masini
+{
+    if (_masini.count == 0)
+        _masini = [YTOAutovehicul Masini];
+    return  _masini;
+}
+
+- (NSMutableArray *) Locuinte
+{
+    if (_locuinte.count == 0)
+        _locuinte = [YTOLocuinta Locuinte];
+    return  _locuinte;
+}
+
+- (NSMutableArray *) Alerte
+{
+    if (_alerte.count == 0)
+        _alerte = [YTOAlerta Alerte];
+    return  _alerte;
+}
+
+- (void) refreshPersoane
+{
+    _persoane = nil;
+}
+
+- (void) refreshMasini
+{
+    _masini = nil;
+}
+
+- (void) refreshLocuinte
+{
+    _locuinte = nil;
+}
+
+- (void) refreshAlerte
+{
+    _alerte = nil;
+}
+
 - (void) syncDataFromOldVersion
 {
-    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
-	NSData * dataSetari = [defaults objectForKey:@"VreauRCASetari"];
-    if (dataSetari != nil) {
-		Setari * setari = [NSKeyedUnarchiver unarchiveObjectWithData:dataSetari];
-        
-        [YTOWrapper savePersonFromSetari:setari];
-    }
+   
 }
 
 
@@ -413,8 +446,8 @@
 {
     @autoreleasepool
     {
-        NSString *  kLogCallUrl = @"https://api.i-business.ro/MaAsigurApiTest/sync.asmx";
-        //NSString *  kLogCallUrl = @"http://192.168.1.176:8082/sync.asmx";
+        //NSString *  kLogCallUrl = @"https://api.i-business.ro/MaAsigurApiTest/sync.asmx";
+        NSString *  kLogCallUrl = @"http://192.168.1.176:8082/sync.asmx";
         
         NSString *	udid = [UIDevice currentDevice].uniqueIdentifier;
         NSString *  platforma = [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"];
@@ -479,6 +512,8 @@
     [viewTooltip addSubview:btnNext];
     
     [self.window addSubview:viewTooltip];
+    
+    [YTOUserDefaults setFirstTime:YES];
 }
 
 - (void)nextTooltip

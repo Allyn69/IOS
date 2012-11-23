@@ -8,6 +8,12 @@
 
 #import "YTOCASCOViewController.h"
 #import "YTOUtils.h"
+#import "YTOListaAutoViewController.h"
+#import "YTOAutovehiculViewController.h"
+#import "YTOListaAsiguratiViewController.h"
+#import "YTOAsiguratViewController.h"
+#import "YTOAppDelegate.h"
+
 
 @interface YTOCASCOViewController ()
 
@@ -16,6 +22,7 @@
 @implementation YTOCASCOViewController
 @synthesize listaCompaniiAsigurare;
 @synthesize _nomenclatorNrItems, _nomenclatorSelIndex, _nomenclatorTip;
+@synthesize responseData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,8 +38,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+
     [self initCells];
-    
     [self initCustomValues];
     
 }
@@ -47,16 +54,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 6;
+    return 7;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -65,7 +68,7 @@
         return 69;
     else if (indexPath.row == 1 || indexPath.row == 2)
         return 75;
-    else if (indexPath.row == 4)
+    else if (indexPath.row == 5)
         return 100;
     return 66;
 }
@@ -78,62 +81,54 @@
     else if (indexPath.row == 1) cell = cellMasina;
     else if (indexPath.row == 2) cell = cellProprietar;
     else if (indexPath.row == 3) cell = cellNrKm;
-    else if (indexPath.row == 4) cell = cellAsigurareCasco;
+    else if (indexPath.row == 4) cell = cellCuloare;
+    else if (indexPath.row == 5) cell = cellAsigurareCasco;
     else cell = cellCalculeaza;
     
     return cell;
 }
 
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    if (indexPath.row == 1)
+    {
+        // Daca exista masini salvate, afisam lista
+        if ([appDelegate Masini].count > 0)
+        {
+            YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
+            aView.controller = self;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+        else {
+            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            aView.controller = self;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+    }
+    else if (indexPath.row == 2)
+    {
+        // Daca exista persoane salvate, afisam lista
+        if ([appDelegate Persoane].count > 0)
+        {
+            YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+            aView.controller = self;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+        else {
+            YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            aView.controller = self;
+            aView.proprietar = YES;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+    }
+    else if (indexPath.row == 6)
+    {
+        [self showCustomConfirm:@"Confirmare date" withDescription:@"Aceste informatii vor fi trimise catre un reprezentant i-Asigurare. Mergi mai departe?" withButtonIndex:100];
+    }
+        
 }
 
 #pragma TEXTFIELD
@@ -142,7 +137,7 @@
 {
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
-    if (indexPath.row == 3)
+    if (indexPath.row == 3 || indexPath.row == 4)
         [self addBarButton];    
 
 }
@@ -184,6 +179,8 @@
 
     if (indexPath.row == 3)
         [self setNumarKm:[textField.text intValue]];
+    else if (indexPath.row == 4)
+        [self setCuloare:textField.text];
 }
 
 -(IBAction) doneEditing
@@ -236,6 +233,11 @@
     [(UILabel *)[cellNrKm viewWithTag:1] setText:@"Numar kilometri autovehicul"];
     [(UITextField *)[cellNrKm viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellNrKm];
+    
+    NSArray *topLevelObjectsCuloare = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+    cellCuloare = [topLevelObjectsCuloare objectAtIndex:0];
+    [(UILabel *)[cellCuloare viewWithTag:1] setText:@"Culoare autovehicul"];
+    [YTOUtils setCellFormularStyle:cellCuloare];
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
@@ -291,6 +293,8 @@
     }
     if (masina.nrKm > 0)
         [self setNumarKm:masina.nrKm];
+    if (masina.culoare && ![masina.culoare isEqualToString:@""])
+        [self setCuloare:masina.culoare];
 }
 
 - (void)setNumarKm:(int)v
@@ -298,6 +302,13 @@
     UITextField * txt = (UITextField *)[cellNrKm viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%d",v];
     masina.nrKm = v;
+}
+
+- (void)setCuloare:(NSString *)v
+{
+    UITextField * txt = (UITextField *)[cellCuloare viewWithTag:2];
+    txt.text = [NSString stringWithFormat:@"%@",v];
+    masina.culoare = v;
 }
 
 - (void)setCompanieCasco:(NSString *)v
@@ -323,8 +334,8 @@
 - (IBAction)checkboxCompanieCascoSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     
     if (btn.tag  == 1) {
         [self setCompanieCasco:@"Allianz"];
@@ -355,14 +366,16 @@
     _nomenclatorNrItems = 0;
     int rows = 0;
     int cols =0;
-    int selectedItemIndex = 0;
+    int selectedItemIndex = -1;
     if (_nomenclatorTip == kCompaniiAsigurare)
     {
         listaCompaniiAsigurare = [YTOUtils GETCompaniiAsigurare];
         [lblTitle setText:@"Alege compania unde ai CASCO"];
         listOfItems = listaCompaniiAsigurare;
         _nomenclatorNrItems = listaCompaniiAsigurare.count;
-// to do        selectedItemIndex = [YTOUtils getKeyList:listaCompaniiAsigurare forValue: masina.];
+        
+        if (masina.cascoLa.length > 0)
+            selectedItemIndex = [YTOUtils getKeyList:listaCompaniiAsigurare forValue: masina.cascoLa];
     }
 
     [scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -442,5 +455,235 @@
         [self setCompanieCasco:item.value];
     }
 }
+
+#pragma mark Consume WebService
+
+- (NSString *) XmlRequest
+{    
+    NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<RequestCasco xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<tip_persoana>%@</tip_persoana>"
+                      "<nume>%@</nume>"
+                      "<codunic>%@</codunic>"
+                      "<telefon>%@</telefon>"
+                      "<email>%@</email>"
+                      "<strada>%@</strada>"
+                      "<judet>%@</judet>"
+                      "<localitate>%@</localitate>"
+                      "<data_permis>%@</data_permis>"
+                      "<casatorit>%@</casatorit>"
+                      "<copii_minori>%@</copii_minori>"
+                      "<pensionar>%@</pensionar>"
+                      "<nr_bugetari>%@</nr_bugetari>"
+                      "<tip_inregistrare>%@</tip_inregistrare>"
+                      "<caen>%@</caen>"
+                      "<subtip_activitate>altele</subtip_activitate>"
+                      "<index_categorie_auto>%d</index_categorie_auto>"
+                      "<subcategorie_auto>%@</subcategorie_auto>"
+                      "<in_leasing>%@</in_leasing>"
+                      "<leasing_firma>%@</leasing_firma>"
+                      "<leasing_cui></leasing_cui>"
+                      "<leasing_judet></leasing_judet>"
+                      "<leasing_localitate></leasing_localitate>"
+                      "<serie_civ>%@</serie_civ>"
+                      "<marca>%@</marca>"
+                      "<model>%@</model>"
+                      "<nr_inmatriculare>%@</nr_inmatriculare>"
+                      "<serie_sasiu>%@</serie_sasiu>"
+                      "<casco>%@</casco>"
+                      "<marca_id></marca_id>"
+                      "<auto_nou>%@</auto_nou>"
+                      "<cm3>%d</cm3>"
+                      "<kw>%d</kw>"
+                      "<combustibil>%@</combustibil>"
+                      "<nr_locuri>%d</nr_locuri>"
+                      "<masa_maxima>%d</masa_maxima>"
+                      "<an_fabricatie>%d</an_fabricatie>"
+                      "<destinatie_auto>%@</destinatie_auto>"
+                      "<culoare>%@</culoare>"
+                      "<nr_km>%d</nr_km>"
+                      "<udid>%@</udid>"
+                      "<id_intern>%@</id_intern>"
+                      "<platforma>%@</platforma>"
+                      "</RequestCasco>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      asigurat.tipPersoana, asigurat.nume, asigurat.codUnic, asigurat.telefon, asigurat.email,
+                      asigurat.adresa, masina.judet, masina.localitate, asigurat.dataPermis, asigurat.casatorit, asigurat.copiiMinori, asigurat.pensionar, asigurat.nrBugetari,
+                      @"inmatriculat", // tip inregistrare
+                      asigurat.codCaen, masina.categorieAuto, masina.subcategorieAuto, masina.inLeasing, masina.firmaLeasing,
+                      masina.serieCiv, masina.marcaAuto, masina.modelAuto, masina.nrInmatriculare, masina.serieSasiu, masina.cascoLa,
+                      @"nu", // auto nou
+                      masina.cm3, masina.putere, masina.combustibil, masina.nrLocuri, masina.masaMaxima, masina.anFabricatie, masina.destinatieAuto,
+                      masina.culoare, masina.nrKm,
+                      [[UIDevice currentDevice] uniqueIdentifier], masina.idIntern,
+                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+    return xml;
+}
+
+- (IBAction) callInregistrareComanda {
+    [self showCustomLoading];
+    self.navigationItem.hidesBackButton = YES;
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/casco.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/casco.asmx"];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:15.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/RequestCasco" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+    self.navigationItem.hidesBackButton = NO;
+    [self hideCustomLoading];
+	//to do parseXML
+	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+	
+    if (succes) {
+        [self showCustomAlert:@"Cerere CASCO" withDescription:responseMessage withError:NO withButtonIndex:1];
+	}
+	else
+    {
+        [self showCustomAlert:@"Cerere CASCO" withDescription:@"Cererea NU a fost transmisa." withError:YES withButtonIndex:4];
+	}
+    
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+	
+    [self hideCustomLoading];
+    [self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
+}
+
+#pragma mark NSXMLParser Methods
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	if ([elementName isEqualToString:@"RequestCascoResult"]) {
+		responseMessage = [NSString stringWithString:currentElementValue];
+	}
+    
+	currentElementValue = nil;
+}
+
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if(!currentElementValue)
+		currentElementValue = [[NSMutableString alloc] initWithString:string];
+	else
+		[currentElementValue appendString:string];
+}
+
+- (void) showCustomLoading
+{
+    [self hideCustomLoading];
+    [btnClosePopup setHidden:YES];
+    [loading setHidden:NO];
+    [lblLoading setHidden:NO];
+    [imgLoading setImage:[UIImage imageNamed:@"popup-generic.png"]];
+    [vwLoading setHidden:NO];
+}
+
+- (IBAction) hideCustomLoading
+{
+    [vwLoading setHidden:YES];
+    if (idOferta && ![idOferta isEqualToString:@""])
+        [self showPopupDupaComanda];
+}
+
+- (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
+{
+    if (error)
+        imgError.image = [UIImage imageNamed:@"comanda-eroare.png"];
+    else
+        imgError.image = [UIImage imageNamed:@"informatii-trimise.png"];
+    
+    btnCustomAlertOK.tag = index;
+    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
+    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
+    [lblCustomAlertOK setText:@"OK"];
+    [btnCustomAlertNO setHidden:YES];
+    [lblCustomAlertNO setHidden:YES];
+    
+    lblCustomAlertTitle.text = title;
+    lblCustomAlertMessage.text = description;
+    [vwCustomAlert setHidden:NO];
+}
+
+- (IBAction) hideCustomAlert:(id)sender;
+{
+    UIButton * btn = (UIButton *)sender;
+    [vwCustomAlert setHidden:YES];
+    if (btn.tag == 1)
+    {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    else if (btn.tag == 11)
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    else if (btn.tag == 100)
+        [self callInregistrareComanda];
+    
+}
+
+- (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
+{
+    imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
+    btnCustomAlertOK.tag = index;
+    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+    [lblCustomAlertOK setText:@"DA"];
+    
+    [btnCustomAlertNO setHidden:NO];
+    [lblCustomAlertNO setHidden:NO];
+    
+    lblCustomAlertTitle.text = title;
+    lblCustomAlertMessage.text = description;
+    [vwCustomAlert setHidden:NO];
+}
+
+- (void) showPopupDupaComanda
+{
+    [vwLoading setHidden:NO];
+    [loading setHidden:YES];
+    [lblLoading setHidden:YES];
+    [btnClosePopup setHidden:NO];
+    btnClosePopup.tag = 11;
+    [imgLoading setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
+}
+
 
 @end

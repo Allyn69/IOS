@@ -27,5 +27,7 @@
 @property (nonatomic, retain) CotatieCalatorie * cotatie;
 
 - (void) initCells;
+- (void) showConditiiComplete;
+- (void) showSumarAcoperiri;
 
 @end

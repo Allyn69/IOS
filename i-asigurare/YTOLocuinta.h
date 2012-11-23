@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSString * clauzaApaConducta;
 @property (nonatomic, retain) NSString * detectieIncendiu;
 @property (nonatomic, retain) NSString * arePaza;
+@property (nonatomic, retain) NSString * areTeren;
 @property (nonatomic, retain) NSString * locuitPermanent;
 @property (nonatomic, retain) NSString * judet;
 @property (nonatomic, retain) NSString * localitate;

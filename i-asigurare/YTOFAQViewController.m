@@ -33,7 +33,7 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    tipFAQ = @"rca";
     [self callGetFAQ];
 }
 
@@ -102,13 +102,53 @@
     return xml;
 }
 
+- (IBAction)getFaqDupaTip:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    
+    if (btn.tag == 1)
+        tipFAQ = @"rca";
+    else if (btn.tag == 2)
+        tipFAQ = @"calatorie";
+    else if (btn.tag == 3)
+        tipFAQ = @"locuinta";
+    else tipFAQ = @"casco";
+    
+    [self callGetFAQ];
+}
+
 - (IBAction) callGetFAQ {
     
     [self showLoading];
     
+    if ([tipFAQ isEqualToString:@"rca"])
+    {
+        imgTip.image = [UIImage imageNamed:@"faq1.png"];
+        lblCalatorie.textColor = lblCasco.textColor = lblLocuinta.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblRca.textColor = [UIColor whiteColor];
+    }
+    else if ([tipFAQ isEqualToString:@"calatorie"])
+    {
+        imgTip.image = [UIImage imageNamed:@"faq2.png"];
+        lblRca.textColor = lblCasco.textColor = lblLocuinta.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblCalatorie.textColor = [UIColor whiteColor];
+    }
+    else if ([tipFAQ isEqualToString:@"locuinta"])
+    {
+        imgTip.image = [UIImage imageNamed:@"faq3.png"];
+        lblCalatorie.textColor = lblCasco.textColor = lblRca.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblLocuinta.textColor = [UIColor whiteColor];
+    }
+    else if ([tipFAQ isEqualToString:@"casco"])
+    {
+        imgTip.image = [UIImage imageNamed:@"faq4.png"];
+        lblCalatorie.textColor = lblRca.textColor = lblLocuinta.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblCasco.textColor = [UIColor whiteColor];
+    }
+    
     self.navigationItem.hidesBackButton = YES;
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
-    NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
+    //NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

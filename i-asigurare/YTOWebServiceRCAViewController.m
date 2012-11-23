@@ -177,15 +177,21 @@
     [vwLoading setHidden:NO];
     [self startLoadingAnimantion];
     
-    NSString * btnText;
     if (oferta.durataAsigurare == 6)
-        btnText = @"Vezi tarife 12 luni";
+    {
+        imgDurata.image = [UIImage imageNamed:@"selectat-stanga-masina.png"];
+        lbl12Luni.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl6Luni.textColor = [UIColor whiteColor];
+    }
     else
-        btnText = @"Vezi tarife 6 luni";        
-    [lblTarif setText:btnText];
+    {
+        imgDurata.image = [UIImage imageNamed:@"selectat-dreapta-masina.png"];
+        lbl6Luni.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl12Luni.textColor = [UIColor whiteColor];
+    }
     
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -470,20 +476,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    return [NSString stringWithFormat:@"Acestea sunt tarifele pe %d luni", oferta.durataAsigurare];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return listTarife.count;
 }
 

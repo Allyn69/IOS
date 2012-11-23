@@ -120,13 +120,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    if (indexPath.row == 2)
-    {
-        YTOWebViewController * aView = [[YTOWebViewController alloc] init];
-        aView.URL = cotatie.LinkConditii;
-        [delegate.rcaNavigationController pushViewController:aView animated:YES];
-    }
-    else if (indexPath.row == 3)
+    if (indexPath.row == 3)
     {
         YTOFinalizareCalatorieViewController * aView = [[YTOFinalizareCalatorieViewController alloc] init];
         aView.listAsigurati = listAsigurati;
@@ -170,6 +164,13 @@
     ((UILabel *)[cellProdus viewWithTag:3]).text = @"";
     ((UILabel *)[cellProdus viewWithTag:4]).text = @"";
     ((UIImageView *)[cellProdus viewWithTag:5]).image = ((UIImageView *)[cellProdus viewWithTag:6]).image = nil ;//[UIImage imageNamed:@"arrow-calatorie.png"];
+    UIButton * btnConditii = ((UIButton *)[cellProdus viewWithTag:7]);
+    UIButton * btnSumar = ((UIButton *)[cellProdus viewWithTag:9]);
+    btnConditii.hidden = ((UILabel *)[cellProdus viewWithTag:8]).hidden =
+    btnSumar.hidden = ((UILabel *)[cellProdus viewWithTag:10]).hidden = NO;
+    
+    [btnConditii addTarget:self action:@selector(showConditiiComplete) forControlEvents:UIControlEventTouchUpInside];
+    [btnSumar addTarget:self action:@selector(showSumarAcoperiri) forControlEvents:UIControlEventTouchUpInside];
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
@@ -178,6 +179,27 @@
     UILabel * lblCellC = (UILabel *)[cellCalculeaza viewWithTag:2];
     lblCellC.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblCellC.text = @"Continua";
+}
+
+- (void) showConditiiComplete
+{
+    if (cotatie.LinkConditii == nil || [cotatie.LinkConditii isEqualToString:@"(null)"] || cotatie.LinkConditii.length == 0)
+        return;
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+    aView.URL = cotatie.LinkConditii;
+    [delegate.rcaNavigationController pushViewController:aView animated:YES];
+}
+
+- (void) showSumarAcoperiri
+{
+    if (cotatie.ConditiiHint == nil || [cotatie.ConditiiHint isEqualToString:@"(null)"] || cotatie.ConditiiHint.length == 0)
+        return;
+    
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+    aView.HTMLContent = [YTOUtils getHTMLWithStyle:cotatie.ConditiiHint];
+    [delegate.rcaNavigationController pushViewController:aView animated:YES];
 }
 
 @end

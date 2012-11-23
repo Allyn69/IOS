@@ -77,7 +77,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<object class="NSCustomResource" key="IBUIImage">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">tooltip-rca.png</string>
+									<string key="NSResourceName">tooltip-profil.png</string>
 								</object>
 							</object>
 							<object class="IBUILabel" id="997658839">
@@ -358,6 +358,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">imgTooltip</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="253149628"/>
+					</object>
+					<int key="connectionID">43</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="512155948"/>
 						<reference key="destination" ref="372490531"/>
@@ -505,7 +513,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">42</int>
+			<int key="maxID">43</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -531,6 +539,7 @@
 						<string key="btnDone">UIBarButtonItem</string>
 						<string key="cellReduceri">UITableViewCell</string>
 						<string key="cellTipPersoana">UITableViewCell</string>
+						<string key="imgTooltip">UIImageView</string>
 						<string key="lblTootlip">UILabel</string>
 						<string key="tableView">UITableView</string>
 						<string key="vwTooltip">UIView</string>
@@ -551,6 +560,10 @@
 						<object class="IBToOneOutletInfo" key="cellTipPersoana">
 							<string key="name">cellTipPersoana</string>
 							<string key="candidateClassName">UITableViewCell</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="imgTooltip">
+							<string key="name">imgTooltip</string>
+							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="lblTootlip">
 							<string key="name">lblTootlip</string>
@@ -583,7 +596,7 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="profil-pf.png">{320, 29}</string>
 			<string key="profil-pj.png">{320, 29}</string>
-			<string key="tooltip-rca.png">{320, 65}</string>
+			<string key="tooltip-profil.png">{320, 65}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>

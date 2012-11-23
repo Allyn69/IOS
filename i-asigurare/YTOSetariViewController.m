@@ -1,4 +1,4 @@
-//
+	//
 //  YTOSetariViewController.m
 //  i-asigurare
 //
@@ -15,6 +15,7 @@
 #import "YTOAutovehicul.h"
 #import "YTOLocuinta.h"
 #import "YTOPersoana.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOSetariViewController ()
 
@@ -40,8 +41,11 @@
     
     [self initCells];
     
-    UIBarButtonItem *btnSync = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(callSyncItems)];
-    self.navigationItem.rightBarButtonItem = btnSync;
+
+    // Daca nu s-a facut  sincronizarea,
+    // se apeleaza metoda din serviciu
+    if ([YTOUserDefaults IsSyncronized] == NO)
+        [self callSyncItems];
     
     // Do any additional setup after loading the view from its nib.
 //    [self startLoadingAnimantion];
@@ -124,7 +128,8 @@
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-masinile-mele.png"];
         ((UILabel *)[cell viewWithTag:2]).text = @"MASINILE MELE";
 //        UIScrollView * scrollView = (UIScrollView *)[cell viewWithTag:4];
-        NSMutableArray * masini = [YTOAutovehicul Masini];
+        YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+        NSMutableArray * masini = [delegate Masini];
 //        for (int i=0; i<masini.count; i++) {
 //            UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(i*60, 5, 30, 30)];
 //            img.image = [UIImage imageNamed:@"marca-auto.png"]; //[UIImage imageNamed:[NSString stringWithFormat:@"%@.png", ((YTOAutovehicul *)[masini objectAtIndex:i]).marcaAuto]];
@@ -150,8 +155,8 @@
         cell = cellLocuinteleMele;        
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-locuintele-mele.png"];
         ((UILabel *)[cell viewWithTag:2]).text = @"LOCUINTELE MELE";        
-        
-        NSMutableArray * locuinte = [YTOLocuinta Locuinte];
+        YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];        
+        NSMutableArray * locuinte = [delegate Locuinte];
         if (locuinte.count > 0)
         {
             ((UILabel *)[cell viewWithTag:3]).text = [NSString stringWithFormat:@"%d %@", locuinte.count, (locuinte.count == 1 ? @"locuinta" : @"locuinte" )];
@@ -248,6 +253,10 @@
     UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 68)];
     imgHeader.image = [UIImage imageNamed:@"header-first-screen.png"];
     [cellHeader addSubview:imgHeader];
+    UILabel * lblLine = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, 320, 1)];
+    [lblLine setBackgroundColor:[YTOUtils colorFromHexString:@"#b3b3b3"]];
+    [cellHeader addSubview:imgHeader];
+    [cellHeader addSubview:lblLine];
     
     NSArray *topLevelObjects1 = [[NSBundle mainBundle] loadNibNamed:@"CellView_Setari" owner:self options:nil];
     cellProfilulMeu = [topLevelObjects1 objectAtIndex:0];
@@ -330,8 +339,8 @@
     [self showCustomLoading];
     
     
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -386,6 +395,8 @@
     
 	if (succes)
     {
+        [YTOUserDefaults setSyncronized:YES];
+        
         NSError * err = nil;
         NSData *dataMasini = [jsonMasini dataUsingEncoding:NSUTF8StringEncoding];
         if (dataMasini)
@@ -394,15 +405,28 @@
             
             for(NSDictionary *item in jsonArray) {
                 NSString * idIntern = [item objectForKey:@"IdIntern"];
-                masina = [YTOAutovehicul getAutovehicul:idIntern];
+                
+                // Daca exista idIntern, cautam in baza de date
+                // Altfel, generam un guid
+                if (idIntern && idIntern.length >0)
+                    masina = [YTOAutovehicul getAutovehicul:idIntern];
+                else
+                    idIntern = [YTOUtils GenerateUUID];
+                
+                // Daca masina nu exista in baza de date,
+                // se creeaza un obiect cu idIntern
                 if (!masina)
-                {    masina = [[YTOAutovehicul alloc] init];
+                {
+                    masina = [[YTOAutovehicul alloc] init];
                     masina.idIntern = [item objectForKey:@"IdIntern"];
+                    NSLog(@"%@", masina.idIntern);
                 }
+                
+                // Mapare valori
                 masina.marcaAuto = [item objectForKey:@"Marca"];
                 masina.modelAuto = [item objectForKey:@"Model"];
-                masina.categorieAuto = [[item objectForKey:@"IndexCategorieAuto"] intValue];
-                masina.subcategorieAuto = [item objectForKey:@"SubcategorieAuto"];
+                masina.categorieAuto = [[item objectForKey:@"Categorie"] intValue];
+                masina.subcategorieAuto = [item objectForKey:@"Subcategorie"];
                 masina.judet = [item objectForKey:@"Judet"];
                 masina.localitate = [item objectForKey:@"Localitate"];
                 masina.nrInmatriculare = [item objectForKey:@"NrInmatriculare"];
@@ -418,13 +442,21 @@
                 masina.inLeasing = [[item objectForKey:@"Leasing"] boolValue] ? @"da" : @"nu";
                 masina.firmaLeasing = [item objectForKey:@"FirmaLeasing"];
                 
+                // Daca masina exista in baza de date, se face update
+                // Altfel se face insert
                 if (!masina._isDirty)
                     [masina addAutovehicul];
                 else
                     [masina updateAutovehicul];
+                
+                masina = nil;
+                
+                YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+                [delegate refreshMasini];
             }
+            
         }
-        
+
         NSData * dataProprietar = [jsonProprietar dataUsingEncoding:NSUTF8StringEncoding];
         if (dataProprietar)
         {
@@ -447,9 +479,11 @@
             
             NSString * eml = [jsonItem objectForKey:@"Email"];
             proprietar.email = eml ? eml : @"";
-            proprietar.judet = [jsonItem objectForKey:@"JudetDR"];
-            proprietar.localitate = [jsonItem objectForKey:@"LocalitateDR"];
-            proprietar.adresa = [jsonItem objectForKey:@"Strada"];
+            proprietar.judet = [jsonItem objectForKey:@"Judet"];
+            proprietar.localitate = [jsonItem objectForKey:@"Localitate"];
+            proprietar.adresa = [jsonItem objectForKey:@"Adresa"];
+            proprietar.dataPermis = [jsonItem objectForKey:@"AnPermis"];
+            proprietar.codCaen = [jsonItem objectForKey:@"CodCaen"];
             
             //NSLog(@"%@", [jsonItem objectForKey:@"DataPermisDR"]);
             

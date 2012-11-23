@@ -58,6 +58,7 @@
     persoana.JSONText = [self toJSON];
     [persoana addObiectAsigurat];
     self._isDirty = YES;
+    
     [self refresh];
 }
 
@@ -75,6 +76,8 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
+
+    [self refresh];
 }
 
 + (YTOPersoana *) getPersoana:(NSString *)_idIntern 

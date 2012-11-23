@@ -9,6 +9,7 @@
 #import "YTOSumarLocuintaViewController.h"
 #import "YTOAppDelegate.h"
 #import "YTOFinalizareLocuintaViewController.h"
+#import "YTOWebViewController.h"
 
 @interface YTOSumarLocuintaViewController ()
 
@@ -121,13 +122,19 @@
     
     NSArray *topLevelObjectsProdus = [[NSBundle mainBundle] loadNibNamed:@"CellView_Sumar" owner:self options:nil];
     cellProdus = [topLevelObjectsProdus objectAtIndex:0];
-    ((UILabel *)[cellProdus viewWithTag:1]).text = [NSString stringWithFormat:@"%.2f RON", oferta.prima];
+    ((UILabel *)[cellProdus viewWithTag:1]).text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
     ((UIImageView *)[cellProdus viewWithTag:2]).image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
     
     ((UILabel *)[cellProdus viewWithTag:3]).text = @"";
     ((UILabel *)[cellProdus viewWithTag:4]).text = @"";
     ((UIImageView *)[cellProdus viewWithTag:5]).image = ((UIImageView *)[cellProdus viewWithTag:6]).image = nil ;//[UIImage imageNamed:@"arrow-calatorie.png"];
+    UIButton * btnConditii = ((UIButton *)[cellProdus viewWithTag:7]);
+    UIButton * btnSumar = ((UIButton *)[cellProdus viewWithTag:9]);
+    btnConditii.hidden = ((UILabel *)[cellProdus viewWithTag:8]).hidden =
+    btnSumar.hidden = ((UILabel *)[cellProdus viewWithTag:10]).hidden = NO;
     
+    [btnConditii addTarget:self action:@selector(showConditiiComplete) forControlEvents:UIControlEventTouchUpInside];
+    [btnSumar addTarget:self action:@selector(showSumarAcoperiri) forControlEvents:UIControlEventTouchUpInside];
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
     UIImageView * imgComanda = (UIImageView *)[cellCalculeaza viewWithTag:1];
@@ -135,5 +142,27 @@
     UILabel * lblCellC = (UILabel *)[cellCalculeaza viewWithTag:2];
     lblCellC.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblCellC.text = @"Continua";
+}
+
+- (void) showConditiiComplete
+{
+    if (cotatie.linkConditii == nil || [cotatie.linkConditii isEqualToString:@"(null)"] || cotatie.linkConditii.length == 0)
+        return;
+    
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+    aView.URL = cotatie.linkConditii;
+    [delegate.rcaNavigationController pushViewController:aView animated:YES];
+}
+
+- (void) showSumarAcoperiri
+{
+    if (cotatie.conditiiHint == nil || [cotatie.conditiiHint isEqualToString:@"(null)"] || cotatie.conditiiHint.length == 0)
+        return;
+    
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+    aView.HTMLContent = [YTOUtils getHTMLWithStyle:cotatie.conditiiHint];
+    [delegate.rcaNavigationController pushViewController:aView animated:YES];
 }
 @end

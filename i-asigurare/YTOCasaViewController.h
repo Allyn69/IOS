@@ -93,4 +93,14 @@
 - (void) setSuprafata:(int)p;
 - (void) setNrLocatari:(int)p;
 - (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave;
+
+- (void) setAlarma:(NSString *)v;
+- (void) setGrilajeGeam:(NSString *)v;
+- (void) setDetectieIncendiu:(NSString *)v;
+- (void) setPaza:(NSString *)v;
+- (void) setTeren:(NSString *)v;
+- (void) setZonaIzolata:(NSString*)v;
+- (void) setLocuitPermananet:(NSString *)v;
+- (void) setClauzaFurtBunuri:(NSString *)v;
+- (void) setClauzaApaConducta:(NSString *)v;
 @end

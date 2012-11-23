@@ -45,7 +45,7 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     // Daca exista masini salvate, afisam lista
-    if ([YTOAutovehicul Masini].count > 0)
+    if ([appDelegate Masini].count > 0)
     {
         YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
         aView.controller = self;
@@ -93,8 +93,8 @@
     [self showLoading];
     
     self.navigationItem.hidesBackButton = YES;
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/utils.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/utils.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/utils.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/utils.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -141,11 +141,14 @@
         NSError * err = nil;
         NSData *data = [jsonResponse dataUsingEncoding:NSUTF8StringEncoding];
         NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
-        
+        dataExpirare = nil;
         for(NSDictionary *json in jsonArray) {
             NSString * status = [json objectForKey:@"status"];
             NSString * mesaj = [json objectForKey:@"mesaj"];
-        //    NSString * dataExpirare =[json objectForKey:@"data-expirare"];
+            
+            NSString * dExpirare =[json objectForKey:@"data-expirare"];
+            if (dExpirare && dExpirare.length >0)
+                dataExpirare = [YTOUtils getDateFromString:dExpirare withFormat:@"dd.MM.yyyy"];
             
             if ([status isEqualToString:@"0"])
                 [self showPopup:@"Polita nu a fost gasita!" withDescription:mesaj];
@@ -201,6 +204,29 @@
 - (IBAction) hideLoading
 {
     [vwLoading setHidden:YES];
+    
+    /* Poate facem ceva..setam o alerta sau facem o calculatie
+    if (dataExpirare != nil)
+    {
+        
+        
+        NSDate *fromDate;
+        NSDate *toDate;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&fromDate
+                     interval:NULL forDate:[NSDate date]];
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&toDate
+                     interval:NULL forDate:dataExpirare];
+        
+        NSDateComponents *difference = [calendar components:NSDayCalendarUnit
+                                                   fromDate:fromDate toDate:toDate options:0];
+        
+        
+        if ([difference day] < 7)
+            NSLog(@"polita expira in mai putin de 7 zile");
+        NSLog(@"polita expira in %d zile", [difference day]);
+    } */
 }
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description
 {

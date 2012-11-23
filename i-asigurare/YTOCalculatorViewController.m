@@ -168,7 +168,7 @@
     if (indexPath.row == 1)
     {        
         // Daca exista masini salvate, afisam lista
-        if ([YTOAutovehicul Masini].count > 0)
+        if ([appDelegate Masini].count > 0)
         {
             YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
             aView.controller = self;

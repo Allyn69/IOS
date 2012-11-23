@@ -151,7 +151,7 @@
 {
     if (indexPath.row == 2)
     {
-        if (alerta.tipAlerta == 5)
+        if (alerta.tipAlerta == 6)
         {
             YTOListaLocuinteViewController * aView = [[YTOListaLocuinteViewController alloc] init];
             aView.controller = self;
@@ -217,8 +217,8 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
     
-    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
-    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+//    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+//    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
 //    if (indexPath.row == 3)
 //        [self setNume:textField.text];
@@ -337,7 +337,7 @@
     [self setDataAlerta:[YTOUtils formatDate:alerta.dataAlerta withFormat:@"dd.MM.yyyy"]];
     if (alerta.idObiect)
     {
-        if (alerta.tipAlerta == 5)
+        if (alerta.tipAlerta == 6)
         {
             YTOLocuinta * locuinta = [YTOLocuinta getLocuinta:alerta.idObiect];
             [self setLocuinta:locuinta];
@@ -376,14 +376,14 @@
     if (alerta.tipAlerta > 0 && alerta.tipAlerta != tip)
     {
         alerta.idObiect = @"";
-        if (tip == 5)
+        if (tip == 6)
             [self setLocuinta:nil];
         else [self setAutovehicul:nil];
     }
     
     alerta.tipAlerta = tip;
     
-    if (alerta.tipAlerta > 3)
+    if (alerta.tipAlerta == 7 || alerta.tipAlerta == 8)
         areRata = YES;
     else
         areRata = NO;
@@ -422,8 +422,8 @@
 -(IBAction)checkboxSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     // [btn setSelected:checkboxSelected];
     if (btn.tag  == 1)
         [self setTipAlerta:@"RCA"];
@@ -439,8 +439,8 @@
 - (IBAction)checkboxRataSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     // [btn setSelected:checkboxSelected];
     if (btn.tag  == 1)
         [self setEsteRata:@"nu"];

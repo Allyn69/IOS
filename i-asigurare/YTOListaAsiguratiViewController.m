@@ -9,6 +9,7 @@
 #import "YTOListaAsiguratiViewController.h"
 #import "YTOAppDelegate.h"
 #import "YTOCalculatorViewController.h"
+#import "YTOCASCOViewController.h"
 #import "YTOCalatorieViewController.h"
 #import "YTOLocuintaViewController.h"
 #import "YTOSetariViewController.h"
@@ -43,13 +44,14 @@
     
     if (produsAsigurare == Calatorie)
     {
+        [self checkVisibilityForOk];
         listaAsigurati = [YTOPersoana PersoaneFizice];
         if (listaAsiguratiSelectati.count == 0)
         {   
             listaAsiguratiSelectati = [[NSMutableArray alloc] init];
             listAsiguratiIndecsi = [[NSMutableArray alloc] init];
+            
         }
-        // to do - make tablView multiselect
     }
     else {
         if ([controller isKindOfClass:[YTOSetariViewController class]])
@@ -111,30 +113,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return listaAsigurati.count;
 }
-
-//- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:@"CellView_String"];
-//    if (cell == nil) {
-//        // Create a temporary UIViewController to instantiate the custom cell.
-//        UIViewController *temporaryController = [[UIViewController alloc] initWithNibName:@"CellView_String" bundle:nil];
-//        // Grab a pointer to the custom cell.
-//        cell = (YTOCellView_String *)temporaryController.view;
-//        // Release the temporary UIViewController.
-//    }
-//    
-//    return cell;
-//}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -151,6 +136,8 @@
 
     if (produsAsigurare == Calatorie)
     {
+        [self checkVisibilityForOk];
+        
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         for (int i = 0; i < listAsiguratiIndecsi.count; i++) {
             NSUInteger num = [[listAsiguratiIndecsi objectAtIndex:i] intValue];
@@ -216,8 +203,10 @@
            {
                YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
                if ([ps.idIntern isEqualToString:p.idIntern])
+               {
                    exista = YES;
-               break;
+                   break;
+               }
            }
            if (!exista)
            {
@@ -238,11 +227,14 @@
            {
                YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
                if ([ps.idIntern isEqualToString:p.idIntern])
+               {
                    [listaAsiguratiSelectati removeObjectAtIndex:i];
-               break;
+                   break;
+               }
            }
            [listAsiguratiIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
        }
+       [self checkVisibilityForOk];
    }
    else 
    {
@@ -252,6 +244,12 @@
        if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
        {
            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+           [parent setAsigurat:persoana];
+           [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+       }
+       else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+       {
+           YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
            [parent setAsigurat:persoana];
            [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
        }
@@ -448,6 +446,24 @@
         UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
         [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
+}
+
+- (IBAction)doneSelecting:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void) checkVisibilityForOk
+{
+    if (listaAsiguratiSelectati.count == 0)
+    {
+        btnOk.hidden = YES;
+        lblOk.hidden = YES;
+    }
+    else
+    {
+        btnOk.hidden = NO;
+        lblOk.hidden = NO;
     }
 }
 @end

@@ -8,7 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@interface YTOAlerta : NSObject
+@interface YTOAlerta : NSObject<NSXMLParserDelegate>
+{
+    NSMutableData * responseData;
+	NSMutableData * capturedCharactes;
+	NSMutableString * currentElementValue;
+    NSString * raspuns;
+}
 
 @property int                            idExtern;
 @property (nonatomic, retain) NSString * idIntern;
@@ -18,6 +24,8 @@
 @property (nonatomic, retain) NSString * idObiect;
 @property (nonatomic, retain) NSDate   * _dataCreare;
 @property BOOL _isDirty;
+
+@property (nonatomic, retain) NSMutableData * responseData;
 
 -(id)initWithGuid:(NSString*)guid;
 - (void) addAlerta;

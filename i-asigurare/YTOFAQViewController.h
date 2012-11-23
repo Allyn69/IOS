@@ -23,6 +23,14 @@
 	NSMutableString * currentElementValue;
 	NSString    * responseMessage;
 	NSString    * jsonResponse;
+    
+    NSString             * tipFAQ;
+    
+    IBOutlet UIImageView * imgTip;
+    IBOutlet UILabel     * lblRca;
+    IBOutlet UILabel     * lblCalatorie;
+    IBOutlet UILabel     * lblLocuinta;
+    IBOutlet UILabel     * lblCasco;
 }
 
 @property (nonatomic, retain) NSMutableData *  responseData;
@@ -31,5 +39,6 @@
 - (void) showLoading;
 - (IBAction) hideLoading;
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description;
+- (IBAction)getFaqDupaTip:(id)sender;
 
 @end

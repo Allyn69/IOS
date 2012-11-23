@@ -97,8 +97,8 @@
                       "<sa_centrala_termica>0</sa_centrala_termica>"
                       "<tip_geam>termopan</tip_geam>"
                       "<vechime_centrala>0</vechime_centrala>"
-                      "<clauza_furt_bunuri>nu</clauza_furt_bunuri>"
-                      "<clauza_apa_conducta>nu</clauza_apa_conducta>"
+                      "<clauza_furt_bunuri>%@</clauza_furt_bunuri>"
+                      "<clauza_apa_conducta>%@</clauza_apa_conducta>"
                       "<tip_cladire>%@</tip_cladire>"
                       "<structura_rezistenta>%@</structura_rezistenta>"
                       "<regim_inaltime>%d</regim_inaltime>"
@@ -106,13 +106,13 @@
                       "<an_constructie>%d</an_constructie>"
                       "<suprafata_utila>%d</suprafata_utila>"
                       "<nr_locatari>%d</nr_locatari>"
-                      "<are_teren>nu</are_teren>"
-                      "<alarma>nu</alarma>"
-                      "<detectie_incendiu>da</detectie_incendiu>"
-                      "<grilaje_geam>nu</grilaje_geam>"
-                      "<paza>da</paza>"
-                      "<locuit_permanent>da</locuit_permanent>"
-                      "<zona_izolata>nu</zona_izolata>"
+                      "<are_teren>%@</are_teren>"
+                      "<alarma>%@</alarma>"
+                      "<detectie_incendiu>%@</detectie_incendiu>"
+                      "<grilaje_geam>%@</grilaje_geam>"
+                      "<paza>%@</paza>"
+                      "<locuit_permanent>%@</locuit_permanent>"
+                      "<zona_izolata>%@</zona_izolata>"
                       "<udid>%@</udid>"
                       "<platforma>%@</platforma>"
                       "</CallCalculLocuinta>"
@@ -122,9 +122,19 @@
                       [formatter stringFromDate:oferta.dataInceput],oferta.moneda,
                       asigurat.tipPersoana,
                       locuinta.judet, locuinta.localitate, asigurat.adresa, locuinta.modEvaluare,
-                      locuinta.sumaAsigurata, locuinta.sumaAsigurataRC, locuinta.tipLocuinta, locuinta.structuraLocuinta,
+                      locuinta.sumaAsigurata, locuinta.sumaAsigurataRC,
+                      [locuinta.clauzaFurtBunuri isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.clauzaApaConducta isEqualToString:@"da"] ? @"da" : @"nu",
+                      locuinta.tipLocuinta, locuinta.structuraLocuinta,
                       locuinta.regimInaltime, locuinta.nrCamere, locuinta.anConstructie, locuinta.suprafataUtila,
                       locuinta.nrLocatari,
+                      [locuinta.areTeren isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.areAlarma isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.detectieIncendiu isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.areGrilajeGeam isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.arePaza isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.locuitPermanent isEqualToString:@"da"] ? @"da" : @"nu",
+                      [locuinta.zonaIzolata isEqualToString:@"da"] ? @"da" : @"nu",
                       [[UIDevice currentDevice] uniqueIdentifier],
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
     return xml;
@@ -153,8 +163,8 @@
     //[btnTarif setTitle:btnText forState:UIControlStateNormal];
     
     
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
+	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
+	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

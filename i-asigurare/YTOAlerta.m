@@ -7,6 +7,7 @@
 //
 
 #import "YTOAlerta.h"
+#import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
 
@@ -20,6 +21,8 @@
 @synthesize idObiect;
 @synthesize _dataCreare;
 @synthesize _isDirty;
+
+@synthesize responseData;
 
 - (id)initWithGuid:(NSString*)guid
 {
@@ -37,6 +40,11 @@
     alerta.JSONText = [self toJSON];
     [alerta addObiectAsigurat];
     self._isDirty = YES;
+
+    [self showLoading];
+    [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    
+    [self refresh];
 }
 
 - (void) updateAlerta
@@ -44,6 +52,11 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
+
+    [self showLoading];
+    [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    
+    [self refresh];
 }
 
 - (void) deleteAlerta
@@ -51,6 +64,8 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
+
+    [self refresh];
 }
 
 + (YTOAlerta *) getAlerta:(NSString *)_idIntern
@@ -131,8 +146,10 @@
 
 + (int)GetNrAlerteScadente
 {
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     int count=0;
-    NSMutableArray * list = [YTOAlerta Alerte];
+    NSMutableArray * list = [delegate Alerte];
     NSDate * peste4zile = [NSDate date];
     for (int i=0; i<list.count; i++)
     {
@@ -203,5 +220,135 @@
     self._dataCreare = [dateFormat dateFromString:dataString];
     
     self._isDirty = YES;
+}
+
+- (void) refresh
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate refreshAlerte];
+}
+
+
+#pragma mark Consume WebService
+
+- (NSString *) XmlRequest
+{
+    NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<InregistrareAlerte3 xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<tip>%d</tip>"
+                      "<data_alerta>%@</data_alerta>"
+                      "<nr_rata>%d</nr_rata>"
+                      "<prima>%.2f</prima>"
+                      "<moneda>%@</moneda>"
+                      "<udid>%@</udid>"
+                      "<id_intern>%@</id_intern>"
+                      "<platforma>%@</platforma>"
+                      "<email>%@</email>"
+                      "</InregistrareAlerte3>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      self.tipAlerta, [YTOUtils formatDate:self.dataAlerta withFormat:@"dd.MM.yyyy"],
+                      0,        // numar rata
+                      0.0,      // prima
+                      @"lei",   // moneda
+                      [[UIDevice currentDevice] uniqueIdentifier],
+                      self.idObiect,
+                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                      @"andi@i-tom.ro"];
+    return xml;
+}
+
+- (void) callInregistrareAlerta {
+
+	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
+	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/InregistrareAlerte3" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+	//to do parseXML
+	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+	
+	if (succes) {
+        NSLog(@"alerta inregistrata");
+    }
+	else {
+        
+	}
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+}
+
+#pragma mark NSXMLParser Methods
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	if ([elementName isEqualToString:@"InregistrareAlerte3Result"]) {
+        raspuns = currentElementValue;
+	}
+    
+	currentElementValue = nil;
+}
+
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if(!currentElementValue)
+		currentElementValue = [[NSMutableString alloc] initWithString:string];
+	else
+		[currentElementValue appendString:string];
+}
+
+
+#pragma LOADING
+- (void) showLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = YES;
+}
+- (void) hideLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = NO;
 }
 @end

@@ -97,7 +97,7 @@
 {
     NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellLocuintaHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsHeader objectAtIndex:0];
-    [YTOUtils setCellFormularStyle:cellHeader];
+    //[YTOUtils setCellFormularStyle:cellHeader];
     
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellNumeAsigurare = [topLevelObjectsNume objectAtIndex:0];
@@ -165,8 +165,8 @@
 - (IBAction) btnTipAsigurare_Clicked:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
 
     [self setTipAsigurare:btn.tag];
 }

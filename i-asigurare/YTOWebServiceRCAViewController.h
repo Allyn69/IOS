@@ -37,6 +37,10 @@
     IBOutlet UITableView *  tableView;
     IBOutlet UIButton *     btnTarif;
     IBOutlet UILabel *     lblTarif;
+    
+    IBOutlet UIImageView * imgDurata;
+    IBOutlet UILabel     * lbl6Luni;
+    IBOutlet UILabel     * lbl12Luni;
 }
 
 @property (nonatomic, retain) CotatieRCA * cotatie;

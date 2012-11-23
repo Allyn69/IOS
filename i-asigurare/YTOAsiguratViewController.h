@@ -17,6 +17,7 @@
     IBOutlet UIBarButtonItem * btnDone;
     IBOutlet UIView * vwTooltip;
     IBOutlet UILabel * lblTootlip;
+    IBOutlet UIImageView * imgTooltip;
     YTOPersoana * asigurat;
     UITableViewCell * cellAsigurat;
     UITableViewCell * cellNume;

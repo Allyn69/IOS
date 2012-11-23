@@ -21,6 +21,9 @@
     IBOutlet UILabel *      lblPersoanaActiva;
     IBOutlet UIView * vwEmpty;
     BOOL editingMode;
+    
+    IBOutlet UILabel * lblOk;
+    IBOutlet UIButton * btnOk;
 }
 
 @property (nonatomic, retain) NSMutableArray *         listaAsiguratiSelectati;
@@ -31,10 +34,13 @@
 
 - (IBAction)adaugaPersoana:(id)sender;
 - (IBAction)hideInfoCalatorie:(id)sender;
--(IBAction)checkboxSelected:(id)sender;
+- (IBAction)checkboxSelected:(id)sender;
+- (IBAction)doneSelecting:(id)sender;
 - (void) reloadData;
 - (void) verifyViewMode;
 
 - (void) loadInfoCalatorie;
 - (void) setInfoCalatorie:(BOOL)k forButton:(UIButton *)btn;
+
+- (void) checkVisibilityForOk;
 @end

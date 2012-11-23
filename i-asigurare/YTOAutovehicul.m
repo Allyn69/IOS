@@ -7,6 +7,7 @@
 //
 
 #import "YTOAutovehicul.h"
+#import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
 
@@ -81,7 +82,9 @@
 
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern
 {
-    NSMutableArray * list = [YTOAutovehicul Masini];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    NSMutableArray * list = [delegate Masini];
     for (int i=0; i<list.count; i++) {
         YTOAutovehicul * _auto = [list objectAtIndex:i];
         if ([_auto.idIntern isEqualToString:_idIntern])
@@ -92,7 +95,8 @@
 
 + (YTOAutovehicul *) getAutovehiculByProprietar:(NSString *)_idProprietar
 {
-    NSMutableArray * list = [YTOAutovehicul Masini];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSMutableArray * list = [delegate Masini];
     for (int i=0; i<list.count; i++) {
         YTOAutovehicul * _auto = [list objectAtIndex:i];
         if ([_auto.idProprietar isEqualToString:_idProprietar])

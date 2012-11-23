@@ -25,6 +25,8 @@
 	NSMutableString * currentElementValue;
 	NSString    * responseMessage;
 	NSString    * jsonResponse;
+    
+    NSDate * dataExpirare;
 }
 @property (nonatomic, retain) NSMutableData * responseData;
 @property (nonatomic, retain) YTOAutovehicul * masina;

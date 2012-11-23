@@ -463,6 +463,8 @@
         lblDespreMine.text = @"Despre mine";
         lblFirmaMea.text = @"Firma mea";
         imgTipPersoana.image = [UIImage imageNamed:@"profil-pf.png"];
+        
+        imgTooltip.image = [UIImage imageNamed:@"tooltip-profil.png"];
     }
     else
     {
@@ -471,6 +473,8 @@
         lblDespreMine.text = @"Persoana fizica";
         lblFirmaMea.text = @"Persoana juridica";
         imgTipPersoana.image = [UIImage imageNamed:@"persoana-pf.png"];
+        
+        imgTooltip.image = [UIImage imageNamed:@"tooltip-calatorie.png"];
     }
     
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];

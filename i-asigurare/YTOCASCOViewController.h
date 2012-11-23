@@ -11,13 +11,14 @@
 #import "YTOAutovehicul.h"
 #import "YTOOferta.h"
 
-@interface YTOCASCOViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface YTOCASCOViewController : UIViewController<NSXMLParserDelegate, UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView     *  tableView;
     UITableViewCell          *  cellHeader;
     UITableViewCell          *  cellMasina;
     UITableViewCell          *  cellProprietar;
     UITableViewCell          *  cellNrKm;
+    UITableViewCell          *  cellCuloare;
     UITableViewCell          *  cellCalculeaza;
     IBOutlet UITableViewCell *  cellAsigurareCasco;
     
@@ -28,9 +29,31 @@
     UITextField * activeTextField;
     
     IBOutlet UIView *   vwNomenclator;
+    
+    NSMutableData * capturedCharactes;
+	NSMutableString * currentElementValue;
+	NSString    * responseMessage;
+	NSString	* idOferta;
+	NSString    * mesajFinal;
+    
+    IBOutlet UIImageView * imgError;
+    IBOutlet UIView      * vwCustomAlert;
+    IBOutlet UILabel     * lblCustomAlertTitle;
+    IBOutlet UILabel     * lblCustomAlertMessage;
+    IBOutlet UIButton    * btnCustomAlertOK;
+    IBOutlet UILabel     * lblCustomAlertOK;
+    IBOutlet UIButton    * btnCustomAlertNO;
+    IBOutlet UILabel     * lblCustomAlertNO;
+    
+    IBOutlet UIView      *      vwLoading;    
+    IBOutlet UILabel     * lblLoading;
+    IBOutlet UIActivityIndicatorView * loading;
+    IBOutlet UIImageView * imgLoading;
+    IBOutlet UIButton    * btnClosePopup;
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSMutableArray * listaCompaniiAsigurare;
+@property (nonatomic, retain) NSMutableData * responseData;
 
 // START for vwNomenclator
 @property int _nomenclatorNrItems;
@@ -48,6 +71,12 @@
 - (void)setAsigurat:(YTOPersoana *) a;
 - (void)setAutovehicul:(YTOAutovehicul *)a;
 - (void)setNumarKm:(int)v;
+- (void)setCuloare:(NSString *)v;
 - (void)setCompanieCasco:(NSString *)v;
 
+- (void) showCustomLoading;
+- (IBAction) hideCustomLoading;
+- (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
+- (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
+- (IBAction) hideCustomAlert:(id)sender;
 @end

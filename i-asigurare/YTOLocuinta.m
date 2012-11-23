@@ -7,6 +7,7 @@
 //
 
 #import "YTOLocuinta.h"
+#import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
 
@@ -29,6 +30,7 @@
 @synthesize clauzaApaConducta;
 @synthesize detectieIncendiu;
 @synthesize arePaza;
+@synthesize areTeren;
 @synthesize locuitPermanent;
 @synthesize judet;
 @synthesize localitate;
@@ -78,7 +80,8 @@
 
 + (YTOLocuinta *) getLocuinta:(NSString *)_idIntern
 {
-    NSMutableArray * list = [YTOLocuinta Locuinte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];    
+    NSMutableArray * list = [delegate Locuinte];
     for (int i=0; i<list.count; i++) {
         YTOLocuinta * _loc = [list objectAtIndex:i];
         if ([_loc.idIntern isEqualToString:_idIntern])
@@ -89,7 +92,8 @@
 
 + (YTOLocuinta *) getLocuintaByProprietar:(NSString *)_idProprietar
 {
-    NSMutableArray * list = [YTOLocuinta Locuinte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];    
+    NSMutableArray * list = [delegate Locuinte];
     for (int i=0; i<list.count; i++) {
         YTOLocuinta * _loc = [list objectAtIndex:i];
         if ([_loc.idProprietar isEqualToString:_idProprietar])
@@ -143,6 +147,7 @@
                            (self.clauzaApaConducta ? self.clauzaApaConducta : @""), @"clauza_apa_conducta",
                            (self.detectieIncendiu ? self.detectieIncendiu : @""), @"detectie_incendiu",
                            (self.arePaza ? self.arePaza : @""), @"are_paza",
+                           (self.areTeren ? self.areTeren : @""), @"are_teren",
                            (self.locuitPermanent ? self.locuitPermanent : @""), @"locuit_permanent",
                            (self.judet ? self.judet : @""), @"judet",
                            (self.localitate ? self.localitate : @""), @"localitate",
@@ -185,6 +190,7 @@
     self.clauzaApaConducta = [item objectForKey:@"clauza_apa_conducta"];
     self.detectieIncendiu = [item objectForKey:@"detectie_incendiu"];
     self.arePaza = [item objectForKey:@"are_paza"];
+    self.areTeren = [item objectForKey:@"are_teren"];
     self.locuitPermanent = [item objectForKey:@"locuit_permanent"];
     self.judet = [item objectForKey:@"judet"];
     self.localitate = [item objectForKey:@"localitate"];

@@ -508,7 +508,7 @@
 {
     goingBack = NO;
     PickerVCSearch * actionPicker = [[PickerVCSearch alloc]initWithNibName:@"PickerVCSearch" bundle:nil];
-    actionPicker.listOfItems = [[NSMutableArray alloc] initWithObjects:@"Are alarma", @"Are grilaje geam", @"Are detectie incendiu", @"Are paza", @"Este intr-o zona izolata", @"Locuit permanent", @"Clauza furt bunuri", @"Clauza apa conducta", nil];
+    actionPicker.listOfItems = [[NSMutableArray alloc] initWithObjects:@"Are alarma", @"Are grilaje geam", @"Are detectie incendiu", @"Are paza", @"Este intr-o zona izolata", @"Locuit permanent", @"Clauza furt bunuri", @"Clauza apa conducta", @"Are teren", nil];
     actionPicker._indexPath = index;
     actionPicker.nomenclator = kDescriereLocuinta;
     actionPicker.delegate = self;
@@ -530,6 +530,8 @@
         [actionPicker.listValoriMultipleIndecsi addObject:[NSString stringWithFormat:@"%d", 6]];                
     if ([locuinta.clauzaApaConducta isEqualToString:@"da"])
         [actionPicker.listValoriMultipleIndecsi addObject:[NSString stringWithFormat:@"%d", 7]];                
+    if ([locuinta.areTeren isEqualToString:@"da"])
+        [actionPicker.listValoriMultipleIndecsi addObject:[NSString stringWithFormat:@"%d", 8]];
     
     [self presentModalViewController:actionPicker animated:YES];
 }
@@ -549,6 +551,7 @@
     {
         [self setStructura:selected];
     }
+
     goingBack = YES;
 }
 
@@ -556,7 +559,6 @@
 {
     NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellLocuintaHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsHeader objectAtIndex:0];
-    [YTOUtils setCellFormularStyle:cellHeader];
     
     NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellJudetLocalitate = [topLevelObjectsJudet objectAtIndex:0];
@@ -672,8 +674,8 @@
 - (IBAction)btnTipLocuinta_Clicked:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     
     for (int i=1; i<=3; i++) {
         UIButton * _btn = (UIButton *)[cellTipLocuinta viewWithTag:i];
@@ -780,6 +782,43 @@
     txt.text = [NSString stringWithFormat:@"%d", p];
 }
 
+- (void) setAlarma:(NSString *)v
+{
+    locuinta.areAlarma = v;
+}
+- (void) setGrilajeGeam:(NSString *)v
+{
+    locuinta.areGrilajeGeam = v;
+}
+- (void) setDetectieIncendiu:(NSString *)v
+{
+    locuinta.detectieIncendiu = v;
+}
+- (void) setPaza:(NSString *)v
+{
+    locuinta.arePaza = v;
+}
+- (void) setTeren:(NSString *)v
+{
+    locuinta.areTeren = v;
+}
+- (void) setZonaIzolata:(NSString*)v
+{
+    locuinta.zonaIzolata = v;
+}
+- (void) setLocuitPermananet:(NSString *)v
+{
+    locuinta.locuitPermanent = v;
+}
+- (void) setClauzaFurtBunuri:(NSString *)v
+{
+    locuinta.clauzaFurtBunuri = v;
+}
+- (void) setClauzaApaConducta:(NSString *)v
+{
+    locuinta.clauzaApaConducta = v;
+}
+
 - (void) showTooltip:(NSString *)tooltip
 {
     [vwTooltip setHidden:NO];
@@ -854,18 +893,18 @@
     
     NSString *timestamp = [formatter stringFromDate:data];
     YTOAlerta * alerta;
-    int tipAlerta;
+    int tipAlerta=0;
     
     UITextField * txt;
     
     if (index == 2)
     {
-        tipAlerta = 5;
+        tipAlerta = 6;
         txt = ((UITextField *)[cellExpirareLoc viewWithTag:2]);
     }
     else if (index == 3)
     {
-        tipAlerta = 7;
+        tipAlerta = 8;
         txt = ((UITextField *)[cellExpirareRataLoc viewWithTag:2]);
     }
     
@@ -881,7 +920,7 @@
     
     alerta.idObiect = locuinta.idIntern;
     alerta.tipAlerta = tipAlerta;
-    alerta.esteRata = (tipAlerta == 7 ? @"da" : @"nu");
+    alerta.esteRata = (tipAlerta == 8 ? @"da" : @"nu");
     alerta.dataAlerta = data;
     
     if (toSave)
@@ -911,6 +950,7 @@
         lblInfoLocuinta.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lblAlerte.textColor = [UIColor whiteColor];
         imgInfoAlerte.image = [UIImage imageNamed:@"selectat-dreapta-locuinta.png"];
+        ((UIImageView *)[cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"header-alerte-locuinta.png"];
         [self save];
     }
     else
@@ -919,6 +959,7 @@
         lblInfoLocuinta.textColor = [UIColor whiteColor];
         lblAlerte.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         imgInfoAlerte.image = [UIImage imageNamed:@"selectat-stanga-locuinta.png"];
+        ((UIImageView *)[cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-locuinta.png"];        
     }
     
     [tableView reloadData];

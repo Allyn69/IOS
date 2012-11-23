@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Setari.h"
-#import "YTOWrapper.h"
 
 @interface YTOAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 {
     NSMutableArray * _persoane;
+    NSMutableArray * _masini;
+    NSMutableArray * _locuinte;    
+    NSMutableArray * _alerte;
+    
     UIView * viewTooltip;
     int indexTooltip;
     NSMutableArray * listImgTooltip;
@@ -31,7 +33,15 @@
 
 - (void) showTooltip;
 - (void) refreshPersoane;
+- (void) refreshMasini;
+- (void) refreshLocuinte;
+- (void) refreshAlerte;
+
+- (NSMutableArray *) Masini;
 - (NSMutableArray *) Persoane;
+- (NSMutableArray *) Locuinte;
+- (NSMutableArray *) Alerte;
+
 - (void) syncDataFromOldVersion;
 - (void) setAlerteBadge;
 

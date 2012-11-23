@@ -424,7 +424,7 @@
     
     NSString *timestamp = [formatter stringFromDate:data];
     YTOAlerta * alerta;
-    int tipAlerta;
+    int tipAlerta=0;
     
     UITextField * txt;
     if (index == 2)
@@ -444,12 +444,12 @@
     }
     else if (index == 5)
     {
-        tipAlerta = 4;
+        tipAlerta = 5;
         txt = ((UITextField *)[cellExpirareCASCO viewWithTag:2]);
     }
     else if (index == 6)
     {
-        tipAlerta = 6;
+        tipAlerta = 7;
         txt = ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]);
     }
     
@@ -465,7 +465,7 @@
     
     alerta.idObiect = autovehicul.idIntern;
     alerta.tipAlerta = tipAlerta;
-    alerta.esteRata = (tipAlerta == 6 ? @"da" : @"nu");
+    alerta.esteRata = (tipAlerta == 7 ? @"da" : @"nu");
     alerta.dataAlerta = data;
     
     if (toSave)
@@ -1053,8 +1053,8 @@
 -(IBAction)checkboxSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
 
     if (btn.tag  == 1) {
         [self setCategorieAuto:1];
@@ -1081,8 +1081,8 @@
 - (IBAction)checkboxCombustibilSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
 
     if (btn.tag  == 1) {
         [self setTipCombustibil:@"benzina"];
@@ -1106,8 +1106,8 @@
 - (IBAction)checkboxDestinatieSelected:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     
     if (btn.tag  == 1) {
         [self setDestinatieAuto:@"interes-personal"];

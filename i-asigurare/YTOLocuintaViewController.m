@@ -120,7 +120,7 @@
     {
         [self doneEditing];
         // Daca exista locuinte salvate, afisam lista
-        if ([YTOLocuinta Locuinte].count > 0)
+        if ([delegate Locuinte].count > 0)
         {
             YTOListaLocuinteViewController * aView = [[YTOListaLocuinteViewController alloc] init];
             aView.controller = self;

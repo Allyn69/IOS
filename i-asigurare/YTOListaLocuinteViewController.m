@@ -38,7 +38,8 @@
 {
     [super viewDidLoad];
 
-    listaLocuinte = [YTOLocuinta Locuinte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    listaLocuinte = [delegate Locuinte];
     
     ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#0071bc"];
     ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
@@ -240,7 +241,8 @@
 
 - (void) reloadData
 {
-    listaLocuinte = [YTOLocuinta Locuinte];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    listaLocuinte = [delegate Locuinte];
     if (listaLocuinte.count > 0)
     {
         [vwEmpty setHidden:YES];    

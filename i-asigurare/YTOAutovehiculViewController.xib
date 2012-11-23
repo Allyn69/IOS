@@ -134,7 +134,6 @@
 								<string key="NSFrame">{{235, 2}, {72, 31}}</string>
 								<reference key="NSSuperview" ref="328419467"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -378,7 +377,6 @@
 								<string key="NSFrame">{{161, 0}, {155, 29}}</string>
 								<reference key="NSSuperview" ref="582835702"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">2</int>
@@ -721,7 +719,6 @@
 								<string key="NSFrame">{{238, 26}, {67, 65}}</string>
 								<reference key="NSSuperview" ref="697687188"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">4</int>
@@ -976,7 +973,6 @@
 								<string key="NSFrame">{{238, 26}, {67, 65}}</string>
 								<reference key="NSSuperview" ref="741236855"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">4</int>
@@ -1228,7 +1224,6 @@
 								<string key="NSFrame">{{238, 26}, {67, 65}}</string>
 								<reference key="NSSuperview" ref="663800092"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<int key="IBUITag">4</int>
@@ -1915,6 +1910,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="btnInfoAlerte_OnClick:">id</string>
+						<string key="btnNomenclator_Clicked:">id</string>
 						<string key="checkboxCombustibilSelected:">id</string>
 						<string key="checkboxDestinatieSelected:">id</string>
 						<string key="checkboxSelected:">id</string>
@@ -1925,6 +1921,10 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="btnInfoAlerte_OnClick:">
 							<string key="name">btnInfoAlerte_OnClick:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="btnNomenclator_Clicked:">
+							<string key="name">btnNomenclator_Clicked:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="checkboxCombustibilSelected:">

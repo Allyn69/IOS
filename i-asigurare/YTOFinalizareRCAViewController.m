@@ -290,8 +290,8 @@
 - (IBAction)btnTipPlata_Clicked:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
     
     for (int i=1; i<=3; i++) {
         UIButton * _btn = (UIButton *)[cellPlata viewWithTag:i];

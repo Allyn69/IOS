@@ -15,7 +15,6 @@
 @interface YTOFinalizareRCAViewController : UIViewController<NSXMLParserDelegate, UIAlertViewDelegate,UITableViewDelegate, UITableViewDataSource, PickerVCSearchDelegate>
 {
     IBOutlet UITableView *      tableView;
-    IBOutlet UIView      *      vwLoading;
     UITextField *               activeTextField;
     
     UITableViewCell *           cellJudetLocalitate;
@@ -49,6 +48,7 @@
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
     
+    IBOutlet UIView      *      vwLoading;
     IBOutlet UILabel     * lblLoading;
     IBOutlet UIActivityIndicatorView * loading;
     IBOutlet UIImageView * imgLoading;
