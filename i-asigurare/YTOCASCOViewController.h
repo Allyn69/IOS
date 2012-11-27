@@ -50,6 +50,8 @@
     IBOutlet UIActivityIndicatorView * loading;
     IBOutlet UIImageView * imgLoading;
     IBOutlet UIButton    * btnClosePopup;
+    
+    BOOL cautLegaturaDintreMasinaSiAsigurat;
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSMutableArray * listaCompaniiAsigurare;

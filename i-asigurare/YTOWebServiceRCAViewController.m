@@ -190,8 +190,7 @@
         lbl12Luni.textColor = [UIColor whiteColor];
     }
     
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

@@ -21,6 +21,8 @@
 @property int                            tipAlerta;
 @property (nonatomic, retain) NSDate *   dataAlerta;
 @property (nonatomic, retain) NSString * esteRata;
+@property int                            numarTotalRate;
+@property int                            numarRata;
 @property (nonatomic, retain) NSString * idObiect;
 @property (nonatomic, retain) NSDate   * _dataCreare;
 @property BOOL _isDirty;
@@ -39,6 +41,7 @@
 + (YTOAlerta *) getAlertaCasco:(NSString *)_idIntern;
 + (YTOAlerta *) getAlertaLocuinta:(NSString *)_idIntern;
 + (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern;
++ (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern andNumarRata:(int)x;
 + (YTOAlerta *) getAlertaRataLocuinta:(NSString *)_idIntern;
 
 + (NSMutableArray*)Alerte;

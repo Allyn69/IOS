@@ -27,6 +27,8 @@
     YTOLocuinta *  locuinta;
     YTOOferta *    oferta; 
     UITextField * activeTextField;
+    
+    BOOL cautLegaturaDintreAsiguratSiLocuinta;    
 }
 
 @property (nonatomic, retain) NSDate *   DataInceput;

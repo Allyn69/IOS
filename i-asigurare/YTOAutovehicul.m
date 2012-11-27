@@ -64,6 +64,8 @@
     autovehicul.JSONText = [self toJSON];
     [autovehicul addObiectAsigurat];
     self._isDirty = YES;
+    
+    [self refresh];
 }
 
 - (void) updateAutovehicul
@@ -71,6 +73,8 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
+    
+    [self refresh];
 }
 
 - (void) deleteAutovehicul
@@ -78,6 +82,8 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
+    
+    [self refresh];    
 }
 
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern
@@ -294,6 +300,12 @@
     }
     
     return campuriCompletate/numarCampuri;
+}
+
+- (void) refresh
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate refreshMasini];
 }
 
 @end

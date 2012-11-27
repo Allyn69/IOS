@@ -45,7 +45,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 4;
+    return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -92,6 +92,8 @@
     cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:@"#888888"];
     cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:12];
     cell.detailTextLabel.numberOfLines = 0;
+    
+    cell.textLabel.backgroundColor = cell.detailTextLabel.backgroundColor = [UIColor clearColor];
     
     if (indexPath.row % 2 != 0) {
         CGRect frame = CGRectMake(0, 0, 320, 70);

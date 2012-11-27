@@ -39,6 +39,7 @@
     
     goingBack = YES;
     persoanaFizica = YES;
+    shouldSave = YES;
     
     [self initCells];
     [self initLabels:persoanaFizica];
@@ -88,6 +89,9 @@
 
 - (IBAction)btnTipPersoana_OnClick:(id)sender
 {
+    if (!proprietar && asigurat._isDirty)
+        return;
+    
     UIButton * btn = (UIButton *)sender;
     BOOL estePF = btn.tag == 1;
     
@@ -97,6 +101,8 @@
     
     if (!estePF)
     {
+        if (!asigurat._isDirty)
+            asigurat.tipPersoana = @"juridica";
         persoanaFizica = NO;
         lblDespreMine.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lblFirmaMea.textColor = [UIColor whiteColor];
@@ -104,6 +110,8 @@
     }
     else
     {
+        if (!asigurat._isDirty)
+            asigurat.tipPersoana = @"fizica";
         persoanaFizica = YES;
         lblDespreMine.textColor = [UIColor whiteColor];
         lblFirmaMea.textColor = [YTOUtils colorFromHexString:ColorTitlu];
@@ -113,11 +121,11 @@
     
     [self initLabels:persoanaFizica];
     
-    [self salveazaPersoana];
-    
     // incarc
     if (proprietar)
     {
+        [self salveazaPersoana];
+        
         NSString * telefon = asigurat.telefon;
         NSString * email = asigurat.email;
         if (!persoanaFizica) {
@@ -144,7 +152,8 @@
 
 - (void) viewWillDisappear:(BOOL)animated {
     [self doneEditing];
-    [self save];
+    if (shouldSave)
+        [self save];
 }
 - (void)viewDidUnload
 {
@@ -260,6 +269,8 @@
     }
     else if (indexPath.row == 3)
     {
+        ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+        
         NSString * txt = @"Codul numeric personal";
         if (!persoanaFizica)
             txt = @"Codul unic de identificare";
@@ -276,9 +287,15 @@
     if (proprietar)
     {
         if (indexPath.row == 6)
+        {
             [self showTooltip:@"Numarul tau de telefon la care poti fi contactat."];
+            ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+        }
         else if (indexPath.row == 7)
+        {
             [self showTooltip:@"Adresa de email pentru corespondenta (comenzi efectuate, polite de asigurare, alerte)"];
+            [self showTooltip:@"Numarul tau de telefon la care poti fi contactat."];
+        }
     }
 }
 
@@ -343,6 +360,16 @@
         
         [self salveazaPersoana];
     
+        if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+        {
+            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+            [parent setAsigurat:asigurat];
+        }
+        else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
+        {
+            YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
+            [parent reloadData];
+        }
     }
 }
 
@@ -368,13 +395,13 @@
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
         YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-        [parent setAsigurat:asigurat];
+        //[parent setAsigurat:asigurat];
         [self.navigationController popToViewController:parent animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
     {
         YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
-        [parent reloadData];
+        //[parent reloadData];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else {
@@ -384,6 +411,12 @@
 
 - (void) btnCancel_Clicked
 {
+    // In cazul in care a modificat ceva si a apasat pe Cancel,
+    // incarcam lista cu persoane din baza de date
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [delegate refreshPersoane];
+    
+    shouldSave = NO;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -394,6 +427,12 @@
 //        UIButton * btn = (UIButton *)[cellTipPersoana viewWithTag:2];
 //        [self btnTipPersoana_OnClick:btn];
 //    }
+    
+    if (!proprietar)
+    {
+        UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
+        imgTextHeader.image = [UIImage imageNamed:@"text-header-persoana-salvata.png"];
+    }
     
     [self setNume:a.nume];
     [self setcodUnic:a.codUnic];
@@ -554,14 +593,22 @@
 - (void) setNume:(NSString *)v
 {
     UITextField * txt = (UITextField *)[cellNume viewWithTag:2];
+    
     txt.text = v;
     asigurat.nume = v;
 }
 - (void) setcodUnic:(NSString *)v
 {
     UITextField * txt = (UITextField *)[cellCodUnic viewWithTag:2];
+    UIImageView * imgAlert = (UIImageView *)[cellCodUnic viewWithTag:10];
     txt.text = v;    
     asigurat.codUnic = v;
+    
+    if ( ([asigurat.tipPersoana isEqualToString:@"fizica"] && [YTOUtils validateCNP:v]) ||
+         ([asigurat.tipPersoana isEqualToString:@"juridica"] && [YTOUtils validateCUI:v]) )
+        [imgAlert setHidden:YES];
+    else
+        [imgAlert setHidden:NO];
 }
 - (void) setJudet:(NSString *)v
 {
@@ -569,6 +616,8 @@
 }
 - (NSString *) getJudet
 {
+    if (asigurat.judet == nil)
+        return @"";
     return asigurat.judet;
 }
 - (void) setLocalitate:(NSString *)v
@@ -579,7 +628,9 @@
 }
 - (NSString *) getLocalitate
 {
-    return asigurat.localitate;    
+    if (asigurat.localitate == nil)
+        return @"";
+    return asigurat.localitate;
 }
 - (NSString *) getLocatie
 {
@@ -598,15 +649,31 @@
 - (void) setTelefon:(NSString *)v
 {
     UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
+    UIImageView * imgAlert = (UIImageView *)[cellTelefon viewWithTag:10];
+    
     txt.text = v;
     asigurat.telefon = v;
+    
+    if (asigurat.telefon.length < 10 || asigurat.telefon.length > 14)
+        [imgAlert setHidden:NO];
+    else
+        [imgAlert setHidden:YES];
 }
 
 - (void) setEmail:(NSString *)v
 {
     UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
+    UIImageView * imgAlert = (UIImageView *)[cellEmail viewWithTag:10];
+    
+    v = [YTOUtils replacePossibleWrongEmailAddresses:v];
+    
     txt.text = v;
     asigurat.email = v;
+    
+    if ([YTOUtils validateEmail:v])
+        [imgAlert setHidden:YES];
+    else
+        [imgAlert setHidden:NO];
 }
 
 - (void) showTooltip:(NSString *)tooltip

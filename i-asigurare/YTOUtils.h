@@ -34,6 +34,11 @@ static NSString * ColorVerde = @"#259c5a";
 static NSString * ColorGalben = @"#f7931e";
 static NSString * ColorOrange = @"#f15a24";
 
+//static NSString * LinkAPI = @"https://app.i-business.ro/MaAsigurApi/";
+static NSString * LinkAPI = @"http://i-crm.ro/MaAsigurApiTest/";
+
+#define NSStringIsNullOrEmpty(str) ((str==nil) || [(str) isEqualToString:@""] || [str isKindOfClass:[NSString class]])
+
 @interface YTOUtils : NSObject
 
 + (UIColor *) colorFromHexString:(NSString *)hexString;
@@ -57,5 +62,16 @@ static NSString * ColorOrange = @"#f15a24";
 + (NSMutableArray *) GETTipAlertaList;
 
 + (NSString *) getHTMLWithStyle:(NSString *)html;
++ (NSString *) reverseString:(NSString *)s;
+
+// VALIDARI
++ (BOOL) validateEmail: (NSString *) email;
++ (BOOL) validateCNP: (NSString* ) cnp;
++ (BOOL) validateCUI: (NSString* ) cui;
++ (BOOL) validateSasiu:(NSString *) sasiu;
++ (BOOL) validateCIV:(NSString *) civ;
+
++ (NSString *) replacePossibleWrongEmailAddresses:(NSString *) email;
++ (NSString *) replacePossibleWrongSerieSasiu:(NSString *)serie;
 
 @end

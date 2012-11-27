@@ -154,8 +154,8 @@
         lbl50k.textColor = [UIColor whiteColor];
     }
     
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/travel.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/travel.asmx"];
+
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@travel.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

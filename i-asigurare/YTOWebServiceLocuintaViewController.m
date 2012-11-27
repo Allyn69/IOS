@@ -163,8 +163,7 @@
     //[btnTarif setTitle:btnText forState:UIControlStateNormal];
     
     
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@locuinta.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

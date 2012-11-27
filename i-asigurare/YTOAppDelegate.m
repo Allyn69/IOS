@@ -446,8 +446,7 @@
 {
     @autoreleasepool
     {
-        //NSString *  kLogCallUrl = @"https://api.i-business.ro/MaAsigurApiTest/sync.asmx";
-        NSString *  kLogCallUrl = @"http://192.168.1.176:8082/sync.asmx";
+        NSString *  kLogCallUrl = [NSString stringWithFormat:@"%@sync.asmx", LinkAPI];
         
         NSString *	udid = [UIDevice currentDevice].uniqueIdentifier;
         NSString *  platforma = [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"];

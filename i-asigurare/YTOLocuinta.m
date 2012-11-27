@@ -242,4 +242,10 @@
     return campuriCompletate/numarCampuri;
 }
 
+- (void) refresh
+{
+    YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [appDelegate refreshLocuinte];
+}
+
 @end

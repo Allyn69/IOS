@@ -323,8 +323,8 @@
 - (IBAction) callInregistrareComanda {
     [self showCustomLoading];
     self.navigationItem.hidesBackButton = YES;
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/locuinta.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/locuinta.asmx"];
+
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@locuinta.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -471,8 +471,8 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
-        //NSString * url = [NSString stringWithFormat:@"http://192.168.1.176:8082/pre-pay.aspx?numar_oferta=%@"
-        NSString * url = [NSString stringWithFormat:@"https://api.i-business.ro/MaAsigurApiTest/pre-pay.aspx?numar_oferta=%@"
+
+        NSString * url = [NSString stringWithFormat:@"%@pre-pay.aspx?numar_oferta=%@"
                           "&email=%@"
                           "&nume=%@"
                           "&adresa=%@"
@@ -484,6 +484,7 @@
                           "&companie=%@"
                           "&udid=%@"
                           "&moneda=eur",
+                          LinkAPI,
                           idOferta, emailLivrare, asigurat.nume, asigurat.adresa, asigurat.localitate, asigurat.judet, telefonLivrare,
                           @"Locuinta", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
         

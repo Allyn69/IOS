@@ -97,6 +97,7 @@
 {
     NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellLocuintaHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsHeader objectAtIndex:0];
+    ((UIImageView *) [cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-asigurare-noua.png"];
     //[YTOUtils setCellFormularStyle:cellHeader];
     
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];

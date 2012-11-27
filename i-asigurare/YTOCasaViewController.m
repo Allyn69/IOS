@@ -41,6 +41,7 @@
 
     goingBack = YES;
     selectatInfoLocuinta = YES;
+    shouldSave = YES;
     
     [self initCells];
     [self loadStructuriRezistenta];
@@ -68,7 +69,9 @@
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
-    [self save];
+
+    if (shouldSave)
+        [self save];
 }
 
 - (void)viewDidUnload
@@ -327,6 +330,9 @@
 
 - (void) load:(YTOLocuinta *)p
 {
+    UIImageView * imgTextHeader = (UIImageView *)[cellHeader viewWithTag:1];
+    imgTextHeader.image = [UIImage imageNamed:@"text-header-locuinta-salvata.png"];
+    
     [self setJudet:p.judet];
     [self setLocalitate:p.localitate];
     [self setAdresa:p.adresa];
@@ -353,19 +359,26 @@
 {
     if (goingBack)
     {
-//        if (locuinta.judet.length > 0 && locuinta.localitate.length > 0 && locuinta.adresa.length > 0)
-//        {
-            if (locuinta._isDirty)
-                [locuinta updateLocuinta];
-            else
-            {
-                NSLog(@"%.2f", [locuinta CompletedPercent]);
-                if ([locuinta CompletedPercent] > percentCompletedOnLoad)
-                    [locuinta addLocuinta];
-            }
         
+        if (locuinta._isDirty)
+            [locuinta updateLocuinta];
+        else
+        {
+            NSLog(@"%.2f", [locuinta CompletedPercent]);
+            if ([locuinta CompletedPercent] > percentCompletedOnLoad)
+                [locuinta addLocuinta];
+        }
         
-        //}
+        if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+        {
+            YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
+            [parent setLocuinta:locuinta];
+        }
+        else if ([self.controller isKindOfClass:[YTOListaLocuinteViewController class]])
+        {
+            YTOListaLocuinteViewController * parent = (YTOListaLocuinteViewController *)self.controller;
+            [parent reloadData];
+        }
     }
 }
 
@@ -376,19 +389,25 @@
     if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
     {
         YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
-        [parent setLocuinta:locuinta];
+        //[parent setLocuinta:locuinta];
         [self.navigationController popToViewController:parent animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOListaLocuinteViewController class]])
     {
         YTOListaLocuinteViewController * parent = (YTOListaLocuinteViewController *)self.controller;
-        [parent reloadData];
+        //[parent reloadData];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
 - (void) btnCancel_Clicked
 {
+    // In cazul in care a modificat ceva si a apasat pe Cancel,
+    // incarcam lista cu masini din baza de date
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [delegate refreshMasini];
+    
+    shouldSave = NO;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -755,25 +774,35 @@
     locuinta.etaj = p;
     UITextField * txt = (UITextField *)[cellEtaj viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%d", p];
+ 
 }
 - (void) setAnConstructie:(int)p
 {
-    locuinta.anConstructie = p;
-    UITextField * txt = (UITextField *)[cellAnConstructie viewWithTag:2];
-    txt.text = [NSString stringWithFormat:@"%d", p];    
+    if (p > 0)
+    {
+        locuinta.anConstructie = p;
+        UITextField * txt = (UITextField *)[cellAnConstructie viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d", p];
+    }
 }
 
 - (void) setNrCamere:(int)p
 {
-    locuinta.nrCamere = p;
-    UITextField * txt = (UITextField *)[cellNrCamere viewWithTag:2];
-    txt.text = [NSString stringWithFormat:@"%d", p];    
+    if (p > 0)
+    {
+        locuinta.nrCamere = p;
+        UITextField * txt = (UITextField *)[cellNrCamere viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d", p];
+    }
 }
 - (void) setSuprafata:(int)p
 {
-    locuinta.suprafataUtila = p;
-    UITextField * txt = (UITextField *)[cellSuprafata viewWithTag:2];
-    txt.text = [NSString stringWithFormat:@"%d mp", p];
+    if (p>0)
+    {
+        locuinta.suprafataUtila = p;
+        UITextField * txt = (UITextField *)[cellSuprafata viewWithTag:2];
+        txt.text = [NSString stringWithFormat:@"%d mp", p];
+    }
 }
 - (void) setNrLocatari:(int)p
 {

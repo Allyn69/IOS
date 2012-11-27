@@ -43,6 +43,7 @@
     
     float percentCompletedOnLoad;
     BOOL  selectatInfoLocuinta;
+    BOOL  shouldSave;
 }
 
 @property BOOL goingBack;

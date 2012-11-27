@@ -277,7 +277,7 @@
 - (void) setTelefon:(NSString *)telefon
 {
     telefonLivrare = telefon;
-    if (asigurat.telefon == nil || [asigurat.telefon isEqualToString:@"null"])
+    if (asigurat.telefon == nil || [asigurat.telefon isEqualToString:@"null"] || [asigurat.telefon isEqualToString:@"(null)"])
     {
         asigurat.telefon = telefon;
         saveAsigurat = YES;
@@ -359,8 +359,8 @@
 - (IBAction) callInregistrareComanda {
     [self showCustomLoading];
     self.navigationItem.hidesBackButton = YES;
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
+
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -520,8 +520,7 @@
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
-        //NSString * url = [NSString stringWithFormat:@"http://192.168.1.176:8082/pre-pay.aspx?numar_oferta=%@"
-        NSString * url = [NSString stringWithFormat:@"https://api.i-business.ro/MaAsigurApiTest/pre-pay.aspx?numar_oferta=%@"
+        NSString * url = [NSString stringWithFormat:@"%@pre-pay.aspx?numar_oferta=%@"
                      "&email=%@"
                      "&nume=%@"
                      "&adresa=%@"
@@ -532,6 +531,7 @@
                      "&valoare=%.2f"
                      "&companie=%@"
                      "&udid=%@",
+                     LinkAPI,
                      idOferta, emailLivrare, asigurat.nume, asigurat.adresa, asigurat.localitate, asigurat.judet, telefonLivrare,
                      @"RCA", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
         

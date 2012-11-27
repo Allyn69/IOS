@@ -54,6 +54,8 @@
 
 - (void) initCustomValues
 {
+    cautLegaturaDintreAsiguratSiLocuinta = YES;
+    
     oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
     oferta.moneda = @"eur";
     [self setModEvaluare:@"valoare-reala"];
@@ -329,8 +331,11 @@
     if (asigurat.idIntern.length > 0 && ![asigurat.idIntern isEqualToString:locuinta.idProprietar])
     {
         YTOLocuinta * _loc = [YTOLocuinta getLocuintaByProprietar:a.idIntern];
-        if (_loc && _loc.idIntern)
+        if (_loc && _loc.idIntern && cautLegaturaDintreAsiguratSiLocuinta)
+        {
             [self setLocuinta:_loc];
+            cautLegaturaDintreAsiguratSiLocuinta = NO;
+        }
     }
 }
 
@@ -351,11 +356,13 @@
     if (locuinta.sumaAsigurataRC > 0)
         [self setSumaAsigurataRC:[NSString stringWithFormat:@"%d",locuinta.sumaAsigurataRC]];
     
-    if (locuinta.idProprietar.length > 0 && ![locuinta.idProprietar isEqualToString:asigurat.idIntern])
+    if (locuinta.idProprietar.length > 0 && ![locuinta.idProprietar isEqualToString:asigurat.idIntern] && cautLegaturaDintreAsiguratSiLocuinta)
     {
         YTOPersoana * prop = [YTOPersoana getPersoana:locuinta.idProprietar];
         if (prop)
             [self setAsigurat:prop];
+        
+        cautLegaturaDintreAsiguratSiLocuinta = NO;
     }
 }
 

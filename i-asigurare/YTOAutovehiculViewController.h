@@ -11,6 +11,7 @@
 #import "YTONomenclatorViewController.h"
 #import "YTOAutovehicul.h"
 #import "YTOUtils.h"
+#import "YTOAlerta.h"
 
 @interface YTOAutovehiculViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PickerVCSearchDelegate, YTONomenclatorDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
@@ -54,10 +55,15 @@
     UITableViewCell          * cellExpirareITP;
     UITableViewCell          * cellExpirareRovinieta;
     UITableViewCell          * cellExpirareCASCO;
+    UITableViewCell          * cellNumarRate;
     UITableViewCell          * cellExpirareRataCASCO;
+    
+    NSMutableArray           * listCellRateCasco;
     
     float percentCompletedOnLoad;
     BOOL  selectatInfoMasina;
+    BOOL  shouldSave;
+    YTOAlerta * alertaRataCasco;
 }
 
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;
@@ -148,5 +154,6 @@
 - (void) setImage:(UIImage *)img;
 
 - (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave;
+- (void) setNumarRate:(int)x;
 
 @end

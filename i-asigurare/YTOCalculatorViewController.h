@@ -40,6 +40,8 @@
     
     IBOutlet UIStepper * stepperAnMinimPermis;
     IBOutlet UIView *   vwNomenclator;
+    
+    BOOL cautLegaturaDintreMasinaSiAsigurat;
 }
 
 @property (nonatomic, retain) NSDate *   DataInceput;
@@ -92,4 +94,6 @@
 - (void) setNrBugetari:(int)k;
 - (void) setAnPermis:(int)k;
 - (void) setCompanieCasco:(NSString*)v;
+
+
 @end

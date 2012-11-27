@@ -147,8 +147,8 @@
     }
     
     self.navigationItem.hidesBackButton = YES;
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
-    //NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
+
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

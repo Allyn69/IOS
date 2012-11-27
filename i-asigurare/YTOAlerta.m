@@ -18,6 +18,8 @@
 @synthesize tipAlerta;
 @synthesize dataAlerta;
 @synthesize esteRata;
+@synthesize numarTotalRate;
+@synthesize numarRata;
 @synthesize idObiect;
 @synthesize _dataCreare;
 @synthesize _isDirty;
@@ -94,26 +96,49 @@
 {
     return [self getAlerta:_idIntern forType:1];
 }
+
 + (YTOAlerta *) getAlertaITP:(NSString *)_idIntern
 {
     return [self getAlerta:_idIntern forType:2];
 }
+
 + (YTOAlerta *) getAlertaRovinieta:(NSString *)_idIntern
 {
     return [self getAlerta:_idIntern forType:3];
 }
+
 + (YTOAlerta *) getAlertaCasco:(NSString *)_idIntern
 {
     return [self getAlerta:_idIntern forType:4];
 }
+
 + (YTOAlerta *) getAlertaLocuinta:(NSString *)_idIntern
 {
     return [self getAlerta:_idIntern forType:5];
 }
+
 + (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern
 {
-    return [self getAlerta:_idIntern forType:6];
+    NSMutableArray * list = [YTOAlerta Alerte];
+    for (int i=0; i<list.count; i++) {
+        YTOAlerta * _alerta = [list objectAtIndex:i];
+        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 6 && _alerta.numarRata == 0)
+            return _alerta;
+    }
+    return  nil;
 }
+
++ (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern andNumarRata:(int)x
+{
+    NSMutableArray * list = [YTOAlerta Alerte];
+    for (int i=0; i<list.count; i++) {
+        YTOAlerta * _alerta = [list objectAtIndex:i];
+        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 6 && _alerta.numarRata == x)
+            return _alerta;
+    }
+    return  nil;
+}
+
 + (YTOAlerta *) getAlertaRataLocuinta:(NSString *)_idIntern
 {
     return [self getAlerta:_idIntern forType:7];
@@ -188,6 +213,8 @@
                            (self.idObiect ? self.idObiect : @""), @"id_obiect",
                            (self.dataAlerta ? [dateFormat stringFromDate:self.dataAlerta] : @""), @"data_alerta",
                            (self.esteRata ? self.esteRata : @""), @"este_rata",
+                           [NSNumber numberWithInt:self.numarTotalRate], @"numar_total_rate",
+                           [NSNumber numberWithInt:self.numarRata], @"numar_rata",
                            dateString, @"data_creare",
                            nil];
     
@@ -209,7 +236,8 @@
     self.tipAlerta = [[item objectForKey:@"tip_alerta"] intValue];
     self.idObiect = [item objectForKey:@"id_obiect"];
     self.esteRata = [item objectForKey:@"este_rata"];
-    
+    self.numarTotalRate = [[item objectForKey:@"numar_total_rate"] intValue];
+    self.numarRata = [[item objectForKey:@"numar_rata"] intValue];
     NSString * dataString = [item objectForKey:@"data_creare"];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
@@ -252,7 +280,7 @@
                       "</soap:Body>"
                       "</soap:Envelope>",
                       self.tipAlerta, [YTOUtils formatDate:self.dataAlerta withFormat:@"dd.MM.yyyy"],
-                      0,        // numar rata
+                      self.numarRata,
                       0.0,      // prima
                       @"lei",   // moneda
                       [[UIDevice currentDevice] uniqueIdentifier],
@@ -264,8 +292,7 @@
 
 - (void) callInregistrareAlerta {
 
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/rca.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/rca.asmx"];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

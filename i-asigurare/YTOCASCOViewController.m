@@ -250,6 +250,7 @@
 
 - (void) initCustomValues
 {
+    cautLegaturaDintreMasinaSiAsigurat = YES;
     YTOPersoana * prop = [YTOPersoana Proprietar];
     if (prop)
     {
@@ -263,18 +264,24 @@
     lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblCellP.text = a.nume;
     ((UILabel *)[cellProprietar viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.codUnic, a.judet];
+    if (![asigurat.idIntern isEqualToString:a.idIntern])
+        cautLegaturaDintreMasinaSiAsigurat = YES;
     asigurat = a;
 
     if (asigurat.idIntern.length > 0 && ![asigurat.idIntern isEqualToString:masina.idProprietar])
     {
         YTOAutovehicul * _auto = [YTOAutovehicul getAutovehiculByProprietar:a.idIntern];
         
-        if (_auto && _auto.idIntern && [_auto isValidForRCA])
+        if (_auto && _auto.idIntern && [_auto isValidForRCA] && cautLegaturaDintreMasinaSiAsigurat)
+        {
             [self setAutovehicul:_auto];
+            cautLegaturaDintreMasinaSiAsigurat = NO;
+        }
     }
-    
+
     [tableView reloadData];
 }
+
 - (void)setAutovehicul:(YTOAutovehicul *)a
 {
     UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
@@ -285,11 +292,12 @@
         ((UILabel *)[cellMasina viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
     }
     masina = a;
-    if (masina.idProprietar.length > 0 && ![masina.idProprietar isEqualToString:asigurat.idIntern])
+    if (masina.idProprietar.length > 0 && ![masina.idProprietar isEqualToString:asigurat.idIntern] && cautLegaturaDintreMasinaSiAsigurat)
     {
         YTOPersoana * prop = [YTOPersoana getPersoana:masina.idProprietar];
         if (prop)
             [self setAsigurat:prop];
+        cautLegaturaDintreMasinaSiAsigurat = NO;
     }
     if (masina.nrKm > 0)
         [self setNumarKm:masina.nrKm];
@@ -526,10 +534,19 @@
 }
 
 - (IBAction) callInregistrareComanda {
+    
+    // Daca masina nu are proprietar SAU
+    // Proprietarul masinii este diferit de asigurat, modificam
+    if (![masina.idProprietar isEqualToString:asigurat.idIntern] || masina.idProprietar.length == 0)
+    {
+        masina.idProprietar = asigurat.idIntern;
+        [masina updateAutovehicul];
+    }
+    
+    [self doneEditing];
     [self showCustomLoading];
     self.navigationItem.hidesBackButton = YES;
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/casco.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/casco.asmx"];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@casco.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

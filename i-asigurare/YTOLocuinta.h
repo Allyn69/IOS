@@ -54,4 +54,6 @@
 - (void) fromJSON:(NSString *)p;
 - (float) CompletedPercent;
 
+- (void) refresh;
+
 @end

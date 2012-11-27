@@ -316,4 +316,143 @@
     return htmlPage;
 }
 
++ (NSString *) reverseString:(NSString *)s
+{
+    NSMutableArray * tempArray = [[NSMutableArray alloc] init];
+    for (int i=0; i<[s length]; i++) {
+        [tempArray addObject:[NSString stringWithFormat:@"%c", [s characterAtIndex:i]]];
+    }
+    
+    tempArray = [NSMutableArray arrayWithArray:[[tempArray reverseObjectEnumerator] allObjects]];
+    NSString * reversed;
+    
+    for (int j=0; j<tempArray.count; j++) {
+        reversed = [NSString stringWithFormat:@"%@%@", (reversed == nil ? @"" : reversed), [tempArray objectAtIndex:j]];
+    }
+    
+    return reversed;
+}
+
+// VALDARI
+#pragma VALIDARI
+
++ (BOOL) validateEmail: (NSString *) email {
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    //	return 0;
+    return [emailTest evaluateWithObject:email];
+}
+
++ (BOOL) validateCNP: (NSString* ) cnp {
+	BOOL isValid = YES;
+
+	if (cnp.length != 13)
+		isValid = NO;
+	else {
+		NSString * s = @"279146358279";
+		int _suma = 0;
+		for (int i=0; i<12; i++) {
+			NSString * a = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:i]];
+			NSString * b = [NSString stringWithFormat:@"%c",[s characterAtIndex:i]];
+			_suma += [a integerValue] * [b integerValue];
+			
+		}
+		NSString * c12 = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:12]];
+		int rest = _suma % 11;
+		if (!((rest < 10) && ([c12 integerValue] == rest)) ||
+            ((rest == 10) && ([c12 integerValue] == 1)))
+			isValid = NO;
+	}
+	return isValid;
+}
+
++ (BOOL) validateCUI: (NSString* ) cui
+{
+    BOOL isValid = YES;
+    
+    NSString * constanta = @"235712357";
+    if (cui.length > 10) isValid = NO;
+    else
+    {
+        int suma = 0;
+        cui = [self reverseString:cui];
+        
+        for (int i = 1; i < cui.length; i++) {
+            NSString * a = [NSString stringWithFormat:@"%c", [cui characterAtIndex:i]];
+            NSString * b = [NSString stringWithFormat:@"%c", [constanta characterAtIndex:i-1]];
+            NSLog(@"a=%@, b=%@", a, b);            
+            suma = suma +  [a intValue] * [b intValue];
+        }
+        int rest = (suma * 10) % 11;
+        NSString * c0 = [NSString stringWithFormat:@"%c",[cui characterAtIndex:0]];
+        
+        if (rest == [c0 intValue] || (rest == 10 && [c0 intValue] == 0))
+            isValid = YES;
+        else
+            isValid = NO;
+    }
+    
+    return isValid;
+}
+
++ (BOOL) validateSasiu:(NSString *) sasiu
+{
+    NSString *regex = @"(([a-h,A-H,j-n,J-N,p-z,P-Z,0-9]{9})([a-h,A-H,j-n,J-N,p,P,r-t,R-T,v-z,V-Z,0-9])([a-h,A-H,j-n,J-N,p-z,P-Z,0-9])(\\d{6}))$";
+
+    NSPredicate *serieSasiu = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    //	return 0;
+    return [serieSasiu evaluateWithObject:sasiu];
+}
+
++ (BOOL) validateCIV:(NSString *) civ
+{
+    NSString *regex = @"(([a-h,A-H,j-n,J-N,p-z,P-Z]{1})(\\d{6}))$";
+    NSString *regex2 = @"(([a-h,A-H,j-n,J-N,p-z,P-Z]{1})(\\d{7}))$";
+    
+    NSPredicate *serieCiv = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex];
+    NSPredicate *serieCiv2 = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regex2];
+    //	return 0;
+    return [serieCiv evaluateWithObject:civ] || [serieCiv2 evaluateWithObject:civ];
+}
+
++ (NSString *) replacePossibleWrongEmailAddresses:(NSString *) email
+{
+    NSMutableArray * listGmail = [[NSMutableArray alloc] initWithObjects:@"@gmail.coml",
+                                  @"@gmal.com", @"@gmail.cim", @"@gmail.col", @"@gmail.con",@"@gmai.com", @"@gma.com", @"@gmail.vom", nil];
+    
+    NSMutableArray * listYahoo = [[NSMutableArray alloc] initWithObjects:@"@yahoo.con",
+                                  @"@yagoo.com", @"@yaahoo.com", @"@yahoo.cim", @"@yah00.com", @"@yahoo.rom", @"@yakoo.com",
+                                  @"@yahoo.cm", @"@yahoo..com", @"@yah.com", @"@yahu.com", @"@yahoo.c", @"@yaho.coj", @"@yaoo.com", @"@yahoo.om", @"@yhoo.com",
+                                  @"@ya.com", @"@yaho.com", @"@yahho.com", @"@yahoo.vom", @"@yahop.com", @"@yahh.com", @"@yah00.vcom", @"@yahol.com", nil];
+    NSString * s = [email lowercaseString];
+    
+    for (int i=0; i<listGmail.count; i++) {
+        NSRange aRange = [email rangeOfString:[listGmail objectAtIndex:i]];
+        if (aRange.location != NSNotFound)
+        {
+            s = [s stringByReplacingOccurrencesOfString:[listGmail objectAtIndex:i] withString:@"@gmail.com"];
+            return s;
+        }
+    }
+    
+    for (int i=0; i<listYahoo.count; i++) {
+        NSRange aRange = [email rangeOfString:[listYahoo objectAtIndex:i]];
+        if (aRange.location != NSNotFound)
+        {
+            s = [s stringByReplacingOccurrencesOfString:[listYahoo objectAtIndex:i] withString:@"@yahoo.com"];
+            return s;
+        }
+    }
+    
+    return s;
+}
+
++ (NSString *) replacePossibleWrongSerieSasiu:(NSString *)serie
+{
+    NSString * s = serie;
+    s = [s stringByReplacingOccurrencesOfString:@"O" withString:@"0"];
+    s = [s stringByReplacingOccurrencesOfString:@"I" withString:@"1"];
+    return s;
+}
+
 @end

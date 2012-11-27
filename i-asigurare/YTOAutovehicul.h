@@ -58,5 +58,6 @@
 
 - (BOOL) isValidForRCA;
 - (float) CompletedPercent;
+- (void) refresh;
 
 @end

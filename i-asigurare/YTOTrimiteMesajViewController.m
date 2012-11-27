@@ -268,8 +268,8 @@
     [self showLoading];
     
     self.navigationItem.hidesBackButton = YES;
-	//NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/utils.asmx"];
-	NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/utils.asmx"];
+
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@utils.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

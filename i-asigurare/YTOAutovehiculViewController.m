@@ -13,7 +13,6 @@
 #import "YTOCalculatorViewController.h"
 #import "YTOListaAutoViewController.h"
 #import "YTOImage.h"
-#import "YTOAlerta.h"
 
 @interface YTOAutovehiculViewController ()
 
@@ -40,6 +39,7 @@
 
     goingBack = YES;
     selectatInfoMasina = YES;
+    shouldSave = YES;
     
     [self initCells];
     
@@ -74,14 +74,13 @@
 - (void) viewWillDisappear:(BOOL)animated
 {
     [self doneEditing];
-    [self save];
+    if (shouldSave)
+        [self save];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -93,8 +92,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
@@ -108,6 +105,8 @@
     }
     else
     {
+        if (alertaRataCasco && alertaRataCasco.numarTotalRate > 0)
+            return 7 + alertaRataCasco.numarTotalRate;
         return 7;
     }
 }
@@ -132,6 +131,8 @@
             return 78;
         else if (indexPath.row == 1)
             return 30;
+        else if (indexPath.row == 6)
+            return 67;
         return 60;
     }
 }
@@ -172,8 +173,13 @@
         else if (indexPath.row == 2)  cell = cellExpirareRCA;
         else if (indexPath.row == 3)  cell = cellExpirareITP;
         else if (indexPath.row == 4)  cell = cellExpirareRovinieta;
-        else if (indexPath.row == 5)  cell = cellExpirareCASCO;
-        else cell =  cellExpirareRataCASCO;
+        else if (indexPath.row == 5)  cell =  cellExpirareCASCO;
+        else if (indexPath.row == 6)  cell = cellNumarRate;
+        
+        else if (alertaRataCasco && alertaRataCasco.numarTotalRate > 0)
+        {
+            cell = (UITableViewCell *)[listCellRateCasco objectAtIndex:(indexPath.row - 7)];
+        }
     }
     
     if (indexPath.row % 2 != 0) {
@@ -259,7 +265,10 @@
         if (indexPath.row == 6)     // Nr Inmatriculare
             [self showTooltip:@"Daca masina este in vederea inmatricularii, introduceti -."];
         else if (indexPath.row == 7)     // Serie Sasiu
+        {
             [self showTooltip:@"Introdu corect seria de sasiu pentru obtinerea tarifelor RCA reale. Vezi talon pozitia E (model nou) sau pozitia 3 (model vechi)."];
+            ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;            
+        }
         else if (indexPath.row == 8)     // Cm3
         {
             textField.text = [textField.text stringByReplacingOccurrencesOfString:@" cm3" withString:@""];
@@ -280,7 +289,10 @@
         else if (indexPath.row == 12)    // An fabricatie
             [self showTooltip:@"Vezi certificat inmatriculare pozitia B (model nou) sau pozitia 15 (model vechi)."];
         else if (indexPath.row == 13)   // Serie CIV
+        {
             [self showTooltip:@"Vezi certificat inmatriculare pozitia X (model nou) sau pozitia 4 (model vechi)."];
+            ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+        }
         
         else if (indexPath.row == 17) // Denumire Firma Leasing
             [self showTooltip:@"Daca masina este in leasing, introdu numele firmei de leasing."];
@@ -306,12 +318,17 @@
             alerta = [YTOAlerta getAlertaRCA:autovehicul.idIntern];
         else if (indexPath.row == 3)
             alerta = [YTOAlerta getAlertaITP:autovehicul.idIntern];
-        else if (indexPath.row ==4)
+        else if (indexPath.row == 4)
             alerta = [YTOAlerta getAlertaRovinieta:autovehicul.idIntern];
-        else if (indexPath.row ==5)
+        else if (indexPath.row == 5)
             alerta = [YTOAlerta getAlertaCasco:autovehicul.idIntern];
-        else if (indexPath.row ==6)
+        else if (indexPath.row == 6)
             alerta = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern];
+        else
+        {
+            int numarRata = indexPath.row - 7;
+            alerta = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern andNumarRata:numarRata];
+        }
         
         if (alerta)
             [datePicker setDate:alerta.dataAlerta];
@@ -425,6 +442,7 @@
     NSString *timestamp = [formatter stringFromDate:data];
     YTOAlerta * alerta;
     int tipAlerta=0;
+    int numarRata = 0;
     
     UITextField * txt;
     if (index == 2)
@@ -449,8 +467,19 @@
     }
     else if (index == 6)
     {
-        tipAlerta = 7;
+        tipAlerta = 6;
         txt = ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]);
+    }
+    else
+    {
+        tipAlerta = 6;
+        txt = ((UITextField *)[[listCellRateCasco objectAtIndex:index-7] viewWithTag:2]);
+        numarRata = index - 6;
+        
+        if (alertaRataCasco._isDirty)
+            [alertaRataCasco updateAlerta];
+        else
+            [alertaRataCasco addAlerta];
     }
     
     if (txt)
@@ -465,7 +494,10 @@
     
     alerta.idObiect = autovehicul.idIntern;
     alerta.tipAlerta = tipAlerta;
-    alerta.esteRata = (tipAlerta == 7 ? @"da" : @"nu");
+    alerta.esteRata = (tipAlerta == 6 ? @"da" : @"nu");
+    if (alerta.esteRata && numarRata  > 0)
+        alerta.numarRata = numarRata;
+    
     alerta.dataAlerta = data;
     
     if (toSave)
@@ -491,40 +523,55 @@
             if ([autovehicul CompletedPercent] > percentCompletedOnLoad)
                 [autovehicul addAutovehicul];
         }
+        
+        if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+        {
+            // selecteaza masina si ma duce direct in ecranul de calculator
+            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+            [parent setAutovehicul:autovehicul];
+        }
+        else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
+        {
+            YTOListaAutoViewController * parent = (YTOListaAutoViewController *)self.controller;
+            [parent reloadData];
+        }
     }
 }
 
 - (void) btnSave_Clicked
 {
-    //[self doneEditing];
-    if (activeTextField)
-    {
-        [activeTextField resignFirstResponder];
-    }
+    [self doneEditing];
     [self save];
     
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
         // selecteaza masina si ma duce direct in ecranul de calculator
         YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-        [parent setAutovehicul:autovehicul];
         [self.navigationController popToViewController:parent animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
     {
-        YTOListaAutoViewController * parent = (YTOListaAutoViewController *)self.controller;
-        [parent reloadData];
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
 - (void) btnCancel_Clicked
 {
+    shouldSave = NO;
+    
+    // In cazul in care a modificat ceva si a apasat pe Cancel,
+    // incarcam lista cu masini din baza de date
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [delegate refreshMasini];
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) load:(YTOAutovehicul *)a
 {
+    UIImageView * imgTextHeader = (UIImageView *)[cellAutoHeader viewWithTag:1];
+    imgTextHeader.image = [UIImage imageNamed:@"text-header-masina-salvata.png"];
+    
     [self setMarca:a.marcaAuto];
     [self setModel:a.modelAuto];
     [self setNrInmatriculare:a.nrInmatriculare];
@@ -562,9 +609,23 @@
     YTOAlerta * alertaCasco = [YTOAlerta getAlertaCasco:autovehicul.idIntern];
     if (alertaCasco)
         [self setAlerta:5 withDate:alertaCasco.dataAlerta savingData:NO];
-    YTOAlerta * alertaRataCasco = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern];
+    alertaRataCasco = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern];
     if (alertaRataCasco)
-        [self setAlerta:6 withDate:alertaRataCasco.dataAlerta savingData:NO];
+    {
+        //[self setAlerta:6 withDate:alertaRataCasco.dataAlerta savingData:NO];
+        [self setNumarRate:alertaRataCasco.numarTotalRate];
+        if (alertaRataCasco.numarTotalRate > 0)
+        {
+            for (int i=0; i<alertaRataCasco.numarTotalRate; i++)
+            {
+                YTOAlerta * alert = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern andNumarRata:i+1];
+                if (alert)
+                    [self setAlerta:(i+6) withDate:alert.dataAlerta savingData:NO];
+            }
+        }
+    }
+    else
+        [self setNumarRate:0];
 }
 
 
@@ -940,6 +1001,26 @@
     ((UIImageView *)[cellExpirareCASCO viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-casco.png"];
     [YTOUtils setCellFormularStyle:cellExpirareCASCO];
     
+    NSArray *topLevelObjectsNumarRate = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
+    cellNumarRate = [topLevelObjectsNumarRate objectAtIndex:0];
+    [(UILabel *)[cellNumarRate viewWithTag:1] setText:@"NUMAR RATE CASCO"];
+    UIStepper * stepper = (UIStepper *)[cellNumarRate viewWithTag:3];
+    stepper.minimumValue = 1;
+    stepper.maximumValue = 12;
+    stepper.value = 0;
+    [stepper addTarget:self action:@selector(numarRate_Changed:) forControlEvents:UIControlEventValueChanged];
+    [YTOUtils setCellFormularStyle:cellNumarRate];
+    
+    listCellRateCasco = [[NSMutableArray alloc] init];
+    for (int i=0; i<12; i++) {
+        NSArray *topLevelObjectsXRata = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
+        UITableViewCell * cellXRata = [[UITableViewCell alloc] init];
+        cellXRata = [topLevelObjectsXRata objectAtIndex:0];
+        [(UILabel *)[cellXRata viewWithTag:1] setText:[NSString stringWithFormat:@"RATA %d CASCO", (i+1)]];
+        ((UIImageView *)[cellXRata viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
+        [listCellRateCasco addObject:cellXRata];
+    }
+    
     NSArray *topLevelObjectsAlertaRataCasco = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareRataCASCO = [topLevelObjectsAlertaRataCasco objectAtIndex:0];
     [(UILabel *)[cellExpirareRataCASCO viewWithTag:1] setText:@"RATA SCADENTA CASCO"];
@@ -948,6 +1029,16 @@
     ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
     ((UIImageView *)[cellExpirareRataCASCO viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];     
     //[YTOUtils setCellFormularStyle:cellExpirareRataCASCO];
+}
+
+- (void) numarRate_Changed:(id)sender
+{
+    UIStepper * stepper = (UIStepper *)sender;
+    
+    [self setNumarRate:stepper.value];
+    [tableView reloadData];
+    
+    //[self setDataInceput:date];
 }
 
 - (void) showListaMarciAuto:(NSIndexPath *)index;
@@ -1403,8 +1494,17 @@
 - (void) setSerieSasiu:(NSString *)serie
 {
     UITextField * txt = (UITextField *)[cellSerieSasiu viewWithTag:2];
+    UIImageView * imgAlert = (UIImageView *)[cellSerieSasiu viewWithTag:10];
+    
+    serie = [YTOUtils replacePossibleWrongSerieSasiu:[serie uppercaseString]];
+    
     txt.text = serie;
-    autovehicul.serieSasiu = serie;    
+    autovehicul.serieSasiu = serie;
+    
+    if (serie && serie.length > 0 && [YTOUtils validateSasiu:serie])
+        [imgAlert setHidden:YES];
+    else
+        [imgAlert setHidden:NO];
 }
 
 - (NSString *) getSerieCIV
@@ -1414,8 +1514,15 @@
 - (void) setSerieCIV:(NSString *)serie
 {
     UITextField * txt = (UITextField *)[cellSerieCiv viewWithTag:2];
+    UIImageView * imgAlert = (UIImageView *)[cellSerieCiv viewWithTag:10];
+    
     txt.text = serie;
-    autovehicul.serieCiv = serie;    
+    autovehicul.serieCiv = serie;
+    
+    if (serie && serie.length > 0 && [YTOUtils validateCIV:serie])
+        [imgAlert setHidden:YES];
+    else
+        [imgAlert setHidden:NO];
 }
 
 - (int) getNrLocuri
@@ -1436,10 +1543,13 @@
 - (void) setMasaMaxima:(int)masa
 {
     UITextField * txt = (UITextField *)[cellMasaMaxima viewWithTag:2];
-    txt.text = [NSString stringWithFormat:@"%d Kg", masa];
-    autovehicul.masaMaxima = masa;            
+    if (masa > 0)
+    {
+        txt.text = [NSString stringWithFormat:@"%d Kg", masa];
+        autovehicul.masaMaxima = masa;
+    }
 }
-     
+
 - (int) getCategorieAuto
 {
     return autovehicul.categorieAuto;
@@ -1537,8 +1647,8 @@
     {
         UITextField * txt = (UITextField *)[cellCm3 viewWithTag:2];
         txt.text = [NSString stringWithFormat:@"%d cm3", v];
+        autovehicul.cm3 = v;
     }
-    autovehicul.cm3 = v;
 }
 
 - (int) getPutere
@@ -1551,8 +1661,9 @@
     {
         UITextField * txt = (UITextField *)[cellPutere viewWithTag:2];
         txt.text = [NSString stringWithFormat:@"%d kW", v];
+        autovehicul.putere = v;
     }
-    autovehicul.putere = v;
+    
 }
 
 - (int) getAnFabricatie
@@ -1561,12 +1672,19 @@
 }
 - (void) setAnFabricatie:(int)v
 {
+    UIImageView * imgAlert = (UIImageView *)[cellAnFabricatie viewWithTag:10];
+    
     if (v != 0)
     {
         UITextField * txt = (UITextField *)[cellAnFabricatie viewWithTag:2];
         txt.text = [NSString stringWithFormat:@"%d", v];
     }
     autovehicul.anFabricatie = v;
+    
+    if (v > 1950 || v <= [YTOUtils getAnCurent] + 1)
+        [imgAlert setHidden:YES];
+    else
+        [imgAlert setHidden:NO];
 }
 
 - (void) setInLeasing:(NSString *)v
@@ -1589,6 +1707,22 @@
         lblDA.textColor = [UIColor whiteColor];
         autovehicul.inLeasing = @"da";
     }
+}
+
+- (void) setNumarRate:(int)x
+{
+    UILabel * lbl = (UILabel *)[cellNumarRate viewWithTag:2];
+    lbl.text = (x == 0 ? @"integral" : [NSString stringWithFormat:@"%d %@", x, (x == 1 ? @"rata" : @"rate")]);
+    
+    if (alertaRataCasco == nil)
+    {
+        alertaRataCasco = [[YTOAlerta alloc] initWithGuid:[YTOUtils GenerateUUID]];
+        alertaRataCasco.tipAlerta = 6;
+        alertaRataCasco.idObiect = autovehicul.idIntern;
+        alertaRataCasco.esteRata = @"da";
+        alertaRataCasco.dataAlerta = [[NSDate date] dateByAddingTimeInterval:-99999999];
+    }
+    alertaRataCasco.numarTotalRate = x;
 }
 
 - (void) setNumeFirmaLeasing:(NSString *)v

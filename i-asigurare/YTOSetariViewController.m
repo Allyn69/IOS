@@ -203,6 +203,8 @@
             ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#b3b3b3"];
         }
     }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundView = [[UIView alloc] initWithFrame:CGRectZero];
     return cell;
 }
@@ -338,9 +340,7 @@
 {
     [self showCustomLoading];
     
-    
-	NSURL * url = [NSURL URLWithString:@"http://192.168.1.176:8082/sync.asmx"];
-	//NSURL * url = [NSURL URLWithString:@"https://api.i-business.ro/MaAsigurApiTest/sync.asmx"];
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy

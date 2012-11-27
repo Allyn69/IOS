@@ -32,6 +32,7 @@
     IBOutlet UIButton * btnCasatorit;
 
     BOOL goingBack;
+    BOOL shouldSave;
 }
 
 @property (nonatomic, retain) YTOPersoana *      asigurat;

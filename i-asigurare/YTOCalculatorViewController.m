@@ -362,6 +362,8 @@
 
 - (void) initCustomValues
 {
+    cautLegaturaDintreMasinaSiAsigurat = YES;
+    
     // Incarc proprietarul PF
     YTOPersoana * prop = [YTOPersoana Proprietar];
     // Daca nu exista proprietar PF, incerc sa incarc propriertar PJ
@@ -478,8 +480,11 @@
     {
         YTOAutovehicul * _auto = [YTOAutovehicul getAutovehiculByProprietar:a.idIntern];
 
-        if (_auto && _auto.idIntern && [_auto isValidForRCA])
+        if (_auto && _auto.idIntern && [_auto isValidForRCA] && cautLegaturaDintreMasinaSiAsigurat)
+        {
             [self setAutovehicul:_auto];
+            cautLegaturaDintreMasinaSiAsigurat = NO;
+        }
     }
     
     [tableView reloadData];
@@ -499,11 +504,13 @@
     }
     masina = a;
     [self setCompanieCasco:masina.cascoLa];
-    if (masina.idProprietar.length > 0 && ![masina.idProprietar isEqualToString:asigurat.idIntern])
+    if (masina.idProprietar.length > 0 && ![masina.idProprietar isEqualToString:asigurat.idIntern] && cautLegaturaDintreMasinaSiAsigurat)
     {
         YTOPersoana * prop = [YTOPersoana getPersoana:masina.idProprietar];
         if (prop)
             [self setAsigurat:prop];
+        
+        cautLegaturaDintreMasinaSiAsigurat = NO;
     }
 }
 
