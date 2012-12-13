@@ -2,7 +2,7 @@
 //  YTOCASCOViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 10/8/12.
+//  Created by Andi Aparaschivei on 10/8/12.
 //
 //
 
@@ -367,6 +367,7 @@
 #pragma YTO Nomenclator
 - (void) showNomenclator
 {
+    self.navigationItem.hidesBackButton = YES;
     [vwNomenclator setHidden:NO];
     UILabel * lblTitle = (UILabel *)[vwNomenclator viewWithTag:1];
     UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
@@ -438,6 +439,7 @@
 
 - (IBAction) hideNomenclator
 {
+    self.navigationItem.hidesBackButton = NO;
     [vwNomenclator setHidden:YES];
 }
 
@@ -584,7 +586,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideCustomLoading];
-	//to do parseXML
+
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];

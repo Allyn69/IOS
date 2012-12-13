@@ -2,8 +2,8 @@
 //  YTOFinalizareRCAViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/30/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/30/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOFinalizareRCAViewController.h"
@@ -11,6 +11,7 @@
 #import "Database.h"
 #import "YTOWebViewController.h"
 #import "YTOAppDelegate.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOFinalizareRCAViewController ()
 
@@ -36,6 +37,9 @@
     
     // Do any additional setup after loading the view from its nib.
     goingBack = YES;
+    
+    proprietar = [YTOPersoana Proprietar];
+    
     [self initCells];
     [self setTipPlata:@"cash"];
     [self setJudet:asigurat.judet];
@@ -103,6 +107,19 @@
     }
     else if (indexPath.row == 5)
     {
+        [self doneEditing];
+        
+        if (telefonLivrare.length == 0)
+        {
+            [txtTelefonLivrare becomeFirstResponder];
+            return;
+        }
+        if (emailLivrare.length == 0)
+        {
+            [txtEmailLivare becomeFirstResponder];
+            return;
+        }
+        
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
     }
 }
@@ -130,6 +147,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(64, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
@@ -154,9 +174,18 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row == 2)
+    // In cazul in care tastatura este activa si se da back
+    int index = 0;
+    if (indexPath != nil)
+        index = indexPath.row;
+    else
+        index = textField.tag;
+    
+    if (index == 1)
+        [self setAdresa:textField.text];
+    if (index == 2)
         [self setTelefon:textField.text];
-    else if (indexPath.row == 3)
+    else if (index == 3)
         [self setEmail:textField.text];
 }
 
@@ -185,25 +214,27 @@
 {
     NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellJudetLocalitate = [topLevelObjectsJudet objectAtIndex:0];
-    [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE LIVRARE"];
+    [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"LIVRARE (JUDET, LOCALITATE)"];
     [YTOUtils setCellFormularStyle:cellJudetLocalitate];
     
     NSArray *topLevelObjectsAdresa = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellAdresa = [topLevelObjectsAdresa objectAtIndex:0];
-    [(UILabel *)[cellAdresa viewWithTag:1] setText:@"STRADA, NUMAR, BLOC"];
+    [(UILabel *)[cellAdresa viewWithTag:1] setText:@"LIVRARE (STRADA, NUMAR, BLOC)"];
     [(UITextField *)[cellAdresa viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [YTOUtils setCellFormularStyle:cellAdresa]; 
     
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
-    [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL"];
+    txtEmailLivare = (UITextField *)[cellEmail viewWithTag:2];
+    [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL CONTACT"];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];        
     [YTOUtils setCellFormularStyle:cellEmail];
     
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
-    [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON"];
+    txtTelefonLivrare = (UITextField *)[cellTelefon viewWithTag:2];
+    [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON CONTACT"];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellTelefon];
@@ -264,27 +295,34 @@
 
 - (void) setEmail:(NSString *)email
 {
-    emailLivrare = email;
-    if (asigurat.email == nil || [asigurat.email isEqualToString:@"null"])
+    if ([email isEqualToString:@""] && proprietar.email.length >0 )
+    {
+        email = proprietar.email;
+    }
+    else if (asigurat.email == nil || [asigurat.email isEqualToString:@"null"])
     {
         asigurat.email = email;
         saveAsigurat = YES;
     }
-    UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
-    txt.text = email;
+    
+    emailLivrare = email;
+    txtEmailLivare.text = email;
 }
 
 - (void) setTelefon:(NSString *)telefon
 {
-    telefonLivrare = telefon;
-    if (asigurat.telefon == nil || [asigurat.telefon isEqualToString:@"null"] || [asigurat.telefon isEqualToString:@"(null)"])
+    if ([telefon isEqualToString:@""] && proprietar.telefon.length >0 )
+    {
+        telefon = proprietar.telefon;
+    }
+    else if (asigurat.telefon == nil || [asigurat.telefon isEqualToString:@"null"] || [asigurat.telefon isEqualToString:@"(null)"])
     {
         asigurat.telefon = telefon;
         saveAsigurat = YES;
     }
     
-    UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
-    txt.text = telefon;
+    telefonLivrare = telefon;
+    txtTelefonLivrare.text = telefon;
 }
 
 - (IBAction)btnTipPlata_Clicked:(id)sender
@@ -305,6 +343,8 @@
         [self setTipPlata:@"op"];
     else if (btn.tag ==3)
         [self setTipPlata:@"online"];
+    
+    [self doneEditing];
 }
 
 - (void) setTipPlata:(NSString *)p
@@ -334,7 +374,7 @@
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
 							 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
 							 "<soap:Body>"
-							 "<InregistrareComanda xmlns=\"http://tempuri.org/\">"
+							 "<InregistrareComandaSmartphone xmlns=\"http://tempuri.org/\">"
 							 "<user>vreaurca</user>"
 							 "<password>123</password>"
 							 "<oferta_prima>%.2f</oferta_prima>"
@@ -345,14 +385,18 @@
 							 "<livrare_localitate>%@</livrare_localitate>"
 							 "<livrare_judet>%@</livrare_judet>"
 							 "<telefon>%@</telefon>"
+                             "<email>%@</email>"
 							 "<mod_plata>%d</mod_plata>"
 							 "<udid>%@</udid>"
+                             "<id_masina>%@</id_masina>"
 							 "<platforma>%@</platforma>"
-							 "</InregistrareComanda>"
+							 "</InregistrareComandaSmartphone>"
 							 "</soap:Body>"
 							 "</soap:Envelope>",
-							 oferta.prima, oferta.companie, oferta.codOferta, bonusMalus, adresaLivrare, localitateLivrare, judetLivrare, telefonLivrare, modPlata,
-							 [[UIDevice currentDevice] uniqueIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+							 oferta.prima, oferta.companie, oferta.codOferta, bonusMalus, adresaLivrare, localitateLivrare, judetLivrare, telefonLivrare, emailLivrare, modPlata,
+							 [[UIDevice currentDevice] uniqueIdentifier],
+                             masina.idIntern,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
     return xml;
 }
 
@@ -371,7 +415,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/InregistrareComanda" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/InregistrareComandaSmartphone" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -398,7 +442,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideCustomLoading];
-	//to do parseXML
+
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -471,6 +515,7 @@
 
 - (void) showCustomLoading
 {
+    self.navigationItem.hidesBackButton = YES;
     [self hideCustomLoading];
     [btnClosePopup setHidden:YES];
     [loading setHidden:NO];
@@ -481,13 +526,18 @@
 
 - (IBAction) hideCustomLoading
 {
+    self.navigationItem.hidesBackButton = NO;
     [vwLoading setHidden:YES];
-    if (idOferta && ![idOferta isEqualToString:@""])
-        [self showPopupDupaComanda];
+    if (idOferta && ![idOferta isEqualToString:@""] && [YTOUserDefaults IsFirstInsuranceRequest])
+    {
+        [YTOUserDefaults setFirstInsuranceRequest:YES];
+        [self showPopupDupaComanda];   
+    }
 }
 
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
     if (error)
         imgError.image = [UIImage imageNamed:@"comanda-eroare.png"];
     else
@@ -507,16 +557,20 @@
 
 - (IBAction) hideCustomAlert:(id)sender;
 {
+    self.navigationItem.hidesBackButton = NO;
     UIButton * btn = (UIButton *)sender;
     [vwCustomAlert setHidden:YES];
+    
+    NSLog(@"tag=%d", btn.tag);
+    
     if (btn.tag == 1)
     {
-        if (true)
+        if ([YTOUserDefaults IsFirstInsuranceRequest])
             [self showPopupDupaComanda];
         else
             [self.navigationController popToRootViewControllerAnimated:YES];
     }
-    else if (btn.tag == 11)
+    else if (btn.tag == 11 || btn.tag == 5)
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
@@ -544,12 +598,18 @@
         //[delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if (btn.tag == 100)
+    {
+        [self doneEditing];
+        
         [self callInregistrareComanda];
-    
+    }
+//    else
+//        [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
     btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
@@ -566,12 +626,29 @@
 
 - (void) showPopupDupaComanda
 {
-    [vwLoading setHidden:NO];
-    [loading setHidden:YES];
-    [lblLoading setHidden:YES];
-    [btnClosePopup setHidden:NO];
-    btnClosePopup.tag = 11;
-    [imgLoading setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
+    self.navigationItem.hidesBackButton = YES;
+    
+    viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+    img.tag = 1;
+    [img setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
+    [viewTooltip addSubview:img];
+    
+    UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+    btnClose.tag = 2;
+    btnClose.frame = CGRectMake(126, 400, 70, 31);
+    [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+    [viewTooltip addSubview:btnClose];
+    
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [delegate.window addSubview:viewTooltip];
+}
+
+- (void) closeTooltip
+{
+    self.navigationItem.hidesBackButton = NO;
+    [viewTooltip removeFromSuperview];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 @end

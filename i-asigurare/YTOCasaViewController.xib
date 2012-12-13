@@ -1084,6 +1084,7 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="btnInfoAlerte_OnClick:">id</string>
+						<string key="btnNomenclator_Clicked:">id</string>
 						<string key="btnTipLocuinta_Clicked:">id</string>
 						<string key="hideNomenclator">id</string>
 						<string key="nrCamere_Changed:">id</string>
@@ -1092,6 +1093,10 @@
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="btnInfoAlerte_OnClick:">
 							<string key="name">btnInfoAlerte_OnClick:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="btnNomenclator_Clicked:">
+							<string key="name">btnNomenclator_Clicked:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="btnTipLocuinta_Clicked:">

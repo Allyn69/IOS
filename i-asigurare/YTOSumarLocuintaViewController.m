@@ -2,7 +2,7 @@
 //  YTOSumarLocuintaViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/8/12.
+//  Created by Andi Aparaschivei on 11/8/12.
 //
 //
 
@@ -125,6 +125,7 @@
     ((UILabel *)[cellProdus viewWithTag:1]).text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
     ((UIImageView *)[cellProdus viewWithTag:2]).image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
     
+    
     ((UILabel *)[cellProdus viewWithTag:3]).text = @"";
     ((UILabel *)[cellProdus viewWithTag:4]).text = @"";
     ((UIImageView *)[cellProdus viewWithTag:5]).image = ((UIImageView *)[cellProdus viewWithTag:6]).image = nil ;//[UIImage imageNamed:@"arrow-calatorie.png"];
@@ -135,6 +136,7 @@
     
     [btnConditii addTarget:self action:@selector(showConditiiComplete) forControlEvents:UIControlEventTouchUpInside];
     [btnSumar addTarget:self action:@selector(showSumarAcoperiri) forControlEvents:UIControlEventTouchUpInside];
+    
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
     UIImageView * imgComanda = (UIImageView *)[cellCalculeaza viewWithTag:1];

@@ -2,8 +2,8 @@
 //  YTOCalatorieViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/31/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/31/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOCalatorieViewController.h"
@@ -17,6 +17,8 @@
 @end
 
 @implementation YTOCalatorieViewController
+
+@synthesize DataInceput = _DataInceput;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,6 +40,11 @@
     [self setSumaAsigurata:@"30.000-eur"];
     [self setNrZile:5];
     [self setTranzit:@"nu"];
+    
+    
+    _DataInceput = [YTOUtils getDataMinimaInceperePolita];
+    [self setDataInceput:_DataInceput];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -68,16 +75,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 8;
+    return 9;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -91,48 +94,10 @@
     else if (indexPath.row == 4) cell = cellTranzit;
     else if (indexPath.row == 5) cell = cellSumaAsigurata;
     else if (indexPath.row == 6) cell = cellCalatori;
+    else if (indexPath.row == 7) cell = cellDataInceput;
     else cell = cellCalculeaza;
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 
@@ -153,12 +118,13 @@
         aView.controller = self;
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
-    else if (indexPath.row == 7)
+    else if (indexPath.row == 8)
     {
         if (listaAsigurati.count == 0)
             return;
         
         oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
+        oferta.dataInceput = _DataInceput;
         oferta.tipAsigurare = 2;
         oferta.obiecteAsigurate = [[NSMutableArray alloc] init];
         
@@ -176,7 +142,7 @@
         
         oferta.durataAsigurare = nrZile;
 
-        oferta.numeAsigurare = [NSString stringWithFormat:@"Asigurare Calatorie %d zile in %@", nrZile, taraDestinatie];
+        oferta.numeAsigurare = [NSString stringWithFormat:@"Calatorie, %@", taraDestinatie];
         
         YTOWebServiceCalatorieViewController * aView = [[YTOWebServiceCalatorieViewController alloc] init];
         aView.listAsigurati = listaAsigurati;
@@ -219,7 +185,7 @@
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
     ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data Inceput";
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
-    [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged]; 
+    [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged];
     ((UIImageView *)[cellDataInceput viewWithTag:4]).image = [UIImage imageNamed:@"arrow-calatorie.png"];
     [YTOUtils setCellFormularStyle:cellDataInceput];
     
@@ -332,9 +298,9 @@
 - (void) btnTranzit_Clicked:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
-    BOOL tranzit = btn.tag == 1;
+    BOOL _tranzit = btn.tag == 1;
         
-    [self setTranzit:tranzit ? @"da" : @"nu"];
+    [self setTranzit:_tranzit ? @"da" : @"nu"];
 }
      
 #pragma Properties
@@ -343,7 +309,9 @@
 {
     UILabel * lbl = (UILabel *)[cellDataInceput viewWithTag:2];
     lbl.text = [YTOUtils formatDate:DataInceput withFormat:@"dd.MM.yyyy"];
-    // to do - salveaza data inceput;
+
+    _DataInceput = DataInceput;
+    oferta.dataInceput = DataInceput;
 }
 
 - (void) setNrZile:(int)zile

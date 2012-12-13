@@ -2,7 +2,7 @@
 //  CotatieRCA.h
 //  WebServiceTest
 //
-//  Created by Administrator on 3/23/11.
+//  Created by Andi Aparaschivei on 3/23/11.
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 

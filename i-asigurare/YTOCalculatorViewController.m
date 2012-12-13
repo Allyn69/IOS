@@ -2,8 +2,8 @@
 //  YTOCalculatorViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/12/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOCalculatorViewController.h"
@@ -187,6 +187,7 @@
         {
             YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
             aView.controller = self;
+            aView.produsAsigurare = RCA;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
         else {
@@ -375,7 +376,8 @@
         [self setAsigurat:prop];
     }
     
-    _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
+    _DataInceput = [YTOUtils getDataMinimaInceperePolita];
+    
     [self setDataInceput:_DataInceput];
     _Durata = @"6";
 }
@@ -757,6 +759,8 @@
 
 - (void) showNomenclator
 {
+    self.navigationItem.hidesBackButton = YES;
+    
     [vwNomenclator setHidden:NO];
     UILabel * lblTitle = (UILabel *)[vwNomenclator viewWithTag:1];
     UIScrollView * scrollView = (UIScrollView *)[vwNomenclator viewWithTag:2];
@@ -827,6 +831,7 @@
 
 - (IBAction) hideNomenclator
 {
+    self.navigationItem.hidesBackButton = NO;
     [vwNomenclator setHidden:YES];
 }
 

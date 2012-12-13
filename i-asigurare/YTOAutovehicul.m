@@ -2,13 +2,14 @@
 //  YTOAutovehicul.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/18/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAutovehicul.h"
 #import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
+#import "YTOAlerta.h"
 #import "Database.h"
 
 @implementation YTOAutovehicul
@@ -46,6 +47,7 @@
 @synthesize _dataCreare;
 
 @synthesize _isDirty;
+@synthesize responseData;
 
 - (id)initWithGuid:(NSString*)guid
 {
@@ -65,6 +67,9 @@
     [autovehicul addObiectAsigurat];
     self._isDirty = YES;
     
+    [self showLoading];
+    [self performSelectorInBackground:@selector(registerAutovehicul) withObject:nil];
+    
     [self refresh];
 }
 
@@ -73,6 +78,9 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
+    
+    [self showLoading];
+    [self performSelectorInBackground:@selector(registerAutovehicul) withObject:nil];
     
     [self refresh];
 }
@@ -83,7 +91,28 @@
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
     
-    [self refresh];    
+    [self showLoading];
+    [self performSelectorInBackground:@selector(markAutovehiculAsDeleted) withObject:nil];
+    
+    [self refresh];
+    
+    // dupa ce sterg autovehiculul,
+    // sterg si alertele, in caz ca exista
+    YTOAlerta * alertaRca = [YTOAlerta getAlertaRCA:self.idIntern];
+    if (alertaRca)
+        [alertaRca deleteAlerta];
+    YTOAlerta * alertaItp = [YTOAlerta getAlertaITP:self.idIntern];
+    if (alertaItp)
+        [alertaItp deleteAlerta];
+    YTOAlerta * alertaRovinieta = [YTOAlerta getAlertaRovinieta:self.idIntern];
+    if (alertaRovinieta)
+        [alertaRovinieta deleteAlerta];
+    YTOAlerta * alertaCasco = [YTOAlerta getAlertaCasco:self.idIntern];
+    if (alertaCasco)
+        [alertaCasco deleteAlerta];
+    YTOAlerta * alertaRataCasco = [YTOAlerta getAlertaRataCasco:self.idIntern];
+    if (alertaRataCasco)
+        [alertaRataCasco deleteAlerta];
 }
 
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern
@@ -259,7 +288,7 @@
 
 - (float) CompletedPercent
 {
-    int numarCampuri = 12;
+    int numarCampuri = 13;
     float campuriCompletate = 0;
     
     if (self.judet && self.judet.length > 0)
@@ -275,6 +304,8 @@
     if (self.serieSasiu && self.serieSasiu.length > 0)
         campuriCompletate ++;
     if (self.marcaAuto && self.marcaAuto.length > 0)
+        campuriCompletate ++;
+    if (self.modelAuto && self.modelAuto.length > 0)
         campuriCompletate ++;
     if (self.categorieAuto != 8 && self.cm3 > 0)
         campuriCompletate ++;
@@ -294,7 +325,7 @@
         campuriCompletate ++;
     
     if ([self.inLeasing isEqualToString:@"da"]) {
-        numarCampuri = 13;
+        numarCampuri = 14;
         if (self.firmaLeasing && self.firmaLeasing.length > 0)
             campuriCompletate++;
     }
@@ -306,6 +337,154 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate refreshMasini];
+}
+
+- (void) registerAutovehicul
+{
+    
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<RegisterMasina xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<marca>%@</marca>"
+                             "<model>%@</model>"
+                             "<index_categorie>%d</index_categorie>"
+                             "<subcategorie>%@</subcategorie>"
+                             "<judet>%@</judet>"
+                             "<localitate>%@</localitate>"
+                             "<nr_inmatriculare>%@</nr_inmatriculare>"
+                             "<serie_sasiu>%@</serie_sasiu>"
+                             "<cm3>%d</cm3>"
+                             "<putere>%d</putere>"
+                             "<nr_locuri>%d</nr_locuri>"
+                             "<masa_maxima>%d</masa_maxima>"
+                             "<an_fabricatie>%d</an_fabricatie>"
+                             "<serie_talon>%@</serie_talon>"
+                             "<destinatie_auto>%@</destinatie_auto>"
+                             "<combustibil>%@</combustibil>"
+                             "<in_leasing>%@</in_leasing>"
+                             "<firma_leasing>%@</firma_leasing>"
+                             "<casco_la>%@</casco_la>"
+                             "<nr_km>%d</nr_km>"
+                             "<culoare>%@</culoare>"
+                             "<udid>%@</udid>"
+                             "<id_intern>%@</id_intern>"
+                             "<platforma>%@</platforma>"
+                             "</RegisterMasina>"
+                             "</soap:Body>"
+                             "</soap:Envelope>",
+                             self.marcaAuto, self.modelAuto, self.categorieAuto, self.subcategorieAuto,
+                             self.judet, self.localitate, self.nrInmatriculare, self.serieSasiu,
+                             self.cm3, self.putere, self.nrLocuri, self.masaMaxima, self.anFabricatie,
+                             self.serieCiv, self.destinatieAuto, self.combustibil, self.inLeasing, self.firmaLeasing,
+                             self.cascoLa, self.nrKm, self.culoare,
+                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/RegisterMasina" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
+- (void) markAutovehiculAsDeleted
+{
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<DeleteMasina xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<udid>%@</udid>"
+                             "<id_masina>%@</id_masina>"
+                             "</DeleteMasina>"
+                             "</soap:Body>"
+                             "</soap:Envelope>",
+                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern];
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/DeleteMasina" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+    
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+    [self hideLoading];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+    
+    [self hideLoading];
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+    [self hideLoading];
+}
+
+
+#pragma LOADING
+- (void) showLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = YES;
+}
+- (void) hideLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = NO;
 }
 
 @end

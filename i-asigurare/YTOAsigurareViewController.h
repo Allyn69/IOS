@@ -2,13 +2,17 @@
 //  YTOAsigurareViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 11/7/12.
+//  Created by Andi Aparaschivei on 11/7/12.
 //
 //
 
 #import <UIKit/UIKit.h>
 #import "YTOUtils.h"
 #import "YTOOferta.h"
+#import "YTOListaLocuinteViewController.h"
+#import "YTOAutovehiculViewController.h"
+#import "YTOCasaViewController.h"
+#import "YTOListaAutoViewController.h"
 
 @interface YTOAsigurareViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
@@ -18,12 +22,23 @@
     IBOutlet UITableViewCell * cellProdusAsigurare;
     UITableViewCell          * cellNumeAsigurare;
     IBOutlet UITableViewCell * cellCompanieAsigurare;
+    UITableViewCell          * cellMoneda;
     UITableViewCell          * cellPrima;
     UITableViewCell          * cellDataInceput;
+    UITableViewCell          * cellMasina;
+    UITableViewCell          * cellLocuinta;
+    UITableViewCell          * cellSC;
+    
     IBOutlet UIView          * vwNomenclator;
     
-    UITextField              * activeTextField;    
+    UITextField              * activeTextField;
+    
+    BOOL shouldSave;
+    BOOL goingBack;
 }
+
+@property (nonatomic, retain) YTOAutovehicul * masina;
+@property (nonatomic, retain) YTOLocuinta    * locuinta;
 
 @property (nonatomic, retain) YTOOferta * asigurare;
 
@@ -44,6 +59,10 @@
 - (void) setTipAsigurare:(int)v;
 - (void) setNumeAsigurare:(NSString *)v;
 - (void) setCompanie:(NSString*)v;
+- (void) setMoneda:(NSString *)v;
 - (void) setPrima:(float)v;
+
+- (void)setAutovehicul:(YTOAutovehicul *)a;
+- (void) setLocuinta:(YTOLocuinta *) a;
 
 @end

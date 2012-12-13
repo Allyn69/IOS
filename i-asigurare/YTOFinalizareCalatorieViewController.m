@@ -2,7 +2,7 @@
 //  YTOFinalizareCalatorieViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 10/12/12.
+//  Created by Andi Aparaschivei on 10/12/12.
 //
 //
 
@@ -33,6 +33,14 @@
     // Do any additional setup after loading the view from its nib.
     [self initCells];
 
+    YTOPersoana * proprietar = [YTOPersoana Proprietar];
+    if (!proprietar)
+        proprietar = [YTOPersoana ProprietarPJ];
+    if (proprietar)
+    {
+        [self setEmail:proprietar.email];
+        [self setTelefon:proprietar.telefon];
+    }
 
     for (int i=0; i<listAsigurati.count; i++) {
         YTOPersoana * pers = [listAsigurati objectAtIndex:i];
@@ -98,6 +106,19 @@
 {
     if (indexPath.row == listAsigurati.count + 2)
     {
+        [self doneEditing];
+        
+        if (telefonLivrare.length == 0)
+        {
+            [txtTelefonLivrare becomeFirstResponder];
+            return;
+        }
+        if (emailLivrare.length == 0)
+        {
+            [txtEmailLivrare becomeFirstResponder];
+            return;
+        }
+        
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
     }
 }
@@ -114,6 +135,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(0, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
@@ -140,15 +164,22 @@
 
     int indexAfter = listAsigurati.count-1;
     
-    if (indexPath.row < listAsigurati.count)
+    // In cazul in care tastatura este activa si se da back
+    int index = 0;
+    if (indexPath != nil)
+        index = indexPath.row;
+    else
+        index = textField.tag;
+    
+    if (index < listAsigurati.count)
     {
-        [self setSerieAct:textField.text forIndex:indexPath.row];
+        [self setSerieAct:textField.text forIndex:index];
     }
-    else if(indexPath.row == (indexAfter+1))
+    else if(index == (indexAfter + 1))
     {
         [self setTelefon:textField.text];
     }
-    else if (indexPath.row == (indexAfter + 2))
+    else if (index == (indexAfter + 2))
     {
         [self setEmail:textField.text];
     }
@@ -181,8 +212,8 @@
         YTOPersoana * asigurat = [listAsigurati objectAtIndex:i];
         NSArray *topLevelObjectAsigurat = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
         UITableViewCell * cell = [topLevelObjectAsigurat objectAtIndex:0];
-        [(UILabel *)[cell viewWithTag:1] setText:[NSString stringWithFormat:@"%@", [asigurat.nume uppercaseString]]];
-        //[(UITextField *)[cell viewWithTag:2] setPlaceholder:@"Serie/Numar act"];
+        [(UILabel *)[cell viewWithTag:1] setText:[NSString stringWithFormat:@"SERIE DOCUMENT %@", [asigurat.nume uppercaseString]]];
+        [(UITextField *)[cell viewWithTag:2] setPlaceholder:@"seria CI/Pasaport"];
         [(UITextField *)[cell viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
         [YTOUtils setCellFormularStyle:cell];
         [listCells addObject:cell];
@@ -191,12 +222,14 @@
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
     [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL"];
+    txtEmailLivrare = (UITextField *)[cellEmail viewWithTag:2];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
     [YTOUtils setCellFormularStyle:cellEmail];
     
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
+    txtTelefonLivrare = (UITextField *)[cellTelefon viewWithTag:2];
     [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON"];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
@@ -221,15 +254,13 @@
 - (void) setEmail:(NSString *)email
 {
     emailLivrare = email;
-    UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
-    txt.text = email;
+    txtEmailLivrare.text = email;
 }
 
 - (void) setTelefon:(NSString *)telefon
 {
     telefonLivrare = telefon;
-    UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
-    txt.text = telefon;
+    txtTelefonLivrare.text = telefon;
 }
 
 - (void) setTipPlata:(NSString *)p
@@ -312,13 +343,22 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideCustomLoading];
-	//to do parseXML
+
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
 	
     // daca este pentru plata ONLINE
 	if (succes && modPlata == 3) {
+        if (idOferta != nil)
+        {
+            oferta.idExtern = [idOferta intValue];
+            
+            if (!oferta._isDirty)
+                [oferta addOferta];
+            else
+                [oferta updateOferta];
+        }
         [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:3];
     }
     else if (succes) {
@@ -377,16 +417,20 @@
 
 - (void) showCustomLoading
 {
+    self.navigationItem.hidesBackButton = YES;
     [self hideCustomLoading];
     [vwLoading setHidden:NO];
 }
 - (IBAction) hideCustomLoading
 {
+    self.navigationItem.hidesBackButton = NO;
     [vwLoading setHidden:YES];
 }
 
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
+    
     if (error)
         imgError.image = [UIImage imageNamed:@"comanda-eroare.png"];
     else
@@ -406,20 +450,44 @@
 
 - (IBAction) hideCustomAlert:(id)sender;
 {
+    self.navigationItem.hidesBackButton = NO;
+    
     UIButton * btn = (UIButton *)sender;
     [vwCustomAlert setHidden:YES];
     if (btn.tag == 1)
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 3)
     {
-        // to do plata ONLINE
+        YTOPersoana * asig1 = [listAsigurati objectAtIndex:0];
+        
+        NSString * url = [NSString stringWithFormat:@"%@pre-pay.aspx?numar_oferta=%@"
+                          "&email=%@"
+                          "&nume=%@"
+                          "&adresa=%@"
+                          "&localitate=%@"
+                          "&judet=%@"
+                          "&telefon=%@"
+                          "&codProdus=%@"
+                          "&valoare=%.2f"
+                          "&companie=%@"
+                          "&udid=%@",
+                          LinkAPI,
+                          idOferta, emailLivrare, asig1.nume, asig1.adresa, asig1.localitate, asig1.judet, telefonLivrare,
+                          @"Calatorie", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
+        
+        NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
+        [[UIApplication sharedApplication] openURL:nsURL];
     }
     else if (btn.tag == 100)
+    {
         [self callInregistrareComanda];
+    }
 }
 
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
+    
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
     btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);

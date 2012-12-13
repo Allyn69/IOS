@@ -2,7 +2,7 @@
 //  YTOAlerta.h
 //  i-asigurare
 //
-//  Created by Administrator on 10/29/12.
+//  Created by Andi Aparaschivei on 10/29/12.
 //
 //
 

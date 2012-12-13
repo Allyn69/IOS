@@ -2,7 +2,7 @@
 //  YTOAlerta.m
 //  i-asigurare
 //
-//  Created by Administrator on 10/29/12.
+//  Created by Andi Aparaschivei on 10/29/12.
 //
 //
 
@@ -67,6 +67,9 @@
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
 
+    [self showLoading];
+    [self performSelectorInBackground:@selector(markAlertaAsDeleted) withObject:nil];
+    
     [self refresh];
 }
 
@@ -109,12 +112,12 @@
 
 + (YTOAlerta *) getAlertaCasco:(NSString *)_idIntern
 {
-    return [self getAlerta:_idIntern forType:4];
+    return [self getAlerta:_idIntern forType:5];
 }
 
 + (YTOAlerta *) getAlertaLocuinta:(NSString *)_idIntern
 {
-    return [self getAlerta:_idIntern forType:5];
+    return [self getAlerta:_idIntern forType:6];
 }
 
 + (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern
@@ -122,7 +125,7 @@
     NSMutableArray * list = [YTOAlerta Alerte];
     for (int i=0; i<list.count; i++) {
         YTOAlerta * _alerta = [list objectAtIndex:i];
-        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 6 && _alerta.numarRata == 0)
+        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 7 && _alerta.numarRata == 0)
             return _alerta;
     }
     return  nil;
@@ -133,7 +136,7 @@
     NSMutableArray * list = [YTOAlerta Alerte];
     for (int i=0; i<list.count; i++) {
         YTOAlerta * _alerta = [list objectAtIndex:i];
-        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 6 && _alerta.numarRata == x)
+        if ([_alerta.idObiect isEqualToString:_idIntern] &&_alerta.tipAlerta == 7 && _alerta.numarRata == x)
             return _alerta;
     }
     return  nil;
@@ -141,7 +144,7 @@
 
 + (YTOAlerta *) getAlertaRataLocuinta:(NSString *)_idIntern
 {
-    return [self getAlerta:_idIntern forType:7];
+    return [self getAlerta:_idIntern forType:8];
 }
 
 + (NSMutableArray*)Alerte
@@ -261,6 +264,10 @@
 
 - (NSString *) XmlRequest
 {
+    YTOPersoana * proprietar = [YTOPersoana Proprietar];
+    if (!proprietar)
+        proprietar = [YTOPersoana ProprietarPJ];
+        
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
@@ -286,8 +293,48 @@
                       [[UIDevice currentDevice] uniqueIdentifier],
                       self.idObiect,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                      @"andi@i-tom.ro"];
+                      (proprietar != nil ?  proprietar.email : @"fara email")];
     return xml;
+}
+
+- (void) markAlertaAsDeleted
+{
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<DisableAlert xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<udid>%@</udid>"
+                             "<id_intern>%@</id_intern>"
+                             "</DisableAlert>"
+                             "</soap:Body>"
+                             "</soap:Envelope>",
+                             [[UIDevice currentDevice] uniqueIdentifier], self.idObiect];
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/DisableAlert" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
 }
 
 - (void) callInregistrareAlerta {
@@ -330,7 +377,7 @@
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
 	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
 	NSLog(@"Response string: %@", responseString);
-	//to do parseXML
+	
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];

@@ -2,7 +2,7 @@
 //  YTOTrimiteMesajViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 10/25/12.
+//  Created by Andi Aparaschivei on 10/25/12.
 //
 //
 
@@ -117,6 +117,7 @@
 - (void) textFieldDidBeginEditing:(UITextField *)textField
 {
     [self addBarButton];
+    
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
@@ -126,6 +127,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
@@ -151,11 +155,17 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row == 0)
+    int index = 0;
+    if (indexPath != nil)
+        index = indexPath.row;
+    else
+        index = textField.tag;
+    
+    if (index == 0)
         [self setEmail:textField.text];
-    else if (indexPath.row == 1)
+    else if (index == 1)
         [self setTelefon:textField.text];
-    else if (indexPath.row == 2)
+    else if (index == 2)
         [self setSubiect:textField.text];
 }
 
@@ -186,6 +196,7 @@
 {
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
+    txtEmail = (UITextField *)[cellTelefon viewWithTag:2];
     [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL-UL TAU"];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
@@ -194,6 +205,7 @@
     
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
+    txtTelefon = (UITextField *)[cellTelefon viewWithTag:2];
     [(UILabel *)[cellTelefon viewWithTag:1] setText:@"NUMARUL TAU DE TELEFON"];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
@@ -201,12 +213,13 @@
     
     NSArray *topLevelObjectsSubiect = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellSubiect = [topLevelObjectsSubiect objectAtIndex:0];
+    txtTelefon = (UITextField *)[cellSubiect viewWithTag:2];
     [(UILabel *)[cellSubiect viewWithTag:1] setText:@"SUBIECT MESAJ"];
     [(UITextField *)[cellSubiect viewWithTag:2] setPlaceholder:@"..."];    
     [YTOUtils setCellFormularStyle:cellSubiect];
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
-    cellTrimite = [topLevelObjectscalc objectAtIndex:0];
+    cellTrimite = [topLevelObjectscalc objectAtIndex:0];    
     UIImageView * imgComanda = (UIImageView *)[cellTrimite viewWithTag:1];
     imgComanda.image = [UIImage imageNamed:@"trimite-mesaj-buton.png"];
     UILabel * lblCellC = (UILabel *)[cellTrimite viewWithTag:2];
@@ -216,22 +229,19 @@
 
 - (void) setEmail:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
-    txt.text = v;
+    txtEmail.text = v;
     email = v;
 }
 
 - (void) setTelefon:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
-    txt.text = v;
+    txtDescriere.text = v;
     telefon = v;
 }
 
 - (void) setSubiect:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellSubiect viewWithTag:2];
-    txt.text = v;
+    txtSubiect.text = v;
     subiect = v;
 }
 - (void) setDescriere:(NSString *)v
@@ -307,7 +317,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideLoading];
-	//to do parseXML
+	
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];

@@ -2,7 +2,7 @@
 //  YTOTermeniViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 11/6/12.
+//  Created by Andi Aparaschivei on 11/6/12.
 //
 //
 

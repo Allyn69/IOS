@@ -2,8 +2,8 @@
 //  YTOWebServiceCalatorieViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/31/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/31/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOWebServiceCalatorieViewController.h"
@@ -69,7 +69,6 @@
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"yyyy-MM-dd";
-    NSDate * dataInceput = [YTOUtils getDataSfarsitPolita:[NSDate date] andDurataInZile:1];
     
     NSString * scopCalatorie = [oferta CalatorieScop];
     taraDestinatie = [oferta CalatorieDestinatie];
@@ -101,7 +100,7 @@
                       "</CallCalculTravel>"
                       "</soap:Body>"
                       "</soap:Envelope>",[[UIDevice currentDevice] uniqueIdentifier],
-                      [formatter stringFromDate:dataInceput],
+                      [formatter stringFromDate:oferta.dataInceput],
                       [oferta CalatorieTranzit],
                       oferta.durataAsigurare, taraDestinatie, sumaAsigurata, scopCalatorie, (listAsigurati.count == 1 ? @"individual" : @"grup"), [YTOPersoana getJsonPersoane:listAsigurati], pers1.judet, pers1.localitate,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
@@ -189,7 +188,7 @@
 	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
 	NSLog(@"Response string: %@", responseString);
 	
-	//to do parseXML
+	
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -197,7 +196,17 @@
     if (succes) {
         [vwLoading setHidden:YES];
         [self stopLoadingAnimantion];
-        [tableView reloadData];
+        if (listTarife.count > 0)
+        {
+            // verific daca nu a intors eroare
+            CotatieCalatorie * _cotatie = [listTarife objectAtIndex:0];
+            if (listTarife.count == 1 && ![_cotatie.Eroare_ws isEqualToString:@"success"])
+                [self showPopupWithTitle:@"Atentie" andDescription:_cotatie.Eroare_ws];
+            else
+                [tableView reloadData];
+        }
+        else
+            [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
     }
 }
 
@@ -264,7 +273,7 @@
 #pragma mark - Table view data source
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 94;
+    return 110;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -292,6 +301,8 @@
     }
     
     CotatieCalatorie * tarif = (CotatieCalatorie *)[listTarife objectAtIndex:indexPath.row];
+    
+    [cell setNumeProdus:tarif.TipProdus];
     [cell setLogo:[NSString stringWithFormat:@"%@.jpg", [tarif.Companie lowercaseString]]];
     [cell setPrima:[NSString stringWithFormat:@"%.2f  lei", [tarif.Prima floatValue]]];
     [cell setCol1:tarif.Fransiza andLabel:@"Fransiza"];

@@ -2,13 +2,14 @@
 //  YTOLocuinta.m
 //  i-asigurare
 //
-//  Created by Administrator on 8/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/2/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOLocuinta.h"
 #import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
+#import "YTOAlerta.h"
 #import "Database.h"
 
 @implementation YTOLocuinta
@@ -43,6 +44,7 @@
 @synthesize _dataCreare;
 
 @synthesize _isDirty;
+@synthesize responseData;
 
 - (id)initWithGuid:(NSString*)guid
 {
@@ -61,7 +63,12 @@
     locuinta.TipObiect = 3;
     locuinta.JSONText = [self toJSON];
     [locuinta addObiectAsigurat];
-    self._isDirty = YES;    
+    self._isDirty = YES;
+    
+    [self showLoading];
+    [self performSelectorInBackground:@selector(registerLocuinta) withObject:nil];
+    
+    [self refresh];
 }
 
 - (void) updateLocuinta
@@ -69,6 +76,11 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
+   
+    [self showLoading];
+    [self performSelectorInBackground:@selector(registerLocuinta) withObject:nil];
+    
+    [self refresh];
 }
 
 - (void) deleteLocutina
@@ -76,6 +88,20 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
+
+    [self showLoading];
+    [self performSelectorInBackground:@selector(markLocuintaAsDeleted) withObject:nil];
+    
+    [self refresh];
+    
+    // dupa ce sterg locuinta,
+    // sterg si alertele, in caz ca exista
+    YTOAlerta * alertaLocuinta = [YTOAlerta getAlertaLocuinta:self.idIntern];
+    if (alertaLocuinta)
+        [alertaLocuinta deleteAlerta];
+    YTOAlerta * alertaRataLocuinta = [YTOAlerta getAlertaRataLocuinta:self.idIntern];
+    if (alertaRataLocuinta)
+        [alertaRataLocuinta deleteAlerta];
 }
 
 + (YTOLocuinta *) getLocuinta:(NSString *)_idIntern
@@ -212,7 +238,7 @@
 
 - (float) CompletedPercent
 {
-    int numarCampuri = 11;
+    int numarCampuri = 10;
     float campuriCompletate = 0;
     
     if (self.judet && self.judet.length > 0)
@@ -227,8 +253,8 @@
         campuriCompletate ++;
     if (self.regimInaltime > 0)
         campuriCompletate ++;
-    if (self.etaj > 0)
-        campuriCompletate ++;
+//    if ( [self.tipLocuinta isEqualToString:@"apartament-in-bloc"] self.etaj > 0 && )
+//        campuriCompletate ++;
     if (self.anConstructie > 0)
         campuriCompletate ++;
     if (self.nrCamere > 0)
@@ -246,6 +272,157 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate refreshLocuinte];
+}
+
+- (void) registerLocuinta
+{
+    
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<RegisterLocuinta xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<tip_locuinta>%@</tip_locuinta>"
+                             "<structura>%@</structura>"
+                             "<inaltime>%d</inaltime>"
+                             "<etaj>%d</etaj>"
+                             "<an_constructie>%d</an_constructie>"
+                             "<nr_camere>%d</nr_camere>"
+                             "<suprafata>%d</suprafata>"
+                             "<nr_locatari>%d</nr_locatari>"
+                             "<tip_geam>%@</tip_geam>"
+                             "<are_alarma>%@</are_alarma>"
+                             "<are_grilaje_geam>%@</are_grilaje_geam>"
+                             "<zona_izolata>%@</zona_izolata>"
+                             "<clauza_furt_bunuri>%@</clauza_furt_bunuri>"
+                             "<clauza_apa_conducta>%@</clauza_apa_conducta>"
+                             "<detectie_incendiu>%@</detectie_incendiu>"
+                             "<are_paza>%@</are_paza>"
+                             "<are_teren>%@</are_teren>"
+                             "<locuit_permanent>%@</locuit_permanent>"
+                             "<judet>%@</judet>"
+                             "<localitate>%@</localitate>"
+                             "<adresa>%@</adresa>"
+                             "<mod_evaluare>%@</mod_evaluare>"
+                             "<nr_rate>%d</nr_rate>"
+                             "<suma_asigurata>%d</suma_asigurata>"
+                             "<suma_asigurata_rc>%d</suma_asigurata_rc>"
+                             "<udid>%@</udid>"
+                             "<id_locuinta>%@</id_locuinta>"
+                             "<platforma>%@</platforma>"
+                             "</RegisterLocuinta>"
+                             "</soap:Body>"
+                             "</soap:Envelope>",
+                             self.tipLocuinta, self.structuraLocuinta, self.regimInaltime, self.etaj, self.anConstructie,
+                             self.nrCamere, self.suprafataUtila, self.nrLocatari,
+                             @"termopan", //self.tipGeam,
+                             self.areAlarma, self.areGrilajeGeam, self.zonaIzolata,
+                             self.clauzaFurtBunuri, self.clauzaApaConducta, self.detectieIncendiu, self.arePaza, self.areTeren, self.locuitPermanent,
+                             self.judet, self.localitate, self.adresa, self.modEvaluare, self.nrRate, self.sumaAsigurata, self.sumaAsigurataRC,
+                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/RegisterLocuinta" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
+- (void) markLocuintaAsDeleted
+{
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<DeleteLocuinta xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<udid>%@</udid>"
+                             "<id_locuinta>%@</id_locuinta>"
+                             "</DeleteLocuinta>"
+                             "</soap:Body>"
+                             "</soap:Envelope>",
+                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern];
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/DeleteLocuinta" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+    [self hideLoading];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+    
+    [self hideLoading];
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+    [self hideLoading];
+}
+
+
+#pragma LOADING
+- (void) showLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = YES;
+}
+- (void) hideLoading
+{
+    UIApplication* app = [UIApplication sharedApplication];
+    app.networkActivityIndicatorVisible = NO;
 }
 
 @end

@@ -2,8 +2,8 @@
 //  YTOUtils.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/18/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOUtils.h"
@@ -147,6 +147,22 @@
     NSCalendar* calendar = [NSCalendar currentCalendar];
     
     return [calendar dateByAddingComponents:dateComponents toDate:dataInceput options:0];
+}
+
++ (NSDate *) getDataMinimaInceperePolita
+{
+    NSDate * _DataInceput;
+    NSDate * acum = [NSDate date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *components = [calendar components:NSHourCalendarUnit fromDate:acum];
+    int ora = components.hour;
+    
+    if (ora >= 21)
+        _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400*2];
+    else
+        _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
+
+    return _DataInceput;
 }
 
 + (UIImage *)scaleImage:(UIImage *) image maxWidth:(float) maxWidth maxHeight:(float) maxHeight
@@ -348,21 +364,23 @@
 
 	if (cnp.length != 13)
 		isValid = NO;
-	else {
-		NSString * s = @"279146358279";
-		int _suma = 0;
-		for (int i=0; i<12; i++) {
-			NSString * a = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:i]];
-			NSString * b = [NSString stringWithFormat:@"%c",[s characterAtIndex:i]];
-			_suma += [a integerValue] * [b integerValue];
-			
-		}
-		NSString * c12 = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:12]];
-		int rest = _suma % 11;
-		if (!((rest < 10) && ([c12 integerValue] == rest)) ||
-            ((rest == 10) && ([c12 integerValue] == 1)))
-			isValid = NO;
-	}
+    
+//	else {
+//		NSString * s = @"279146358279";
+//		int _suma = 0;
+//		for (int i=0; i<12; i++) {
+//			NSString * a = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:i]];
+//			NSString * b = [NSString stringWithFormat:@"%c",[s characterAtIndex:i]];
+//			_suma += [a integerValue] * [b integerValue];
+//			
+//		}
+//		NSString * c12 = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:12]];
+//		int rest = _suma % 11;
+//		if (!((rest < 10) && ([c12 integerValue] == rest)) ||
+//            ((rest == 10) && ([c12 integerValue] == 1)))
+//			isValid = NO;
+//	}
+    
 	return isValid;
 }
 
@@ -422,8 +440,9 @@
     
     NSMutableArray * listYahoo = [[NSMutableArray alloc] initWithObjects:@"@yahoo.con",
                                   @"@yagoo.com", @"@yaahoo.com", @"@yahoo.cim", @"@yah00.com", @"@yahoo.rom", @"@yakoo.com",
-                                  @"@yahoo.cm", @"@yahoo..com", @"@yah.com", @"@yahu.com", @"@yahoo.c", @"@yaho.coj", @"@yaoo.com", @"@yahoo.om", @"@yhoo.com",
+                                  @"@yahoo.cm", @"@yahoo..com", @"@yah.com", @"@yahu.com", @"@yaho.coj", @"@yaoo.com", @"@yahoo.om", @"@yhoo.com",
                                   @"@ya.com", @"@yaho.com", @"@yahho.com", @"@yahoo.vom", @"@yahop.com", @"@yahh.com", @"@yah00.vcom", @"@yahol.com", nil];
+    
     NSString * s = [email lowercaseString];
     
     for (int i=0; i<listGmail.count; i++) {

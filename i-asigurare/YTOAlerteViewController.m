@@ -2,8 +2,8 @@
 //  YTOSecondViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/12/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAlerteViewController.h"
@@ -82,15 +82,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return listAlerte.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tv numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return 1;
 }
 
@@ -178,19 +174,19 @@
     }
     else if (alerta.tipAlerta == 6) // Locuinta
     {
-        detaliu = @"locuinta";
+        detaliu = @"expirare locuinta";
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
         img = [UIImage imageNamed:@"icon-alerta-locuinta.png"];
     }
     else if (alerta.tipAlerta == 7)
     {
-        detaliu = @"rata casco";
+        detaliu = @"expirare rata";
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
     }
     else if (alerta.tipAlerta == 8)
     {
-        detaliu = @"rata locuinta";
+        detaliu = @"expirare rata";
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
         img = [UIImage imageNamed:@"icon-alerta-rata-locuinta.png"];
     }
@@ -201,45 +197,6 @@
     
     return cell;
 }
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 

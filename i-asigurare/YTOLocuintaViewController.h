@@ -2,8 +2,8 @@
 //  YTOLocuintaViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 8/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/1/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -23,13 +23,15 @@
     UITableViewCell *           cellSumaAsigurataRC;
     UITableViewCell *           cellDataInceput;
     UITableViewCell *           cellCalculeaza;
-    YTOPersoana *  asigurat;
-    YTOLocuinta *  locuinta;
+
     YTOOferta *    oferta; 
     UITextField * activeTextField;
     
     BOOL cautLegaturaDintreAsiguratSiLocuinta;    
 }
+
+@property (nonatomic, retain) YTOPersoana *  asigurat;
+@property (nonatomic, retain) YTOLocuinta *  locuinta;
 
 @property (nonatomic, retain) NSDate *   DataInceput;
 - (IBAction)btnModeEvaluare_Clicked:(id)sender;

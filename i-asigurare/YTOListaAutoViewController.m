@@ -2,8 +2,8 @@
 //  YTOListaAutoViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/18/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOListaAutoViewController.h"
@@ -17,6 +17,7 @@
 #import "YTOUtils.h"
 #import "YTOImage.h"
 #import "YTOFormAlertaViewController.h"
+#import "YTOAsigurareViewController.h"
 
 @interface YTOListaAutoViewController ()
 
@@ -234,6 +235,12 @@
         [parent setAutovehicul:masina];
         [appDelegate.alerteNavigationController popViewControllerAnimated:YES];
     }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
+        YTOAsigurareViewController * parent = (YTOAsigurareViewController*)self.controller;
+        [parent setAutovehicul:masina];
+        [appDelegate.setariNavigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -267,6 +274,11 @@
     {
         aView.controller = self;
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
+        aView.controller = self;
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
 }
 

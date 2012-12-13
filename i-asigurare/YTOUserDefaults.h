@@ -2,7 +2,7 @@
 //  YTOUserDefaults.h
 //  i-asigurare
 //
-//  Created by Administrator on 11/21/12.
+//  Created by Andi Aparaschivei on 11/21/12.
 //
 //
 
@@ -14,8 +14,11 @@
 }
 
 + (void) setFirstTime:(BOOL)ok;
++ (void) setFirstInsuranceRequest:(BOOL)ok;
 + (BOOL) IsFirstTime;
 
 + (void) setSyncronized:(BOOL)ok;
 + (BOOL) IsSyncronized;
++ (BOOL) IsFirstInsuranceRequest;
+
 @end

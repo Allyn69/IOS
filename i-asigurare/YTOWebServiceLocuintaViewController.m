@@ -2,8 +2,8 @@
 //  YTOWebServiceLocuintaViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 8/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/6/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOWebServiceLocuintaViewController.h"
@@ -119,9 +119,10 @@
                       "</soap:Body>"
                       "</soap:Envelope>",
                       locuinta.idIntern, asigurat.nume, asigurat.codUnic, asigurat.telefon, asigurat.email,
-                      [formatter stringFromDate:oferta.dataInceput],oferta.moneda,
+                      [formatter stringFromDate:oferta.dataInceput],
+                      oferta.moneda,
                       asigurat.tipPersoana,
-                      locuinta.judet, locuinta.localitate, asigurat.adresa, locuinta.modEvaluare,
+                      locuinta.judet, locuinta.localitate, locuinta.adresa, locuinta.modEvaluare,
                       locuinta.sumaAsigurata, locuinta.sumaAsigurataRC,
                       [locuinta.clauzaFurtBunuri isEqualToString:@"da"] ? @"da" : @"nu",
                       [locuinta.clauzaApaConducta isEqualToString:@"da"] ? @"da" : @"nu",
@@ -211,10 +212,7 @@
 }
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
 	
-    //NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-	//NSLog(@"Response string: %@", responseString);
     
-	//to do parseXML
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -230,9 +228,8 @@
             NSString * eroare_ws = [item objectForKey:@"Eroare_ws"];
             if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
             {
-                NSLog(@"%@",eroare_ws);
-                // to do popup generic
                 [vwLoading setHidden:YES];
+                [self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
                 [self stopLoadingAnimantion];
                 return;
             }
@@ -249,15 +246,24 @@
             cotatie.riscFurt = [item objectForKey:@"RiscFurt"];
             cotatie.riscApaConducta = [item objectForKey:@"RiscApaConducta"];
             cotatie.linkConditii = [item objectForKey:@"LinkConditii"];
+            cotatie.conditiiHint = [item objectForKey:@"ConditiiHint"];
             
             [listTarife addObject:cotatie];
         }
     }
-    //if (succes) {
-        [vwLoading setHidden:YES];
-        [self stopLoadingAnimantion];
+    
+    [vwLoading setHidden:YES];
+    [self stopLoadingAnimantion];
+    
+    // Daca nu este afisata nicio prima, dau mesaj
+    if (listTarife.count == 0)
+    {
+        [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+    }
+    else
+    {
         [tableView reloadData];
-    //}
+    }
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -322,7 +328,7 @@
 #pragma mark - Table view data source
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 94;
+    return 110;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -356,6 +362,7 @@
     
     CotatieLocuinta * c = (CotatieLocuinta *)[listTarife objectAtIndex:indexPath.row];
 
+    [cell setNumeProdus:c.tipProdus];
     [cell setLogo:[NSString stringWithFormat:@"%@.jpg", [c.companie lowercaseString]]];
     [cell setPrima:[NSString stringWithFormat:@"%.2f  %@", [c.prima floatValue], [oferta.moneda uppercaseString]]];
     [cell setCol1:c.fransiza andLabel:@"Fransiza"];
@@ -463,5 +470,26 @@
 - (void) stopLoadingAnimantion
 {
     [imgLoading stopAnimating];    
+}
+
+#pragma YTOCustomPopup
+- (void)chosenButton:(UIButton *)button
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopup setHidden:NO];
+    lblPopupDescription.text = description;
+    lblPopupTitle.text = title;
+}
+
+- (IBAction)hidePopup:(id)sender
+{
+    [vwPopup setHidden:YES];
+    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate.rcaNavigationController popViewControllerAnimated:YES];
 }
 @end

@@ -2,8 +2,8 @@
 //  YTOWebServiceRCAViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/20/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -41,6 +41,9 @@
     IBOutlet UIImageView * imgDurata;
     IBOutlet UILabel     * lbl6Luni;
     IBOutlet UILabel     * lbl12Luni;
+    
+    NSMutableData * responseCalcul6Luni;
+    NSMutableData * responseCalcul12Luni;
 }
 
 @property (nonatomic, retain) CotatieRCA * cotatie;

@@ -2,8 +2,8 @@
 //  YTOSecondViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/12/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

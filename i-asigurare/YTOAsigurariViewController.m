@@ -2,8 +2,8 @@
 //  YTOAsigurariViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/12/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/12/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAsigurariViewController.h"
@@ -29,6 +29,8 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    /*
+     
     cellHeader = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 35)];
     UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 68)];
     imgHeader.image = [UIImage imageNamed:@"header-second-screen.png"];
@@ -37,7 +39,6 @@
     [cellHeader addSubview:imgHeader];
     [cellHeader addSubview:lblLine];
     
-    /*
     NSArray *topLevelObjects1 = [[NSBundle mainBundle] loadNibNamed:@"CellView_Setari" owner:self options:nil];
     cellAsigurareRca = [topLevelObjects1 objectAtIndex:0];
     
@@ -94,7 +95,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 4;
+    return 3;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -103,9 +104,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0)
-        return 40;
-    else if (indexPath.section == 3)
+    if (indexPath.section == 2)
         return 30;
     
     return 105;
@@ -119,13 +118,13 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell;
+//    if (indexPath.section == 0)
+//    {
+//        cell = cellHeader;
+//    }
     if (indexPath.section == 0)
-    {
-        cell = cellHeader;
-    }
-    else if (indexPath.section == 1)
         cell = cellRow1;
-    else if  (indexPath.section == 2)
+    else if  (indexPath.section == 1)
         cell = cellRow2;
     else cell = cellFooter;
     /*

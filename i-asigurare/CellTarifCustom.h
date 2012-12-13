@@ -2,14 +2,15 @@
 //  CellTarifCalatorie.h
 //  i-asigurare
 //
-//  Created by Administrator on 8/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/1/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @interface CellTarifCustom : UITableViewCell
 {
+    IBOutlet UILabel     * lblNumeProdus;    
     IBOutlet UIImageView *  imgLogo;
     IBOutlet UILabel *      lblPrima;
     
@@ -18,7 +19,7 @@
     UILabel * lblCol3;
     UILabel * lblCol4;
     
-    IBOutlet UIImageView *      imgFransiza;
+    IBOutlet UILabel *      imgFransiza;
     IBOutlet UIImageView *      imgSABagaje;
     IBOutlet UIImageView *      imgSAEEI;
     IBOutlet UIImageView *      imgSport;
@@ -28,6 +29,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier forCalatorie:(BOOL)k;
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier forLocuinta:(BOOL)k;
 
+- (void) setNumeProdus:(NSString *)v;
 - (void) setLogo:(NSString *)p;
 - (void) setPrima:(NSString *)p;
 - (void) setCol1:(NSString *)value andLabel:(NSString *)label;

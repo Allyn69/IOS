@@ -2,13 +2,14 @@
 //  YTOCasaViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 8/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/2/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "PickerVCSearch.h"
 #import "YTOLocuinta.h"
+#import "YTOAlerta.h"
 
 @interface YTOCasaViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, PickerVCSearchDelegate, UIActionSheetDelegate>
 {
@@ -44,6 +45,13 @@
     float percentCompletedOnLoad;
     BOOL  selectatInfoLocuinta;
     BOOL  shouldSave;
+    BOOL editingMode;    
+    
+    YTOAlerta * alertaLocuinta;
+    YTOAlerta * alertaRataLoc;
+    
+    UITextField * txtAlertaLocuinta;
+    UITextField * txtAlertaRataLocuinta;
 }
 
 @property BOOL goingBack;

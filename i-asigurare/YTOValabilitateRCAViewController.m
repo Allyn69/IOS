@@ -2,7 +2,7 @@
 //  YTOValabilitateRCAViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 10/25/12.
+//  Created by Andi Aparaschivei on 10/25/12.
 //
 //
 
@@ -98,7 +98,7 @@
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:15.0];
+														timeoutInterval:30.0];
     
 	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
 	NSLog(@"Request=%@", parameters);
@@ -132,7 +132,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideLoading];
-	//to do parseXML
+	
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -168,9 +168,8 @@
 	NSLog(@"connection:didFailWithError:");
 	NSLog(@"%@", [error localizedDescription]);
 	
-    //	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    //	[alertView show];
     [self hideLoading];
+    [self showPopup:@"Polita nu a fost gasita" withDescription:@"Baza de date CEDAM nu a raspuns. Fie nu functioneaza momentan, fie ai introdus gresit seria de sasiu sau numarul de inmatriculare."];
 }
 
 #pragma mark NSXMLParser Methods

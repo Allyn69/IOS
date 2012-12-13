@@ -2,8 +2,8 @@
 //  YTOWebServiceRCAViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/20/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/20/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOWebServiceRCAViewController.h"
@@ -131,7 +131,7 @@
                       masina.cascoLa,
                       masina.localitate, 
                       asigurat.dataPermis,
-                      @"nu", // auto nou inmatriculat??
+                      ([masina.nrInmatriculare isEqualToString:@"-"] ? @"1" : @"0"),
                       0, 
                       masina.cm3, 
                       masina.putere, 
@@ -164,12 +164,35 @@
 
 - (IBAction)calculeazaRCADupaAltaDurata
 {
-    if (oferta.durataAsigurare == 6)
-        oferta.durataAsigurare = 12;
-    else
-        oferta.durataAsigurare = 6;
+//    if (oferta.durataAsigurare == 6)
+//    {
+//        oferta.durataAsigurare = 12;
+//    }
+//    else
+//    {
+//        oferta.durataAsigurare = 6;
+//    }
     
-    [self calculRCA];
+    oferta.durataAsigurare = (oferta.durataAsigurare == 6 ? 12 : 6);
+
+    if (oferta.durataAsigurare == 6 && responseCalcul6Luni != nil)
+    {
+        [self parseRcaResponse:responseCalcul6Luni];
+        
+        imgDurata.image = [UIImage imageNamed:@"selectat-stanga-masina.png"];
+        lbl12Luni.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl6Luni.textColor = [UIColor whiteColor];
+    }
+    else if (oferta.durataAsigurare == 12 && responseCalcul12Luni != nil)
+    {
+        [self parseRcaResponse:responseCalcul12Luni];
+        
+        imgDurata.image = [UIImage imageNamed:@"selectat-dreapta-masina.png"];
+        lbl6Luni.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lbl12Luni.textColor = [UIColor whiteColor];
+    }
+    else
+        [self calculRCA];
 }
 
 - (void) calculRCA {
@@ -223,188 +246,15 @@
 }
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
 	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    
+    if (oferta.durataAsigurare == 6)
+        responseCalcul6Luni = responseData;
+    else
+        responseCalcul12Luni = responseData;
+    
 	NSLog(@"Response string: %@", responseString);
 	
-	//to do parseXML
-	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
-	xmlParser.delegate = self;
-	BOOL succes = [xmlParser parse];
-	//cotatie.eroare_ws = @"xx";
-    	if (succes && cotatie != nil && cotatie.eroare_ws != nil && cotatie.eroare_ws.length > 0) {
-    		NSLog(@"Error = %@", cotatie.eroare_ws);	
-//    		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//    		[alertView show];
-            
-            [self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", cotatie.eroare_ws]];
-            
-//            YTOCustomPopup * alert = [[YTOCustomPopup alloc] init];
-//            [alert showAlert:@"Atentie" withMessage:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
-    	}
-    	else if (succes && cotatie != nil) {
-        
-            listTarife = [[NSMutableArray alloc] init];
-            
-            NSString * errorMsgs;
-            
-            
-            if ([cotatie.Astra_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif0 = [[TarifRCA alloc] init];
-                tarif0.idCompanie = 4;
-                tarif0.nume = @"Astra";
-                tarif0.codOferta = cotatie.Astra_cod_oferta;
-                tarif0.prima = (cotatie.Astra_prima != nil ? cotatie.Astra_prima : @"0");
-                tarif0.clasa_bm = cotatie.Astra_clasa_bm;
-                
-                [listTarife addObject:tarif0];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare]];
-            //else errorMsgs = [NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare];
-            
-            
-            if ([cotatie.Allianz_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif1 = [[TarifRCA alloc] init];
-                tarif1.idCompanie = 5;
-                tarif1.nume = @"Allianz";
-                tarif1.codOferta = cotatie.Allianz_cod_oferta;
-                tarif1.prima = (cotatie.Allianz_prima != nil ? cotatie.Allianz_prima : @"0");
-                tarif1.clasa_bm = cotatie.Allianz_clasa_bm;
-                
-                [listTarife addObject:tarif1];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Allianz_mesaj_eroare]];
-            
-            if ([cotatie.Omniasig_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif2 = [[TarifRCA alloc] init];
-                tarif2.idCompanie = 6;
-                tarif2.nume = @"Omniasig";
-                tarif2.codOferta = cotatie.Omniasig_cod_oferta;
-                tarif2.prima = (cotatie.Omniasig_prima != nil ? cotatie.Omniasig_prima : @"0");
-                tarif2.clasa_bm = cotatie.Omniasig_clasa_bm;
-                
-                [listTarife addObject:tarif2];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Omniasig_mesaj_eroare]];
-            
-            if ([cotatie.Groupama_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif3 = [[TarifRCA alloc] init];
-                tarif3.idCompanie = 7;
-                tarif3.nume = @"Groupama";
-                tarif3.codOferta = cotatie.Groupama_cod_oferta;
-                tarif3.prima = (cotatie.Groupama_prima != nil ? cotatie.Groupama_prima : @"0");
-                tarif3.clasa_bm = cotatie.Groupama_clasa_bm;
-                
-                [listTarife addObject:tarif3];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Groupama_mesaj_eroare]];
-            
-            if ([cotatie.BCR_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif4 = [[TarifRCA alloc] init];
-                tarif4.idCompanie = 8;
-                tarif4.nume = @"BCR";
-                tarif4.codOferta = cotatie.BCR_cod_oferta;
-                tarif4.prima = (cotatie.BCR_prima != nil ? cotatie.BCR_prima : @"0");
-                tarif4.clasa_bm = cotatie.BCR_clasa_bm;
-                
-                [listTarife addObject:tarif4];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.BCR_mesaj_eroare]];
-            
-            if ([cotatie.Asirom_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif5 = [[TarifRCA alloc] init];
-                tarif5.idCompanie = 9;
-                tarif5.nume = @"Asirom";
-                tarif5.codOferta = cotatie.Asirom_cod_oferta;
-                tarif5.prima = (cotatie.Asirom_prima != nil ? cotatie.Asirom_prima : @"0");
-                tarif5.clasa_bm = cotatie.Asirom_clasa_bm;
-                
-                [listTarife addObject:tarif5];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Asirom_mesaj_eroare]];
-            
-            if ([cotatie.Uniqa_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif6 = [[TarifRCA alloc] init];
-                tarif6.idCompanie = 10;
-                tarif6.nume = @"Uniqa";
-                tarif6.codOferta = cotatie.Uniqa_cod_oferta;
-                tarif6.prima = (cotatie.Uniqa_prima != nil ? cotatie.Uniqa_prima : @"0");
-                tarif6.clasa_bm = cotatie.Uniqa_clasa_bm;
-                
-                [listTarife addObject:tarif6];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Uniqa_mesaj_eroare]];
-            
-            if ([cotatie.Generali_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif7 = [[TarifRCA alloc] init];
-                tarif7.idCompanie = 11;
-                tarif7.nume = @"Generali";
-                tarif7.codOferta = cotatie.Generali_cod_oferta;
-                tarif7.prima = (cotatie.Generali_prima != nil ? cotatie.Generali_prima : @"0");
-                tarif7.clasa_bm = cotatie.Generali_clasa_bm;
-                
-                [listTarife addObject:tarif7];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Generali_mesaj_eroare]];
-            
-            if ([cotatie.Euroins_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif8 = [[TarifRCA alloc] init];
-                tarif8.idCompanie = 12;
-                tarif8.nume = @"Euroins";
-                tarif8.codOferta = cotatie.Euroins_cod_oferta;
-                tarif8.prima = (cotatie.Euroins_prima != nil ? cotatie.Euroins_prima : @"0");
-                tarif8.clasa_bm = cotatie.Euroins_clasa_bm;
-                
-                [listTarife addObject:tarif8];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Euroins_mesaj_eroare]];
-            
-            if ([cotatie.Carpatica_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif9 = [[TarifRCA alloc] init];
-                tarif9.idCompanie = 13;
-                tarif9.nume = @"Carpatica";
-                tarif9.codOferta = cotatie.Carpatica_cod_oferta;
-                tarif9.prima = (cotatie.Carpatica_prima != nil ? cotatie.Carpatica_prima : @"0");
-                tarif9.clasa_bm = cotatie.Carpatica_clasa_bm;
-                
-                [listTarife addObject:tarif9];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Carpatica_mesaj_eroare]];
-            
-            if ([cotatie.Ardaf_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif11 = [[TarifRCA alloc] init];
-                tarif11.idCompanie = 14;
-                tarif11.nume = @"Ardaf";
-                tarif11.codOferta = cotatie.Ardaf_cod_oferta;
-                tarif11.prima = (cotatie.Ardaf_prima != nil ? cotatie.Ardaf_prima : @"0");
-                tarif11.clasa_bm = cotatie.Ardaf_clasa_bm;
-                
-                [listTarife addObject:tarif11];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
-            
-            if ([cotatie.City_status_response isEqualToString:@"true"]) {
-                TarifRCA * tarif12 = [[TarifRCA alloc] init];
-                tarif12.idCompanie = 15;
-                tarif12.nume = @"City";
-                tarif12.codOferta = cotatie.City_cod_oferta;
-                tarif12.prima = (cotatie.City_prima != nil ? cotatie.City_prima : @"0");
-                tarif12.clasa_bm = cotatie.City_clasa_bm;
-                
-                [listTarife addObject:tarif12];
-            }
-            else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
-            
-            NSSortDescriptor * sortDescriptor;
-            sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"primaInt" ascending:YES];
-            
-            NSMutableArray * sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-            [listTarife sortUsingDescriptors:sortDescriptors];
-            
-            [vwLoading setHidden:YES];
-            [self stopLoadingAnimantion];
-            self.navigationItem.hidesBackButton = NO;
-            [tableView reloadData];
-            
-        }
+	[self parseRcaResponse:responseData];
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -421,9 +271,210 @@
 //    [alert showAlert:@"Atentie" withMessage:[error localizedDescription] andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
 }
 
+- (void) parseRcaResponse:(NSMutableData *) response
+{
+	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:response];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+	//cotatie.eroare_ws = @"xx";
+    if (succes && cotatie != nil && cotatie.eroare_ws != nil && cotatie.eroare_ws.length > 0) {
+        NSLog(@"Error = %@", cotatie.eroare_ws);
+        //    		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        //    		[alertView show];
+        
+        [self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", cotatie.eroare_ws]];
+        
+        //            YTOCustomPopup * alert = [[YTOCustomPopup alloc] init];
+        //            [alert showAlert:@"Atentie" withMessage:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
+    }
+    else if (succes && cotatie != nil) {
+        
+        listTarife = [[NSMutableArray alloc] init];
+        
+        NSString * errorMsgs;
+        
+        
+        if ([cotatie.Astra_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif0 = [[TarifRCA alloc] init];
+            tarif0.idCompanie = 4;
+            tarif0.nume = @"Astra";
+            tarif0.codOferta = cotatie.Astra_cod_oferta;
+            tarif0.prima = (cotatie.Astra_prima != nil ? cotatie.Astra_prima : @"0");
+            tarif0.clasa_bm = cotatie.Astra_clasa_bm;
+            
+            if ([tarif0.prima intValue] > 0)
+                [listTarife addObject:tarif0];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare]];
+        //else errorMsgs = [NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare];
+        
+        
+        if ([cotatie.Allianz_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif1 = [[TarifRCA alloc] init];
+            tarif1.idCompanie = 5;
+            tarif1.nume = @"Allianz";
+            tarif1.codOferta = cotatie.Allianz_cod_oferta;
+            tarif1.prima = (cotatie.Allianz_prima != nil ? cotatie.Allianz_prima : @"0");
+            tarif1.clasa_bm = cotatie.Allianz_clasa_bm;
+            
+            if ([tarif1.prima intValue] > 0)
+                [listTarife addObject:tarif1];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Allianz_mesaj_eroare]];
+        
+        if ([cotatie.Omniasig_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif2 = [[TarifRCA alloc] init];
+            tarif2.idCompanie = 6;
+            tarif2.nume = @"Omniasig";
+            tarif2.codOferta = cotatie.Omniasig_cod_oferta;
+            tarif2.prima = (cotatie.Omniasig_prima != nil ? cotatie.Omniasig_prima : @"0");
+            tarif2.clasa_bm = cotatie.Omniasig_clasa_bm;
+            
+            if ([tarif2.prima intValue] > 0)
+                [listTarife addObject:tarif2];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Omniasig_mesaj_eroare]];
+        
+        if ([cotatie.Groupama_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif3 = [[TarifRCA alloc] init];
+            tarif3.idCompanie = 7;
+            tarif3.nume = @"Groupama";
+            tarif3.codOferta = cotatie.Groupama_cod_oferta;
+            tarif3.prima = (cotatie.Groupama_prima != nil ? cotatie.Groupama_prima : @"0");
+            tarif3.clasa_bm = cotatie.Groupama_clasa_bm;
+            
+            if ([tarif3.prima intValue] > 0)
+                [listTarife addObject:tarif3];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Groupama_mesaj_eroare]];
+        
+        if ([cotatie.BCR_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif4 = [[TarifRCA alloc] init];
+            tarif4.idCompanie = 8;
+            tarif4.nume = @"BCR";
+            tarif4.codOferta = cotatie.BCR_cod_oferta;
+            tarif4.prima = (cotatie.BCR_prima != nil ? cotatie.BCR_prima : @"0");
+            tarif4.clasa_bm = cotatie.BCR_clasa_bm;
+           
+            if ([tarif4.prima intValue] > 0)
+                [listTarife addObject:tarif4];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.BCR_mesaj_eroare]];
+        
+        if ([cotatie.Asirom_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif5 = [[TarifRCA alloc] init];
+            tarif5.idCompanie = 9;
+            tarif5.nume = @"Asirom";
+            tarif5.codOferta = cotatie.Asirom_cod_oferta;
+            tarif5.prima = (cotatie.Asirom_prima != nil ? cotatie.Asirom_prima : @"0");
+            tarif5.clasa_bm = cotatie.Asirom_clasa_bm;
+
+            if ([tarif5.prima intValue] > 0)
+                [listTarife addObject:tarif5];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Asirom_mesaj_eroare]];
+        
+        if ([cotatie.Uniqa_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif6 = [[TarifRCA alloc] init];
+            tarif6.idCompanie = 10;
+            tarif6.nume = @"Uniqa";
+            tarif6.codOferta = cotatie.Uniqa_cod_oferta;
+            tarif6.prima = (cotatie.Uniqa_prima != nil ? cotatie.Uniqa_prima : @"0");
+            tarif6.clasa_bm = cotatie.Uniqa_clasa_bm;
+            
+            if ([tarif6.prima intValue] > 0)
+                [listTarife addObject:tarif6];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Uniqa_mesaj_eroare]];
+        
+        if ([cotatie.Generali_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif7 = [[TarifRCA alloc] init];
+            tarif7.idCompanie = 11;
+            tarif7.nume = @"Generali";
+            tarif7.codOferta = cotatie.Generali_cod_oferta;
+            tarif7.prima = (cotatie.Generali_prima != nil ? cotatie.Generali_prima : @"0");
+            tarif7.clasa_bm = cotatie.Generali_clasa_bm;
+
+            if ([tarif7.prima intValue] > 0)
+                [listTarife addObject:tarif7];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Generali_mesaj_eroare]];
+        
+        if ([cotatie.Euroins_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif8 = [[TarifRCA alloc] init];
+            tarif8.idCompanie = 12;
+            tarif8.nume = @"Euroins";
+            tarif8.codOferta = cotatie.Euroins_cod_oferta;
+            tarif8.prima = (cotatie.Euroins_prima != nil ? cotatie.Euroins_prima : @"0");
+            tarif8.clasa_bm = cotatie.Euroins_clasa_bm;
+            
+            if ([tarif8.prima intValue] > 0)
+                [listTarife addObject:tarif8];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Euroins_mesaj_eroare]];
+        
+        if ([cotatie.Carpatica_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif9 = [[TarifRCA alloc] init];
+            tarif9.idCompanie = 13;
+            tarif9.nume = @"Carpatica";
+            tarif9.codOferta = cotatie.Carpatica_cod_oferta;
+            tarif9.prima = (cotatie.Carpatica_prima != nil ? cotatie.Carpatica_prima : @"0");
+            tarif9.clasa_bm = cotatie.Carpatica_clasa_bm;
+            
+            if ([tarif9.prima intValue] > 0)
+                [listTarife addObject:tarif9];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Carpatica_mesaj_eroare]];
+        
+        if ([cotatie.Ardaf_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif11 = [[TarifRCA alloc] init];
+            tarif11.idCompanie = 14;
+            tarif11.nume = @"Ardaf";
+            tarif11.codOferta = cotatie.Ardaf_cod_oferta;
+            tarif11.prima = (cotatie.Ardaf_prima != nil ? cotatie.Ardaf_prima : @"0");
+            tarif11.clasa_bm = cotatie.Ardaf_clasa_bm;
+            
+            if ([tarif11.prima intValue] > 0)
+                [listTarife addObject:tarif11];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
+        
+        if ([cotatie.City_status_response isEqualToString:@"true"]) {
+            TarifRCA * tarif12 = [[TarifRCA alloc] init];
+            tarif12.idCompanie = 15;
+            tarif12.nume = @"City";
+            tarif12.codOferta = cotatie.City_cod_oferta;
+            tarif12.prima = (cotatie.City_prima != nil ? cotatie.City_prima : @"0");
+            tarif12.clasa_bm = cotatie.City_clasa_bm;
+            
+            if ([tarif12.prima intValue] > 0)
+                [listTarife addObject:tarif12];
+        }
+        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
+        
+        NSSortDescriptor * sortDescriptor;
+        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"primaInt" ascending:YES];
+        
+        NSMutableArray * sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
+        [listTarife sortUsingDescriptors:sortDescriptors];
+        
+        [vwLoading setHidden:YES];
+        [self stopLoadingAnimantion];
+        self.navigationItem.hidesBackButton = NO;
+        
+        if (listTarife.count == 0)
+        {
+            [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+        }
+        else
+            [tableView reloadData];
+        
+    }
+}
+
 #pragma mark NSXMLParser Methods
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName 
-  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName 
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
 	attributes:(NSDictionary *)attributeDict {
 	
 	if ([elementName isEqualToString:@"return"]) {
@@ -431,10 +482,10 @@
 	}
 }
 
-- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName 
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	if (![elementName isEqualToString:@"return"] && ![elementName isEqualToString:@"ns1:calcul_prima_rcaResponse"]
-		&& ![elementName isEqualToString:@"SOAP-ENV:Body"] 
+		&& ![elementName isEqualToString:@"SOAP-ENV:Body"]
 		&& ![elementName isEqualToString:@"SOAP-ENV:Envelope"]) {
 		
 		//TarifRCA * tarif = [[TarifRCA alloc] init];
@@ -562,7 +613,7 @@
     oferta.prima = tarif.primaInt;
     oferta.companie = tarif.nume;
     oferta.dataSfarsit = [YTOUtils getDataSfarsitPolita:oferta.dataInceput andDurataInLuni:oferta.durataAsigurare];
-    oferta.numeAsigurare = @"Asigurare RCA";
+    oferta.numeAsigurare = [NSString stringWithFormat:@"RCA, %@", masina.nrInmatriculare];
     oferta.moneda = @"RON";
     oferta.codOferta = tarif.codOferta;
     [oferta setRCABonusMalus:tarif.clasa_bm];

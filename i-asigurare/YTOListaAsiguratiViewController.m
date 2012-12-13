@@ -2,8 +2,8 @@
 //  YTOListaAsiguratiViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/17/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/17/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOListaAsiguratiViewController.h"
@@ -39,11 +39,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    goingBack = YES;
+    
     // Do any additional setup after loading the view from its nib.
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    if (produsAsigurare == RCA || produsAsigurare == Locuinta)
+        ((UILabel *)[self.view viewWithTag:2]).text = @"Adauga asigurat";
+    
     if (produsAsigurare == Calatorie)
     {
+        ((UILabel *)[self.view viewWithTag:2]).text = @"Adauga calator";
         [self checkVisibilityForOk];
         listaAsigurati = [YTOPersoana PersoaneFizice];
         if (listaAsiguratiSelectati.count == 0)
@@ -90,8 +97,9 @@
 
 - (void) viewWillDisappear:(BOOL)animated
 {
-    if (produsAsigurare == Calatorie)
+    if (produsAsigurare == Calatorie && goingBack)
     {
+        goingBack = YES;
         YTOCalatorieViewController  * parent = (YTOCalatorieViewController *)controller;
         [parent setListaAsigurati:listaAsiguratiSelectati withIndex:listAsiguratiIndecsi];
     }
@@ -256,8 +264,23 @@
        else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
        {
            YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
-           [parent setAsigurat:persoana];
-           [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+           
+           // TRUE -  Daca persoana este valida, se poate
+           //         folosi pentru calculatia asigurarii de locuinta
+           // FALSE - Se incarca formularul de persoana, iar la
+           //         salvare, se afiseaza calculatorul de asigurare de locuinta
+           if ([parent.asigurat isValidForCompute])
+           {
+               [parent setAsigurat:persoana];
+               [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+           }
+           else
+           {
+               YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+               aView.asigurat = parent.asigurat;
+               aView.controller = self;
+               [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+           }
        }
        else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
        {
@@ -281,12 +304,28 @@
 
 - (IBAction)adaugaPersoana:(id)sender
 {
+    goingBack = NO;
+    
     YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]] || [self.controller isKindOfClass:[YTOLocuintaViewController class]]
-        ||[self.controller isKindOfClass:[YTOCalatorieViewController class]])
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
         aView.controller = (YTOCalculatorViewController *)self.controller;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+    {
+        aView.controller = (YTOLocuintaViewController *)self.controller;;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOCalatorieViewController class]])
+    {
+        aView.controller = self;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+    {
+        aView.controller = self;
         [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])

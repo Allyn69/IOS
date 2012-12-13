@@ -39,6 +39,20 @@
 						<reference key="NSNextResponder" ref="569131215"/>
 						<int key="NSvFlags">256</int>
 						<array class="NSMutableArray" key="NSSubviews">
+							<object class="IBUIImageView" id="662086180">
+								<reference key="NSNextResponder" ref="935666357"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{0, 16}, {320, 68}}</string>
+								<reference key="NSSuperview" ref="935666357"/>
+								<reference key="NSWindow"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<object class="NSCustomResource" key="IBUIImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">tarife-calatorie-header.png</string>
+								</object>
+							</object>
 							<object class="IBUILabel" id="871961096">
 								<reference key="NSNextResponder" ref="935666357"/>
 								<int key="NSvFlags">292</int>
@@ -542,6 +556,7 @@
 							<reference ref="87245593"/>
 							<reference ref="1012873654"/>
 							<reference ref="1003130419"/>
+							<reference ref="662086180"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -600,6 +615,11 @@
 						<reference key="object" ref="871961096"/>
 						<reference key="parent" ref="569131215"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">30</int>
+						<reference key="object" ref="662086180"/>
+						<reference key="parent" ref="569131215"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -622,6 +642,7 @@
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="18.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="19.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="30.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -630,27 +651,24 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">29</int>
+			<int key="maxID">30</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">YTOLocuintaViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="btnModeEvaluare_Clicked:">id</string>
-						<string key="dateStepper_Changed:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="btnModeEvaluare_Clicked:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">btnModeEvaluare_Clicked:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">btnModeEvaluare_Clicked:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">btnModeEvaluare_Clicked:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="dateStepper_Changed:">
-							<string key="name">dateStepper_Changed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="cellModEvaluare">UITableViewCell</string>
 						<string key="tableView">UITableView</string>
@@ -674,16 +692,13 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1536" key="NS.object.0"/>
-		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="arrow-locuinta.png">{10, 10}</string>
 			<string key="neselectat.png">{72, 72}</string>
 			<string key="selectat-locuinta.png">{72, 72}</string>
+			<string key="tarife-calatorie-header.png">{320, 68}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>

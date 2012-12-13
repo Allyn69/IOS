@@ -2,7 +2,7 @@
 //  PickerVCSearch.m
 //  iRCA
 //
-//  Created by Administrator on 11/16/11.
+//  Created by Andi Aparaschivei on 11/16/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
@@ -72,8 +72,6 @@
             }
         }
     }
-
-
 }
 
 - (void)viewDidUnload

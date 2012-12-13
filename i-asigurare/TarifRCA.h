@@ -2,7 +2,7 @@
 //  TarifRCA.h
 //  i-Asigurare
 //
-//  Created by Administrator on 3/23/11.
+//  Created by Andi Aparaschivei on 3/23/11.
 //  Copyright 2011 i-Tom Solutions. All rights reserved.
 //
 

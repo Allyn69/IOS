@@ -2,7 +2,7 @@
 //  YTOFinalizareLocuintaViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 11/8/12.
+//  Created by Andi Aparaschivei on 11/8/12.
 //
 //
 
@@ -49,6 +49,9 @@
     IBOutlet UILabel     * lblCustomAlertOK;
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
+    
+    UITextField * txtEmailLivrare;
+    UITextField * txtTelefonLivrare;
 }
 
 

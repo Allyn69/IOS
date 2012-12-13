@@ -2,7 +2,7 @@
 //  YTOFinalizareLocuintaViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/8/12.
+//  Created by Andi Aparaschivei on 11/8/12.
 //
 //
 
@@ -49,8 +49,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
     return 6;
 }
 
@@ -89,6 +87,20 @@
     }
     else if (indexPath.row == 5)
     {
+        [self doneEditing];
+        [self doneEditing];
+        
+        if (telefonLivrare.length == 0)
+        {
+            [txtTelefonLivrare becomeFirstResponder];
+            return;
+        }
+        if (emailLivrare.length == 0)
+        {
+            [txtEmailLivrare becomeFirstResponder];
+            return;
+        }
+        
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
     }
 }
@@ -116,6 +128,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(64, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
@@ -138,6 +153,28 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 
+    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    // In cazul in care tastatura este activa si se da back
+    int index = 0;
+    if (indexPath != nil)
+        index = indexPath.row;
+    else
+        index = textField.tag;
+    
+    if (index == 1)
+    {
+        [self setAdresa:textField.text];
+    }
+    else if (index == 2) // telefon
+    {
+        [self setTelefon:textField.text];
+    }
+    else if (index == 3) // email
+    {
+        [self setEmail:textField.text];
+    }
 }
 
 -(IBAction) doneEditing
@@ -176,6 +213,7 @@
     
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
+    txtEmailLivrare = (UITextField *)[cellEmail viewWithTag:2];
     [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL"];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
@@ -183,6 +221,7 @@
     
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
+    txtTelefonLivrare = (UITextField *)[cellTelefon viewWithTag:2];
     [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON"];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
@@ -245,15 +284,20 @@
 - (void) setEmail:(NSString *)email
 {
     emailLivrare = email;
-    UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
-    txt.text = email;
+    txtEmailLivrare.text = email;
+    
+    if ([YTOUtils validateEmail:asigurat.email] == NO && [YTOUtils validateEmail:email])
+        asigurat.email = email;
 }
 
 - (void) setTelefon:(NSString *)telefon
 {
     telefonLivrare = telefon;
-    UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
-    txt.text = telefon;
+    txtTelefonLivrare.text = telefon;
+
+    if (asigurat.telefon.length < 10 && asigurat.telefon.length > 14 &&
+        telefon.length > 9 && telefon.length < 15)
+        asigurat.telefon = telefon;
 }
 
 - (IBAction)btnTipPlata_Clicked:(id)sender
@@ -272,6 +316,8 @@
         [self setTipPlata:@"op"];
     else if (btn.tag ==3)
         [self setTipPlata:@"online"];
+    
+    [self doneEditing];
 }
 
 - (void) setTipPlata:(NSString *)p
@@ -295,7 +341,7 @@
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<CallInregistrareComanda xmlns=\"http://tempuri.org/\">"
+                      "<CallInregistrareComandaSmartphone xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<oferta_prima>%.2f</oferta_prima>"
@@ -310,13 +356,15 @@
                       "<mod_plata>%d</mod_plata>"
                       "<udid>%@</udid>"
                       "<platforma>%@</platforma>"
+                      "<id_locuinta>%@</id_locuinta>"
                       "<sendEmail>1</sendEmail>"
-                      "</CallInregistrareComanda>"
+                      "</CallInregistrareComandaSmartphone>"
                       "</soap:Body>"
                       "</soap:Envelope>",
                       oferta.prima, oferta.companie, [oferta LocuintaTipProdus], oferta.codOferta, [YTOUtils formatDate:oferta.dataInceput withFormat:@"yyyy-MM-dd"],
-                      asigurat.nume, asigurat.codUnic, asigurat.email, asigurat.telefon,modPlata,
-                      [[UIDevice currentDevice] uniqueIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                      asigurat.nume, asigurat.codUnic, emailLivrare, telefonLivrare, modPlata,
+                      [[UIDevice currentDevice] uniqueIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                      locuinta.idIntern];
     return xml;
 }
 
@@ -335,7 +383,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/CallInregistrareComanda" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/CallInregistrareComandaSmartphone" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -362,7 +410,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideCustomLoading];
-	//to do parseXML
+
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -428,17 +476,23 @@
 
 - (void) showCustomLoading
 {
+    self.navigationItem.hidesBackButton = NO;
+    
     [self hideCustomLoading];
     [vwLoading setHidden:NO];
 }
 
 - (IBAction) hideCustomLoading
 {
+    self.navigationItem.hidesBackButton = NO;
+    
     [vwLoading setHidden:YES];
 }
 
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
+    
     if (error)
         imgError.image = [UIImage imageNamed:@"comanda-eroare.png"];
     else
@@ -458,14 +512,19 @@
 
 - (IBAction) hideCustomAlert:(id)sender;
 {
+    self.navigationItem.hidesBackButton = NO;
+    
     UIButton * btn = (UIButton *)sender;
     [vwCustomAlert setHidden:YES];
+    
+  //  NSLog(@"btn tag=%d", btn.tag);
+    
     if (btn.tag == 1)
     {
-        if (true)
-            [self showPopupDupaComanda];
-        else
-            [self.navigationController popToRootViewControllerAnimated:YES];
+        //if (true)
+        //    [self showPopupDupaComanda];
+        // else
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (btn.tag == 11)
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -493,12 +552,24 @@
 
     }
     else if (btn.tag == 100)
+    {
+        [self doneEditing];
+        
+        if (telefonLivrare.length == 0 || emailLivrare.length == 0)
+        {
+            return;
+        }
+        
         [self callInregistrareComanda];
-    
+    }
+//    else
+//        [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
 {
+    self.navigationItem.hidesBackButton = YES;
+    
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
     btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);

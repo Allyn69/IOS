@@ -2,7 +2,7 @@
 //  YTOTermeniViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/6/12.
+//  Created by Andi Aparaschivei on 11/6/12.
 //
 //
 
@@ -88,11 +88,13 @@
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	NSLog(@"Response: %@", [response textEncodingName]);
 	[self.responseData setLength:0];
+    self.navigationItem.hidesBackButton = NO;
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
 	NSLog(@"connection:DidReceiveData");
 	[self.responseData appendData:data];
+    self.navigationItem.hidesBackButton = NO;
 }
 
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
@@ -100,7 +102,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideLoading];
-	//to do parseXML
+	
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -173,6 +175,7 @@
 - (IBAction) hideLoading
 {
     [vwLoading setHidden:YES];
+    self.navigationItem.hidesBackButton = NO;
 }
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description
 {
@@ -194,11 +197,13 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
     [self hideLoading];
+    self.navigationItem.hidesBackButton = NO;    
 }
 
 - (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     [self showPopup:@"Conexiune esuata" withDescription:@"Pagina nu este disponibila. Verificati conexiunea la internet."];
+    self.navigationItem.hidesBackButton = NO;
 }
 
 @end

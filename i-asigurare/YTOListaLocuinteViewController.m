@@ -2,8 +2,8 @@
 //  YTOListaLocuinteViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 8/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/2/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOListaLocuinteViewController.h"
@@ -16,6 +16,7 @@
 #import "Database.h"
 #import "YTOLocuinta.h"
 #import "YTOFormAlertaViewController.h"
+#import "YTOAsigurareViewController.h"
 
 @interface YTOListaLocuinteViewController ()
 
@@ -210,6 +211,12 @@
         [parent setLocuinta:locuinta];
         [appDelegate.alerteNavigationController popViewControllerAnimated:YES];
     }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
+        YTOAsigurareViewController * parent = (YTOAsigurareViewController*)self.controller;
+        [parent setLocuinta:locuinta];
+        [appDelegate.setariNavigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -236,6 +243,11 @@
     {
         aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
+    }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
+        aView.controller = self;
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
 }
 

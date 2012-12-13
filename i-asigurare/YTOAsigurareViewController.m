@@ -2,11 +2,12 @@
 //  YTOAsigurareViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/7/12.
+//  Created by Andi Aparaschivei on 11/7/12.
 //
 //
 
 #import "YTOAsigurareViewController.h"
+#import "YTOAppDelegate.h"
 #import "KeyValueItem.h"
 
 @interface YTOAsigurareViewController ()
@@ -17,6 +18,7 @@
 
 @synthesize _nomenclatorNrItems, _nomenclatorSelIndex, _nomenclatorTip, listaCompanii;
 @synthesize asigurare;
+@synthesize masina, locuinta;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -32,27 +34,48 @@
     [super viewDidLoad];
     
     [self initCells];
+    
+    shouldSave = YES;
+    goingBack = YES;
+    
     if (asigurare)
     {
+        ((UIImageView *) [cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-asigurare-salvata.png"];
+        [self setMoneda:asigurare.moneda];
         [self setCompanie:asigurare.companie];
         [self setPrima:asigurare.prima];
         [self setNumeAsigurare:asigurare.numeAsigurare];
         [self setTipAsigurare:asigurare.tipAsigurare];
+    }
+    else
+    {
+        ((UIImageView *) [cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-asigurare-noua.png"];
+        asigurare = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
+        [self setMoneda:@"eur"];
+        [self setTipAsigurare:1];
+    }
+}
+
+- (void) viewWillDisappear:(BOOL)animated
+{
+    [self doneEditing];
+    
+    if (goingBack)
+    {
+        if (shouldSave)
+            [self save];
     }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
@@ -60,16 +83,18 @@
 {
     if (indexPath.row == 0)
         return 78;
-    else if (indexPath.row == 1 || indexPath.row == 3)
+    else if (indexPath.row == 2)
+        return 75;
+    else if (indexPath.row == 1 || indexPath.row == 4)
         return 100;
     else return 60;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 5;
+    if (asigurare.tipAsigurare == 2 || asigurare.tipAsigurare == 3)
+        return 8;
+    return 7;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -79,9 +104,28 @@
     
     if (indexPath.row == 0) cell = cellHeader;
     else if (indexPath.row == 1) cell = cellProdusAsigurare;
-    else if (indexPath.row == 2) cell = cellNumeAsigurare;
-    else if (indexPath.row == 3) cell = cellCompanieAsigurare;
-    else cell = cellPrima;
+    else if (indexPath.row == 2) cell = (asigurare.tipAsigurare == 3 ? cellLocuinta : cellMasina);
+    else if (indexPath.row == 3) cell = cellNumeAsigurare;
+    else if (indexPath.row == 4) cell = cellCompanieAsigurare;
+    else
+    {
+        if (asigurare.tipAsigurare == 2 || asigurare.tipAsigurare == 3)
+        {
+            if (indexPath.row == 5)
+                cell = cellMoneda;
+            else if (indexPath.row == 6)
+                cell = cellPrima;
+            else
+                cell = cellSC;
+        }
+        else
+        {
+            if (indexPath.row == 5)
+                cell = cellPrima;
+            else
+                cell = cellSC;
+        }
+    }
     
     return cell;
 }
@@ -90,14 +134,97 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
+    if (indexPath.row == 2)
+    {
+        [self doneEditing];
+        
+        YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        if (asigurare.tipAsigurare == 3)
+        {
+            goingBack = NO;
+            
+            // Daca exista locuinte salvate, afisam lista
+            if ([appDelegate Locuinte].count > 0)
+            {
+                YTOListaLocuinteViewController * aView = [[YTOListaLocuinteViewController alloc] init];
+                aView.controller = self;
+                [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+            }
+            else {
+                YTOCasaViewController * aView = [[YTOCasaViewController alloc] init];
+                aView.controller = self;
+                [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+            }
+        }
+        else
+        {
+            goingBack = NO;
+            
+            // Daca exista masini salvate, afisam lista
+            if ([appDelegate Masini].count > 0)
+            {
+                YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
+                aView.controller = self;
+                [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+            }
+            else {
+                YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+                aView.controller = self;
+                [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+            }
+        }
+    }
+}
+
+- (void) save
+{
+    if (asigurare.obiecteAsigurate.count == 0 && asigurare.prima == 0)
+    {
+        // nu salvam
+    }
+    else
+    {
+        
+        if (asigurare._isDirty)
+        {
+            [asigurare updateOferta];
+        }
+        else {
+            [asigurare addOferta];
+        }
+        
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void) btnSave_Clicked
+{
+    [self doneEditing];
+    
+    [self save];
+    
+    // Am salvat o data, nu mai salvam pe viewWillDissapear
+    shouldSave = YES;
+}
+
+- (void) btnCancel_Clicked
+{
+    shouldSave = NO;
+    
+    // In cazul in care a modificat ceva si a apasat pe Cancel,
+    // incarcam lista cu masini din baza de date
+    //YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    //[delegate refreshMasini];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void) initCells
 {
     NSArray *topLevelObjectsHeader = [[NSBundle mainBundle] loadNibNamed:@"CellLocuintaHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsHeader objectAtIndex:0];
-    ((UIImageView *) [cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-asigurare-noua.png"];
+    ((UIImageView *) [cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-asigurare-salvata.png"];
     //[YTOUtils setCellFormularStyle:cellHeader];
     
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
@@ -106,11 +233,83 @@
     [YTOUtils setCellFormularStyle:cellNumeAsigurare];
     ((UITextField *)[cellNumeAsigurare viewWithTag:2]).font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
 
+    NSArray *topLevelObjectsMoneda = [[NSBundle mainBundle] loadNibNamed:@"CellView_DaNu" owner:self options:nil];
+    cellMoneda = [topLevelObjectsMoneda objectAtIndex:0];
+    [(UILabel *)[cellMoneda viewWithTag:6] setText:@"MONEDA"];
+    //[YTOUtils setCellFormularStyle:cellMoneda];
+    UIButton * btnMonedaLei = (UIButton *)[cellMoneda viewWithTag:1];
+    [btnMonedaLei addTarget:self action:@selector(btnMoneda_Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton * btnMonedaEur = (UIButton *)[cellMoneda viewWithTag:2];
+    [btnMonedaEur addTarget:self action:@selector(btnMoneda_Clicked:) forControlEvents:UIControlEventTouchUpInside];
+    ((UILabel *)[cellMoneda viewWithTag:3]).text = @"LEI";
+    ((UILabel *)[cellMoneda viewWithTag:4]).text = @"EUR";
+    
     NSArray *topLevelObjectsPrima = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellPrima = [topLevelObjectsPrima objectAtIndex:0];
     [(UILabel *)[cellPrima viewWithTag:1] setText:@"Prima asigurare"];
     [(UITextField *)[cellPrima viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellPrima];
+    
+    NSArray *topLevelObjectsMarca = [[NSBundle mainBundle] loadNibNamed:@"CellAutovehicul" owner:self options:nil];
+    cellMasina = [topLevelObjectsMarca objectAtIndex:0];
+    UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
+    lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCell.text = @"Alege masina";
+    
+    NSArray *topLevelObjectsLocuinta = [[NSBundle mainBundle] loadNibNamed:@"CellAutovehicul" owner:self options:nil];
+    cellLocuinta = [topLevelObjectsLocuinta objectAtIndex:0];
+    UILabel * lblCellLoc = (UILabel *)[cellLocuinta viewWithTag:2];
+    lblCellLoc.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCellLoc.text = @"Alege locuinta";
+    UIImageView * img2 = (UIImageView *)[cellLocuinta viewWithTag:4];
+    img2.image = [UIImage imageNamed:@"icon-foto-casa.png"];
+    UIImageView * bg = (UIImageView *)[cellLocuinta viewWithTag:5];
+    bg.image = [UIImage imageNamed:@"alege-persoana-locuinta.png"];
+    
+    NSArray *topLevelObjectsSC = [[NSBundle mainBundle] loadNibNamed:@"CellSalveazaRenunt" owner:self options:nil];
+    cellSC = [topLevelObjectsSC objectAtIndex:0];
+    UIButton * btnSave = (UIButton *)[cellSC viewWithTag:1];
+    UIButton * btnCancel = (UIButton *)[cellSC viewWithTag:2];
+    [btnSave addTarget:self action:@selector(btnSave_Clicked) forControlEvents:UIControlEventTouchUpInside];
+    [btnCancel addTarget:self action:@selector(btnCancel_Clicked) forControlEvents:UIControlEventTouchUpInside];
+}
+
+#pragma CELL MONEDA
+- (void) btnMoneda_Clicked:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    BOOL moneda = btn.tag == 1;
+    
+    
+    [self setMoneda:moneda ? @"lei" : @"eur"];
+    
+  //  [tableView reloadData];
+}
+
+- (void) setMoneda:(NSString *)v
+{
+
+    UILabel *lblLei = (UILabel *)[cellMoneda viewWithTag:3];
+    UILabel *lblEur = (UILabel *)[cellMoneda viewWithTag:4];
+    UIImageView * img = (UIImageView *)[cellMoneda viewWithTag:5];
+    
+    if ([v isEqualToString:@"eur"])
+    {
+        img.image = [UIImage imageNamed:@"da-nu-nu-rca.png"];
+        lblLei.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblEur.textColor = [UIColor whiteColor];
+        asigurare.moneda = @"eur";
+    }
+    else if ([v isEqualToString:@"lei"])
+    {
+        img.image = [UIImage imageNamed:@"da-nu-da-rca.png"];
+        lblEur.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        lblLei.textColor = [UIColor whiteColor];
+        asigurare.moneda = @"lei";
+    }
+    
+    if (asigurare.prima > 0)
+        [self setPrima:asigurare.prima];
 }
 
 - (void) setCompanie:(NSString*)v;
@@ -162,6 +361,9 @@
         ((UIButton *)[cellProdusAsigurare viewWithTag:3]).selected = YES;
         asigurare.numeAsigurare = @"Asigurare Locuinta";
     }
+    
+    asigurare.tipAsigurare = v;
+    [tableView reloadData];
 }
 - (IBAction) btnTipAsigurare_Clicked:(id)sender
 {
@@ -190,9 +392,9 @@
 
 - (void) textFieldDidBeginEditing:(UITextField *)textField
 {
-    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
-    NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
-    if (indexPath.row == 2 || indexPath.row == 4)
+    //UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    //NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    //if (indexPath.row == 3 || indexPath.row == 5)
         [self addBarButton];
     
 }
@@ -232,7 +434,9 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row == 4)
+    if (indexPath.row == 3)
+        [self setNumeAsigurare:textField.text];
+    else if (indexPath.row == 5 || indexPath.row == 6)
         [self setPrima:[textField.text intValue]];
 }
 
@@ -389,4 +593,31 @@
         }
     }
 }
+
+- (void)setAutovehicul:(YTOAutovehicul *)a
+{
+    //[btnMasina.titleLabel setText:a.marcaAuto];
+    UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
+    lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    if (a.marcaAuto.length > 0)
+    {
+        lblCell.text = a.marcaAuto;
+        ((UILabel *)[cellMasina viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
+    }
+    masina = a;
+    asigurare.obiecteAsigurate = [[NSMutableArray alloc] initWithObjects:masina.idIntern, nil];
+    goingBack = YES;
+}
+
+- (void) setLocuinta:(YTOLocuinta *) a
+{
+    UILabel * lblCellP = ((UILabel *)[cellLocuinta viewWithTag:2]);
+    lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCellP.text = a.tipLocuinta;
+    ((UILabel *)[cellLocuinta viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@, %d mp", a.judet, a.localitate, a.suprafataUtila];
+    locuinta = a;
+    asigurare.obiecteAsigurate = [[NSMutableArray alloc] initWithObjects:locuinta.idIntern, nil];
+    goingBack = YES;
+}
+
 @end

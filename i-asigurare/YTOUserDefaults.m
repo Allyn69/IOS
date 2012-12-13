@@ -2,7 +2,7 @@
 //  YTOUserDefaults.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/21/12.
+//  Created by Andi Aparaschivei on 11/21/12.
 //
 //
 
@@ -35,4 +35,16 @@
     return [myUserDefault boolForKey:@"Syncronized"];
 }
 
++ (void) setFirstInsuranceRequest:(BOOL)ok
+{
+    NSUserDefaults *myUserDefault = [NSUserDefaults standardUserDefaults];
+    
+    [myUserDefault setBool:ok forKey:@"FirstInsuranceRequest"];
+}
+
++ (BOOL) IsFirstInsuranceRequest
+{
+    NSUserDefaults *myUserDefault = [NSUserDefaults standardUserDefaults];
+    return ![myUserDefault boolForKey:@"FirstInsuranceRequest"];
+}
 @end

@@ -2,7 +2,7 @@
 //  YTOCustomPopup.h
 //  i-asigurare
 //
-//  Created by Administrator on 10/2/12.
+//  Created by Andi Aparaschivei on 10/2/12.
 //
 //
 

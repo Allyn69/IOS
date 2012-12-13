@@ -119,7 +119,6 @@
 								<string key="NSFrame">{{250, 10}, {68, 40}}</string>
 								<reference key="NSSuperview" ref="385458788"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<int key="IBUITag">10</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>

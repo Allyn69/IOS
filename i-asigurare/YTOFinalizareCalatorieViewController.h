@@ -2,7 +2,7 @@
 //  YTOFinalizareCalatorieViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 10/12/12.
+//  Created by Andi Aparaschivei on 10/12/12.
 //
 //
 
@@ -46,6 +46,9 @@
     IBOutlet UILabel     * lblCustomAlertOK;
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
+    
+    UITextField * txtEmailLivrare;
+    UITextField * txtTelefonLivrare;
 }
 
 @property (nonatomic, retain) YTOOferta         * oferta;

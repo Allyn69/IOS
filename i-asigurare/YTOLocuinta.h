@@ -2,14 +2,22 @@
 //  YTOLocuinta.h
 //  i-asigurare
 //
-//  Created by Administrator on 8/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/2/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
 @interface YTOLocuinta : NSObject
+{
+    NSMutableData * responseData;
+	NSMutableData * capturedCharactes;
+	NSMutableString * currentElementValue;
+    NSString * raspuns;
+}
+
+@property (nonatomic, retain) NSMutableData * responseData;
 
 @property (nonatomic, retain) NSString * idIntern;
 @property (nonatomic, retain) NSString * tipLocuinta;

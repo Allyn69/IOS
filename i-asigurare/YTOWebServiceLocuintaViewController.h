@@ -2,8 +2,8 @@
 //  YTOWebServiceLocuintaViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 8/6/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/6/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -28,6 +28,11 @@
     IBOutlet UITableView *  tableView;
     IBOutlet UIView *       vwLoading;
     IBOutlet UIImageView *  imgLoading;
+    
+    // Custom POPUP
+    IBOutlet UIView  *      vwPopup;
+    IBOutlet UILabel *      lblPopupTitle;
+    IBOutlet UILabel *      lblPopupDescription;
 }
 
 //@property (nonatomic, retain) CotatieCalatorie * cotatie;
@@ -41,5 +46,6 @@
 - (NSString *) XmlRequest;
 - (void) startLoadingAnimantion;
 - (void) stopLoadingAnimantion;
+- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
 
 @end

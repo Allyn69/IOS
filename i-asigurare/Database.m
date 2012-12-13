@@ -2,7 +2,7 @@
 //  Database.m
 //  iRCA
 //
-//  Created by Administrator on 11/16/11.
+//  Created by Andi Aparaschivei on 11/16/11.
 //  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 //
 
@@ -44,12 +44,14 @@ static sqlite3 *database = nil;
     NSMutableArray * judete = [[NSMutableArray alloc] initWithArray:nil];
     
     if (sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"Select Nume from judete";
+		NSString * sqlstring = @"Select Nume from JUDETE WHERE NUME <> 'Bucuresti'";
 		const char *sql = [sqlstring UTF8String];
 		sqlite3_stmt *selectstmt;
 		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
+
+			[judete addObject:@"Bucuresti"];
 			
-			while(sqlite3_step(selectstmt) == SQLITE_ROW) {
+            while(sqlite3_step(selectstmt) == SQLITE_ROW) {
                 
                 NSString * judet;
 				judet = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 0)];

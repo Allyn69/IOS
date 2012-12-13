@@ -2,8 +2,8 @@
 //  YTOAutovehiculViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/18/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -55,7 +55,7 @@
     UITableViewCell          * cellExpirareITP;
     UITableViewCell          * cellExpirareRovinieta;
     UITableViewCell          * cellExpirareCASCO;
-    UITableViewCell          * cellNumarRate;
+//    UITableViewCell          * cellNumarRate;
     UITableViewCell          * cellExpirareRataCASCO;
     
     NSMutableArray           * listCellRateCasco;
@@ -63,7 +63,19 @@
     float percentCompletedOnLoad;
     BOOL  selectatInfoMasina;
     BOOL  shouldSave;
+    BOOL editingMode;
     YTOAlerta * alertaRataCasco;
+    
+    YTOAlerta * alertaRca;
+    YTOAlerta * alertaItp;
+    YTOAlerta * alertaRovinieta;
+    YTOAlerta * alertaCasco;
+    
+    UITextField * txtAlertaRca;
+    UITextField * txtAlertaItp;
+    UITextField * txtAlertaRovinieta;
+    UITextField * txtAlertaCasco;
+    UITextField * txtAlertaRataCasco;
 }
 
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;
@@ -95,6 +107,8 @@
 - (IBAction)checkboxCombustibilSelected:(id)sender;
 - (IBAction)checkboxDestinatieSelected:(id)sender;
 - (IBAction)btnInfoAlerte_OnClick:(id)sender;
+
+- (void) btnEditShouldAppear;
 
 - (void) showNomenclator;
 - (IBAction) hideNomenclator;
@@ -154,6 +168,6 @@
 - (void) setImage:(UIImage *)img;
 
 - (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave;
-- (void) setNumarRate:(int)x;
+//- (void) setNumarRate:(int)x;
 
 @end

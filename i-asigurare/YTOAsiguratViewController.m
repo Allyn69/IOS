@@ -2,8 +2,8 @@
 //  YTOAsiguratViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/16/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAsiguratViewController.h"
@@ -12,8 +12,10 @@
 #import "Database.h"
 #import "YTOUtils.h"
 #import "YTOCalculatorViewController.h"
+#import "YTOLocuintaViewController.h"
 #import "YTOListaAsiguratiViewController.h"
 #import "YTOSetariViewController.h"
+#import "YTOCASCOViewController.h"
 
 @interface YTOAsiguratViewController ()
 
@@ -22,6 +24,8 @@
 @implementation YTOAsiguratViewController
 
 @synthesize asigurat, controller, proprietar, persoanaFizica;
+
+@synthesize responseData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,7 +46,7 @@
     shouldSave = YES;
     
     [self initCells];
-    [self initLabels:persoanaFizica];
+    
     
     // Verific daca view-ul este pentru contul meu
     if (proprietar)
@@ -69,14 +73,16 @@
     }
     else {
         if ([asigurat.tipPersoana isEqualToString:@"juridica"])
-        {
-            // Simulez click-ul pe PJ, dupa care se face load:asigurat din btnTipPersoana_OnClick
-            UIButton * btn = (UIButton *)[cellTipPersoana viewWithTag:2];
-            [self btnTipPersoana_OnClick:btn];
-        }
-        else
-            [self load:asigurat];
-    }    
+            persoanaFizica = NO;
+
+        [self load:asigurat];
+    }
+    [self initLabels:persoanaFizica];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    goingBack = YES;
 }
 
 -(IBAction)checkboxSelected:(id)sender
@@ -89,43 +95,34 @@
 
 - (IBAction)btnTipPersoana_OnClick:(id)sender
 {
-    if (!proprietar && asigurat._isDirty)
+    // Daca persoana este salvata si nu este din profilul meu
+    // nu se mai schimba tipul persoanei
+    if (asigurat._isDirty && !proprietar)
         return;
     
+    // inchid tastatura in caz ca este deschisa
+    [self doneEditing];
+    
+    // aflu pe ce buton a apasat PF sau PJ
     UIButton * btn = (UIButton *)sender;
     BOOL estePF = btn.tag == 1;
     
-    UILabel *lblDespreMine = (UILabel *)[cellTipPersoana viewWithTag:3];
-    UILabel *lblFirmaMea = (UILabel *)[cellTipPersoana viewWithTag:4];
-    UIImageView * img = (UIImageView *)[cellTipPersoana viewWithTag:5];
+    if (proprietar)
+        [self salveazaPersoana];
     
-    if (!estePF)
+    // Daca persoana nu a fost salvata, schimb tipul de persoana
+    persoanaFizica = estePF;
+    if (asigurat._isDirty == NO)
     {
-        if (!asigurat._isDirty)
-            asigurat.tipPersoana = @"juridica";
-        persoanaFizica = NO;
-        lblDespreMine.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        lblFirmaMea.textColor = [UIColor whiteColor];
-        img.image = proprietar ? [UIImage imageNamed:@"profil-pj.png"] : [UIImage imageNamed:@"persoana-pj.png"];
-    }
-    else
-    {
-        if (!asigurat._isDirty)
-            asigurat.tipPersoana = @"fizica";
-        persoanaFizica = YES;
-        lblDespreMine.textColor = [UIColor whiteColor];
-        lblFirmaMea.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        img.image = proprietar ? [UIImage imageNamed:@"profil-pf.png"] : [UIImage imageNamed:@"persoana-pf.png"];
+        asigurat.tipPersoana = estePF ? @"fizica" : @"juridica";
     }
     
-    
+    // se initializeaza labelurile si textele in functie de tip persoana PF sau PJ
     [self initLabels:persoanaFizica];
     
-    // incarc
+    // Daca sunt pe "Profilul meu", incarca ProprietarPF sau ProprietarPJ
     if (proprietar)
     {
-        [self salveazaPersoana];
-        
         NSString * telefon = asigurat.telefon;
         NSString * email = asigurat.email;
         if (!persoanaFizica) {
@@ -147,19 +144,30 @@
         if (asigurat.email.length == 0 && email.length > 0)
             asigurat.email = email;
     }
+    
+    if (!asigurat._isDirty && !persoanaFizica)
+    {
+        // Daca nu a completat nimic la cod unic, ii deschidem tastatura
+        // pentru a pregati apelul de GetCUIInfo
+        if (asigurat.codUnic == nil || asigurat.codUnic.length == 0)
+        {
+            [txtCodUnic becomeFirstResponder];
+        }
+    }
+    
     [self load:asigurat];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
     [self doneEditing];
+    
+    // Daca vine de pe butonul de cancel
     if (shouldSave)
         [self save];
 }
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -171,8 +179,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //#warning Potentially incomplete method implementation.
-    // Return the number of sections.
     return 1;
 }
 
@@ -237,6 +243,9 @@
 {
     [self doneEditing];    
     
+    if (isSearching)
+        return;
+    
     if (indexPath.row == 4) {
         [self showListaJudete:indexPath];
     }
@@ -273,7 +282,12 @@
         
         NSString * txt = @"Codul numeric personal";
         if (!persoanaFizica)
-            txt = @"Codul unic de identificare";
+        {
+            if (!asigurat._isDirty)
+                isSearching = YES;
+            
+            txt = @"Codul unic de identificare - pe baza acestuia vom incerca sa obtinem automat informatii publice precum denumire si adresa firmei.";
+        }
         [self showTooltip:txt];
     }
     else if (indexPath.row == 5)
@@ -306,6 +320,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
@@ -332,18 +349,25 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
-    if (indexPath.row == 2)
+    // In cazul in care tastatura este activa si se da back
+    int index = 0;
+    if (indexPath != nil)
+        index = indexPath.row;
+    else
+        index = textField.tag;
+    
+    if (index == 2)
         [self setNume:textField.text];
-    else if (indexPath.row == 3)
+    else if (index == 3)
         [self setcodUnic:textField.text];
-    else if (indexPath.row == 5)
+    else if (index == 5)
         [self setAdresa:textField.text];
     
     if (proprietar)
     {
-        if (indexPath.row == 6)
+        if (index == 6)
             [self setTelefon:textField.text];
-        else if (indexPath.row == 7)
+        else if (index == 7)
             [self setEmail:textField.text];
     }
 }
@@ -352,30 +376,38 @@
 {
     if (goingBack)
     {
-        
-        if (asigurat.codUnic.length == 13)
-            asigurat.tipPersoana = @"fizica";
-        else if (asigurat.codUnic.length > 0 && asigurat.codUnic.length < 10)
-            asigurat.tipPersoana = @"juridica";
-        
+        // Daca persoana a fost salvata si cnp-ul nu este corect, sau introduce
+        // altceva decat CNP, las asa cum introduce utilizatorul, nu intervin la tip persoana
+        if (!asigurat._isDirty)
+        {
+            if (asigurat.codUnic.length == 13)
+                asigurat.tipPersoana = @"fizica";
+            else if (asigurat.codUnic.length > 0 && asigurat.codUnic.length < 10)
+                asigurat.tipPersoana = @"juridica";
+        }
         [self salveazaPersoana];
     
-        if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
-        {
-            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-            [parent setAsigurat:asigurat];
-        }
-        else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
-        {
-            YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
-            [parent reloadData];
-        }
+//        if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+//        {
+//            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+//            [parent setAsigurat:asigurat];
+//        }
+//        else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+//        {
+//            YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
+//            [parent setAsigurat:asigurat];
+//        }
+//        else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
+//        {
+//            YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
+//            [parent reloadData];
+//        }
     }
 }
 
 - (void) salveazaPersoana
 {
-    if (asigurat.nume.length == 0 && asigurat.codUnic.length == 0 && asigurat.judet.length == 0 && asigurat.localitate.length == 0 && asigurat.adresa.length == 0)
+    if (!asigurat._isDirty && asigurat.nume.length == 0 && asigurat.codUnic.length == 0 && asigurat.judet.length == 0 && asigurat.localitate.length == 0 && asigurat.adresa.length == 0)
     {
         // daca nu a completat nimic, nu salvam
     }
@@ -385,23 +417,63 @@
     {
         [asigurat addPersoana];
     }
+    
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+    {
+        YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+        [parent setAsigurat:asigurat];
+    }
+    else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+    {
+        YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
+        [parent setAsigurat:asigurat];
+    }
+    else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+    {
+        YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
+        [parent setAsigurat:asigurat];
+    }
+    else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
+    {
+        // fac reload doar daca s-a salvat persoana
+        if (asigurat._isDirty)
+        {
+            YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
+            [parent reloadData];
+        }
+    }
+
 }
 
 - (void) btnSave_Clicked
 {
     [self doneEditing];
+    
     [self save];
+    
+    // Am salvat o data, pe viewWillDissapear nu mai salvam
+    shouldSave = NO;
     
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
+        // selecteaza asiguratul si ma duce direct in ecranul de calculator
         YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-        //[parent setAsigurat:asigurat];
+        [self.navigationController popToViewController:parent animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+    {
+        // selecteaza asiguratul si ma duce direct in ecranul de calculator
+        YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
+        [self.navigationController popToViewController:parent animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+    {
+        // selecteaza asiguratul si ma duce direct in ecranul de calculator
+        YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
         [self.navigationController popToViewController:parent animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOListaAsiguratiViewController class]])
     {
-        YTOListaAsiguratiViewController * parent = (YTOListaAsiguratiViewController *)self.controller;
-        //[parent reloadData];
         [self.navigationController popViewControllerAnimated:YES];
     }
     else {
@@ -428,11 +500,13 @@
 //        [self btnTipPersoana_OnClick:btn];
 //    }
     
-    if (!proprietar)
-    {
-        UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
+    UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
+    if (!proprietar && a._isDirty)
         imgTextHeader.image = [UIImage imageNamed:@"text-header-persoana-salvata.png"];
-    }
+    else if (!proprietar)
+        imgTextHeader.image = [UIImage imageNamed:@"text-header-persoana.png"];
+    else
+        imgTextHeader.image = [UIImage imageNamed:@"text-header-profil.png"];
     
     [self setNume:a.nume];
     [self setcodUnic:a.codUnic];
@@ -462,9 +536,11 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
+    self.navigationItem.hidesBackButton = YES;
 }
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = NO;
 }
 
 #pragma Picker View Nomenclator
@@ -518,15 +594,18 @@
     
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellNume = [topLevelObjectsNume objectAtIndex:0];
+    txtNume = (UITextField *)[cellNume viewWithTag:2];
     [YTOUtils setCellFormularStyle:cellNume];
     
     NSArray *topLevelObjectsCodUnic = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellCodUnic = [topLevelObjectsCodUnic objectAtIndex:0];
     [(UITextField *)[cellCodUnic viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+    txtCodUnic = (UITextField *)[cellCodUnic viewWithTag:2];    
     [YTOUtils setCellFormularStyle:cellCodUnic];
     
     NSArray *topLevelObjectsAdresa = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellAdresa = [topLevelObjectsAdresa objectAtIndex:0];
+    txtAdresa = (UITextField *)[cellAdresa viewWithTag:2];
     [YTOUtils setCellFormularStyle:cellAdresa];
     
     NSArray *topLevelObjectsJudet = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
@@ -548,6 +627,7 @@
         [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
         [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
         [(UITextField *)[cellEmail viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+        txtEmail = (UITextField *)[cellEmail viewWithTag:2];
         [YTOUtils setCellFormularStyle:cellEmail];
         
         NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
@@ -555,18 +635,27 @@
         [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON"];
         [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
         [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
+        txtTelefon = (UITextField *)[cellTelefon viewWithTag:2];
         [YTOUtils setCellFormularStyle:cellTelefon];
     }
 }
 
 - (void) initLabels:(BOOL )pf
 {
+    UILabel *lblDespreMine = (UILabel *)[cellTipPersoana viewWithTag:3];
+    UILabel *lblFirmaMea = (UILabel *)[cellTipPersoana viewWithTag:4];
+    UIImageView * img = (UIImageView *)[cellTipPersoana viewWithTag:5];
+
     if (pf)
     {
         [(UITextField *)[cellNume viewWithTag:1] setText:@"NUME PRENUME"];
         [(UILabel *)[cellCodUnic viewWithTag:1] setText:@"CNP"];
         [(UILabel *)[cellAdresa viewWithTag:1] setText:@"ADRESA"];
         [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE"];
+        
+        lblDespreMine.textColor = [UIColor whiteColor];
+        lblFirmaMea.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        img.image = proprietar ? [UIImage imageNamed:@"profil-pf.png"] : [UIImage imageNamed:@"persoana-pf.png"];
     }
     else
     {
@@ -574,6 +663,10 @@
         [(UILabel *)[cellCodUnic viewWithTag:1] setText:@"CUI"];
         [(UILabel *)[cellAdresa viewWithTag:1] setText:@"ADRESA"];
         [(UILabel *)[cellJudetLocalitate viewWithTag:1] setText:@"JUDET, LOCALITATE"];
+        
+        lblFirmaMea.textColor = [UIColor whiteColor];
+        lblDespreMine.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        img.image = proprietar ? [UIImage imageNamed:@"profil-pj.png"] : [UIImage imageNamed:@"persoana-pj.png"];
     }
 }
 
@@ -592,23 +685,43 @@
 #pragma Proprietati
 - (void) setNume:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellNume viewWithTag:2];
-    
-    txt.text = v;
+    txtNume.text = v;
     asigurat.nume = v;
 }
+
 - (void) setcodUnic:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellCodUnic viewWithTag:2];
+    
     UIImageView * imgAlert = (UIImageView *)[cellCodUnic viewWithTag:10];
-    txt.text = v;    
+    txtCodUnic.text = v;
+    NSString * cui_vechi = asigurat.codUnic;
     asigurat.codUnic = v;
     
-    if ( ([asigurat.tipPersoana isEqualToString:@"fizica"] && [YTOUtils validateCNP:v]) ||
-         ([asigurat.tipPersoana isEqualToString:@"juridica"] && [YTOUtils validateCUI:v]) )
+    if (v.length == 0)
+    {
+        isSearching = NO;
+        return;
+    }
+    
+    if ( ([asigurat.tipPersoana isEqualToString:@"fizica"] && [YTOUtils validateCNP:v]))
+    {
         [imgAlert setHidden:YES];
+    }
+    else if ([asigurat.tipPersoana isEqualToString:@"juridica"] && [YTOUtils validateCUI:v])
+    {
+        [imgAlert setHidden:YES];
+        
+        // Daca persoana este noua, cui-ul este valid
+        // Apelam serviciul GetCUIInfo
+        if (!asigurat._isDirty && ![cui_vechi isEqualToString:v])
+            [self callGetCUIInfo];
+    }
     else
+    {
         [imgAlert setHidden:NO];
+        isSearching = NO;
+    }
+    
 }
 - (void) setJudet:(NSString *)v
 {
@@ -641,20 +754,19 @@
 
 - (void) setAdresa:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellAdresa viewWithTag:2];
-    txt.text = v;
+    txtAdresa = (UITextField *)[cellAdresa viewWithTag:2];
+    txtAdresa.text = v;
     asigurat.adresa = v;
 }
 
 - (void) setTelefon:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellTelefon viewWithTag:2];
     UIImageView * imgAlert = (UIImageView *)[cellTelefon viewWithTag:10];
     
-    txt.text = v;
+    txtTelefon.text = v;
     asigurat.telefon = v;
     
-    if (asigurat.telefon.length < 10 || asigurat.telefon.length > 14)
+    if (asigurat.telefon.length < 10 && asigurat.telefon.length > 14)
         [imgAlert setHidden:NO];
     else
         [imgAlert setHidden:YES];
@@ -662,18 +774,20 @@
 
 - (void) setEmail:(NSString *)v
 {
-    UITextField * txt = (UITextField *)[cellEmail viewWithTag:2];
     UIImageView * imgAlert = (UIImageView *)[cellEmail viewWithTag:10];
     
     v = [YTOUtils replacePossibleWrongEmailAddresses:v];
     
-    txt.text = v;
+    txtEmail.text = v;
     asigurat.email = v;
     
-    if ([YTOUtils validateEmail:v])
-        [imgAlert setHidden:YES];
-    else
-        [imgAlert setHidden:NO];
+    if (v.length > 0)
+    {
+        if ([YTOUtils validateEmail:v])
+            [imgAlert setHidden:YES];
+        else
+            [imgAlert setHidden:NO];
+    }
 }
 
 - (void) showTooltip:(NSString *)tooltip
@@ -687,4 +801,167 @@
     lblTootlip.text = @"";    
 }
 
+
+#pragma mark Consume WebService
+
+- (NSString *) XmlRequest
+{
+    NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<GetCUIInfo xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<cui>%@</cui>"
+                      "</GetCUIInfo>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      asigurat.codUnic];
+    return xml;
+}
+
+- (void) callGetCUIInfo {
+
+    [self showLoading];
+	
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@utils.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:5.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/GetCUIInfo" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    //[self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+
+	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+	
+	if (succes) {
+        NSError * err = nil;
+        NSData *data = [raspuns dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary * json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
+
+        NSString * nume = [json objectForKey:@"Nume"];
+        NSString * caen = [json objectForKey:@"ClasaCaen"];
+        NSString * judet = [json objectForKey:@"Judet"];
+        NSString * localitate = [json objectForKey:@"Localitate"];
+        NSString * strada = [json objectForKey:@"Strada"];
+        NSString * numar = [json objectForKey:@"Numar"];
+        NSString * bloc = [json objectForKey:@"Bloc"];
+        NSString * scara = [json objectForKey:@"Scara"];
+        NSString * apartament = [json objectForKey:@"Apartament"];
+        
+        NSLog(@"%@, %@", nume, caen);
+        
+        if (nume.length > 0)
+            [self setNume:nume];
+        if (caen.length > 0)
+            asigurat.codCaen = caen;
+        if (judet.length > 0)
+            [self setJudet:judet];
+        if (localitate.length > 0)
+            [self setLocalitate:localitate];
+
+        NSString * adresaFull = @"";
+        if (strada.length > 0)
+            adresaFull = [adresaFull stringByAppendingString:strada];
+        if (numar.length > 0)
+            adresaFull = [adresaFull stringByAppendingString:[NSString stringWithFormat:@", nr.%@", numar]];
+        if (bloc.length > 0)
+            adresaFull = [adresaFull stringByAppendingString:[NSString stringWithFormat:@", bl.%@", bloc]];
+        if (scara.length > 0)
+            adresaFull = [adresaFull stringByAppendingString:[NSString stringWithFormat:@", sc.%@", scara]];
+        if (apartament.length > 0)
+            adresaFull = [adresaFull stringByAppendingString:[NSString stringWithFormat:@", ap.%@", apartament]];
+        
+        [self setAdresa:adresaFull];
+    }
+	else {
+        
+	}
+    
+    [self hideLoading];
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+    [self hideLoading];
+}
+
+#pragma mark NSXMLParser Methods
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+	if ([elementName isEqualToString:@"GetCUIInfoResult"]) {
+        raspuns = currentElementValue;
+	}
+    
+	currentElementValue = nil;
+}
+
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if(!currentElementValue)
+		currentElementValue = [[NSMutableString alloc] initWithString:string];
+	else
+		[currentElementValue appendString:string];
+}
+
+#pragma POPUP
+- (void) showLoading
+{
+    isSearching = YES;
+    [btnLoadingOk setHidden:YES];
+    [lblLoadingOk setHidden:YES];
+    [lblLoadingDescription setHidden:YES];
+    [lblLoadingTitlu setText:@"Cautam datele firmei..."];
+    [loading setHidden:NO];
+    [vwLoading setHidden:NO];
+}
+- (IBAction) hideLoading
+{
+    isSearching = NO;
+    [vwLoading setHidden:YES];
+}
+- (void) showPopup:(NSString *)title withDescription:(NSString *)description
+{
+    [btnLoadingOk setHidden:NO];
+    [lblLoadingOk setHidden:NO];
+    [lblLoadingDescription setHidden:NO];
+    [lblLoadingDescription setText:description];
+    [lblLoadingTitlu setText:title];
+    [loading setHidden:YES];
+    [vwLoading setHidden:NO];
+}
 @end

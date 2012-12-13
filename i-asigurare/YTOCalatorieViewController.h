@@ -2,8 +2,8 @@
 //  YTOCalatorieViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/31/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/31/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -34,6 +34,8 @@
     NSString * tranzit;
     NSString * sumaAsigurata;
 }
+
+@property (nonatomic, retain) NSDate *   DataInceput;
 
 - (IBAction) nrZileStepper_Changed:(id)sender;
 - (IBAction) dateStepper_Changed:(id)sender;

@@ -2,18 +2,21 @@
 //  YTOComenziViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/26/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/26/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOComenziViewController.h"
 #import "YTOAsigurareViewController.h"
+#import "YTOAppDelegate.h"
 
 @interface YTOComenziViewController ()
 
 @end
 
 @implementation YTOComenziViewController
+
+@synthesize controller;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -87,22 +90,50 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell; // = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     YTOOferta * oferta = [list objectAtIndex:indexPath.row];
-
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
-    cell.detailTextLabel.text = oferta.numeAsigurare;
     
-    cell.textLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:16];
-    cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:14];
+    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [oferta.companie lowercaseString]]];
+    //cell.textLabel.text = oferta.numeAsigurare;
+    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
+    
+    UILabel * lblProdus = [[UILabel alloc] initWithFrame:CGRectMake(95, 7, 150, 20)];
+    lblProdus.backgroundColor = [UIColor clearColor];
+    lblProdus.text = [oferta.numeAsigurare stringByReplacingOccurrencesOfString:@"Asigurare" withString:@""];
+    lblProdus.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblProdus.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
+    [cell.contentView addSubview:lblProdus];
+    
+    UILabel * lblPrima = [[UILabel alloc] initWithFrame:CGRectMake(95, 30, 180, 20)];
+    lblPrima.backgroundColor = [UIColor clearColor];
+    lblPrima.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
+    lblPrima.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblPrima.font = [UIFont fontWithName:@"Arial" size:13];
+    [cell.contentView addSubview:lblPrima];
+    
+    UILabel *lblDataLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 7, 100, 20)];
+    lblDataLabel.backgroundColor = [UIColor clearColor];
+    lblDataLabel.text = @"Data inceput";
+    lblDataLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblDataLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
+    [cell.contentView addSubview:lblDataLabel];
+    
+    UILabel *lblData = [[UILabel alloc] initWithFrame:CGRectMake(240, 30, 100, 20)];
+    lblData.backgroundColor = [UIColor clearColor];
+    lblData.text = [YTOUtils formatDate:oferta.dataInceput withFormat:@"dd.MM.yyyy"];
+    lblData.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblData.font = [UIFont fontWithName:@"Arial" size:13];
+    [cell.contentView addSubview:lblData];
+    
+    //    cell.textLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    //    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
+    //    cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    //    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:14];
     
     if (indexPath.row % 2 != 0) {
         CGRect frame = CGRectMake(0, 0, 320, 40);
@@ -112,6 +143,8 @@
         bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#fafafa"];
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
 }
 
@@ -119,10 +152,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    YTOOferta * oferta = [list objectAtIndex:indexPath.row];
-    YTOAsigurareViewController * aView = [[YTOAsigurareViewController alloc] init];
-    aView.asigurare = oferta;
-    [self.navigationController pushViewController:aView animated:YES];
+//    YTOOferta * oferta = [list objectAtIndex:indexPath.row];
+//    YTOAsigurareViewController * aView = [[YTOAsigurareViewController alloc] init];
+//    aView.asigurare = oferta;
+//    [self.navigationController pushViewController:aView animated:YES];
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -138,7 +171,9 @@
 - (IBAction)addAsigurare:(id)sender
 {
     YTOAsigurareViewController * aView = [[YTOAsigurareViewController alloc] init];
-    [self.navigationController pushViewController:aView animated:YES];
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    //aView.controller = self;
+    [appDelegate.setariNavigationController pushViewController:aView animated:YES];
 }
 
 - (void) reloadData

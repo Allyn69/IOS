@@ -2,8 +2,8 @@
 //  YTOAlteleViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/17/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/17/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAlteleViewController.h"
@@ -15,6 +15,7 @@
 #import "YTOTermeniViewController.h"
 #import "YTOPromotiiViewController.h"
 #import "YTOSocietatiViewController.h"
+#import "YTOContactViewController.h"
 
 @interface YTOAlteleViewController ()
 
@@ -59,7 +60,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 6;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,26 +87,31 @@
         cell.detailTextLabel.text = @"trimite-ne un mesaj";        
         cell.imageView.image = [UIImage imageNamed:@"trimite-mesaj.png"];
     }
+//    else if (indexPath.row == 2) {
+//        cell.textLabel.text = @"INTREBARI FRECVENTE";
+//        cell.detailTextLabel.text = @"totul despre asigurari";    
+//        cell.imageView.image = [UIImage imageNamed:@"faq.png"];
+//    }
+//    else if (indexPath.row == 2) {
+//        cell.textLabel.text = @"COMPANII ASIGURARE";
+//        cell.detailTextLabel.text = @"date de contact";        
+//        cell.imageView.image = [UIImage imageNamed:@"contact-companii.png"];        
+//    }
     else if (indexPath.row == 2) {
-        cell.textLabel.text = @"INTREBARI FRECVENTE";
-        cell.detailTextLabel.text = @"totul despre asigurari";    
-        cell.imageView.image = [UIImage imageNamed:@"faq.png"];
-    }
-    else if (indexPath.row == 3) {
-        cell.textLabel.text = @"COMPANII ASIGURARE";
-        cell.detailTextLabel.text = @"date de contact";        
-        cell.imageView.image = [UIImage imageNamed:@"contact-companii.png"];        
-    }
-    else if (indexPath.row == 4) {
         cell.textLabel.text = @"VALABILITATE RCA";
         cell.detailTextLabel.text = @"verifica polita ta RCA";        
         cell.imageView.image = [UIImage imageNamed:@"valabilitate-rca.png"];
     }
-    else if (indexPath.row == 5) {
+    else if (indexPath.row == 3) {
         cell.textLabel.text = @"TERMENI & CONDITII";
         cell.detailTextLabel.text = @"citeste regulile";        
         cell.imageView.image = [UIImage imageNamed:@"termeni.png"];
-    }    
+    }
+    else if (indexPath.row == 4) {
+        cell.textLabel.text = @"CONTACT";
+        cell.detailTextLabel.text = @"cum ne gasesti";
+        cell.imageView.image = [UIImage imageNamed:@"contact-iasigurare.png"];
+    }
     return cell;
 }
 
@@ -129,25 +135,30 @@
         YTOTrimiteMesajViewController * aView = [[YTOTrimiteMesajViewController alloc] init];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
+//    else if (indexPath.row == 2)
+//    {
+//        YTOFAQViewController * aView = [[YTOFAQViewController alloc] init];
+//        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+//    }
+//    else if (indexPath.row == 2)
+//    {
+//        YTOSocietatiViewController * aView = [[YTOSocietatiViewController alloc] init];
+//        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+//    }
     else if (indexPath.row == 2)
-    {
-        YTOFAQViewController * aView = [[YTOFAQViewController alloc] init];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
-    }
-    else if (indexPath.row == 3)
-    {
-        YTOSocietatiViewController * aView = [[YTOSocietatiViewController alloc] init];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
-    }
-    else if (indexPath.row == 4)
     {
         YTOValabilitateRCAViewController * aView = [[YTOValabilitateRCAViewController alloc] init];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
-    else if (indexPath.row == 5)
+    else if (indexPath.row == 3)
     {
         YTOTermeniViewController * aView = [[YTOTermeniViewController alloc] init];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];        
+    }
+    else if (indexPath.row == 4)
+    {
+        YTOContactViewController * aView = [[YTOContactViewController alloc] init];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
 }
 

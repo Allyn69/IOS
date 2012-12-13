@@ -2,8 +2,8 @@
 //  YTOLocuintaViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 8/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/1/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOLocuintaViewController.h"
@@ -22,6 +22,7 @@
 @implementation YTOLocuintaViewController
 
 @synthesize DataInceput = _DataInceput;
+@synthesize asigurat, locuinta;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -71,7 +72,8 @@
         [self setAsigurat:prop];
     }
     
-    _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
+    _DataInceput = [YTOUtils getDataMinimaInceperePolita];
+    
     [self setDataInceput:_DataInceput];
 }
 
@@ -115,7 +117,7 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];    
     if (indexPath.row == 1)
@@ -142,6 +144,7 @@
         {
             YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
             aView.controller = self;
+            aView.produsAsigurare  = Locuinta;
             [delegate.rcaNavigationController pushViewController:aView animated:YES];
         }
         else {
@@ -156,10 +159,31 @@
         if (locuinta.idIntern.length == 0 || asigurat.idIntern.length == 0)
             return;
         
+        BOOL isOK = YES;
+        
+        if (![asigurat isValidForCompute])
+        {
+            UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            isOK = NO;
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+        }
+        else {
+            UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        }
+    
+        if (!isOK)
+            return;
+        
         oferta.tipAsigurare = 3;
         oferta.idAsigurat = asigurat.idIntern;
         oferta.obiecteAsigurate = [[NSMutableArray alloc] initWithObjects:locuinta.idIntern, nil];
-        oferta.numeAsigurare = [NSString stringWithFormat:@"Asigurare Locuinta, pentru %@, %d mp, %d %@", locuinta.tipLocuinta, locuinta.suprafataUtila, locuinta.sumaAsigurata, [oferta.moneda uppercaseString]];
+        oferta.numeAsigurare = [NSString stringWithFormat:@"Locuinta, %d mp", locuinta.suprafataUtila];
         
         locuinta.idProprietar = asigurat.idIntern;
         [locuinta updateLocuinta];
@@ -184,7 +208,6 @@
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" EUR" withString:@""];
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" LEI" withString:@""];
     }
-    // to do - [self showTooltip];
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField 
@@ -214,8 +237,6 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    // to do [self hideTooltip];
-    
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
@@ -409,6 +430,9 @@
 
 - (void) setModEvaluare:(NSString *)p
 {
+    ((UIButton *)[cellModEvaluare viewWithTag:1]).selected = ((UIButton *)[cellModEvaluare viewWithTag:2]).selected =
+    ((UIButton *)[cellModEvaluare viewWithTag:3]).selected = ((UIButton *)[cellModEvaluare viewWithTag:4]).selected = NO;
+    
     if ([p isEqualToString:@"valoare-reala"])
         ((UIButton *)[cellModEvaluare viewWithTag:1]).selected = YES;
     else if ([p isEqualToString:@"valoare-piata"])
@@ -416,7 +440,7 @@
     else if ([p isEqualToString:@"evaluare-banca"])
         ((UIButton *)[cellModEvaluare viewWithTag:3]).selected = YES; 
     else if ([p isEqualToString:@"valoare-inlocuire"])
-        ((UIButton *)[cellModEvaluare viewWithTag:3]).selected = YES; 
+        ((UIButton *)[cellModEvaluare viewWithTag:4]).selected = YES;
 
     locuinta.modEvaluare = p;
 }

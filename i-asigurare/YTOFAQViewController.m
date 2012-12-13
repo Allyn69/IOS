@@ -2,7 +2,7 @@
 //  YTOFAQViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 11/5/12.
+//  Created by Andi Aparaschivei on 11/5/12.
 //
 //
 
@@ -186,7 +186,7 @@
 	NSLog(@"Response string: %@", responseString);
     self.navigationItem.hidesBackButton = NO;
     [self hideLoading];
-	//to do parseXML
+
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];

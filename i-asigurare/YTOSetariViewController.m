@@ -2,8 +2,8 @@
 //  YTOSetariViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/19/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/19/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOSetariViewController.h"
@@ -42,10 +42,17 @@
     [self initCells];
     
 
+    UIBarButtonItem *btnEdit;
+    if ([YTOUserDefaults IsSyncronized] == NO)
+    {
+        btnEdit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(confirmSync)];
+        self.navigationItem.rightBarButtonItem = btnEdit; 
+    }
+    
     // Daca nu s-a facut  sincronizarea,
     // se apeleaza metoda din serviciu
-    if ([YTOUserDefaults IsSyncronized] == NO)
-        [self callSyncItems];
+    //if ([YTOUserDefaults IsSyncronized] == NO)
+    //    [self callSyncItems];
     
     // Do any additional setup after loading the view from its nib.
 //    [self startLoadingAnimantion];
@@ -73,7 +80,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 6;
+    return 5;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -82,8 +89,8 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0)
-        return 38;
+//    if (indexPath.section == 0)
+//        return 38;
     return 60;
 }
 
@@ -95,11 +102,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell;
+//    if (indexPath.section == 0)
+//    {
+//        cell = cellHeader;
+//    }
+//    else
     if (indexPath.section == 0)
-    {
-        cell = cellHeader;
-    }
-    else if (indexPath.section == 1)
     {
         cell = cellProfilulMeu;
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-profilul-meu.png"];
@@ -107,9 +115,10 @@
 
         // Incarc proprietar PF, daca nu exista incarcam proprietar PJ
         YTOPersoana * proprietar = [YTOPersoana Proprietar];
+        YTOPersoana * proprietarPJ = [YTOPersoana ProprietarPJ];
         if (!proprietar)
         {
-            proprietar = [YTOPersoana ProprietarPJ];
+            proprietar = proprietarPJ;
         }
         
         if (proprietar && proprietar.nume.length > 0)
@@ -117,12 +126,17 @@
             ((UILabel *)[cell viewWithTag:3]).text = proprietar.nume;
             ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#cb2929"];
         }
+        else if (proprietarPJ && proprietarPJ.nume.length > 0)
+        {
+            ((UILabel *)[cell viewWithTag:3]).text = proprietarPJ.nume;
+            ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#cb2929"];
+        }
         else {
             ((UILabel *)[cell viewWithTag:3]).text = @"Configureaza profilul tau";
             ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#b3b3b3"];
         }
     }
-    else if (indexPath.section == 2)
+    else if (indexPath.section == 1)
     {
         cell = cellMasinileMele;        
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-masinile-mele.png"];
@@ -150,7 +164,7 @@
             ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#b3b3b3"];
         }
     }
-    else if (indexPath.section == 3)
+    else if (indexPath.section == 2)
     {
         cell = cellLocuinteleMele;        
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-locuintele-mele.png"];
@@ -168,11 +182,11 @@
             ((UILabel *)[cell viewWithTag:3]).textColor = [YTOUtils colorFromHexString:@"#b3b3b3"];
         }
     }
-    else if (indexPath.section == 4)
+    else if (indexPath.section == 3)
     {
         cell = cellAltePersoane;
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-alte-persoane.png"];
-        ((UILabel *)[cell viewWithTag:2]).text = @"ALTE PERSOANE"; 
+        ((UILabel *)[cell viewWithTag:2]).text = @"ALTE PERSOANE ASIGURARE"; 
         NSMutableArray * persoane = [YTOPersoana AltePersoane];
         if (persoane.count > 0)
         {
@@ -189,7 +203,7 @@
     { 
         cell = cellComenzileMele;
         ((UIImageView *)[cell viewWithTag:1]).image = [UIImage imageNamed:@"setari-asigurarile-mele.png"];
-        ((UILabel *)[cell viewWithTag:2]).text = @"ASIGURARILE MELE";
+        ((UILabel *)[cell viewWithTag:2]).text = @"COMENZILE MELE";
         
         NSMutableArray * asigurari = [YTOOferta Oferte];
         if (asigurari.count > 0)
@@ -215,7 +229,7 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if (indexPath.section == 1)
+    if (indexPath.section == 0)
     {
         YTOAsiguratViewController *aView = [[YTOAsiguratViewController alloc] init];
         aView.proprietar = YES;
@@ -223,42 +237,43 @@
         aView.navigationItem.title = @"Contul meu";
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
     }
-    else if (indexPath.section == 2)
+    else if (indexPath.section == 1)
     {
         YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
         aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
-    else if (indexPath.section == 3)
+    else if (indexPath.section == 2)
     {
         YTOListaLocuinteViewController * aView = [[YTOListaLocuinteViewController alloc] init];
         aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
-    else if (indexPath.section == 4)
+    else if (indexPath.section == 3)
     {
         YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
         aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     
     }
-    else if (indexPath.section == 5)
+    else if (indexPath.section == 4)
     {
         YTOComenziViewController * aView = [[YTOComenziViewController alloc] init];
+        aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
     }
 }
 
 - (void) initCells
 {
-    cellHeader = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 35)];
-    UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 68)];
-    imgHeader.image = [UIImage imageNamed:@"header-first-screen.png"];
-    [cellHeader addSubview:imgHeader];
-    UILabel * lblLine = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, 320, 1)];
-    [lblLine setBackgroundColor:[YTOUtils colorFromHexString:@"#b3b3b3"]];
-    [cellHeader addSubview:imgHeader];
-    [cellHeader addSubview:lblLine];
+//    cellHeader = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 35)];
+//    UIImageView * imgHeader = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, 320, 68)];
+//    imgHeader.image = [UIImage imageNamed:@"header-first-screen.png"];
+//    [cellHeader addSubview:imgHeader];
+//    UILabel * lblLine = [[UILabel alloc] initWithFrame:CGRectMake(0, 58, 320, 1)];
+//    [lblLine setBackgroundColor:[YTOUtils colorFromHexString:@"#b3b3b3"]];
+//    [cellHeader addSubview:imgHeader];
+//    [cellHeader addSubview:lblLine];
     
     NSArray *topLevelObjects1 = [[NSBundle mainBundle] loadNibNamed:@"CellView_Setari" owner:self options:nil];
     cellProfilulMeu = [topLevelObjects1 objectAtIndex:0];
@@ -388,7 +403,6 @@
     //NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
 	//NSLog(@"Response string: %@", responseString);
     
-	//to do parseXML
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -496,6 +510,7 @@
     
     [self hideCustomLoading];
     [self reloadData];
+    self.navigationItem.rightBarButtonItem = nil;
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -545,6 +560,11 @@
 		[currentElementValue appendString:string];
 }
 
+- (void) confirmSync
+{
+    [self showCustomConfirm:@"Sincronizare date" withDescription:@"Daca ai folosit versiunea veche, poti sincroniza aplicatia si incercam sa incarcam informatiile existente. Vrei sa sincronizezi?" withButtonIndex:100];
+}
+
 #pragma mark UIAlertView
 -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	//MainViewController * mainController = [[MainViewController alloc] init];
@@ -561,6 +581,35 @@
 - (IBAction) hideCustomLoading
 {
     [vwLoading setHidden:YES];
+}
+
+#pragma Custom Alert
+- (IBAction) hideCustomAlert:(id)sender;
+{
+    UIButton * btn = (UIButton *)sender;
+    [vwCustomAlert setHidden:YES];
+    
+    if (btn.tag == 100)
+    {
+        [self callSyncItems];
+    }
+}
+
+- (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
+{
+    self.navigationItem.hidesBackButton = YES;
+    imgError.image = [UIImage imageNamed:@"confirmare-sincronizare.png"];
+    btnCustomAlertOK.tag = index;
+    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+    [lblCustomAlertOK setText:@"DA"];
+    
+    [btnCustomAlertNO setHidden:NO];
+    [lblCustomAlertNO setHidden:NO];
+    
+    lblCustomAlertTitle.text = title;
+    lblCustomAlertMessage.text = description;
+    [vwCustomAlert setHidden:NO];
 }
 
 @end

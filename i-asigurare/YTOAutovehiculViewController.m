@@ -2,8 +2,8 @@
 //  YTOAutovehiculViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 7/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/18/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOAutovehiculViewController.h"
@@ -12,6 +12,7 @@
 #import "KeyValueItem.h"
 #import "YTOCalculatorViewController.h"
 #import "YTOListaAutoViewController.h"
+#import "YTOAsigurareViewController.h"
 #import "YTOImage.h"
 
 @interface YTOAutovehiculViewController ()
@@ -76,6 +77,11 @@
     [self doneEditing];
     if (shouldSave)
         [self save];
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    goingBack = YES;
 }
 
 - (void)viewDidUnload
@@ -174,7 +180,7 @@
         else if (indexPath.row == 3)  cell = cellExpirareITP;
         else if (indexPath.row == 4)  cell = cellExpirareRovinieta;
         else if (indexPath.row == 5)  cell =  cellExpirareCASCO;
-        else if (indexPath.row == 6)  cell = cellNumarRate;
+        else if (indexPath.row == 6)  cell = cellExpirareRataCASCO;
         
         else if (alertaRataCasco && alertaRataCasco.numarTotalRate > 0)
         {
@@ -205,6 +211,62 @@
             [self showListaJudete:indexPath];
         }
     }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row > 1 && !selectatInfoMasina) {
+        if ( (indexPath.row == 2 && alertaRca != nil) || (indexPath.row == 3 && alertaItp != nil) ||
+             (indexPath.row == 4 && alertaRovinieta != nil) || (indexPath.row == 5 && alertaCasco != nil) ||
+             (indexPath.row == 6 && alertaRataCasco != nil))
+            return YES;
+    }
+    return NO;
+}
+
+- (void) tableView:(UITableView *)tv commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete && !selectatInfoMasina)
+    {
+        if (indexPath.row == 2)
+        {
+            [alertaRca deleteAlerta];
+            alertaRca = nil;
+            ((UITextField *)[cellExpirareRCA viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareRCA viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+        else if (indexPath.row == 3)
+        {
+            [alertaItp deleteAlerta];
+            alertaItp = nil;
+            ((UITextField *)[cellExpirareITP viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareITP viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+        else if (indexPath.row == 4)
+        {
+            [alertaRovinieta deleteAlerta];
+            alertaRovinieta = nil;
+            ((UITextField *)[cellExpirareRovinieta viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareRovinieta viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+        else if (indexPath.row == 5)
+        {
+            [alertaCasco deleteAlerta];
+            alertaCasco = nil;
+            ((UITextField *)[cellExpirareCASCO viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareCASCO viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+        else if (indexPath.row == 6)
+        {
+            [alertaRataCasco deleteAlerta];
+            alertaRataCasco = nil;
+            ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+    }
+    
+    [self btnEditShouldAppear];
+    [tv reloadData];
 }
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -304,7 +366,7 @@
             return;
         
         NSString *title = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? @"\n\n\n\n\n\n\n\n\n" : @"\n\n\n\n\n\n\n\n\n\n\n\n" ;
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Renunt" destructiveButtonTitle:nil otherButtonTitles:@"Selecteaza",nil];
+		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Salveaza" destructiveButtonTitle:nil otherButtonTitles:@"Renunt",nil];
         actionSheet.tag = indexPath.row;
         [actionSheet showFromTabBar:self.tabBarController.tabBar];
         
@@ -352,6 +414,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(64, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
@@ -394,27 +459,32 @@
     {
         [self hideTooltip];
         
-        //    [self setModel:textField.text];
+        // In cazul in care tastatura este activa si se da back
+        int index = 0;
+        if (indexPath != nil)
+            index = indexPath.row;
+        else
+            index = textField.tag;
         
-        if (indexPath.row == 3) // Model auto
+        if (index == 3) // Model auto
             [self setModel:textField.text];
-        else if (indexPath.row == 6)     // Nr Inmatriculare
+        else if (index == 6)     // Nr Inmatriculare
             [self setNrInmatriculare:textField.text];
-        else if (indexPath.row == 7)     // Serie Sasiu
+        else if (index == 7)     // Serie Sasiu
             [self setSerieSasiu:textField.text];
-        else if (indexPath.row == 8)     // Cm3
+        else if (index== 8)     // Cm3
             [self setCm3:[textField.text intValue]];
-        else if (indexPath.row == 9)    // Putere
+        else if (index == 9)    // Putere
             [self setPutere:[textField.text intValue]];
-        else if (indexPath.row == 10)     // Numar Locuri
+        else if (index == 10)     // Numar Locuri
             [self setNrLocuri:[textField.text intValue]];
-        else if (indexPath.row == 11)    // Masa maxima
+        else if (index== 11)    // Masa maxima
             [self setMasaMaxima:[textField.text intValue]];
-        else if (indexPath.row == 12)    // An fabricatie
+        else if (index == 12)    // An fabricatie
             [self setAnFabricatie:[textField.text intValue]];
-        else if (indexPath.row == 13)   // Serie CIV
+        else if (index == 13)   // Serie CIV
             [self setSerieCIV:textField.text];
-        else if (indexPath.row == 17)   // Firma Leasing
+        else if (index == 17)   // Firma Leasing
             [self setNumeFirmaLeasing:textField.text];
     }
     else
@@ -426,12 +496,19 @@
 #pragma mark Action Sheet Methods
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    UIDatePicker *datePickerPermis = (UIDatePicker *)[actionSheet viewWithTag:101];
-    if (datePickerPermis) {
-		[self setAlerta:actionSheet.tag withDate:datePickerPermis.date savingData:YES];
-	}
-    [activeTextField resignFirstResponder];
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    // 0 = apasa Renunt
+    // 1 = apasa Salveaza
+    if (buttonIndex == 1)
+    {
+        UIDatePicker *datePickerPermis = (UIDatePicker *)[actionSheet viewWithTag:101];
+        if (datePickerPermis) {
+            [self setAlerta:actionSheet.tag withDate:datePickerPermis.date savingData:YES];
+        }
+        [activeTextField resignFirstResponder];
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    
+    [self doneEditing];
 }
 
 - (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave
@@ -448,39 +525,39 @@
     if (index == 2)
     {
         tipAlerta = 1;
-        txt = ((UITextField *)[cellExpirareRCA viewWithTag:2]);
+        txt = txtAlertaRca;
     }
     else if (index == 3)
     {
         tipAlerta = 2;
-        txt = ((UITextField *)[cellExpirareITP viewWithTag:2]);
+        txt = txtAlertaItp;
     }
     else if (index == 4)
     {
         tipAlerta = 3;
-        txt = ((UITextField *)[cellExpirareRovinieta viewWithTag:2]);
+        txt = txtAlertaRovinieta;
     }
     else if (index == 5)
     {
         tipAlerta = 5;
-        txt = ((UITextField *)[cellExpirareCASCO viewWithTag:2]);
+        txt = txtAlertaCasco;
     }
     else if (index == 6)
     {
-        tipAlerta = 6;
-        txt = ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]);
+        tipAlerta = 7;
+        txt = txtAlertaRataCasco;
     }
-    else
-    {
-        tipAlerta = 6;
-        txt = ((UITextField *)[[listCellRateCasco objectAtIndex:index-7] viewWithTag:2]);
-        numarRata = index - 6;
-        
-        if (alertaRataCasco._isDirty)
-            [alertaRataCasco updateAlerta];
-        else
-            [alertaRataCasco addAlerta];
-    }
+//    else
+//    {
+//        tipAlerta = 7;
+//        txt = ((UITextField *)[[listCellRateCasco objectAtIndex:index-7] viewWithTag:2]);
+//        numarRata = index - 7;
+//        
+//        if (alertaRataCasco._isDirty)
+//            [alertaRataCasco updateAlerta];
+//        else
+//            [alertaRataCasco addAlerta];
+//    }
     
     if (txt)
     {
@@ -494,7 +571,7 @@
     
     alerta.idObiect = autovehicul.idIntern;
     alerta.tipAlerta = tipAlerta;
-    alerta.esteRata = (tipAlerta == 6 ? @"da" : @"nu");
+    alerta.esteRata = (tipAlerta == 7 ? @"da" : @"nu");
     if (alerta.esteRata && numarRata  > 0)
         alerta.numarRata = numarRata;
     
@@ -508,7 +585,30 @@
             [alerta addAlerta];
         YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
         [delegate setAlerteBadge];
+        
+        // setam variabila globala cu alerta salvata
+        if (index == 2)
+        {
+            alertaRca = alerta;
+        }
+        else if (index == 3)
+        {
+            alertaItp = alerta;
+        }
+        else if (index == 4)
+        {
+            alertaRovinieta = alerta;
+        }
+        else if (index == 5)
+        {
+            alertaCasco = alerta;
+        }
+        else if (index == 6)
+        {
+            alertaRataCasco = alerta;
+        }
     }
+    [self btnEditShouldAppear];
 }
 
 - (void) save
@@ -529,11 +629,24 @@
             // selecteaza masina si ma duce direct in ecranul de calculator
             YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
             [parent setAutovehicul:autovehicul];
+
+            // Nu a apasat pe butonul de salveaza,
+            // il intoarcem la calculator
+            if (shouldSave)
+            {
+                YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+                [self.navigationController popToViewController:parent animated:YES];
+            }
         }
         else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
         {
             YTOListaAutoViewController * parent = (YTOListaAutoViewController *)self.controller;
             [parent reloadData];
+        }
+        else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+        {
+            YTOAsigurareViewController * parent = (YTOAsigurareViewController *)self.controller;
+            [parent setMasina:autovehicul];
         }
     }
 }
@@ -541,7 +654,11 @@
 - (void) btnSave_Clicked
 {
     [self doneEditing];
+
     [self save];
+
+    // Am salvat o data, nu mai salvam pe viewWillDissapear
+    shouldSave = NO;
     
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
@@ -552,6 +669,10 @@
     else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
     {
         [self.navigationController popViewControllerAnimated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
+        [self.navigationController popViewControllerAnimated:YES];        
     }
 }
 
@@ -597,35 +718,35 @@
 //    }
     
     // PENTRU ALERTE
-    YTOAlerta * alertaRca = [YTOAlerta getAlertaRCA:autovehicul.idIntern];
+    alertaRca = [YTOAlerta getAlertaRCA:autovehicul.idIntern];
     if (alertaRca)
         [self setAlerta:2 withDate:alertaRca.dataAlerta savingData:NO];
-    YTOAlerta * alertaItp = [YTOAlerta getAlertaITP:autovehicul.idIntern];
+    alertaItp = [YTOAlerta getAlertaITP:autovehicul.idIntern];
     if (alertaItp)
         [self setAlerta:3 withDate:alertaItp.dataAlerta savingData:NO];
-    YTOAlerta * alertaRovinieta = [YTOAlerta getAlertaRovinieta:autovehicul.idIntern];
+    alertaRovinieta = [YTOAlerta getAlertaRovinieta:autovehicul.idIntern];
     if (alertaRovinieta)
         [self setAlerta:4 withDate:alertaRovinieta.dataAlerta savingData:NO];
-    YTOAlerta * alertaCasco = [YTOAlerta getAlertaCasco:autovehicul.idIntern];
+    alertaCasco = [YTOAlerta getAlertaCasco:autovehicul.idIntern];
     if (alertaCasco)
         [self setAlerta:5 withDate:alertaCasco.dataAlerta savingData:NO];
     alertaRataCasco = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern];
     if (alertaRataCasco)
     {
-        //[self setAlerta:6 withDate:alertaRataCasco.dataAlerta savingData:NO];
-        [self setNumarRate:alertaRataCasco.numarTotalRate];
-        if (alertaRataCasco.numarTotalRate > 0)
-        {
-            for (int i=0; i<alertaRataCasco.numarTotalRate; i++)
-            {
-                YTOAlerta * alert = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern andNumarRata:i+1];
-                if (alert)
-                    [self setAlerta:(i+6) withDate:alert.dataAlerta savingData:NO];
-            }
-        }
+        [self setAlerta:6 withDate:alertaRataCasco.dataAlerta savingData:NO];
+//        [self setNumarRate:alertaRataCasco.numarTotalRate];
+//        if (alertaRataCasco.numarTotalRate > 0)
+//        {
+//            for (int i=0; i<alertaRataCasco.numarTotalRate; i++)
+//            {
+//                YTOAlerta * alert = [YTOAlerta getAlertaRataCasco:autovehicul.idIntern andNumarRata:i+1];
+//                if (alert)
+//                    [self setAlerta:(i+6) withDate:alert.dataAlerta savingData:NO];
+//            }
+//        }
     }
-    else
-        [self setNumarRate:0];
+//    else
+//        [self setNumarRate:0];
 }
 
 
@@ -643,11 +764,13 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
+    self.navigationItem.hidesBackButton = YES;
     
   //  [vwKeyboardAddon setHidden:NO];
 }
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = NO;
     
     [vwKeyboardAddon setHidden:YES];
 }
@@ -732,11 +855,14 @@
     
     float height = [listOfItems count]/3.0;
     [scrollView  setContentSize:CGSizeMake(279, height * 75)];
+
+    self.navigationItem.hidesBackButton = YES;
 }
 
 - (IBAction) hideNomenclator
 {
     [vwNomenclator setHidden:YES];
+    self.navigationItem.hidesBackButton = NO;
 }
 
 - (IBAction) btnNomenclator_Clicked:(id)sender
@@ -968,6 +1094,7 @@
     NSArray *topLevelObjectsAlertaRca = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareRCA = [topLevelObjectsAlertaRca objectAtIndex:0];
     [(UILabel *)[cellExpirareRCA viewWithTag:1] setText:@"RCA"];
+    txtAlertaRca = (UITextField *)[cellExpirareRCA viewWithTag:2];
     [(UITextField *)[cellExpirareRCA viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareRCA viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareRCA viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -977,6 +1104,7 @@
     NSArray *topLevelObjectsAlertaITP = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareITP = [topLevelObjectsAlertaITP objectAtIndex:0];
     [(UILabel *)[cellExpirareITP viewWithTag:1] setText:@"ITP"];
+    txtAlertaItp= (UITextField *)[cellExpirareITP viewWithTag:2];
     [(UITextField *)[cellExpirareITP viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareITP viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareITP viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -986,6 +1114,7 @@
     NSArray *topLevelObjectsAlertaRovinieta = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareRovinieta = [topLevelObjectsAlertaRovinieta objectAtIndex:0];
     [(UILabel *)[cellExpirareRovinieta viewWithTag:1] setText:@"Rovinieta"];
+    txtAlertaRovinieta = (UITextField *)[cellExpirareRovinieta viewWithTag:2];
     [(UITextField *)[cellExpirareRovinieta viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareRovinieta viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareRovinieta viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -995,35 +1124,37 @@
     NSArray *topLevelObjectsAlertaCasco = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareCASCO = [topLevelObjectsAlertaCasco objectAtIndex:0];
     [(UILabel *)[cellExpirareCASCO viewWithTag:1] setText:@"CASCO"];
+    txtAlertaCasco = (UITextField *)[cellExpirareCASCO viewWithTag:2];
     [(UITextField *)[cellExpirareCASCO viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareCASCO viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareCASCO viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
     ((UIImageView *)[cellExpirareCASCO viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-casco.png"];
     [YTOUtils setCellFormularStyle:cellExpirareCASCO];
+//    
+//    NSArray *topLevelObjectsNumarRate = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
+//    cellNumarRate = [topLevelObjectsNumarRate objectAtIndex:0];
+//    [(UILabel *)[cellNumarRate viewWithTag:1] setText:@"NUMAR RATE CASCO"];
+//    UIStepper * stepper = (UIStepper *)[cellNumarRate viewWithTag:3];
+//    stepper.minimumValue = 1;
+//    stepper.maximumValue = 12;
+//    stepper.value = 0;
+//    [stepper addTarget:self action:@selector(numarRate_Changed:) forControlEvents:UIControlEventValueChanged];
+//    [YTOUtils setCellFormularStyle:cellNumarRate];
     
-    NSArray *topLevelObjectsNumarRate = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
-    cellNumarRate = [topLevelObjectsNumarRate objectAtIndex:0];
-    [(UILabel *)[cellNumarRate viewWithTag:1] setText:@"NUMAR RATE CASCO"];
-    UIStepper * stepper = (UIStepper *)[cellNumarRate viewWithTag:3];
-    stepper.minimumValue = 1;
-    stepper.maximumValue = 12;
-    stepper.value = 0;
-    [stepper addTarget:self action:@selector(numarRate_Changed:) forControlEvents:UIControlEventValueChanged];
-    [YTOUtils setCellFormularStyle:cellNumarRate];
-    
-    listCellRateCasco = [[NSMutableArray alloc] init];
-    for (int i=0; i<12; i++) {
-        NSArray *topLevelObjectsXRata = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
-        UITableViewCell * cellXRata = [[UITableViewCell alloc] init];
-        cellXRata = [topLevelObjectsXRata objectAtIndex:0];
-        [(UILabel *)[cellXRata viewWithTag:1] setText:[NSString stringWithFormat:@"RATA %d CASCO", (i+1)]];
-        ((UIImageView *)[cellXRata viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
-        [listCellRateCasco addObject:cellXRata];
-    }
+//    listCellRateCasco = [[NSMutableArray alloc] init];
+//    for (int i=0; i<12; i++) {
+//        NSArray *topLevelObjectsXRata = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
+//        UITableViewCell * cellXRata = [[UITableViewCell alloc] init];
+//        cellXRata = [topLevelObjectsXRata objectAtIndex:0];
+//        [(UILabel *)[cellXRata viewWithTag:1] setText:[NSString stringWithFormat:@"RATA %d CASCO", (i+1)]];
+//        ((UIImageView *)[cellXRata viewWithTag:3]).image = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
+//        [listCellRateCasco addObject:cellXRata];
+//    }
     
     NSArray *topLevelObjectsAlertaRataCasco = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareRataCASCO = [topLevelObjectsAlertaRataCasco objectAtIndex:0];
     [(UILabel *)[cellExpirareRataCASCO viewWithTag:1] setText:@"RATA SCADENTA CASCO"];
+    txtAlertaRataCasco = (UITextField *)[cellExpirareRataCASCO viewWithTag:2];
     [(UITextField *)[cellExpirareRataCASCO viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareRataCASCO viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareRataCASCO viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -1031,15 +1162,15 @@
     //[YTOUtils setCellFormularStyle:cellExpirareRataCASCO];
 }
 
-- (void) numarRate_Changed:(id)sender
-{
-    UIStepper * stepper = (UIStepper *)sender;
-    
-    [self setNumarRate:stepper.value];
-    [tableView reloadData];
-    
-    //[self setDataInceput:date];
-}
+//- (void) numarRate_Changed:(id)sender
+//{
+//    UIStepper * stepper = (UIStepper *)sender;
+//    
+//    [self setNumarRate:stepper.value];
+//    [tableView reloadData];
+//    
+//    //[self setDataInceput:date];
+//}
 
 - (void) showListaMarciAuto:(NSIndexPath *)index;
 {
@@ -1143,6 +1274,9 @@
 
 -(IBAction)checkboxSelected:(id)sender
 {
+    // inchidem tastatura    
+    [self doneEditing];
+    
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
@@ -1150,16 +1284,27 @@
     if (btn.tag  == 1) {
         [self setCategorieAuto:1];
         [self setSubcategorieAuto:@"Autoturism"];
+        
+        // Punem default values
+        [self setNrLocuri:5];
     }
     else if (btn.tag == 2)
     {
         [self setCategorieAuto:1];
         [self setSubcategorieAuto:@"Autoturism-de-teren"];
+
+        // Punem default values
+        [self setNrLocuri:5];
     }
     else if (btn.tag == 3) {
         [self setCategorieAuto:7];
         if ([((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text isEqualToString:@"Motocicleta"])
+        {
             [self setSubcategorieAuto:@"Motocicleta"];
+            
+            // Punem default values
+            [self setNrLocuri:2];
+        }
         else
             [self setSubcategorieAuto:((UILabel *)[cellSubcategorieAuto viewWithTag:33]).text];
     }
@@ -1171,6 +1316,9 @@
 
 - (IBAction)checkboxCombustibilSelected:(id)sender
 {
+    // inchidem tastatura    
+    [self doneEditing];
+    
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
@@ -1196,6 +1344,9 @@
 
 - (IBAction)checkboxDestinatieSelected:(id)sender
 {
+    // inchidem tastatura
+    [self doneEditing];
+    
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
@@ -1501,10 +1652,13 @@
     txt.text = serie;
     autovehicul.serieSasiu = serie;
     
-    if (serie && serie.length > 0 && [YTOUtils validateSasiu:serie])
-        [imgAlert setHidden:YES];
-    else
-        [imgAlert setHidden:NO];
+    if (serie.length > 0)
+    {
+        if (serie && serie.length > 0) // && [YTOUtils validateSasiu:serie])
+            [imgAlert setHidden:YES];
+        else
+            [imgAlert setHidden:NO];
+    }
 }
 
 - (NSString *) getSerieCIV
@@ -1519,10 +1673,13 @@
     txt.text = serie;
     autovehicul.serieCiv = serie;
     
-    if (serie && serie.length > 0 && [YTOUtils validateCIV:serie])
-        [imgAlert setHidden:YES];
-    else
-        [imgAlert setHidden:NO];
+    if (serie.length > 0)
+    {
+        if (serie && serie.length > 0 && [YTOUtils validateCIV:serie])
+            [imgAlert setHidden:YES];
+        else
+            [imgAlert setHidden:NO];
+    }
 }
 
 - (int) getNrLocuri
@@ -1681,7 +1838,7 @@
     }
     autovehicul.anFabricatie = v;
     
-    if (v > 1950 || v <= [YTOUtils getAnCurent] + 1)
+    if (v > 1950 && v <= [YTOUtils getAnCurent] + 1)
         [imgAlert setHidden:YES];
     else
         [imgAlert setHidden:NO];
@@ -1709,21 +1866,21 @@
     }
 }
 
-- (void) setNumarRate:(int)x
-{
-    UILabel * lbl = (UILabel *)[cellNumarRate viewWithTag:2];
-    lbl.text = (x == 0 ? @"integral" : [NSString stringWithFormat:@"%d %@", x, (x == 1 ? @"rata" : @"rate")]);
-    
-    if (alertaRataCasco == nil)
-    {
-        alertaRataCasco = [[YTOAlerta alloc] initWithGuid:[YTOUtils GenerateUUID]];
-        alertaRataCasco.tipAlerta = 6;
-        alertaRataCasco.idObiect = autovehicul.idIntern;
-        alertaRataCasco.esteRata = @"da";
-        alertaRataCasco.dataAlerta = [[NSDate date] dateByAddingTimeInterval:-99999999];
-    }
-    alertaRataCasco.numarTotalRate = x;
-}
+//- (void) setNumarRate:(int)x
+//{
+//    UILabel * lbl = (UILabel *)[cellNumarRate viewWithTag:2];
+//    lbl.text = (x == 0 ? @"integral" : [NSString stringWithFormat:@"%d %@", x, (x == 1 ? @"rata" : @"rate")]);
+//    
+//    if (alertaRataCasco == nil)
+//    {
+//        alertaRataCasco = [[YTOAlerta alloc] initWithGuid:[YTOUtils GenerateUUID]];
+//        alertaRataCasco.tipAlerta = 6;
+//        alertaRataCasco.idObiect = autovehicul.idIntern;
+//        alertaRataCasco.esteRata = @"da";
+//        alertaRataCasco.dataAlerta = [[NSDate date] dateByAddingTimeInterval:-99999999];
+//    }
+//    alertaRataCasco.numarTotalRate = x;
+//}
 
 - (void) setNumeFirmaLeasing:(NSString *)v
 {
@@ -1767,9 +1924,12 @@
     UIButton * btn = (UIButton *)sender;
     BOOL esteInfoMasina = btn.tag == 1;
     
+    [self doneEditing];
+    
     UILabel *lblInfoMasina = (UILabel *)[cellInfoAlerte viewWithTag:3];
     UILabel *lblAlerte = (UILabel *)[cellInfoAlerte viewWithTag:4];
     UIImageView * imgInfoAlerte = (UIImageView *)[cellInfoAlerte viewWithTag:5];
+    
     
     if (!esteInfoMasina)
     {
@@ -1786,10 +1946,58 @@
         lblInfoMasina.textColor = [UIColor whiteColor];
         lblAlerte.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         imgInfoAlerte.image = [UIImage imageNamed:@"selectat-stanga-masina.png"];
-        ((UIImageView *)[cellAutoHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-masina.png"];
+        if (autovehicul._isDirty)
+            ((UIImageView *)[cellAutoHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-masina-salvata.png"];
+        else
+            ((UIImageView *)[cellAutoHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-masina.png"];
     }
     
     [tableView reloadData];
+
+    [self btnEditShouldAppear];
+}
+
+- (void) btnEditShouldAppear
+{
+    if (!selectatInfoMasina && (alertaRca != nil || alertaItp != nil || alertaRovinieta != nil || alertaCasco != nil || alertaRataCasco != nil))
+    {
+        UIBarButtonItem *btnEdit;
+        if (editingMode)
+            btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(callEditItems)];
+        else
+            btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+}
+
+- (void) callEditItems
+{
+    if (!editingMode)
+    {
+        editingMode = YES;
+        [tableView setEditing:YES];
+        UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnDone;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+    }
+    else
+    {
+        editingMode = NO;
+        [tableView setEditing:NO];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
 }
 
 @end

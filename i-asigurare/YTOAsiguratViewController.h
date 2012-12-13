@@ -2,15 +2,15 @@
 //  YTOAsiguratViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/16/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/16/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "PickerVCSearch.h"
 #import "YTOPersoana.h"
 
-@interface YTOAsiguratViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, PickerVCSearchDelegate>
+@interface YTOAsiguratViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, PickerVCSearchDelegate, NSXMLParserDelegate>
 {
     IBOutlet UITableView * tableView;
     UITextField * activeTextField;
@@ -33,7 +33,30 @@
 
     BOOL goingBack;
     BOOL shouldSave;
+    
+    // PENTRU REQUEST-uri
+    NSMutableData * responseData;
+	NSMutableData * capturedCharactes;
+	NSMutableString * currentElementValue;
+    NSString * raspuns;
+    
+    // PENTRU LOADING
+    IBOutlet UIView     * vwLoading;
+    IBOutlet UILabel    * lblLoadingTitlu;
+    IBOutlet UILabel    * lblLoadingDescription;
+    IBOutlet UIButton   * btnLoadingOk;
+    IBOutlet UILabel    * lblLoadingOk;
+    IBOutlet UIActivityIndicatorView * loading;
+    BOOL isSearching;
+    
+    UITextField * txtNume;
+    UITextField * txtCodUnic;
+    UITextField * txtAdresa;
+    UITextField * txtTelefon;
+    UITextField * txtEmail;
 }
+
+@property (nonatomic, retain) NSMutableData * responseData;
 
 @property (nonatomic, retain) YTOPersoana *      asigurat;
 @property (nonatomic, retain) UIViewController * controller;
@@ -67,4 +90,8 @@
 - (void) setAdresa:(NSString *)v;
 - (void) setTelefon:(NSString *)v;
 - (void) setEmail:(NSString *)v;
+
+- (void) showLoading;
+- (IBAction) hideLoading;
+- (void) showPopup:(NSString *)title withDescription:(NSString *)description;
 @end

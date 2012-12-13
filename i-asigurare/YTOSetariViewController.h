@@ -2,8 +2,8 @@
 //  YTOSetariViewController.h
 //  i-asigurare
 //
-//  Created by Administrator on 7/19/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 7/19/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -32,6 +32,16 @@
     NSString             * jsonProprietar;
     
     IBOutlet UIView      * vwLoading;
+    
+    // Custom Alert
+    IBOutlet UIImageView * imgError;
+    IBOutlet UIView      * vwCustomAlert;
+    IBOutlet UILabel     * lblCustomAlertTitle;
+    IBOutlet UILabel     * lblCustomAlertMessage;
+    IBOutlet UIButton    * btnCustomAlertOK;
+    IBOutlet UILabel     * lblCustomAlertOK;
+    IBOutlet UIButton    * btnCustomAlertNO;
+    IBOutlet UILabel     * lblCustomAlertNO;
 }
 
 @property (nonatomic, retain) NSMutableData * responseData;

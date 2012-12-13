@@ -2,18 +2,18 @@
 //  YTOCasaViewController.m
 //  i-asigurare
 //
-//  Created by Administrator on 8/2/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Created by Andi Aparaschivei on 8/2/12.
+//  Copyright (c) Created by i-Tom Solutions. All rights reserved.
 //
 
 #import "YTOCasaViewController.h"
 #import "YTOLocuintaViewController.h"
 #import "YTOListaLocuinteViewController.h"
+#import "YTOAsigurareViewController.h"
 #import "YTOLocuinta.h"
 #import "YTOUtils.h"
 #import "Database.h"
 #import "KeyValueItem.h"
-#import "YTOAlerta.h"
 #import "YTOAppDelegate.h"
 
 @interface YTOCasaViewController ()
@@ -66,6 +66,11 @@
     else {
         [self load:locuinta];
     }
+}
+
+- (void) viewWillAppear:(BOOL)animated
+{
+    goingBack = YES;
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -170,6 +175,40 @@
 }
 
 #pragma mark - Table view delegate
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (indexPath.row > 1 && !selectatInfoLocuinta) {
+        if ( (indexPath.row == 2 && alertaLocuinta != nil) || (indexPath.row == 3 && alertaRataLoc != nil) )
+            return YES;
+    }
+    return NO;
+}
+
+- (void) tableView:(UITableView *)tv commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete && !selectatInfoLocuinta)
+    {
+        if (indexPath.row == 2)
+        {
+            [alertaLocuinta deleteAlerta];
+            alertaLocuinta = nil;
+            ((UITextField *)[cellExpirareLoc viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareLoc viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+        else if (indexPath.row == 3)
+        {
+            [alertaRataLoc deleteAlerta];
+            alertaRataLoc = nil;
+            ((UITextField *)[cellExpirareRataLoc viewWithTag:2]).text = @"";
+            ((UITextField *)[cellExpirareRataLoc viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
+        }
+    }
+    
+    [self btnEditShouldAppear];
+    [tv reloadData];
+}
+
 - (void) tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
 //    [self doneEditing];
 //    if (indexPath.row == 3) {
@@ -181,23 +220,26 @@
 {
     [self doneEditing];
     
-    if (indexPath.row == 2)
+    if (selectatInfoLocuinta)
     {
-        [self showListaJudete:indexPath];
-    }
-    else if (indexPath.row == 5) {
-        [self showNomenclator];
-    }
-    else if (indexPath.row == 12)
-    {
-        [self showListaDescriereLocuinta:indexPath];
-    }
-    else
-    {
-        UITableViewCell * cell = [tv cellForRowAtIndexPath:indexPath];
-        UITextField * txt = (UITextField *)[cell viewWithTag:2];
-        activeTextField = txt;
-        [txt becomeFirstResponder];
+        if (indexPath.row == 2)
+        {
+            [self showListaJudete:indexPath];
+        }
+        else if (indexPath.row == 5) {
+            [self showNomenclator];
+        }
+        else if (indexPath.row == 12)
+        {
+            [self showListaDescriereLocuinta:indexPath];
+        }
+        else
+        {
+            UITableViewCell * cell = [tv cellForRowAtIndexPath:indexPath];
+            UITextField * txt = (UITextField *)[cell viewWithTag:2];
+            activeTextField = txt;
+            [txt becomeFirstResponder];
+        }
     }
 }
 
@@ -221,20 +263,23 @@
         else if (indexPath.row == 7) // Etaj
             [self showTooltip:@"Etajul la care se afla locuinta."];
         else if (indexPath.row == 8)
+        {
             [self showTooltip:@"Anul constructiei imobilului."];
+            ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+        }
         else if (indexPath.row == 10)
         {
-            [textField.text stringByReplacingOccurrencesOfString:@" mp" withString:@""];
+            textField.text = [textField.text stringByReplacingOccurrencesOfString:@" mp" withString:@""];
             [self showTooltip:@"Supfrata utila a locuintei in metri patrati."];
         }
     }
     else
     {
-        // Daca nu a fost salvata masina, nu setam alerte
+        // Daca nu a fost salvata locuinta, nu setam alerte
         if (!locuinta._isDirty)
             return;
         NSString *title = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? @"\n\n\n\n\n\n\n\n\n" : @"\n\n\n\n\n\n\n\n\n\n\n\n" ;
-		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"Selecteaza",nil];
+		UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:title delegate:self cancelButtonTitle:@"Salveaza" destructiveButtonTitle:nil otherButtonTitles:@"Renunt",nil];
         actionSheet.tag = indexPath.row;
         [actionSheet showFromTabBar:self.tabBarController.tabBar];
         
@@ -266,6 +311,9 @@
 	
 	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
+    
+    activeTextField.tag = indexPath.row;
+    
 	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
@@ -293,15 +341,22 @@
 
     if (selectatInfoLocuinta)
     {
-        if (indexPath.row == 3)
+        // In cazul in care tastatura este activa si se da back
+        int index = 0;
+        if (indexPath != nil)
+            index = indexPath.row;
+        else
+            index = textField.tag;
+            
+        if (index == 3)
             [self setAdresa:textField.text];
-        else if (indexPath.row == 6)
+        else if (index == 6)
             [self setInaltime:[textField.text intValue]];
-        else if (indexPath.row == 7)
+        else if (index == 7)
             [self setEtaj:[textField.text intValue]];
-        else if (indexPath.row == 8)
+        else if (index == 8)
             [self setAnConstructie:[textField.text intValue]];
-        else if (indexPath.row == 10)
+        else if (index == 10)
             [self setSuprafata:[textField.text intValue]];
     }
     else
@@ -323,9 +378,11 @@
                                                                   target:self
                                                                   action:@selector(doneEditing)];
     self.navigationItem.rightBarButtonItem = backButton;
+    self.navigationItem.hidesBackButton = YES;
 }
 - (void) deleteBarButton {
 	self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = NO;
 }
 
 - (void) load:(YTOLocuinta *)p
@@ -344,12 +401,22 @@
     [self setNrCamere:p.nrCamere];
     [self setSuprafata:p.suprafataUtila];
     [self setNrLocatari:p.nrLocatari];
+
+    [self setAlarma:p.areAlarma];
+    [self setGrilajeGeam:p.areGrilajeGeam];
+    [self setDetectieIncendiu:p.detectieIncendiu];
+    [self setPaza:p.arePaza];
+    [self setZonaIzolata:p.zonaIzolata];
+    [self setLocuitPermananet:p.locuitPermanent];
+    [self setClauzaFurtBunuri:p.clauzaFurtBunuri];
+    [self setClauzaApaConducta:p.clauzaApaConducta];
+    [self setTeren:p.areTeren];
     
     // PENTRU ALERTE
-    YTOAlerta * alertaLocuinta = [YTOAlerta getAlertaLocuinta:locuinta.idIntern];
+    alertaLocuinta = [YTOAlerta getAlertaLocuinta:locuinta.idIntern];
     if (alertaLocuinta)
         [self setAlerta:2 withDate:alertaLocuinta.dataAlerta savingData:NO];
-    YTOAlerta * alertaRataLoc = [YTOAlerta getAlertaRataLocuinta:locuinta.idIntern];
+    alertaRataLoc = [YTOAlerta getAlertaRataLocuinta:locuinta.idIntern];
     if (alertaRataLoc)
         [self setAlerta:3 withDate:alertaRataLoc.dataAlerta savingData:NO];
 
@@ -379,13 +446,23 @@
             YTOListaLocuinteViewController * parent = (YTOListaLocuinteViewController *)self.controller;
             [parent reloadData];
         }
+        else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+        {
+            YTOAsigurareViewController * parent = (YTOAsigurareViewController *)self.controller;
+            [parent setLocuinta:locuinta];
+        }
     }
 }
 
 - (void) btnSave_Clicked
 {
     [self doneEditing];
+    
     [self save];
+    
+    // Am salvat o data, nu mai salvam pe viewWillDissapear
+    shouldSave = NO;
+    
     if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
     {
         YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
@@ -394,8 +471,12 @@
     }
     else if ([self.controller isKindOfClass:[YTOListaLocuinteViewController class]])
     {
-        YTOListaLocuinteViewController * parent = (YTOListaLocuinteViewController *)self.controller;
+        //YTOListaLocuinteViewController * parent = (YTOListaLocuinteViewController *)self.controller;
         //[parent reloadData];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOAsigurareViewController class]])
+    {
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -484,11 +565,15 @@
     
     float height = [structuriRezistenta count]/3.0;
     [scrollView  setContentSize:CGSizeMake(279, height * 75)];
+    
+    self.navigationItem.hidesBackButton = YES;
 }
 
 - (IBAction) hideNomenclator
 {
     [vwNomenclator setHidden:YES];
+    
+    self.navigationItem.hidesBackButton = NO;
 }
 
 - (IBAction) btnNomenclator_Clicked:(id)sender
@@ -662,6 +747,7 @@
     NSArray *topLevelObjectsAlertaLoc = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareLoc = [topLevelObjectsAlertaLoc objectAtIndex:0];
     [(UILabel *)[cellExpirareLoc viewWithTag:1] setText:@"LOCUINTA"];
+    txtAlertaLocuinta = (UITextField *)[cellExpirareLoc viewWithTag:2];
     [(UITextField *)[cellExpirareLoc viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareLoc viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareLoc viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -671,6 +757,7 @@
     NSArray *topLevelObjectsAlertaRataLoc = [[NSBundle mainBundle] loadNibNamed:@"CellView_String2" owner:self options:nil];
     cellExpirareRataLoc = [topLevelObjectsAlertaRataLoc objectAtIndex:0];
     [(UILabel *)[cellExpirareRataLoc viewWithTag:1] setText:@"RATA SCADENTA LOCUINTA"];
+    txtAlertaRataLocuinta = (UITextField *)[cellExpirareRataLoc viewWithTag:2];
     [(UITextField *)[cellExpirareRataLoc viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
     [(UITextField *)[cellExpirareRataLoc viewWithTag:2] setPlaceholder:@"selecteaza ultima zi de valabilitate"];
     ((UITextField *)[cellExpirareRataLoc viewWithTag:2]).font = [UIFont fontWithName:@"Arial" size:12.0];
@@ -680,18 +767,26 @@
 
 - (IBAction)nrLocatari_Changed:(id)sender
 {
+    // inchidem tastatura
+    [self doneEditing];
+    
     UIStepper * stepper = (UIStepper *)sender;
     [self setNrLocatari:stepper.value];    
 }
 
 - (IBAction)nrCamere_Changed:(id)sender
 {
+    // inchidem tastatura
+    [self doneEditing];
+    
     UIStepper * stepper = (UIStepper *)sender;
     [self setNrCamere:stepper.value];
 }
 
 - (IBAction)btnTipLocuinta_Clicked:(id)sender
 {
+    // inchidem tastatura
+    [self doneEditing];
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
@@ -778,11 +873,18 @@
 }
 - (void) setAnConstructie:(int)p
 {
+    UIImageView * imgAlert = (UIImageView *)[cellAnConstructie viewWithTag:10];
+    
     if (p > 0)
     {
         locuinta.anConstructie = p;
         UITextField * txt = (UITextField *)[cellAnConstructie viewWithTag:2];
         txt.text = [NSString stringWithFormat:@"%d", p];
+        
+        if (p > 1930 && p <= [YTOUtils getAnCurent] + 1)
+            [imgAlert setHidden:YES];
+        else
+            [imgAlert setHidden:NO];
     }
 }
 
@@ -814,38 +916,134 @@
 - (void) setAlarma:(NSString *)v
 {
     locuinta.areAlarma = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.areAlarma isEqualToString:@"da"] && [descr rangeOfString:@"alarma |"].location != 0)
+        descr = [descr stringByAppendingString:@"alarma | "];
+    else if (![locuinta.areAlarma isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"alarma |" withString:@""];
+
+    lbl.text = descr;
 }
+
 - (void) setGrilajeGeam:(NSString *)v
 {
     locuinta.areGrilajeGeam = v;
+
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.areGrilajeGeam isEqualToString:@"da"] && [descr rangeOfString:@"grilaje geam |"].location != 0)
+        descr = [descr stringByAppendingString:@"grilaje geam | "];
+    else if (![locuinta.areGrilajeGeam isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"grilaje geam |" withString:@""];
+
+        lbl.text = descr;
 }
+
 - (void) setDetectieIncendiu:(NSString *)v
 {
     locuinta.detectieIncendiu = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.detectieIncendiu isEqualToString:@"da"] && [descr rangeOfString:@"detectie incendiu |"].location != 0)
+        descr = [descr stringByAppendingString:@"detectie incendiu | "];
+    else if (![locuinta.detectieIncendiu isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"detectie incendiu |" withString:@""];
+
+        lbl.text = descr;
 }
+
 - (void) setPaza:(NSString *)v
 {
     locuinta.arePaza = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.arePaza isEqualToString:@"da"] && [descr rangeOfString:@"are paza |"].location != 0)
+        descr = [descr stringByAppendingString:@"are paza | "];
+    else if (![locuinta.arePaza isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"are paza |" withString:@""];
+   
+    lbl.text = descr;
 }
+
 - (void) setTeren:(NSString *)v
 {
     locuinta.areTeren = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.areTeren isEqualToString:@"da"] && [descr rangeOfString:@"are teren |"].location != 0)
+        descr = [descr stringByAppendingString:@"are teren | "];
+    else if (![locuinta.areTeren isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"are teren |" withString:@""];
+
+    lbl.text = descr;
 }
+
 - (void) setZonaIzolata:(NSString*)v
 {
     locuinta.zonaIzolata = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.zonaIzolata isEqualToString:@"da"] && [descr rangeOfString:@"zona izolata |"].location != 0)
+        descr = [descr stringByAppendingString:@"zona izolata | "];
+    else if (![locuinta.zonaIzolata isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"zona izolata |" withString:@""];
+    
+    lbl.text = descr;
 }
+
 - (void) setLocuitPermananet:(NSString *)v
 {
     locuinta.locuitPermanent = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.locuitPermanent isEqualToString:@"da"] && [descr rangeOfString:@"locuit permanent |"].location != 0)
+        descr = [descr stringByAppendingString:@"locuit permanent | "];
+    else if (![locuinta.locuitPermanent isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"locuit permanent |" withString:@""];
+    
+    lbl.text = descr;
 }
 - (void) setClauzaFurtBunuri:(NSString *)v
 {
     locuinta.clauzaFurtBunuri = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.clauzaFurtBunuri isEqualToString:@"da"] && [descr rangeOfString:@"clauza furt bunuri |"].location != 0)
+        descr = [descr stringByAppendingString:@"clauza furt bunuri | "];
+    else if (![locuinta.clauzaFurtBunuri isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"clauza furt bunuri |" withString:@""];
+    
+    lbl.text = descr;
 }
 - (void) setClauzaApaConducta:(NSString *)v
 {
     locuinta.clauzaApaConducta = v;
+    
+    UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+    NSString * descr = lbl.text;
+    
+    if ([locuinta.clauzaApaConducta isEqualToString:@"da"] && [descr rangeOfString:@"clauza apa conducta |"].location != 0)
+        descr = [descr stringByAppendingString:@"clauza apa conducta | "];
+    else if (![locuinta.clauzaApaConducta isEqualToString:@"da"])
+        descr = [descr stringByReplacingOccurrencesOfString:@"clauza apa conducta |" withString:@""];
+    
+    lbl.text = descr;
 }
 
 - (void) showTooltip:(NSString *)tooltip
@@ -907,12 +1105,19 @@
 #pragma mark Action Sheet Methods
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    UIDatePicker *datePickerPermis = (UIDatePicker *)[actionSheet viewWithTag:101];
-    if (datePickerPermis) {
-		[self setAlerta:actionSheet.tag withDate:datePickerPermis.date savingData:YES];
-	}
-    [activeTextField resignFirstResponder];
-    tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    // 0 = apasa Reunt
+    // 1 = apasa Salveaza
+    if (buttonIndex == 1)
+    {
+        UIDatePicker *datePickerPermis = (UIDatePicker *)[actionSheet viewWithTag:101];
+        if (datePickerPermis) {
+            [self setAlerta:actionSheet.tag withDate:datePickerPermis.date savingData:YES];
+        }
+        [activeTextField resignFirstResponder];
+        tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    
+    [self doneEditing];
 }
 
 - (void) setAlerta:(int)index withDate:(NSDate *)data savingData:(BOOL)toSave
@@ -929,12 +1134,12 @@
     if (index == 2)
     {
         tipAlerta = 6;
-        txt = ((UITextField *)[cellExpirareLoc viewWithTag:2]);
+        txt = txtAlertaLocuinta;
     }
     else if (index == 3)
     {
         tipAlerta = 8;
-        txt = ((UITextField *)[cellExpirareRataLoc viewWithTag:2]);
+        txt = txtAlertaRataLocuinta;
     }
     
     if (txt)
@@ -960,7 +1165,14 @@
             [alerta addAlerta];
         YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
         [delegate setAlerteBadge];
+        
+        if (index == 2)
+            alertaLocuinta = alerta;
+        else if (index == 3)
+            alertaRataLoc = alerta;
     }
+    
+    [self btnEditShouldAppear];
 }
 
 #pragma INFO || ALERTE
@@ -968,6 +1180,8 @@
 {
     UIButton * btn = (UIButton *)sender;
     BOOL esteInfoLocuinta = btn.tag == 1;
+    
+    [self doneEditing];
     
     UILabel *lblInfoLocuinta = (UILabel *)[cellInfoAlerte viewWithTag:3];
     UILabel *lblAlerte = (UILabel *)[cellInfoAlerte viewWithTag:4];
@@ -988,10 +1202,58 @@
         lblInfoLocuinta.textColor = [UIColor whiteColor];
         lblAlerte.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         imgInfoAlerte.image = [UIImage imageNamed:@"selectat-stanga-locuinta.png"];
-        ((UIImageView *)[cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-locuinta.png"];        
+        if (locuinta._isDirty)
+            ((UIImageView *)[cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-locuinta-salvata.png"];
+        else
+            ((UIImageView *)[cellHeader viewWithTag:1]).image = [UIImage imageNamed:@"text-header-locuinta.png"];                    
     }
     
     [tableView reloadData];
+    
+    [self btnEditShouldAppear];
+}
+
+- (void) btnEditShouldAppear
+{
+    if (!selectatInfoLocuinta && (alertaLocuinta != nil || alertaRataLoc != nil))
+    {
+        UIBarButtonItem *btnEdit;
+        if (editingMode)
+            btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                       style:UIBarButtonItemStylePlain
+                                                      target:self
+                                                      action:@selector(callEditItems)];
+        else
+            btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+    }
+    else
+    {
+        self.navigationItem.rightBarButtonItem = nil;
+    }
+}
+
+- (void) callEditItems
+{
+    if (!editingMode)
+    {
+        editingMode = YES;
+        [tableView setEditing:YES];
+        UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                                    style:UIBarButtonItemStylePlain
+                                                                   target:self
+                                                                   action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnDone;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+    }
+    else
+    {
+        editingMode = NO;
+        [tableView setEditing:NO];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+        self.navigationItem.rightBarButtonItem = btnEdit;
+        [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+    }
 }
 
 @end
