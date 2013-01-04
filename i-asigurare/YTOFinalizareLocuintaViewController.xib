@@ -187,7 +187,6 @@
 								<string key="NSFrame">{{87, 34}, {67, 34}}</string>
 								<reference key="NSSuperview" ref="940940050"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -305,7 +304,6 @@
 						<string key="NSFrame">{{0, 66}, {320, 301}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="1047164877"/>
 						<bool key="IBUIClipsSubviews">YES</bool>

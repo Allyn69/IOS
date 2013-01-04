@@ -189,7 +189,10 @@
         }
         else 
         {
-            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            YTOAutovehiculViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+            else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
             aView.controller = self.controller;
             aView.autovehicul = masina;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];        
@@ -210,7 +213,10 @@
         }
         else
         {
-            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            YTOAutovehiculViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+            else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
             aView.controller = self.controller;
             aView.autovehicul = masina;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -218,7 +224,10 @@
     }
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
     {
-        YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+        YTOAutovehiculViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+        else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
         aView.controller = self;
         aView.autovehicul = masina;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
@@ -258,7 +267,10 @@
     editingMode = NO;
      [tableView setEditing:NO];
     
-    YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+    YTOAutovehiculViewController * aView;
+    if (IS_IPHONE_5)
+        aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+    else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {

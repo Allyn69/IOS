@@ -251,7 +251,10 @@
     }
     else if (indexPath.section == 3)
     {
-        YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+        YTOListaAsiguratiViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+        else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
         aView.controller = self;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     

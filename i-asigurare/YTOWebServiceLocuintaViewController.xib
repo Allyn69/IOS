@@ -754,17 +754,6 @@ cmFyZQ</string>
 				<object class="IBPartialClassDescription">
 					<string key="className">YTOWebServiceLocuintaViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">hidePopup:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">hidePopup:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">hidePopup:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="imgLoading">UIImageView</string>
 						<string key="lblPopupDescription">UILabel</string>

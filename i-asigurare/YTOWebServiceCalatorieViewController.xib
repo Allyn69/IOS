@@ -520,7 +520,7 @@ cmFyZQ</string>
 						<array class="NSMutableArray" key="NSSubviews">
 							<object class="IBUIImageView" id="248369384">
 								<reference key="NSNextResponder" ref="936016275"/>
-								<int key="NSvFlags">274</int>
+								<int key="NSvFlags">-2147483374</int>
 								<string key="NSFrameSize">{320, 367}</string>
 								<reference key="NSSuperview" ref="936016275"/>
 								<reference key="NSWindow"/>

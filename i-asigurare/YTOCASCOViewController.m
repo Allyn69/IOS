@@ -103,7 +103,10 @@
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
         else {
-            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            YTOAutovehiculViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+            else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
             aView.controller = self;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
@@ -113,7 +116,10 @@
         // Daca exista persoane salvate, afisam lista
         if ([appDelegate Persoane].count > 0)
         {
-            YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+            YTOListaAsiguratiViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+            else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
             aView.controller = self;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }

@@ -71,7 +71,7 @@
 							<object class="IBUIImageView" id="249156786">
 								<reference key="NSNextResponder" ref="452904699"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrameSize">{320, 367}</string>
+								<string key="NSFrameSize">{320, 369}</string>
 								<reference key="NSSuperview" ref="452904699"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="83777314"/>
@@ -193,7 +193,7 @@
 								<bool key="IBUIShowsHorizontalScrollIndicator">NO</bool>
 							</object>
 						</array>
-						<string key="NSFrameSize">{320, 367}</string>
+						<string key="NSFrameSize">{320, 455}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="249156786"/>
@@ -1716,7 +1716,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">187</int>
+			<int key="maxID">188</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

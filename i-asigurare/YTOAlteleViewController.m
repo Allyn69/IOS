@@ -132,7 +132,11 @@
     }
     else if (indexPath.row == 1)
     {
-        YTOTrimiteMesajViewController * aView = [[YTOTrimiteMesajViewController alloc] init];
+        YTOTrimiteMesajViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOTrimiteMesajViewController alloc] initWithNibName:@"YTOTrimiteMesajViewController_R4" bundle:nil];
+        else aView = [[YTOTrimiteMesajViewController alloc] initWithNibName:@"YTOTrimiteMesajViewController" bundle:nil];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
 //    else if (indexPath.row == 2)
@@ -147,17 +151,26 @@
 //    }
     else if (indexPath.row == 2)
     {
-        YTOValabilitateRCAViewController * aView = [[YTOValabilitateRCAViewController alloc] init];
+        YTOValabilitateRCAViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOValabilitateRCAViewController alloc] initWithNibName:@"YTOValabilitateRCAViewController_R4" bundle:nil];
+        else aView = [[YTOValabilitateRCAViewController alloc] initWithNibName:@"YTOValabilitateRCAViewController" bundle:nil];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 3)
     {
-        YTOTermeniViewController * aView = [[YTOTermeniViewController alloc] init];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];        
+        YTOTermeniViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOTermeniViewController alloc] initWithNibName:@"YTOTermeniViewController_R4" bundle:nil];
+        else aView = [[YTOTermeniViewController alloc] initWithNibName:@"YTOTermeniViewController" bundle:nil];
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 4)
     {
-        YTOContactViewController * aView = [[YTOContactViewController alloc] init];
+        YTOContactViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOContactViewController alloc] initWithNibName:@"YTOContactViewController_R4" bundle:nil];
+        else aView = [[YTOContactViewController alloc] initWithNibName:@"YTOContactViewController" bundle:nil];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
 }

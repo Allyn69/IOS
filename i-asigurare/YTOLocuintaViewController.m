@@ -131,7 +131,10 @@
             [delegate.rcaNavigationController pushViewController:aView animated:YES];
         }
         else {
-            YTOCasaViewController * aView = [[YTOCasaViewController alloc] init];
+            YTOCasaViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+            else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
             aView.controller = self;
             [delegate.rcaNavigationController pushViewController:aView animated:YES];
         }
@@ -142,7 +145,10 @@
         // Daca exista persoane salvate, afisam lista
         if ([delegate Persoane].count > 0)
         {
-            YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+            YTOListaAsiguratiViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+            else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
             aView.controller = self;
             aView.produsAsigurare  = Locuinta;
             [delegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -188,7 +194,10 @@
         locuinta.idProprietar = asigurat.idIntern;
         [locuinta updateLocuinta];
         
-        YTOWebServiceLocuintaViewController * aView = [[YTOWebServiceLocuintaViewController alloc] init];
+        YTOWebServiceLocuintaViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOWebServiceLocuintaViewController alloc] initWithNibName:@"YTOWebServiceLocuintaViewController_R4" bundle:nil];
+        else aView = [[YTOWebServiceLocuintaViewController alloc] initWithNibName:@"YTOWebServiceLocuintaViewController" bundle:nil];
         aView.oferta = oferta;
         aView.locuinta = locuinta;
         aView.asigurat = asigurat;

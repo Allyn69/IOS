@@ -111,7 +111,10 @@
     } 
     else if (indexPath.row == 6)
     {
-        YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+        YTOListaAsiguratiViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+        else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
         aView.produsAsigurare = Calatorie;
         aView.listaAsiguratiSelectati = listaAsigurati;
         aView.listAsiguratiIndecsi = listaAsiguratiIndecsi;
@@ -144,7 +147,11 @@
 
         oferta.numeAsigurare = [NSString stringWithFormat:@"Calatorie, %@", taraDestinatie];
         
-        YTOWebServiceCalatorieViewController * aView = [[YTOWebServiceCalatorieViewController alloc] init];
+        YTOWebServiceCalatorieViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOWebServiceCalatorieViewController alloc] initWithNibName:@"YTOWebServiceCalatorieViewController_R4" bundle:nil];
+        else aView = [[YTOWebServiceCalatorieViewController alloc] initWithNibName:@"YTOWebServiceCalatorieViewController" bundle:nil];
+
         aView.listAsigurati = listaAsigurati;
         aView.oferta = oferta;
         [delegate.rcaNavigationController pushViewController:aView animated:YES];

@@ -175,7 +175,10 @@
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
         else {
-            YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+            YTOAutovehiculViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+            else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
             aView.controller = self;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
@@ -185,7 +188,10 @@
         // Daca exista persoane salvate, afisam lista
         if ([appDelegate Persoane].count > 0)
         {
-            YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+            YTOListaAsiguratiViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+            else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
             aView.controller = self;
             aView.produsAsigurare = RCA;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -400,7 +406,10 @@
 
 - (IBAction)selectPersoana:(id)sender 
 {
-    YTOListaAsiguratiViewController * aView = [[YTOListaAsiguratiViewController alloc] init];
+    YTOListaAsiguratiViewController * aView;
+    if (IS_IPHONE_5)
+        aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController_R4" bundle:nil];
+    else aView = [[YTOListaAsiguratiViewController alloc] initWithNibName:@"YTOListaAsiguratiViewController" bundle:nil];
     aView.controller = self;
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -580,7 +589,12 @@
         oferta.dataInceput = _DataInceput;
         oferta.durataAsigurare = [_Durata intValue];
         
-        YTOWebServiceRCAViewController * aView = [[YTOWebServiceRCAViewController alloc] init];
+        YTOWebServiceRCAViewController * aView;
+        
+        if (IS_IPHONE_5)
+            aView = [[YTOWebServiceRCAViewController alloc] initWithNibName:@"YTOWebServiceRCAViewController_R4" bundle:nil];
+        else
+            aView = [[YTOWebServiceRCAViewController alloc] initWithNibName:@"YTOWebServiceRCAViewController" bundle:nil];
         aView.asigurat = asigurat;
         aView.masina = masina;
         aView.oferta = oferta;

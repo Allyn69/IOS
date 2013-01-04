@@ -152,7 +152,10 @@
                 [appDelegate.setariNavigationController pushViewController:aView animated:YES];
             }
             else {
-                YTOCasaViewController * aView = [[YTOCasaViewController alloc] init];
+                YTOCasaViewController * aView;
+                if (IS_IPHONE_5)
+                    aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+                else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
                 aView.controller = self;
                 [appDelegate.setariNavigationController pushViewController:aView animated:YES];
             }
@@ -169,7 +172,10 @@
                 [appDelegate.setariNavigationController pushViewController:aView animated:YES];
             }
             else {
-                YTOAutovehiculViewController * aView = [[YTOAutovehiculViewController alloc] init];
+                YTOAutovehiculViewController * aView;
+                if (IS_IPHONE_5)
+                    aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+                else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
                 aView.controller = self;
                 [appDelegate.setariNavigationController pushViewController:aView animated:YES];
             }

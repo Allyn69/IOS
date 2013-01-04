@@ -86,7 +86,10 @@
 
     if (indexPath.row == 3)
     {
-        YTOFinalizareLocuintaViewController * aView = [[YTOFinalizareLocuintaViewController alloc] init];
+        YTOFinalizareLocuintaViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOFinalizareLocuintaViewController alloc] initWithNibName:@"YTOFinalizareLocuintaViewController_R4" bundle:nil];
+        else aView = [[YTOFinalizareLocuintaViewController alloc] initWithNibName:@"YTOFinalizareLocuintaViewController" bundle:nil];
         aView.oferta = oferta;
         aView.asigurat = asigurat;
         aView.locuinta = locuinta;

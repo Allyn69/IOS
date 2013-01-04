@@ -200,7 +200,10 @@
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
     {
         YTOLocuinta * pAux = [YTOLocuinta getLocuinta:locuinta.idIntern];
-        YTOCasaViewController * aView = [[YTOCasaViewController alloc] init];
+        YTOCasaViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+        else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
         aView.controller = self;
         aView.locuinta = pAux;
         [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
@@ -231,7 +234,10 @@
 
 - (IBAction)adaugaLocuinta:(id)sender
 {
-    YTOCasaViewController * aView = [[YTOCasaViewController alloc] init];
+    YTOCasaViewController * aView;
+    if (IS_IPHONE_5)
+        aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+    else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     
     if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])

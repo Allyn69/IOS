@@ -122,7 +122,10 @@
     YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     if (indexPath.row == 3)
     {
-        YTOFinalizareCalatorieViewController * aView = [[YTOFinalizareCalatorieViewController alloc] init];
+        YTOFinalizareCalatorieViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOFinalizareCalatorieViewController alloc] initWithNibName:@"YTOFinalizareCalatorieViewController_R4" bundle:nil];
+        else aView = [[YTOFinalizareCalatorieViewController alloc] initWithNibName:@"YTOFinalizareCalatorieViewController" bundle:nil];
         aView.listAsigurati = listAsigurati;
         aView.oferta = oferta;
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
