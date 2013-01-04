@@ -714,7 +714,6 @@
 		C3FE688115C9500800CB16AA /* calculator-locuinta.png in Resources */ = {isa = PBXBuildFile; fileRef = C3FE687F15C9500800CB16AA /* calculator-locuinta.png */; };
 		C3FE688215C9500800CB16AA /* calculator-locuinta@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3FE688015C9500800CB16AA /* calculator-locuinta@2x.png */; };
 		FF261EDA1695DB30000B8590 /* YTOAutovehiculViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */; };
-		FF261EDC1696C578000B8590 /* popup-rca-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FF261EDB1696C578000B8590 /* popup-rca-r4.png */; };
 		FF8A32D81696CFDF0033C64E /* YTOCasaViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */; };
 		FF8A32DB1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */; };
 		FF8A32DD1696D4E10033C64E /* popup-despre-calator-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32DC1696D4E10033C64E /* popup-despre-calator-r4.png */; };
@@ -728,6 +727,7 @@
 		FF8A32F11696F8C70033C64E /* YTOTermeniViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F01696F8C70033C64E /* YTOTermeniViewController_R4.xib */; };
 		FF8A32F31696F9680033C64E /* YTOFAQViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F21696F9680033C64E /* YTOFAQViewController_R4.xib */; };
 		FF8A32F51696FC4C0033C64E /* YTOTrimiteMesajViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F41696FC4A0033C64E /* YTOTrimiteMesajViewController_R4.xib */; };
+		FF8A32F7169702860033C64E /* popup-rca-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F6169702850033C64E /* popup-rca-r4.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1503,7 +1503,6 @@
 		C3FE687F15C9500800CB16AA /* calculator-locuinta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calculator-locuinta.png"; sourceTree = "<group>"; };
 		C3FE688015C9500800CB16AA /* calculator-locuinta@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calculator-locuinta@2x.png"; sourceTree = "<group>"; };
 		FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAutovehiculViewController_R4.xib; sourceTree = "<group>"; };
-		FF261EDB1696C578000B8590 /* popup-rca-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-rca-r4.png"; sourceTree = "<group>"; };
 		FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCasaViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAsiguratiViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32DC1696D4E10033C64E /* popup-despre-calator-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-despre-calator-r4.png"; sourceTree = "<group>"; };
@@ -1517,6 +1516,7 @@
 		FF8A32F01696F8C70033C64E /* YTOTermeniViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOTermeniViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32F21696F9680033C64E /* YTOFAQViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOFAQViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32F41696FC4A0033C64E /* YTOTrimiteMesajViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOTrimiteMesajViewController_R4.xib; sourceTree = "<group>"; };
+		FF8A32F6169702850033C64E /* popup-rca-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-rca-r4.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1926,7 +1926,7 @@
 				C3B7635316148D6200C3187E /* ok-rca@2x.png */,
 				C3E1462D16198C4B0047F46E /* popup-rca.png */,
 				C3E1462E16198C4B0047F46E /* popup-rca@2x.png */,
-				FF261EDB1696C578000B8590 /* popup-rca-r4.png */,
+				FF8A32F6169702850033C64E /* popup-rca-r4.png */,
 				C30C6B2C165514C60082ED02 /* vezi-tarife-6-12.png */,
 				C30C6B2D165514C60082ED02 /* vezi-tarife-6-12@2x.png */,
 				C331BF4915D553EC00C1F79C /* zero-masini.png */,
@@ -3330,7 +3330,6 @@
 				C35FEAEF1683319500961D87 /* YTOCASCOViewController_R4.xib in Resources */,
 				C35FEAF11683322E00961D87 /* YTOWebServiceCalatorieViewController_R4.xib in Resources */,
 				FF261EDA1695DB30000B8590 /* YTOAutovehiculViewController_R4.xib in Resources */,
-				FF261EDC1696C578000B8590 /* popup-rca-r4.png in Resources */,
 				FF8A32D81696CFDF0033C64E /* YTOCasaViewController_R4.xib in Resources */,
 				FF8A32DB1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib in Resources */,
 				FF8A32DD1696D4E10033C64E /* popup-despre-calator-r4.png in Resources */,
@@ -3344,6 +3343,7 @@
 				FF8A32F11696F8C70033C64E /* YTOTermeniViewController_R4.xib in Resources */,
 				FF8A32F31696F9680033C64E /* YTOFAQViewController_R4.xib in Resources */,
 				FF8A32F51696FC4C0033C64E /* YTOTrimiteMesajViewController_R4.xib in Resources */,
+				FF8A32F7169702860033C64E /* popup-rca-r4.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
