@@ -336,7 +336,8 @@
             listOfItems = [Database Localitati:selectedValue];
             navBar.title = [NSString stringWithFormat:@"Localitati %@", selectedValue];
             [searchBar resignFirstResponder];
-            [self.delegate chosenIndexAfterSearch:selectedValue rowIndex:_indexPath forView:self];
+            judet = selectedValue;
+            //[self.delegate chosenIndexAfterSearch:selectedValue rowIndex:_indexPath forView:self];
             nomenclator = kLocalitati;
             [self doneSearching_Clicked:nil];
             [tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
@@ -345,6 +346,12 @@
         else {
             if (nomenclator == kCoduriCaen)
                 [self.delegate chosenIndexAfterSearch:((KeyValueItem *)selectedValue).value rowIndex:_indexPath forView:self];
+            else if (nomenclator == kLocalitati)
+            {
+                [self.delegate chosenIndexAfterSearch:selectedValue rowIndex:_indexPath forView:self];
+                nomenclator = kJudete;
+                [self.delegate chosenIndexAfterSearch:judet rowIndex:_indexPath forView:self];
+            }
             else
                 [self.delegate chosenIndexAfterSearch:selectedValue rowIndex:_indexPath forView:self];
             [self dismissModalViewControllerAnimated:YES];

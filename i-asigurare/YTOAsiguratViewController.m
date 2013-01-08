@@ -726,6 +726,8 @@
 - (void) setJudet:(NSString *)v
 {
     asigurat.judet = v;
+    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
+    lbl.text = [self getLocatie];
 }
 - (NSString *) getJudet
 {
@@ -736,8 +738,7 @@
 - (void) setLocalitate:(NSString *)v
 {
     asigurat.localitate = v;
-    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
-    lbl.text = [self getLocatie];
+    
 }
 - (NSString *) getLocalitate
 {

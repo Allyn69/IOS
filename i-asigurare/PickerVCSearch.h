@@ -32,6 +32,8 @@
     IBOutlet UITableView * tableView;
     id<PickerVCSearchDelegate> delegate;
     NSString * titlu;
+    
+    NSString * judet;
 }
 
 @property (nonatomic, retain) NSMutableArray * listValoriMultipleIndecsi;

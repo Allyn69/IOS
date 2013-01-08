@@ -1577,6 +1577,8 @@
 - (void) setJudet:(NSString *)judet
 {
     autovehicul.judet = judet;
+    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
+    lbl.text = [self getLocatie];
 }
 
 - (NSString *) getLocalitate
@@ -1586,8 +1588,6 @@
 - (void) setLocalitate:(NSString *)localitate
 {
     autovehicul.localitate = localitate;
-    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
-    lbl.text = [self getLocatie];
 }
 
 - (NSString *) getLocatie

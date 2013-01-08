@@ -846,6 +846,8 @@
 - (void) setJudet:(NSString *)judet
 {
     locuinta.judet = judet;
+    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
+    lbl.text = [self getLocatie];
 }
 
 - (NSString *) getLocalitate
@@ -855,8 +857,6 @@
 - (void) setLocalitate:(NSString *)localitate
 {
     locuinta.localitate = localitate;
-    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
-    lbl.text = [self getLocatie];
 }
 
 - (NSString *) getLocatie
