@@ -41,7 +41,6 @@
 
     [self initCells];
     [self initCustomValues];
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +58,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 7;
+    return 8;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -68,7 +67,7 @@
         return 69;
     else if (indexPath.row == 1 || indexPath.row == 2)
         return 75;
-    else if (indexPath.row == 5)
+    else if (indexPath.row == 5 || indexPath.row == 6)
         return 100;
     return 66;
 }
@@ -83,6 +82,7 @@
     else if (indexPath.row == 3) cell = cellNrKm;
     else if (indexPath.row == 4) cell = cellCuloare;
     else if (indexPath.row == 5) cell = cellAsigurareCasco;
+    else if (indexPath.row == 6) cell = cellNrRate;
     else cell = cellCalculeaza;
     
     return cell;
@@ -90,9 +90,10 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];   
+    
     if (indexPath.row == 1)
     {
         // Daca exista masini salvate, afisam lista
@@ -129,12 +130,69 @@
             aView.proprietar = YES;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
+        
     }
-    else if (indexPath.row == 6)
+    else if (indexPath.row == 7)
     {
+        BOOL isOK = YES;
+        
+        // Daca nu a fost selectata masina sau datele masinii nu sunt complete
+        if (!masina || ![masina isValidForRCA])
+        {
+            UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            isOK = NO;
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+        }
+        else {
+            UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
+            lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        }
+        
+        // Daca nu a fost selectata persoana sau datele persoanei nu sunt complete
+        if (!asigurat || asigurat.idIntern.length == 0)
+        {
+            UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            isOK = NO;
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+        }
+        else {
+            UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        }
+        
+        if (!isOK)
+            return;
+        
+//        masina.idProprietar  = asigurat.idIntern;
+//        [masina updateAutovehicul];
+//        [asigurat updatePersoana];
+
+        
+        [self doneEditing];
+        
+        if (masina.nrKm == 0)
+        {
+            [txtNumarKm becomeFirstResponder];
+            return;
+        }
+        if (masina.culoare.length == 0)
+        {
+            [txtCuloare becomeFirstResponder];
+            return;
+        }
+        
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Aceste informatii vor fi trimise catre un reprezentant i-Asigurare. Mergi mai departe?" withButtonIndex:100];
     }
-        
 }
 
 #pragma TEXTFIELD
@@ -144,7 +202,7 @@
     UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     if (indexPath.row == 3 || indexPath.row == 4)
-        [self addBarButton];    
+        [self addBarButton];
 
 }
 
@@ -236,12 +294,14 @@
     
     NSArray *topLevelObjectsnrKm = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellNrKm = [topLevelObjectsnrKm objectAtIndex:0];
+    txtNumarKm = (UITextField *)[cellNrKm viewWithTag:2];
     [(UILabel *)[cellNrKm viewWithTag:1] setText:@"Numar kilometri autovehicul"];
     [(UITextField *)[cellNrKm viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellNrKm];
     
     NSArray *topLevelObjectsCuloare = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellCuloare = [topLevelObjectsCuloare objectAtIndex:0];
+    txtCuloare = (UITextField *)[cellCuloare viewWithTag:2];
     [(UILabel *)[cellCuloare viewWithTag:1] setText:@"Culoare autovehicul"];
     [YTOUtils setCellFormularStyle:cellCuloare];
     
@@ -307,23 +367,66 @@
     }
     if (masina.nrKm > 0)
         [self setNumarKm:masina.nrKm];
+    
     if (masina.culoare && ![masina.culoare isEqualToString:@""])
         [self setCuloare:masina.culoare];
+
 }
 
 - (void)setNumarKm:(int)v
 {
+
     UITextField * txt = (UITextField *)[cellNrKm viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%d",v];
     masina.nrKm = v;
+
 }
 
 - (void)setCuloare:(NSString *)v
 {
+
     UITextField * txt = (UITextField *)[cellCuloare viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%@",v];
     masina.culoare = v;
 }
+
+- (void)setNrRate:(NSString *)v
+{
+    ((UIButton *)[cellNrRate viewWithTag:1]).selected = ((UIButton *)[cellNrRate viewWithTag:2]).selected = ((UIButton *)[cellNrRate viewWithTag:3]).selected = NO;
+    
+    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+    if ([v isEqualToString:@"Integral"]) {
+        ((UIButton *)[cellNrRate viewWithTag:1]).selected = YES;
+        nrRate = @"Integral";
+    }
+    else if ([v isEqualToString:@"2 Rate"]) {
+        ((UIButton *)[cellNrRate viewWithTag:2]).selected = YES;
+        nrRate = @"2 Rate";
+    }
+    else if ([v isEqualToString:@"4 Rate"]) {
+        ((UILabel *)[cellNrRate viewWithTag:33]).text = v;
+        ((UIButton *)[cellNrRate viewWithTag:3]).selected = YES;
+        nrRate = @"4 Rate";
+    }
+}
+
+- (IBAction)checkboxNrRateSelected:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    //BOOL checkboxSelected = btn.selected;
+    //checkboxSelected = !checkboxSelected;
+    
+    if (btn.tag  == 1) {
+        [self setNrRate:@"Integral"];
+    }
+    else if (btn.tag == 2){
+        [self setNrRate:@"2 Rate"];
+    }
+    else if (btn.tag == 3) {
+        [self setNrRate:@"4 Rate"];
+    }
+}
+
 
 - (void)setCompanieCasco:(NSString *)v
 {

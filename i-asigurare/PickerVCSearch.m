@@ -15,6 +15,7 @@
 @implementation PickerVCSearch
 
 @synthesize tableView, delegate, titlu, listOfItems, _indexPath;
+@synthesize copListOfItems;
 @synthesize nomenclator;
 @synthesize listValoriMultipleIndecsi;
 
@@ -46,7 +47,7 @@
     navBar.title = titlu;
     
     //Initialize the copy array.
-    copyListOfItems = [[NSMutableArray alloc] init];
+    copListOfItems = [[NSMutableArray alloc] init];
 
     //Add the search bar
     if (nomenclator == kJudete || nomenclator == kLocalitati || nomenclator == kMarci)
@@ -92,26 +93,38 @@
 - (void) searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
     searching = YES;
     letUserSelectRow = NO;
-    self.tableView.scrollEnabled = NO;
+    //self.tableView.scrollEnabled = NO;
+    
+//    CGRect frame = [tableView frame];
+//    frame.size.height -= 250.f;
+//    [tableView setFrame:frame];
     
     //Add the done button.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                               initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                               target:self action:@selector(doneSearching_Clicked:)];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+//                                               initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                               target:self action:@selector(doneSearching_Clicked:)];
+    
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
+                                                                   style:UIBarButtonItemStylePlain
+                                                                  target:self
+                                                                  action:@selector(doneSearching_Clicked:)];
+    self.navigationItem.rightBarButtonItem = backButton;
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
     
     //Remove all objects first.
-    [copyListOfItems removeAllObjects];
+    [copListOfItems removeAllObjects];
     
     if([searchText length] > 0) {        
         searching = YES;
         letUserSelectRow = YES;
+        ok = YES;
         [self searchTableView];
     }
     else {
         searching = NO;
+        ok = NO;
         letUserSelectRow = NO;
     }
     
@@ -138,7 +151,7 @@
         NSRange titleResultsRange = [sTemp rangeOfString:searchText options:NSCaseInsensitiveSearch];
         
         if (titleResultsRange.length > 0)
-            [copyListOfItems addObject:sTemp];
+            [copListOfItems addObject:sTemp];
     }
     searchArray = nil;
 }
@@ -160,7 +173,7 @@
 
 #pragma mark TABLEVIEW
 
-- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     return indexPath;
 }
@@ -174,7 +187,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     if (searching)
-        return [copyListOfItems count];
+        return [copListOfItems count];
     else {
         
         return [listOfItems count];
@@ -186,15 +199,22 @@
     
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:nil];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:nil];
     }
     
     // Set up the cell...
     
-    if(searching)
-        cell.textLabel.text = [copyListOfItems objectAtIndex:indexPath.row];
+    if(searching) {
+        UIView *searchView = [[UIView alloc] initWithFrame:CGRectMake(0, 265, 320, 215)];
+        self.tableView.tableFooterView = searchView;
+    
+        if (ok)
+            cell.textLabel.text = [copListOfItems objectAtIndex:indexPath.row];
+        else
+            cell.textLabel.text = [listOfItems objectAtIndex:indexPath.row];
+    }
     else if (nomenclator == kCoduriCaen)
     {
         
@@ -304,7 +324,7 @@
         
         if(searching && ![searchBar.text isEqualToString:@""])
         {
-            selectedValue = [copyListOfItems objectAtIndex:indexPath.row];
+            selectedValue = [copListOfItems objectAtIndex:indexPath.row];
         }
         else {
             

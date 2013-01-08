@@ -22,11 +22,12 @@
 {
     NSMutableArray *listOfItems;
     NSIndexPath * _indexPath;
-    NSMutableArray *copyListOfItems;
+    //NSMutableArray *copyListOfItems;
     IBOutlet UINavigationItem * navBar;
     IBOutlet UISearchBar *searchBar;
     BOOL searching;
     BOOL letUserSelectRow;
+    BOOL ok;
 //    OverlayViewControllerPVCSV2 * ovController;
     IBOutlet UITableView * tableView;
     id<PickerVCSearchDelegate> delegate;
@@ -38,6 +39,7 @@
 @property (nonatomic, retain) id<PickerVCSearchDelegate> delegate;
 @property (nonatomic, retain) NSString * titlu;
 @property (nonatomic, retain) NSMutableArray *listOfItems;
+@property (nonatomic, retain) NSMutableArray *copListOfItems;
 @property (nonatomic, retain) NSIndexPath * _indexPath;
 @property (readwrite) Nomenclatoare nomenclator;
 

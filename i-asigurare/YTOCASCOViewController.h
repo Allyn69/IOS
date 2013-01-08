@@ -19,6 +19,7 @@
     UITableViewCell          *  cellProprietar;
     UITableViewCell          *  cellNrKm;
     UITableViewCell          *  cellCuloare;
+    IBOutlet UITableViewCell *  cellNrRate;
     UITableViewCell          *  cellCalculeaza;
     IBOutlet UITableViewCell *  cellAsigurareCasco;
     
@@ -52,6 +53,11 @@
     IBOutlet UIButton    * btnClosePopup;
     
     BOOL cautLegaturaDintreMasinaSiAsigurat;
+    
+    UITextField * txtNumarKm;
+    UITextField * txtCuloare;
+    
+    NSString * nrRate;
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSMutableArray * listaCompaniiAsigurare;
@@ -62,6 +68,7 @@
 @property int _nomenclatorSelIndex;
 @property (readwrite) Nomenclatoare _nomenclatorTip;
 - (IBAction)checkboxCompanieCascoSelected:(id)sender;
+- (IBAction)checkboxNrRateSelected:(id)sender;
 - (void) showNomenclator;
 - (IBAction) hideNomenclator;
 - (IBAction) btnNomenclator_Clicked:(id)sender;

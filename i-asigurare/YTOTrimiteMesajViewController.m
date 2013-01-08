@@ -35,8 +35,8 @@
     proprietar = [YTOPersoana Proprietar];
     if (proprietar)
     {
-        [self setTelefon:proprietar.telefon];
-        [self setEmail:proprietar.email];
+        //[self setTelefon:proprietar.telefon];
+        //[self setEmail:proprietar.email];
     }
 }
 
@@ -92,10 +92,32 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   if (indexPath.row == 4)
-       [self callTrimiteMesaj];
+    //am comentat in viewdidload ca sa pot sa testez
+    if (indexPath.row == 4) {
+        
+        [self doneEditing];
+        
+        if (email.length == 0 && telefon.length == 0)
+        {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+
+            [txtEmail becomeFirstResponder];
+            return;
+        }
+        
+        if (subiect.length == 0 && descriere.length == 0)
+        {
+            [txtSubiect becomeFirstResponder];
+            return;
+        }
+    
+        [self callTrimiteMesaj];
+    }
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textView
@@ -131,6 +153,7 @@
     activeTextField.tag = indexPath.row;
     
 	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
+    if (indexPath)
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
 	return YES;
@@ -145,6 +168,7 @@
 	}
     
 	[textField resignFirstResponder];
+    [self deleteBarButton]; 
 	btnDone.enabled = NO;
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 	return YES;
@@ -196,7 +220,7 @@
 {
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
-    txtEmail = (UITextField *)[cellTelefon viewWithTag:2];
+    txtEmail = (UITextField *)[cellEmail viewWithTag:2];
     [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL-UL TAU"];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
@@ -213,7 +237,7 @@
     
     NSArray *topLevelObjectsSubiect = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellSubiect = [topLevelObjectsSubiect objectAtIndex:0];
-    txtTelefon = (UITextField *)[cellSubiect viewWithTag:2];
+    txtSubiect = (UITextField *)[cellSubiect viewWithTag:2];
     [(UILabel *)[cellSubiect viewWithTag:1] setText:@"SUBIECT MESAJ"];
     [(UITextField *)[cellSubiect viewWithTag:2] setPlaceholder:@"..."];    
     [YTOUtils setCellFormularStyle:cellSubiect];

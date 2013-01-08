@@ -137,7 +137,6 @@
             aView = [[YTOTrimiteMesajViewController alloc] initWithNibName:@"YTOTrimiteMesajViewController_R4" bundle:nil];
         else aView = [[YTOTrimiteMesajViewController alloc] initWithNibName:@"YTOTrimiteMesajViewController" bundle:nil];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
 //    else if (indexPath.row == 2)
 //    {

@@ -140,6 +140,7 @@
     
     if (selectatInfoLocuinta)
     {
+        if (isOK == NO){
         if (indexPath.row == 0) cell = cellHeader;
         else if (indexPath.row == 1) cell = cellInfoAlerte;
         else if (indexPath.row == 2) cell = cellJudetLocalitate;
@@ -154,6 +155,23 @@
         else if (indexPath.row == 11) cell = cellNrLocatari;
         else if (indexPath.row == 12) cell = cellDescriereLocuinta;
         else cell = cellSC;
+        }
+        else
+        {
+            if (indexPath.row == 0) cell = cellHeader;
+            else if (indexPath.row == 1) cell = cellInfoAlerte;
+            else if (indexPath.row == 2) cell = cellJudetLocalitate;
+            else if (indexPath.row == 3) cell = cellAdresa;
+            else if (indexPath.row == 4) cell = cellTipLocuinta;
+            else if (indexPath.row == 5) cell = cellStructura;
+            else if (indexPath.row == 6) cell = cellInaltime;
+            else if (indexPath.row == 7) cell = cellAnConstructie;
+            else if (indexPath.row == 8) cell = cellNrCamere;
+            else if (indexPath.row == 9) cell = cellSuprafata;
+            else if (indexPath.row == 10) cell = cellNrLocatari;
+            else if (indexPath.row == 11) cell = cellDescriereLocuinta;
+            else cell = cellSC;
+        }
     }
     else
     {
@@ -797,12 +815,21 @@
             [_btn setSelected:NO];
     }
     
-    if (btn.tag == 1)
+    if (btn.tag == 1) {
         [self setTipLocuinta:@"apartament-in-bloc"];
-    else if (btn.tag == 2)
+        isOK = NO;
+        [tableView reloadData];
+    }
+    else if (btn.tag == 2) {
         [self setTipLocuinta:@"casa-vila-comuna"];
-    else if (btn.tag ==3)
+        isOK = YES;
+        [tableView reloadData];
+    }
+    else if (btn.tag ==3) {
         [self setTipLocuinta:@"casa-vila-individuala"];
+        isOK = YES;
+        [tableView reloadData];
+    }
 }
 
 - (void) setAdresa:(NSString *)p

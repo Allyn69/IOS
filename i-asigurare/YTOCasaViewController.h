@@ -45,7 +45,8 @@
     float percentCompletedOnLoad;
     BOOL  selectatInfoLocuinta;
     BOOL  shouldSave;
-    BOOL editingMode;    
+    BOOL  editingMode;
+    BOOL  isOK;
     
     YTOAlerta * alertaLocuinta;
     YTOAlerta * alertaRataLoc;
