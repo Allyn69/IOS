@@ -168,7 +168,7 @@
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:10.0];
+														timeoutInterval:30.0];
     //	
     //	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //	formatter.dateFormat = @"yyyy-MM-dd";

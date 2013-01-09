@@ -362,7 +362,7 @@
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:10.0];
+														timeoutInterval:30.0];
     
 	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequestForAuto]];
 	NSLog(@"Request=%@", parameters);

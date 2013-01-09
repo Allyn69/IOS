@@ -317,7 +317,7 @@
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:5.0];
+														timeoutInterval:10.0];
     
 	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
 	NSLog(@"Request=%@", parameters);
@@ -344,7 +344,7 @@
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:5.0];
+														timeoutInterval:10.0];
     
 	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
 	NSLog(@"Request=%@", parameters);
