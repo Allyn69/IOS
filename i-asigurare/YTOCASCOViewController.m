@@ -14,6 +14,9 @@
 #import "YTOAsiguratViewController.h"
 #import "YTOAppDelegate.h"
 
+
+#import "VerifyNet.h"
+
 //////////
 
 @interface YTOCASCOViewController ()
@@ -660,6 +663,9 @@
     self.navigationItem.hidesBackButton = YES;
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@casco.asmx", LinkAPI]];
     
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+        
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
 														timeoutInterval:30.0];
@@ -679,6 +685,14 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+        
+    }
+    
+    else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Verificati conexiunea dumneavoastra la Internet." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -762,8 +776,8 @@
         imgError.image = [UIImage imageNamed:@"informatii-trimise.png"];
     
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
     [lblCustomAlertOK setText:@"OK"];
     [btnCustomAlertNO setHidden:YES];
     [lblCustomAlertNO setHidden:YES];
@@ -792,8 +806,8 @@
 {
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
     [lblCustomAlertOK setText:@"DA"];
     
     [btnCustomAlertNO setHidden:NO];

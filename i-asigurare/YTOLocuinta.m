@@ -236,6 +236,38 @@
     self._isDirty = YES;
 }
 
+- (BOOL) isValidForLocuinta
+{
+    BOOL valid = YES;
+    
+    if (!self.judet || self.judet.length == 0)
+        valid = NO;
+    if (!self.localitate || self.localitate.length == 0)
+        valid = NO;
+    if (!self.tipLocuinta || self.tipLocuinta.length == 0)
+        valid = NO;
+    if (!self.structuraLocuinta || self.structuraLocuinta.length == 0)
+        valid = NO;
+    if (self.regimInaltime == 0)
+        valid = NO;
+    if ([tipLocuinta isEqualToString:@"apartament-in-bloc"])
+        if (self.etaj == 0)
+        valid = NO;
+    if (self.anConstructie == 0)
+        valid = NO;
+    if (self.nrCamere == 0)
+        valid = NO;
+    if (self.suprafataUtila == 0)
+        valid = NO;
+    if (self.nrLocatari == 0)
+        valid = NO;
+    if (!self.areAlarma || !self.areGrilajeGeam || !self.detectieIncendiu || !self.arePaza || !self.zonaIzolata || !self.locuitPermanent || !self.clauzaFurtBunuri || !self.clauzaApaConducta || !self.areTeren)
+        valid = NO;
+    
+    return valid;
+}
+
+
 - (float) CompletedPercent
 {
     int numarCampuri = 10;

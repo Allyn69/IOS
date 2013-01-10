@@ -101,7 +101,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (selectatInfoLocuinta)
-        return 14;
+        if (isOK == NO) return 14;
+                   else return 13;
     else
         return 4;
 }
@@ -110,6 +111,7 @@
 {
     if (selectatInfoLocuinta)
     {
+        if (isOK == NO){
         if (indexPath.row == 0)
             return 78;
         else if (indexPath.row ==1)
@@ -119,6 +121,18 @@
         else if (indexPath.row == 9 || indexPath.row == 11)
             return 67;
         return 60;
+        }
+        else {            
+            if (indexPath.row == 0)
+                return 78;
+            else if (indexPath.row ==1)
+                return 30;
+            else if (indexPath.row == 4)
+                return 100;
+            else if (indexPath.row == 8 || indexPath.row == 10)
+                return 67;
+            return 60;
+        }
     }
     else
     {
@@ -247,8 +261,14 @@
         else if (indexPath.row == 5) {
             [self showNomenclator];
         }
+        else if (indexPath.row == 11)
+        {
+            if (isOK == YES)
+            [self showListaDescriereLocuinta:indexPath];
+        }
         else if (indexPath.row == 12)
         {
+            if (isOK == NO)
             [self showListaDescriereLocuinta:indexPath];
         }
         else
@@ -830,6 +850,10 @@
         isOK = YES;
         [tableView reloadData];
     }
+    
+//    YTOLocuinta * loc = [[YTOLocuinta alloc] init];
+//    if (isOK == YES) loc.isOK = YES;
+    
 }
 
 - (void) setAdresa:(NSString *)p

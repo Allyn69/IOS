@@ -713,6 +713,8 @@
 		C3FE687D15C9465A00CB16AA /* YTOLocuintaViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3FE687B15C9465A00CB16AA /* YTOLocuintaViewController.xib */; };
 		C3FE688115C9500800CB16AA /* calculator-locuinta.png in Resources */ = {isa = PBXBuildFile; fileRef = C3FE687F15C9500800CB16AA /* calculator-locuinta.png */; };
 		C3FE688215C9500800CB16AA /* calculator-locuinta@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3FE688015C9500800CB16AA /* calculator-locuinta@2x.png */; };
+		FF022B7F169EDF560077656A /* VerifyNet.m in Sources */ = {isa = PBXBuildFile; fileRef = FF022B7E169EDF560077656A /* VerifyNet.m */; };
+		FF022B82169EE11B0077656A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF022B81169EE11B0077656A /* SystemConfiguration.framework */; };
 		FF261EDA1695DB30000B8590 /* YTOAutovehiculViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */; };
 		FF8A32D81696CFDF0033C64E /* YTOCasaViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */; };
 		FF8A32DB1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */; };
@@ -1502,6 +1504,9 @@
 		C3FE687B15C9465A00CB16AA /* YTOLocuintaViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOLocuintaViewController.xib; sourceTree = "<group>"; };
 		C3FE687F15C9500800CB16AA /* calculator-locuinta.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calculator-locuinta.png"; sourceTree = "<group>"; };
 		C3FE688015C9500800CB16AA /* calculator-locuinta@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "calculator-locuinta@2x.png"; sourceTree = "<group>"; };
+		FF022B7D169EDF560077656A /* VerifyNet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyNet.h; sourceTree = "<group>"; };
+		FF022B7E169EDF560077656A /* VerifyNet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyNet.m; sourceTree = "<group>"; };
+		FF022B81169EE11B0077656A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAutovehiculViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCasaViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAsiguratiViewController_R4.xib; sourceTree = "<group>"; };
@@ -1524,6 +1529,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF022B82169EE11B0077656A /* SystemConfiguration.framework in Frameworks */,
 				C341370E15B433AE004CA7A5 /* libsqlite3.0.dylib in Frameworks */,
 				C341369115B0440C004CA7A5 /* QuartzCore.framework in Frameworks */,
 				C341368615B042C8004CA7A5 /* libz.1.2.5.dylib in Frameworks */,
@@ -1539,6 +1545,7 @@
 		C303224A15AEE1AC00E8BED7 = {
 			isa = PBXGroup;
 			children = (
+				FF022B81169EE11B0077656A /* SystemConfiguration.framework */,
 				C3B97BE71678E7DB00FE952C /* logo@2x.png */,
 				C3B97BE51678E7A500FE952C /* logo.png */,
 				C36B1CAA161EE8DB002CEB4D /* YTOCustomPopupView.xib */,
@@ -2063,6 +2070,8 @@
 				C386A0F615E26E95007542C9 /* YTOImage.m */,
 				C3FA0DB81647E308001E8D64 /* YTOFaq.h */,
 				C3FA0DB91647E308001E8D64 /* YTOFaq.m */,
+				FF022B7D169EDF560077656A /* VerifyNet.h */,
+				FF022B7E169EDF560077656A /* VerifyNet.m */,
 			);
 			name = "Business Objects";
 			sourceTree = "<group>";
@@ -3416,6 +3425,7 @@
 				C31D699F165D0EE000DACF32 /* YTOSocietatiViewController.m in Sources */,
 				C31D69AA165D19A600DACF32 /* YTOUserDefaults.m in Sources */,
 				C3B97BAD1678BBFD00FE952C /* YTOContactViewController.m in Sources */,
+				FF022B7F169EDF560077656A /* VerifyNet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

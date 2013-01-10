@@ -195,8 +195,11 @@
         NSDateComponents *difference = [calendar components:NSDayCalendarUnit
                                                    fromDate:fromDate toDate:toDate options:0];
         
-        //NSLog(@"%d",[difference day]);
-        if ([difference day] < 5)
+        //NSLog(@"%@",alerta.dataAlerta);
+        //NSLog(@"%@",peste4zile);
+              
+        NSLog(@"%d",[difference day]);
+        if ([difference day] < 5 && [difference day] >= 0)
             count++;
     }
     return count;

@@ -193,9 +193,20 @@
     {
 
         YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
-        [parent setLocuinta:locuinta];
         
-        [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+        if ([locuinta isValidForLocuinta]) {
+            [parent setLocuinta:locuinta];
+            [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+        }
+        else {
+            YTOCasaViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+            else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
+            aView.controller = self;
+            aView.locuinta = locuinta;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
     }
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
     {
@@ -206,7 +217,7 @@
         else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
         aView.controller = self;
         aView.locuinta = pAux;
-        [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOFormAlertaViewController class]])
     {

@@ -15,6 +15,7 @@
 	NSMutableData * capturedCharactes;
 	NSMutableString * currentElementValue;
     NSString * raspuns;
+    
 }
 
 @property (nonatomic, retain) NSMutableData * responseData;
@@ -61,6 +62,7 @@
 - (NSString *) toJSON;
 - (void) fromJSON:(NSString *)p;
 - (float) CompletedPercent;
+- (BOOL) isValidForLocuinta;
 
 - (void) refresh;
 
