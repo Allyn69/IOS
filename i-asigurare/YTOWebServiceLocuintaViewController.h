@@ -33,6 +33,13 @@
     IBOutlet UIView  *      vwPopup;
     IBOutlet UILabel *      lblPopupTitle;
     IBOutlet UILabel *      lblPopupDescription;
+    
+    IBOutlet UIView      * vwErrorAlert;
+    IBOutlet UIButton    * btnErrorAlertOK;
+    IBOutlet UIButton    * btnErrorAlertNO;
+    
+    IBOutlet UIView      * vwDetailErrorAlert;
+    IBOutlet UIButton    * btnDetailErrorAlertOK;
 }
 
 //@property (nonatomic, retain) CotatieCalatorie * cotatie;
@@ -47,5 +54,8 @@
 - (void) startLoadingAnimantion;
 - (void) stopLoadingAnimantion;
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
+
+- (IBAction) hideErrorAlert:(id)sender;
+- (IBAction) hideDetailErrorAlert;
 
 @end

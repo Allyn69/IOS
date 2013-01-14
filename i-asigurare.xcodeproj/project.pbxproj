@@ -715,6 +715,17 @@
 		C3FE688215C9500800CB16AA /* calculator-locuinta@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3FE688015C9500800CB16AA /* calculator-locuinta@2x.png */; };
 		FF022B7F169EDF560077656A /* VerifyNet.m in Sources */ = {isa = PBXBuildFile; fileRef = FF022B7E169EDF560077656A /* VerifyNet.m */; };
 		FF022B82169EE11B0077656A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF022B81169EE11B0077656A /* SystemConfiguration.framework */; };
+		FF022B90169F0A4F0077656A /* popup-generic-inalt.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B8F169F0A4F0077656A /* popup-generic-inalt.png */; };
+		FF022B95169F0AA50077656A /* popup-generic-inalt@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B94169F0AA50077656A /* popup-generic-inalt@2x.png */; };
+		FF022B97169F0AB10077656A /* popup-generic-inalt-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B96169F0AB10077656A /* popup-generic-inalt-r4.png */; };
+		FF022B99169F0AFA0077656A /* text-ne-pare-rau.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B98169F0AFA0077656A /* text-ne-pare-rau.png */; };
+		FF022B9B169F0B040077656A /* text-ne-pare-rau@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B9A169F0B040077656A /* text-ne-pare-rau@2x.png */; };
+		FF022B9D169F0B270077656A /* text-detalii-eroare.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B9C169F0B270077656A /* text-detalii-eroare.png */; };
+		FF022B9F169F0B360077656A /* text-detalii-eroare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022B9E169F0B360077656A /* text-detalii-eroare@2x.png */; };
+		FF022BA1169F16600077656A /* continua.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA0169F165F0077656A /* continua.png */; };
+		FF022BA3169F166A0077656A /* continua@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA2169F166A0077656A /* continua@2x.png */; };
+		FF022BA5169F23B50077656A /* text-iti-multumim-intelegere.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA4169F23B20077656A /* text-iti-multumim-intelegere.png */; };
+		FF022BA7169F23BC0077656A /* text-iti-multumim-intelegere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA6169F23BC0077656A /* text-iti-multumim-intelegere@2x.png */; };
 		FF261EDA1695DB30000B8590 /* YTOAutovehiculViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */; };
 		FF8A32D81696CFDF0033C64E /* YTOCasaViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */; };
 		FF8A32DB1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */; };
@@ -1507,6 +1518,17 @@
 		FF022B7D169EDF560077656A /* VerifyNet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyNet.h; sourceTree = "<group>"; };
 		FF022B7E169EDF560077656A /* VerifyNet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyNet.m; sourceTree = "<group>"; };
 		FF022B81169EE11B0077656A /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		FF022B8F169F0A4F0077656A /* popup-generic-inalt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-generic-inalt.png"; sourceTree = "<group>"; };
+		FF022B94169F0AA50077656A /* popup-generic-inalt@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-generic-inalt@2x.png"; sourceTree = "<group>"; };
+		FF022B96169F0AB10077656A /* popup-generic-inalt-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-generic-inalt-r4.png"; sourceTree = "<group>"; };
+		FF022B98169F0AFA0077656A /* text-ne-pare-rau.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-ne-pare-rau.png"; sourceTree = "<group>"; };
+		FF022B9A169F0B040077656A /* text-ne-pare-rau@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-ne-pare-rau@2x.png"; sourceTree = "<group>"; };
+		FF022B9C169F0B270077656A /* text-detalii-eroare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-detalii-eroare.png"; sourceTree = "<group>"; };
+		FF022B9E169F0B360077656A /* text-detalii-eroare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-detalii-eroare@2x.png"; sourceTree = "<group>"; };
+		FF022BA0169F165F0077656A /* continua.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = continua.png; sourceTree = "<group>"; };
+		FF022BA2169F166A0077656A /* continua@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continua@2x.png"; sourceTree = "<group>"; };
+		FF022BA4169F23B20077656A /* text-iti-multumim-intelegere.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-iti-multumim-intelegere.png"; sourceTree = "<group>"; };
+		FF022BA6169F23BC0077656A /* text-iti-multumim-intelegere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-iti-multumim-intelegere@2x.png"; sourceTree = "<group>"; };
 		FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAutovehiculViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCasaViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAsiguratiViewController_R4.xib; sourceTree = "<group>"; };
@@ -1758,6 +1780,14 @@
 				C3C73EE216248172008C309F /* selectat-casco@2x.png */,
 				C312894515D508E0006E057D /* tooltip-casco.png */,
 				C312894615D508E0006E057D /* tooltip-casco@2x.png */,
+				FF022B98169F0AFA0077656A /* text-ne-pare-rau.png */,
+				FF022B9A169F0B040077656A /* text-ne-pare-rau@2x.png */,
+				FF022B9C169F0B270077656A /* text-detalii-eroare.png */,
+				FF022B9E169F0B360077656A /* text-detalii-eroare@2x.png */,
+				FF022BA0169F165F0077656A /* continua.png */,
+				FF022BA2169F166A0077656A /* continua@2x.png */,
+				FF022BA4169F23B20077656A /* text-iti-multumim-intelegere.png */,
+				FF022BA6169F23BC0077656A /* text-iti-multumim-intelegere@2x.png */,
 			);
 			name = casco;
 			sourceTree = "<group>";
@@ -2217,6 +2247,9 @@
 				C3E1467A1619CADB0047F46E /* popup-generic.png */,
 				C3E1467B1619CADB0047F46E /* popup-generic@2x.png */,
 				FF8A32E01696DE1E0033C64E /* popup-generic-r4.png */,
+				FF022B8F169F0A4F0077656A /* popup-generic-inalt.png */,
+				FF022B94169F0AA50077656A /* popup-generic-inalt@2x.png */,
+				FF022B96169F0AB10077656A /* popup-generic-inalt-r4.png */,
 				C3E1467E1619CFEE0047F46E /* renunt-popup.png */,
 				C3E1467F1619CFEE0047F46E /* renunt-popup@2x.png */,
 			);
@@ -3353,6 +3386,17 @@
 				FF8A32F31696F9680033C64E /* YTOFAQViewController_R4.xib in Resources */,
 				FF8A32F51696FC4C0033C64E /* YTOTrimiteMesajViewController_R4.xib in Resources */,
 				FF8A32F7169702860033C64E /* popup-rca-r4.png in Resources */,
+				FF022B90169F0A4F0077656A /* popup-generic-inalt.png in Resources */,
+				FF022B95169F0AA50077656A /* popup-generic-inalt@2x.png in Resources */,
+				FF022B97169F0AB10077656A /* popup-generic-inalt-r4.png in Resources */,
+				FF022B99169F0AFA0077656A /* text-ne-pare-rau.png in Resources */,
+				FF022B9B169F0B040077656A /* text-ne-pare-rau@2x.png in Resources */,
+				FF022B9D169F0B270077656A /* text-detalii-eroare.png in Resources */,
+				FF022B9F169F0B360077656A /* text-detalii-eroare@2x.png in Resources */,
+				FF022BA1169F16600077656A /* continua.png in Resources */,
+				FF022BA3169F166A0077656A /* continua@2x.png in Resources */,
+				FF022BA5169F23B50077656A /* text-iti-multumim-intelegere.png in Resources */,
+				FF022BA7169F23BC0077656A /* text-iti-multumim-intelegere@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

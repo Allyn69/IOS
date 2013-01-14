@@ -46,7 +46,14 @@
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
     
-    IBOutlet UIView      *      vwLoading;    
+    IBOutlet UIView      * vwErrorAlert;
+    IBOutlet UIButton    * btnErrorAlertOK;
+    IBOutlet UIButton    * btnErrorAlertNO;
+    
+    IBOutlet UIView      * vwDetailErrorAlert;
+    IBOutlet UIButton    * btnDetailErrorAlertOK;
+    
+    IBOutlet UIView      * vwLoading;    
     IBOutlet UILabel     * lblLoading;
     IBOutlet UIActivityIndicatorView * loading;
     IBOutlet UIImageView * imgLoading;
@@ -58,6 +65,7 @@
     UITextField * txtCuloare;
     
     NSString * nrRate;
+    
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSMutableArray * listaCompaniiAsigurare;
@@ -88,4 +96,6 @@
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
 - (IBAction) hideCustomAlert:(id)sender;
+- (IBAction) hideErrorAlert:(id)sender;
+- (IBAction) hideDetailErrorAlert;
 @end

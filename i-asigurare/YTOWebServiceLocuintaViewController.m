@@ -8,6 +8,7 @@
 
 #import "YTOWebServiceLocuintaViewController.h"
 #import "YTOSumarLocuintaViewController.h"
+#import "VerifyNet.h"
 
 @interface YTOWebServiceLocuintaViewController ()
 
@@ -152,8 +153,7 @@
 }
 
 - (void) calculLocuinta {
-    [vwLoading setHidden:NO];
-    [self startLoadingAnimantion];
+    
     
 //    NSString * btnText;
 //    if (oferta.durataAsigurare == 6)
@@ -166,6 +166,12 @@
     
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@locuinta.asmx", LinkAPI]];
     
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+    
+        [vwLoading setHidden:NO];
+        [self startLoadingAnimantion];
+        
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
 														timeoutInterval:30.0];
@@ -199,7 +205,14 @@
 	
 	if (connection) {
 		self.responseData = [NSMutableData data];
-	}
+        }
+    }
+    else {
+    
+        vwErrorAlert.hidden = NO;
+    
+    }
+
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -229,7 +242,8 @@
             if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
             {
                 [vwLoading setHidden:YES];
-                [self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
+                //[self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
+                vwErrorAlert.hidden = NO;
                 [self stopLoadingAnimantion];
                 return;
             }
@@ -258,7 +272,8 @@
     // Daca nu este afisata nicio prima, dau mesaj
     if (listTarife.count == 0)
     {
-        [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+//        [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+        vwErrorAlert.hidden = NO;
     }
     else
     {
@@ -478,18 +493,36 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+//- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+//{
+//    [self stopLoadingAnimantion];
+//    [vwPopup setHidden:NO];
+//    lblPopupDescription.text = description;
+//    lblPopupTitle.text = title;
+//}
+
+//- (IBAction)hidePopup:(id)sender
+//{
+//    [vwPopup setHidden:YES];
+//    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+//}
+
+- (IBAction) hideErrorAlert:(id)sender
 {
-    [self stopLoadingAnimantion];
-    [vwPopup setHidden:NO];
-    lblPopupDescription.text = description;
-    lblPopupTitle.text = title;
+    UIButton * btn = (UIButton *)sender;
+    [vwErrorAlert setHidden:YES];
+    
+    if (btn == btnErrorAlertOK)
+        [vwDetailErrorAlert setHidden:NO];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)hidePopup:(id)sender
+- (IBAction) hideDetailErrorAlert
 {
-    [vwPopup setHidden:YES];
-    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+    [vwDetailErrorAlert setHidden:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
+
 @end

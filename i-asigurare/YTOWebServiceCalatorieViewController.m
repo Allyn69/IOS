@@ -9,6 +9,7 @@
 #import "YTOWebServiceCalatorieViewController.h"
 #import "YTOUtils.h"
 #import "YTOSumarCalatorieViewController.h"
+#import "VerifyNet.h"
 
 @interface YTOWebServiceCalatorieViewController ()
 
@@ -125,35 +126,39 @@
 }
 
 - (void) calculCalatorie {
-    [vwLoading setHidden:NO];
-    [self startLoadingAnimantion];
     
-    if ([[oferta CalatorieProgram] isEqualToString:@"5.000-eur"])
-    {
-        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-5000.png"];
-        lbl10k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        lbl5k.textColor = [UIColor whiteColor];
-    }
-    else if ([[oferta CalatorieProgram] isEqualToString:@"10.000-eur"])
-    {
-        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-10000.png"];
-        lbl5k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        lbl10k.textColor = [UIColor whiteColor];
-    }
-    else if ([[oferta CalatorieProgram] isEqualToString:@"30.000-eur"])
-    {
-        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-30000.png"];
-        lbl5k.textColor = lbl10k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        lbl30k.textColor = [UIColor whiteColor];
-    }
-    else if ([[oferta CalatorieProgram] isEqualToString:@"50.000-eur"])
-    {
-        imgSA.image = [UIImage imageNamed:@"tarife-calatorie-50000.png"];
-        lbl5k.textColor = lbl10k.textColor = lbl30k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-        lbl50k.textColor = [UIColor whiteColor];
-    }
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
     
+        [vwLoading setHidden:NO];
+        [self startLoadingAnimantion];
+        
+        if ([[oferta CalatorieProgram] isEqualToString:@"5.000-eur"])
+        {
+            imgSA.image = [UIImage imageNamed:@"tarife-calatorie-5000.png"];
+            lbl10k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+            lbl5k.textColor = [UIColor whiteColor];
+        }
+        else if ([[oferta CalatorieProgram] isEqualToString:@"10.000-eur"])
+        {
+            imgSA.image = [UIImage imageNamed:@"tarife-calatorie-10000.png"];
+            lbl5k.textColor = lbl30k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+            lbl10k.textColor = [UIColor whiteColor];
+        }
+        else if ([[oferta CalatorieProgram] isEqualToString:@"30.000-eur"])
+        {
+            imgSA.image = [UIImage imageNamed:@"tarife-calatorie-30000.png"];
+            lbl5k.textColor = lbl10k.textColor = lbl50k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+            lbl30k.textColor = [UIColor whiteColor];
+        }
+        else if ([[oferta CalatorieProgram] isEqualToString:@"50.000-eur"])
+        {
+            imgSA.image = [UIImage imageNamed:@"tarife-calatorie-50000.png"];
+            lbl5k.textColor = lbl10k.textColor = lbl30k.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+            lbl50k.textColor = [UIColor whiteColor];
+        }
 
+        
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@travel.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
@@ -174,6 +179,12 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+    }
+    else {
+        
+        vwErrorAlert.hidden = NO;
+        
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -202,11 +213,13 @@
             CotatieCalatorie * _cotatie = [listTarife objectAtIndex:0];
             if (listTarife.count == 1 && ![_cotatie.Eroare_ws isEqualToString:@"success"])
                 [self showPopupWithTitle:@"Atentie" andDescription:_cotatie.Eroare_ws];
+                //vwErrorAlert.hidden = NO;
             else
                 [tableView reloadData];
         }
         else
             [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+            //vwErrorAlert.hidden = NO;
     }
 }
 
@@ -216,8 +229,8 @@
 
     [self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", [error localizedDescription]]];
     
-//	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//	[alertView show];
+    //vwErrorAlert.hidden = NO;
+
 }
 
 #pragma mark NSXMLParser Methods
@@ -383,6 +396,23 @@
     [vwPopup setHidden:YES];
     YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [delegate.rcaNavigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hideErrorAlert:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    [vwErrorAlert setHidden:YES];
+    
+    if (btn == btnErrorAlertOK)
+        [vwDetailErrorAlert setHidden:NO];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hideDetailErrorAlert
+{
+    [vwDetailErrorAlert setHidden:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

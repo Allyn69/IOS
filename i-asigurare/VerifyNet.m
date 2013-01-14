@@ -29,6 +29,7 @@
             if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
             {
                 // if target host is not reachable
+                
                 return NO;
             }
             
@@ -57,6 +58,8 @@
             {
                 // ... but WWAN connections are OK if the calling application
                 //     is using the CFNetwork (CFSocketStream?) APIs.
+                
+                
                 return YES;
             }
         }

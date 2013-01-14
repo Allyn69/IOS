@@ -38,6 +38,13 @@
     IBOutlet UILabel     * lbl10k;
     IBOutlet UILabel     * lbl30k;
     IBOutlet UILabel     * lbl50k;
+    
+    IBOutlet UIView      * vwErrorAlert;
+    IBOutlet UIButton    * btnErrorAlertOK;
+    IBOutlet UIButton    * btnErrorAlertNO;
+    
+    IBOutlet UIView      * vwDetailErrorAlert;
+    IBOutlet UIButton    * btnDetailErrorAlertOK;
 }
 
 @property (nonatomic, retain) CotatieCalatorie * cotatie;
@@ -54,5 +61,6 @@
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
 - (IBAction)hidePopup:(id)sender;
 - (IBAction)calculeazaDupaAltaSA:(id)sender;
-
+- (IBAction) hideErrorAlert:(id)sender;
+- (IBAction) hideDetailErrorAlert;
 @end

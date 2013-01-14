@@ -43,6 +43,17 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
+    if (masina.nrKm > 0)
+        [self setNumarKm:masina.nrKm];
+    
+    if (masina.culoare && ![masina.culoare isEqualToString:@""])
+        [self setCuloare:masina.culoare];
+    
+    if (masina.cascoLa && ![masina.cascoLa isEqualToString:@""])
+        [self setCompanieCasco:masina.cascoLa];
+    
+    [self setNrRate:@"Integral"];
+    
     [self initCells];
     [self initCustomValues];
 }
@@ -362,6 +373,7 @@
         ((UILabel *)[cellMasina viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
     }
     masina = a;
+    [self setCompanieCasco:a.cascoLa];
     if (masina.idProprietar.length > 0 && ![masina.idProprietar isEqualToString:asigurat.idIntern] && cautLegaturaDintreMasinaSiAsigurat)
     {
         YTOPersoana * prop = [YTOPersoana getPersoana:masina.idProprietar];
@@ -658,13 +670,14 @@
         [masina updateAutovehicul];
     }
     
-    [self doneEditing];
-    [self showCustomLoading];
     self.navigationItem.hidesBackButton = YES;
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@casco.asmx", LinkAPI]];
     
     VerifyNet * vn = [[VerifyNet alloc] init];
     if ([vn hasConnectivity]) {
+        
+        [self doneEditing];
+        [self showCustomLoading];
         
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -689,10 +702,12 @@
     }
     
     else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle:@"" message:@"Verificati conexiunea dumneavoastra la Internet." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        
+        vwErrorAlert.hidden = NO;
+        vwCustomAlert.hidden = YES;
+        
     }
-
+    
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -720,7 +735,8 @@
 	}
 	else
     {
-        [self showCustomAlert:@"Cerere CASCO" withDescription:@"Cererea NU a fost transmisa." withError:YES withButtonIndex:4];
+        //[self showCustomAlert:@"Cerere CASCO" withDescription:@"Cererea NU a fost transmisa." withError:YES withButtonIndex:4];
+        vwErrorAlert.hidden = NO;
 	}
     
 }
@@ -730,7 +746,8 @@
 	NSLog(@"%@", [error localizedDescription]);
 	
     [self hideCustomLoading];
-    [self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
+    //[self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
+    vwErrorAlert.hidden = NO;
 }
 
 #pragma mark NSXMLParser Methods
@@ -768,6 +785,22 @@
         [self showPopupDupaComanda];
 }
 
+
+
+- (IBAction) hideErrorAlert:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    [vwErrorAlert setHidden:YES];
+    
+    if (btn == btnErrorAlertOK)
+        [vwDetailErrorAlert setHidden:NO];
+}
+
+- (IBAction) hideDetailErrorAlert
+{
+    [vwDetailErrorAlert setHidden:YES];
+}
+
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
 {
     if (error)
@@ -787,7 +820,7 @@
     [vwCustomAlert setHidden:NO];
 }
 
-- (IBAction) hideCustomAlert:(id)sender;
+- (IBAction) hideCustomAlert:(id)sender
 {
     UIButton * btn = (UIButton *)sender;
     [vwCustomAlert setHidden:YES];
@@ -798,8 +831,8 @@
     else if (btn.tag == 11)
         [self.navigationController popToRootViewControllerAnimated:YES];
     else if (btn.tag == 100)
-        [self callInregistrareComanda];
-    
+             [self callInregistrareComanda];
+
 }
 
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index

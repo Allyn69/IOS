@@ -42,6 +42,13 @@
     IBOutlet UILabel     * lbl6Luni;
     IBOutlet UILabel     * lbl12Luni;
     
+    IBOutlet UIView      * vwErrorAlert;
+    IBOutlet UIButton    * btnErrorAlertOK;
+    IBOutlet UIButton    * btnErrorAlertNO;
+    
+    IBOutlet UIView      * vwDetailErrorAlert;
+    IBOutlet UIButton    * btnDetailErrorAlertOK;
+    
     NSMutableData * responseCalcul6Luni;
     NSMutableData * responseCalcul12Luni;
 }
@@ -61,5 +68,6 @@
 
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
 - (IBAction)hidePopup:(id)sender;
-
+- (IBAction) hideErrorAlert:(id)sender;
+- (IBAction) hideDetailErrorAlert;
 @end

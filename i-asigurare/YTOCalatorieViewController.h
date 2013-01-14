@@ -33,6 +33,7 @@
     NSString * taraDestinatie;
     NSString * tranzit;
     NSString * sumaAsigurata;
+    
 }
 
 @property (nonatomic, retain) NSDate *   DataInceput;
@@ -53,5 +54,7 @@
 - (void) setTaraDestinatie:(NSString *)tara;
 - (void) setListaAsigurati:(NSMutableArray *) list withIndex:(NSMutableArray *) indexList;
 - (void) setTranzit:(NSString *)v;
+
+- (void) setCuloareCellCalatori;
 
 @end

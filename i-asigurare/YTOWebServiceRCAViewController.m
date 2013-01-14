@@ -10,6 +10,8 @@
 #import "YTOAppDelegate.h"
 #import "YTOSumarRCAViewController.h"
 #import "YTOUtils.h"
+#import "VerifyNet.h"
+#import "YTOCalculatorViewController.h"
 
 @interface YTOWebServiceRCAViewController ()
 
@@ -197,8 +199,6 @@
 
 - (void) calculRCA {
     self.navigationItem.hidesBackButton = YES;
-    [vwLoading setHidden:NO];
-    [self startLoadingAnimantion];
     
     if (oferta.durataAsigurare == 6)
     {
@@ -213,6 +213,12 @@
         lbl12Luni.textColor = [UIColor whiteColor];
     }
     
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+        
+        [vwLoading setHidden:NO];
+        [self startLoadingAnimantion];
+        
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
@@ -234,6 +240,13 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+    }
+    
+    else {
+        
+        vwErrorAlert.hidden = NO;
+        
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -264,7 +277,9 @@
 //	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 //	[alertView show];
 
-    [self showPopupWithTitle:@"Atentie" andDescription:[error localizedDescription]];
+    //[self showPopupWithTitle:@"Atentie" andDescription:[error localizedDescription]];
+    
+    vwErrorAlert.hidden = NO;
     
 //    YTOCustomPopup * alert = [[YTOCustomPopup alloc] initWithNibName:@"YTOCustomPopupView" bundle:nil];
 //    alert.delegate = self;
@@ -282,10 +297,11 @@
         //    		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         //    		[alertView show];
         
-        [self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", cotatie.eroare_ws]];
+        //[self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", cotatie.eroare_ws]];
         
         //            YTOCustomPopup * alert = [[YTOCustomPopup alloc] init];
         //            [alert showAlert:@"Atentie" withMessage:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
+        vwErrorAlert.hidden = NO;
     }
     else if (succes && cotatie != nil) {
         
@@ -464,7 +480,8 @@
         
         if (listTarife.count == 0)
         {
-            [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+            //[self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+            vwErrorAlert.hidden = NO;
         }
         else
             [tableView reloadData];
@@ -648,19 +665,37 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+//- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+//{
+//    [self stopLoadingAnimantion];
+//    //[vwPopup setHidden:NO];
+//    [vwErrorAlert setHidden:NO];
+//    //lblPopupDescription.text = description;
+//    //lblPopupTitle.text = title;
+//}
+
+//- (IBAction)hidePopup:(id)sender
+//{
+//    [vwPopup setHidden:YES];
+//    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+//}
+
+- (IBAction) hideErrorAlert:(id)sender
 {
-    [self stopLoadingAnimantion];
-    [vwPopup setHidden:NO];
-    lblPopupDescription.text = description;
-    lblPopupTitle.text = title;
+    UIButton * btn = (UIButton *)sender;
+    [vwErrorAlert setHidden:YES];
+    
+    if (btn == btnErrorAlertOK)
+        [vwDetailErrorAlert setHidden:NO];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (IBAction)hidePopup:(id)sender
+- (IBAction) hideDetailErrorAlert
 {
-    [vwPopup setHidden:YES];
-    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+    [vwDetailErrorAlert setHidden:YES];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

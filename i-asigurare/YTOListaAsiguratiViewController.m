@@ -216,6 +216,10 @@
                    break;
                }
            }
+           
+           YTOCalatorieViewController * parent = (YTOCalatorieViewController *)self.controller;
+           [parent setCuloareCellCalatori];
+           
            if (!exista)
            {
                [listaAsiguratiSelectati addObject:p];

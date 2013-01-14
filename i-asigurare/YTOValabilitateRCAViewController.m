@@ -11,6 +11,7 @@
 #import "YTOAutovehicul.h"
 #import "YTOListaAutoViewController.h"
 #import "YTOUtils.h"
+#import "VerifyNet.h"
 
 @interface YTOValabilitateRCAViewController ()
 
@@ -90,10 +91,13 @@
         return;
     }
     
-    [self showLoading];
-    
     self.navigationItem.hidesBackButton = YES;
 
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+
+        [self showLoading];
+        
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@utils.asmx", LinkAPI]];
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
@@ -114,7 +118,14 @@
 	
 	if (connection) {
 		self.responseData = [NSMutableData data];
-	}
+        }
+    }
+    else {
+        
+        vwErrorAlert.hidden = NO;
+        
+    }
+
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -152,6 +163,7 @@
             
             if ([status isEqualToString:@"0"])
                 [self showPopup:@"Polita nu a fost gasita!" withDescription:mesaj];
+                //vwErrorAlert.hidden = NO;
             else if ([status isEqualToString:@"1"])
                 [self showPopup:@"Polita gasita!" withDescription:mesaj];
             else if ([status isEqualToString:@"2"])
@@ -169,7 +181,8 @@
 	NSLog(@"%@", [error localizedDescription]);
 	
     [self hideLoading];
-    [self showPopup:@"Polita nu a fost gasita" withDescription:@"Baza de date CEDAM nu a raspuns. Fie nu functioneaza momentan, fie ai introdus gresit seria de sasiu sau numarul de inmatriculare."];
+    //[self showPopup:@"Polita nu a fost gasita" withDescription:@"Baza de date CEDAM nu a raspuns. Fie nu functioneaza momentan, fie ai introdus gresit seria de sasiu sau numarul de inmatriculare."];
+    vwErrorAlert.hidden = NO;
 }
 
 #pragma mark NSXMLParser Methods
@@ -237,4 +250,22 @@
     [loading setHidden:YES];
     [vwLoading setHidden:NO];
 }
+
+- (IBAction) hideErrorAlert:(id)sender
+{
+    UIButton * btn = (UIButton *)sender;
+    [vwErrorAlert setHidden:YES];
+    
+    if (btn == btnErrorAlertOK)
+        [vwDetailErrorAlert setHidden:NO];
+    //else
+      //  [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hideDetailErrorAlert
+{
+    [vwDetailErrorAlert setHidden:YES];
+    //[self.navigationController popViewControllerAnimated:YES];
+}
+
 @end

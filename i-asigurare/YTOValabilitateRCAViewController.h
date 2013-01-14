@@ -27,6 +27,13 @@
 	NSString    * jsonResponse;
     
     NSDate * dataExpirare;
+    
+    IBOutlet UIView      * vwErrorAlert;
+    IBOutlet UIButton    * btnErrorAlertOK;
+    IBOutlet UIButton    * btnErrorAlertNO;
+    
+    IBOutlet UIView      * vwDetailErrorAlert;
+    IBOutlet UIButton    * btnDetailErrorAlertOK;
 }
 @property (nonatomic, retain) NSMutableData * responseData;
 @property (nonatomic, retain) YTOAutovehicul * masina;
@@ -39,4 +46,6 @@
 - (IBAction) hideLoading;
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description;
 
+- (IBAction) hideErrorAlert:(id)sender;
+- (IBAction) hideDetailErrorAlert;
 @end

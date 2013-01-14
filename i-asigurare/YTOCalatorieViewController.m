@@ -101,7 +101,7 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
@@ -122,9 +122,22 @@
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 8)
-    {
-        if (listaAsigurati.count == 0)
+    {        
+        if (!listaAsigurati.count)
+        {
+            UILabel * lblCell = (UILabel *)[cellCalatori viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
             return;
+        }
+        else {
+            UILabel * lblCell = (UILabel *)[cellCalatori viewWithTag:2];
+            lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+        }
         
         oferta = [[YTOOferta alloc] initWithGuid:[YTOUtils GenerateUUID]];
         oferta.dataInceput = _DataInceput;
@@ -311,6 +324,11 @@
 }
      
 #pragma Properties
+
+- (void) setCuloareCellCalatori {
+    UILabel * lblCell = (UILabel *)[cellCalatori viewWithTag:2];
+    lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+}
 
 - (void) setDataInceput:(NSDate *)DataInceput
 {
