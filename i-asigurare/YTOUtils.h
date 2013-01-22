@@ -43,12 +43,14 @@ static NSString * ColorOrange = @"#f15a24";
 static NSString * ColorOrangeInchis = @"#f15f2a";
 static NSString * ColorAlbastru = @"#006fbb";
 static NSString * ColorAlbastruInchis = @"#004572";
+BOOL trecutDeOra;
 
-//static NSString * LinkAPI = @"https://api.i-business.ro/MaAsigurApi/";
+static NSString * LinkAPI = @"https://api.i-business.ro/MaAsigurApi/";
 
 //static NSString * LinkAPI = @"http://i-crm.ro/MaAsigurApiTest/";
-static NSString * LinkAPI = @"http://rc.i-crm.ro/MaAsigurApi/";
+//static NSString * LinkAPI = @"http://rc.i-crm.ro/MaAsigurApi/";
 //static NSString * LinkAPI = @"http://192.168.1.176:8082/";
+//static NSString * LinkAPI = @"";
 
 #define NSStringIsNullOrEmpty(str) ((str==nil) || [(str) isEqualToString:@""] || [str isKindOfClass:[NSString class]])
 

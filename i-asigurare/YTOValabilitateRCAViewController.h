@@ -28,12 +28,25 @@
     
     NSDate * dataExpirare;
     
+    IBOutlet UIView      * vwPopup;
+    IBOutlet UILabel     * lblPopupTitle;
+    IBOutlet UILabel     * lblPopupDescription;
+    
     IBOutlet UIView      * vwErrorAlert;
     IBOutlet UIButton    * btnErrorAlertOK;
     IBOutlet UIButton    * btnErrorAlertNO;
     
+    IBOutlet UIView      * vwDetailAlert;
+    IBOutlet UIButton    * btnDetailAlertOK;
+    
     IBOutlet UIView      * vwDetailErrorAlert;
     IBOutlet UIButton    * btnDetailErrorAlertOK;
+    
+    IBOutlet UIView      * vwServiciu;
+    IBOutlet UILabel     * lblServiciuDescription;
+    
+    IBOutlet UILabel     * lblTitlu;
+    IBOutlet UILabel     * lblExpira;
 }
 @property (nonatomic, retain) NSMutableData * responseData;
 @property (nonatomic, retain) YTOAutovehicul * masina;
@@ -44,8 +57,13 @@
 
 - (void) showLoading;
 - (IBAction) hideLoading;
+- (void) showPopupServiciu:description;
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description;
+- (void) arataPopup:(NSString *)title withDescription:(NSString *)desciption;
 
 - (IBAction) hideErrorAlert:(id)sender;
 - (IBAction) hideDetailErrorAlert;
+- (IBAction) hideDetailAlert;
+- (IBAction) hidePopup;
+- (IBAction) hidePopupServiciu;
 @end

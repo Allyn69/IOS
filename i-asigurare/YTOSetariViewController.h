@@ -42,6 +42,11 @@
     IBOutlet UILabel     * lblCustomAlertOK;
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
+    
+    IBOutlet UIView      * vwServiciu;
+    IBOutlet UILabel     * lblServiciuDescription;
+    
+    IBOutlet UIView      * vwPopup;
 }
 
 @property (nonatomic, retain) NSMutableData * responseData;
@@ -50,8 +55,12 @@
 - (void) reloadData;
 - (void) startLoadingAnimantion;
 - (void) stopLoadingAnimantion;
-
+- (void) showPopupServiciu:description;
+- (void) showPopup;
 - (void) showCustomLoading;
+
+- (IBAction) hidePopup;
 - (IBAction) hideCustomLoading;
+- (IBAction) hidePopupServiciu;
 
 @end

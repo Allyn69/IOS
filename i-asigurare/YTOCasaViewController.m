@@ -54,16 +54,29 @@
         [self setNrLocatari:2];
         locuinta.locuitPermanent = @"da";
         
+        UILabel * lbl = (UILabel *)[cellDescriereLocuinta viewWithTag:2];
+        NSString * descr = lbl.text;
+        
+        if ([locuinta.locuitPermanent isEqualToString:@"da"] && [descr rangeOfString:@"locuit permanent |"].location != 0)
+            descr = [descr stringByAppendingString:@"locuit permanent | "];
+        else if (![locuinta.locuitPermanent isEqualToString:@"da"])
+            descr = [descr stringByReplacingOccurrencesOfString:@"locuit permanent |" withString:@""];
+        
+        lbl.text = descr;
+        
         YTOPersoana * proprietar = [YTOPersoana Proprietar];
         if (proprietar)
         {
-            [self setJudet:proprietar.judet];
             [self setLocalitate:proprietar.localitate];
+            [self setJudet:proprietar.judet];
             [self setAdresa:proprietar.adresa];
         }
         percentCompletedOnLoad = [locuinta CompletedPercent];
     }
     else {
+        if (([locuinta.tipLocuinta isEqualToString:@"casa-vila-individuala"])
+            || ([locuinta.tipLocuinta isEqualToString:@"casa-vila-comuna"]))
+            faraEtaj = YES;
         [self load:locuinta];
     }
 }
@@ -101,7 +114,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (selectatInfoLocuinta)
-        if (isOK == NO) return 14;
+        if (faraEtaj == NO) return 14;
                    else return 13;
     else
         return 4;
@@ -111,7 +124,7 @@
 {
     if (selectatInfoLocuinta)
     {
-        if (isOK == NO){
+        if (faraEtaj == NO){
         if (indexPath.row == 0)
             return 78;
         else if (indexPath.row ==1)
@@ -154,7 +167,7 @@
     
     if (selectatInfoLocuinta)
     {
-        if (isOK == NO){
+        if (faraEtaj == NO){
         if (indexPath.row == 0) cell = cellHeader;
         else if (indexPath.row == 1) cell = cellInfoAlerte;
         else if (indexPath.row == 2) cell = cellJudetLocalitate;
@@ -263,12 +276,12 @@
         }
         else if (indexPath.row == 11)
         {
-            if (isOK == YES)
+            if (faraEtaj == YES)
             [self showListaDescriereLocuinta:indexPath];
         }
         else if (indexPath.row == 12)
         {
-            if (isOK == NO)
+            if (faraEtaj == NO)
             [self showListaDescriereLocuinta:indexPath];
         }
         else
@@ -296,19 +309,36 @@
         
         if (indexPath.row == 3)     // Adresa
             [self showTooltip:@"Adresa completa, strada, numar, bloc, etc."];
-        else if (indexPath.row == 6) // Nr. Etaje
-            [self showTooltip:@"Numarul de etaje al imobilului / blocului."];
-        else if (indexPath.row == 7) // Etaj
-            [self showTooltip:@"Etajul la care se afla locuinta."];
-        else if (indexPath.row == 8)
-        {
-            [self showTooltip:@"Anul constructiei imobilului."];
-            ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+        if (faraEtaj == NO) {
+            
+            if (indexPath.row == 6) // Nr. Etaje
+                [self showTooltip:@"Numarul de etaje al imobilului / blocului."];
+            else if (indexPath.row == 7) // Etaj
+                [self showTooltip:@"Etajul la care se afla locuinta."];
+            else if (indexPath.row == 8)
+            {
+                [self showTooltip:@"Anul constructiei imobilului."];
+                ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+            }
+            else if (indexPath.row == 10)
+            {
+                textField.text = [textField.text stringByReplacingOccurrencesOfString:@" mp" withString:@""];
+                [self showTooltip:@"Supfrata utila a locuintei in metri patrati."];
+            }
         }
-        else if (indexPath.row == 10)
-        {
-            textField.text = [textField.text stringByReplacingOccurrencesOfString:@" mp" withString:@""];
-            [self showTooltip:@"Supfrata utila a locuintei in metri patrati."];
+        else {
+            if (indexPath.row == 6) // Nr. Etaje
+                [self showTooltip:@"Numarul de etaje al imobilului / blocului."];
+            else if (indexPath.row == 7)
+            {
+                [self showTooltip:@"Anul constructiei imobilului."];
+                ((UIImageView *)[currentCell viewWithTag:10]).hidden = YES;
+            }
+            else if (indexPath.row == 9)
+            {
+                textField.text = [textField.text stringByReplacingOccurrencesOfString:@" mp" withString:@""];
+                [self showTooltip:@"Supfrata utila a locuintei in metri patrati."];
+            }
         }
     }
     else
@@ -392,10 +422,19 @@
             [self setInaltime:[textField.text intValue]];
         else if (index == 7)
             [self setEtaj:[textField.text intValue]];
-        else if (index == 8)
-            [self setAnConstructie:[textField.text intValue]];
-        else if (index == 10)
-            [self setSuprafata:[textField.text intValue]];
+        if (!faraEtaj) {
+            if (index == 8)
+                [self setAnConstructie:[textField.text intValue]];
+            else if (index == 10)
+                [self setSuprafata:[textField.text intValue]];
+        }
+        else {
+            if (index == 7)
+                [self setAnConstructie:[textField.text intValue]];
+            else if (index == 9)
+                [self setSuprafata:[textField.text intValue]];
+
+        }
     }
     else
     {
@@ -428,8 +467,8 @@
     UIImageView * imgTextHeader = (UIImageView *)[cellHeader viewWithTag:1];
     imgTextHeader.image = [UIImage imageNamed:@"text-header-locuinta-salvata.png"];
     
-    [self setJudet:p.judet];
     [self setLocalitate:p.localitate];
+    [self setJudet:p.judet];
     [self setAdresa:p.adresa];
     [self setTipLocuinta:p.tipLocuinta];
     [self setStructura:p.structuraLocuinta];
@@ -754,6 +793,7 @@
     NSArray *topLevelObjectsSuprafata = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellSuprafata = [topLevelObjectsSuprafata objectAtIndex:0];
     [(UILabel *)[cellSuprafata viewWithTag:1] setText:@"SUPRAFATA (MP)"];
+    txtSuprafata = (UITextField *)[cellSuprafata viewWithTag:2];
     [(UITextField *)[cellSuprafata viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellSuprafata viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellSuprafata];    
@@ -837,17 +877,17 @@
     
     if (btn.tag == 1) {
         [self setTipLocuinta:@"apartament-in-bloc"];
-        isOK = NO;
+        faraEtaj = NO;
         [tableView reloadData];
     }
     else if (btn.tag == 2) {
         [self setTipLocuinta:@"casa-vila-comuna"];
-        isOK = YES;
+        faraEtaj = YES;
         [tableView reloadData];
     }
     else if (btn.tag ==3) {
         [self setTipLocuinta:@"casa-vila-individuala"];
-        isOK = YES;
+        faraEtaj = YES;
         [tableView reloadData];
     }
     
@@ -954,9 +994,11 @@
     {
         locuinta.suprafataUtila = p;
         UITextField * txt = (UITextField *)[cellSuprafata viewWithTag:2];
-        txt.text = [NSString stringWithFormat:@"%d mp", p];
+        txtSuprafata.text = [NSString stringWithFormat:@"%d mp", p];
     }
+    else locuinta.suprafataUtila = 0;
 }
+
 - (void) setNrLocatari:(int)p
 {
     locuinta.nrLocatari = p;

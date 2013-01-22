@@ -248,6 +248,11 @@
 		C34C62D115B03328003D88DE /* asig-locuinte@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62C915B03328003D88DE /* asig-locuinte@2x.png */; };
 		C34C62D215B03328003D88DE /* asig-rca.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62CA15B03328003D88DE /* asig-rca.png */; };
 		C34C62D315B03328003D88DE /* asig-rca@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C34C62CB15B03328003D88DE /* asig-rca@2x.png */; };
+		C35ABD6316A95C2900F037BC /* persoana-salvata.png in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD6216A95C2900F037BC /* persoana-salvata.png */; };
+		C35ABD6516A95C3700F037BC /* persoana-salvata@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD6416A95C3700F037BC /* persoana-salvata@2x.png */; };
+		C35ABD6716A9859A00F037BC /* text-important.png in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD6616A9859A00F037BC /* text-important.png */; };
+		C35ABD6916A985A300F037BC /* text-important@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD6816A985A300F037BC /* text-important@2x.png */; };
+		C35ABD7316AD60C400F037BC /* zero-alerte-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = C35ABD7216AD60C400F037BC /* zero-alerte-r4.png */; };
 		C35FEAE816832AA400961D87 /* YTOCalculatorViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = C35FEAE716832AA400961D87 /* YTOCalculatorViewController_R4.xib */; };
 		C35FEAEB16832EE600961D87 /* YTOWebServiceRCAViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = C35FEAEA16832EE600961D87 /* YTOWebServiceRCAViewController_R4.xib */; };
 		C35FEAED1683307200961D87 /* YTOFinalizareRCAViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = C35FEAEC1683307100961D87 /* YTOFinalizareRCAViewController_R4.xib */; };
@@ -291,6 +296,13 @@
 		C39B8CC4160217FA00CDBD9B /* icon-foto-person-profil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C39B8CC0160217A900CDBD9B /* icon-foto-person-profil@2x.png */; };
 		C39B8CC5160217FA00CDBD9B /* icon-foto-person-xs-profil.png in Resources */ = {isa = PBXBuildFile; fileRef = C39B8CC1160217B900CDBD9B /* icon-foto-person-xs-profil.png */; };
 		C39B8CC6160217FA00CDBD9B /* icon-foto-person-xs-profil@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C39B8CC2160217D400CDBD9B /* icon-foto-person-xs-profil@2x.png */; };
+		C3A17B3916A8105200650278 /* recuperezi-datele.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B3816A8105200650278 /* recuperezi-datele.png */; };
+		C3A17B3C16A8105F00650278 /* recuperezi-datele@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B3B16A8105F00650278 /* recuperezi-datele@2x.png */; };
+		C3A17B3E16A8296500650278 /* sincronizare.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B3D16A8296500650278 /* sincronizare.png */; };
+		C3A17B4016A8296E00650278 /* sincronizare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B3F16A8296E00650278 /* sincronizare@2x.png */; };
+		C3A17B4216A8349600650278 /* cum-editezi-alerte.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B4116A8349600650278 /* cum-editezi-alerte.png */; };
+		C3A17B4416A8349F00650278 /* cum-editezi-alerte@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B4316A8349F00650278 /* cum-editezi-alerte@2x.png */; };
+		C3A17B4716A8632600650278 /* YTOAlerteViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = C3A17B4516A8632400650278 /* YTOAlerteViewController_R4.xib */; };
 		C3B7632B1614630A00C3187E /* adauga-persoana-noua.png in Resources */ = {isa = PBXBuildFile; fileRef = C3B763291614630A00C3187E /* adauga-persoana-noua.png */; };
 		C3B7632C1614630A00C3187E /* adauga-persoana-noua@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C3B7632A1614630A00C3187E /* adauga-persoana-noua@2x.png */; };
 		C3B7632F1614633700C3187E /* adauga-locuinta-noua.png in Resources */ = {isa = PBXBuildFile; fileRef = C3B7632D1614633700C3187E /* adauga-locuinta-noua.png */; };
@@ -726,6 +738,8 @@
 		FF022BA3169F166A0077656A /* continua@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA2169F166A0077656A /* continua@2x.png */; };
 		FF022BA5169F23B50077656A /* text-iti-multumim-intelegere.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA4169F23B20077656A /* text-iti-multumim-intelegere.png */; };
 		FF022BA7169F23BC0077656A /* text-iti-multumim-intelegere@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BA6169F23BC0077656A /* text-iti-multumim-intelegere@2x.png */; };
+		FF022BBA16A430820077656A /* arrow-mov.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BB816A430820077656A /* arrow-mov.png */; };
+		FF022BBB16A430820077656A /* arrow-mov@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FF022BB916A430820077656A /* arrow-mov@2x.png */; };
 		FF261EDA1695DB30000B8590 /* YTOAutovehiculViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */; };
 		FF8A32D81696CFDF0033C64E /* YTOCasaViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */; };
 		FF8A32DB1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */; };
@@ -741,6 +755,11 @@
 		FF8A32F31696F9680033C64E /* YTOFAQViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F21696F9680033C64E /* YTOFAQViewController_R4.xib */; };
 		FF8A32F51696FC4C0033C64E /* YTOTrimiteMesajViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F41696FC4A0033C64E /* YTOTrimiteMesajViewController_R4.xib */; };
 		FF8A32F7169702860033C64E /* popup-rca-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FF8A32F6169702850033C64E /* popup-rca-r4.png */; };
+		FFF2759016A55CBC00798A7C /* tooltip1-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FFF2758F16A55CBC00798A7C /* tooltip1-r4.png */; };
+		FFF2759316A55D0900798A7C /* tooltip2-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FFF2759216A55D0900798A7C /* tooltip2-r4.png */; };
+		FFF2759516A55D2A00798A7C /* tooltip3-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FFF2759416A55D2A00798A7C /* tooltip3-r4.png */; };
+		FFF275AB16A5A6F200798A7C /* popup-dupa-comanda-r4.png in Resources */ = {isa = PBXBuildFile; fileRef = FFF275AA16A5A6F200798A7C /* popup-dupa-comanda-r4.png */; };
+		FFF275B516A6A9D800798A7C /* YTOSetariViewController_R4.xib in Resources */ = {isa = PBXBuildFile; fileRef = FFF275B416A6A9D400798A7C /* YTOSetariViewController_R4.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -1010,6 +1029,11 @@
 		C34C62C915B03328003D88DE /* asig-locuinte@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-locuinte@2x.png"; sourceTree = "<group>"; };
 		C34C62CA15B03328003D88DE /* asig-rca.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-rca.png"; sourceTree = "<group>"; };
 		C34C62CB15B03328003D88DE /* asig-rca@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "asig-rca@2x.png"; sourceTree = "<group>"; };
+		C35ABD6216A95C2900F037BC /* persoana-salvata.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "persoana-salvata.png"; sourceTree = "<group>"; };
+		C35ABD6416A95C3700F037BC /* persoana-salvata@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "persoana-salvata@2x.png"; sourceTree = "<group>"; };
+		C35ABD6616A9859A00F037BC /* text-important.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-important.png"; sourceTree = "<group>"; };
+		C35ABD6816A985A300F037BC /* text-important@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-important@2x.png"; sourceTree = "<group>"; };
+		C35ABD7216AD60C400F037BC /* zero-alerte-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zero-alerte-r4.png"; sourceTree = "<group>"; };
 		C35FEAE716832AA400961D87 /* YTOCalculatorViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCalculatorViewController_R4.xib; sourceTree = "<group>"; };
 		C35FEAEA16832EE600961D87 /* YTOWebServiceRCAViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOWebServiceRCAViewController_R4.xib; sourceTree = "<group>"; };
 		C35FEAEC1683307100961D87 /* YTOFinalizareRCAViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOFinalizareRCAViewController_R4.xib; sourceTree = "<group>"; };
@@ -1054,6 +1078,13 @@
 		C39B8CC0160217A900CDBD9B /* icon-foto-person-profil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-foto-person-profil@2x.png"; sourceTree = "<group>"; };
 		C39B8CC1160217B900CDBD9B /* icon-foto-person-xs-profil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-foto-person-xs-profil.png"; sourceTree = "<group>"; };
 		C39B8CC2160217D400CDBD9B /* icon-foto-person-xs-profil@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-foto-person-xs-profil@2x.png"; sourceTree = "<group>"; };
+		C3A17B3816A8105200650278 /* recuperezi-datele.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "recuperezi-datele.png"; sourceTree = "<group>"; };
+		C3A17B3B16A8105F00650278 /* recuperezi-datele@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "recuperezi-datele@2x.png"; sourceTree = "<group>"; };
+		C3A17B3D16A8296500650278 /* sincronizare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sincronizare.png; sourceTree = "<group>"; };
+		C3A17B3F16A8296E00650278 /* sincronizare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sincronizare@2x.png"; sourceTree = "<group>"; };
+		C3A17B4116A8349600650278 /* cum-editezi-alerte.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cum-editezi-alerte.png"; sourceTree = "<group>"; };
+		C3A17B4316A8349F00650278 /* cum-editezi-alerte@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cum-editezi-alerte@2x.png"; sourceTree = "<group>"; };
+		C3A17B4616A8632600650278 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/YTOAlerteViewController_R4.xib; sourceTree = "<group>"; };
 		C3B763291614630A00C3187E /* adauga-persoana-noua.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "adauga-persoana-noua.png"; sourceTree = "<group>"; };
 		C3B7632A1614630A00C3187E /* adauga-persoana-noua@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "adauga-persoana-noua@2x.png"; sourceTree = "<group>"; };
 		C3B7632D1614633700C3187E /* adauga-locuinta-noua.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "adauga-locuinta-noua.png"; sourceTree = "<group>"; };
@@ -1529,6 +1560,8 @@
 		FF022BA2169F166A0077656A /* continua@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "continua@2x.png"; sourceTree = "<group>"; };
 		FF022BA4169F23B20077656A /* text-iti-multumim-intelegere.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-iti-multumim-intelegere.png"; sourceTree = "<group>"; };
 		FF022BA6169F23BC0077656A /* text-iti-multumim-intelegere@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "text-iti-multumim-intelegere@2x.png"; sourceTree = "<group>"; };
+		FF022BB816A430820077656A /* arrow-mov.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-mov.png"; sourceTree = "<group>"; };
+		FF022BB916A430820077656A /* arrow-mov@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-mov@2x.png"; sourceTree = "<group>"; };
 		FF261ED91695DB30000B8590 /* YTOAutovehiculViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOAutovehiculViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32D71696CFDF0033C64E /* YTOCasaViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOCasaViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32DA1696D2CB0033C64E /* YTOListaAsiguratiViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOListaAsiguratiViewController_R4.xib; sourceTree = "<group>"; };
@@ -1544,6 +1577,11 @@
 		FF8A32F21696F9680033C64E /* YTOFAQViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOFAQViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32F41696FC4A0033C64E /* YTOTrimiteMesajViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOTrimiteMesajViewController_R4.xib; sourceTree = "<group>"; };
 		FF8A32F6169702850033C64E /* popup-rca-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-rca-r4.png"; sourceTree = "<group>"; };
+		FFF2758F16A55CBC00798A7C /* tooltip1-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip1-r4.png"; sourceTree = "<group>"; };
+		FFF2759216A55D0900798A7C /* tooltip2-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip2-r4.png"; sourceTree = "<group>"; };
+		FFF2759416A55D2A00798A7C /* tooltip3-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tooltip3-r4.png"; sourceTree = "<group>"; };
+		FFF275AA16A5A6F200798A7C /* popup-dupa-comanda-r4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "popup-dupa-comanda-r4.png"; sourceTree = "<group>"; };
+		FFF275B416A6A9D400798A7C /* YTOSetariViewController_R4.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = YTOSetariViewController_R4.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1618,12 +1656,14 @@
 				C3D6458115B84BC90033EAD6 /* YTOSetariViewController.h */,
 				C3D6458215B84BCA0033EAD6 /* YTOSetariViewController.m */,
 				C3D6458315B84BCD0033EAD6 /* YTOSetariViewController.xib */,
+				FFF275B416A6A9D400798A7C /* YTOSetariViewController_R4.xib */,
 				C303226B15AEE1AC00E8BED7 /* YTOAsigurariViewController.h */,
 				C303226C15AEE1AC00E8BED7 /* YTOAsigurariViewController.m */,
 				C303227915AEE1AC00E8BED7 /* YTOAsigurariViewController.xib */,
 				C303227215AEE1AC00E8BED7 /* YTOAlerteViewController.h */,
 				C303227315AEE1AC00E8BED7 /* YTOAlerteViewController.m */,
 				C303227C15AEE1AC00E8BED7 /* YTOAlerteViewController.xib */,
+				C3A17B4516A8632400650278 /* YTOAlerteViewController_R4.xib */,
 				C3D6450315B590080033EAD6 /* YTOAlteleViewController.h */,
 				C3D6450415B590090033EAD6 /* YTOAlteleViewController.m */,
 				C3D6450515B590090033EAD6 /* YTOAlteleViewController.xib */,
@@ -1664,6 +1704,8 @@
 				C3DF5A2B1664E0C4000503D6 /* Default@2x.png */,
 				C3F7C41E15C1581B008B53C7 /* logo-app@2x.png */,
 				C3F7C41C15C15816008B53C7 /* logo-app.png */,
+				C3A17B4116A8349600650278 /* cum-editezi-alerte.png */,
+				C3A17B4316A8349F00650278 /* cum-editezi-alerte@2x.png */,
 				C3E7858D1609E70C00575129 /* welcome */,
 				C324CF3115B947FA00B25C7C /* asigurari */,
 				C324CEA615B939D200B25C7C /* marci_auto */,
@@ -1682,6 +1724,8 @@
 				C333165F160B7E5900E69CFB /* persoana-pf@2x.png */,
 				C3331660160B7E5900E69CFB /* persoana-pj.png */,
 				C3331661160B7E5900E69CFB /* persoana-pj@2x.png */,
+				C35ABD6216A95C2900F037BC /* persoana-salvata.png */,
+				C35ABD6416A95C3700F037BC /* persoana-salvata@2x.png */,
 				C3331652160B755E00E69CFB /* profil-pf.png */,
 				C3331653160B755E00E69CFB /* profil-pf@2x.png */,
 				C3331654160B755E00E69CFB /* profil-pj.png */,
@@ -1768,6 +1812,8 @@
 				C3E7870F160B01C100575129 /* alege-masina-portocaliu@2x.png */,
 				C30C6B23165514760082ED02 /* informatii-trimise.png */,
 				C30C6B24165514760082ED02 /* informatii-trimise@2x.png */,
+				C35ABD6616A9859A00F037BC /* text-important.png */,
+				C35ABD6816A985A300F037BC /* text-important@2x.png */,
 				C3E785401609DAC400575129 /* calculeaza-casco.png */,
 				C3E785411609DAC400575129 /* calculeaza-casco@2x.png */,
 				C3C73ED116230F15008C309F /* calculator-casco.png */,
@@ -1955,6 +2001,7 @@
 				C3DF5A38166514BF000503D6 /* text-header-masina-salvata@2x.png */,
 				C3B97BE91678EF6100FE952C /* popup-dupa-comanda.png */,
 				C3B97BEA1678EF6100FE952C /* popup-dupa-comanda@2x.png */,
+				FFF275AA16A5A6F200798A7C /* popup-dupa-comanda-r4.png */,
 				C3EA5B631652959100A105CD /* header-alerte-masina.png */,
 				C3EA5B641652959100A105CD /* header-alerte-masina@2x.png */,
 				C3F7C3B815BEE8F6008B53C7 /* informatii-masina-bg.png */,
@@ -2203,6 +2250,10 @@
 		C3D6457015B84B790033EAD6 /* setari */ = {
 			isa = PBXGroup;
 			children = (
+				C3A17B3D16A8296500650278 /* sincronizare.png */,
+				C3A17B3F16A8296E00650278 /* sincronizare@2x.png */,
+				C3A17B3816A8105200650278 /* recuperezi-datele.png */,
+				C3A17B3B16A8105F00650278 /* recuperezi-datele@2x.png */,
 				C3B97BE11678DB9D00FE952C /* confirmare-sincronizare.png */,
 				C3B97BE21678DB9D00FE952C /* confirmare-sincronizare@2x.png */,
 				C31529C015DA8CB2006D5E9E /* setari-alte-persoane.png */,
@@ -2363,6 +2414,7 @@
 		C3E786E3160A034200575129 /* alerte */ = {
 			isa = PBXGroup;
 			children = (
+				C35ABD7216AD60C400F037BC /* zero-alerte-r4.png */,
 				C3B763351614636900C3187E /* adauga-alerta-noua.png */,
 				C3B763361614636900C3187E /* adauga-alerta-noua@2x.png */,
 				C3EA5B4116528F5500A105CD /* icon-alerta-casco.png */,
@@ -2406,6 +2458,9 @@
 				C30C6B29165514A40082ED02 /* tooltip2@2x.png */,
 				C3DF5A4316662C73000503D6 /* tooltip3.png */,
 				C3DF5A4416662C73000503D6 /* tooltip3@2x.png */,
+				FFF2758F16A55CBC00798A7C /* tooltip1-r4.png */,
+				FFF2759216A55D0900798A7C /* tooltip2-r4.png */,
+				FFF2759416A55D2A00798A7C /* tooltip3-r4.png */,
 			);
 			name = tooltip;
 			sourceTree = "<group>";
@@ -2485,6 +2540,8 @@
 				C31D698E165D09C300DACF32 /* faq2.png */,
 				C31D698F165D09C300DACF32 /* faq2@2x.png */,
 				C31D6990165D09C300DACF32 /* faq3.png */,
+				FF022BB816A430820077656A /* arrow-mov.png */,
+				FF022BB916A430820077656A /* arrow-mov@2x.png */,
 				C31D6991165D09C300DACF32 /* faq3@2x.png */,
 				C31D6992165D09C300DACF32 /* faq4.png */,
 				C31D6993165D09C300DACF32 /* faq4@2x.png */,
@@ -3397,6 +3454,25 @@
 				FF022BA3169F166A0077656A /* continua@2x.png in Resources */,
 				FF022BA5169F23B50077656A /* text-iti-multumim-intelegere.png in Resources */,
 				FF022BA7169F23BC0077656A /* text-iti-multumim-intelegere@2x.png in Resources */,
+				FF022BBA16A430820077656A /* arrow-mov.png in Resources */,
+				FF022BBB16A430820077656A /* arrow-mov@2x.png in Resources */,
+				FFF2759016A55CBC00798A7C /* tooltip1-r4.png in Resources */,
+				FFF2759316A55D0900798A7C /* tooltip2-r4.png in Resources */,
+				FFF2759516A55D2A00798A7C /* tooltip3-r4.png in Resources */,
+				FFF275AB16A5A6F200798A7C /* popup-dupa-comanda-r4.png in Resources */,
+				FFF275B516A6A9D800798A7C /* YTOSetariViewController_R4.xib in Resources */,
+				C3A17B3916A8105200650278 /* recuperezi-datele.png in Resources */,
+				C3A17B3C16A8105F00650278 /* recuperezi-datele@2x.png in Resources */,
+				C3A17B3E16A8296500650278 /* sincronizare.png in Resources */,
+				C3A17B4016A8296E00650278 /* sincronizare@2x.png in Resources */,
+				C3A17B4216A8349600650278 /* cum-editezi-alerte.png in Resources */,
+				C3A17B4416A8349F00650278 /* cum-editezi-alerte@2x.png in Resources */,
+				C3A17B4716A8632600650278 /* YTOAlerteViewController_R4.xib in Resources */,
+				C35ABD6316A95C2900F037BC /* persoana-salvata.png in Resources */,
+				C35ABD6516A95C3700F037BC /* persoana-salvata@2x.png in Resources */,
+				C35ABD6716A9859A00F037BC /* text-important.png in Resources */,
+				C35ABD6916A985A300F037BC /* text-important@2x.png in Resources */,
+				C35ABD7316AD60C400F037BC /* zero-alerte-r4.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3500,6 +3576,14 @@
 			name = YTOAlerteViewController.xib;
 			sourceTree = "<group>";
 		};
+		C3A17B4516A8632400650278 /* YTOAlerteViewController_R4.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C3A17B4616A8632600650278 /* en */,
+			);
+			name = YTOAlerteViewController_R4.xib;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -3558,12 +3642,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Andi Aparaschivei (4HUDGBWHZ2)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Andi Aparaschivei (4HUDGBWHZ2)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "i-asigurare/i-asigurare-Prefix.pch";
 				INFOPLIST_FILE = "i-asigurare/i-asigurare-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "CE6D195F-D9F5-47A3-A948-6AE1C0F4693C";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "CE6D195F-D9F5-47A3-A948-6AE1C0F4693C";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;

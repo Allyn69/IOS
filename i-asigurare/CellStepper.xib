@@ -81,6 +81,7 @@
 								<string key="NSFrame">{{206, 28}, {94, 27}}</string>
 								<reference key="NSSuperview" ref="240052332"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -90,7 +91,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUIValue">1</double>
 								<double key="IBUIMinimumValue">1</double>
-								<double key="IBUIMaximumValue">15</double>
+								<double key="IBUIMaximumValue">30</double>
 							</object>
 							<object class="IBUILabel" id="578750981">
 								<reference key="NSNextResponder" ref="240052332"/>

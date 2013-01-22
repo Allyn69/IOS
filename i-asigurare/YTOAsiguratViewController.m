@@ -360,15 +360,19 @@
         [self setNume:textField.text];
     else if (index == 3)
         [self setcodUnic:textField.text];
-    else if (index == 5)
+    else if (index == 5) {
         [self setAdresa:textField.text];
+        [self deleteBarButton];
+    }
     
     if (proprietar)
     {
         if (index == 6)
             [self setTelefon:textField.text];
-        else if (index == 7)
+        else if (index == 7) {
             [self setEmail:textField.text];
+            [self deleteBarButton];
+        }
     }
 }
 
@@ -501,17 +505,18 @@
 //    }
     
     UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
-    if (!proprietar && a._isDirty)
+    
+    if (!proprietar && a._isDirty) 
         imgTextHeader.image = [UIImage imageNamed:@"text-header-persoana-salvata.png"];
     else if (!proprietar)
         imgTextHeader.image = [UIImage imageNamed:@"text-header-persoana.png"];
-    else
+    else 
         imgTextHeader.image = [UIImage imageNamed:@"text-header-profil.png"];
     
     [self setNume:a.nume];
     [self setcodUnic:a.codUnic];
-    [self setJudet:a.judet];
     [self setLocalitate:a.localitate];
+    [self setJudet:a.judet];
     [self setAdresa:a.adresa];
     
     if ([a.proprietar isEqualToString:@"da"])
@@ -569,6 +574,7 @@
     UIImageView * imgTipPersoana = (UIImageView *)[cellTipPersoana viewWithTag:5];
     lblDespreMine.textColor = [UIColor whiteColor];
     lblFirmaMea.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+
     if (proprietar)
     {
         UIImageView * imgTextHeader = (UIImageView *)[cellAsigurat viewWithTag:4];
@@ -591,7 +597,7 @@
         
         imgTooltip.image = [UIImage imageNamed:@"tooltip-calatorie.png"];
     }
-    
+
     NSArray *topLevelObjectsNume = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellNume = [topLevelObjectsNume objectAtIndex:0];
     txtNume = (UITextField *)[cellNume viewWithTag:2];
@@ -642,10 +648,13 @@
 
 - (void) initLabels:(BOOL )pf
 {
+    
     UILabel *lblDespreMine = (UILabel *)[cellTipPersoana viewWithTag:3];
     UILabel *lblFirmaMea = (UILabel *)[cellTipPersoana viewWithTag:4];
+    UILabel *lblGeneric = (UILabel *)[cellTipPersoana viewWithTag:6];
     UIImageView * img = (UIImageView *)[cellTipPersoana viewWithTag:5];
 
+        
     if (pf)
     {
         [(UITextField *)[cellNume viewWithTag:1] setText:@"NUME PRENUME"];
@@ -667,6 +676,15 @@
         lblFirmaMea.textColor = [UIColor whiteColor];
         lblDespreMine.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         img.image = proprietar ? [UIImage imageNamed:@"profil-pj.png"] : [UIImage imageNamed:@"persoana-pj.png"];
+    }
+    
+    if (asigurat._isDirty && !proprietar)
+    {
+        lblGeneric.text = [@"Persoana " stringByAppendingString:asigurat.tipPersoana];
+        lblGeneric.textColor = [UIColor whiteColor];
+        img.image = [UIImage imageNamed:@"persoana-salvata.png"];
+        lblDespreMine.hidden = YES;
+        lblFirmaMea.hidden = YES;
     }
 }
 

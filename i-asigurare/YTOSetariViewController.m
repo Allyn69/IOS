@@ -16,6 +16,7 @@
 #import "YTOLocuinta.h"
 #import "YTOPersoana.h"
 #import "YTOUserDefaults.h"
+#import "VerifyNet.h"
 
 @interface YTOSetariViewController ()
 
@@ -41,12 +42,19 @@
     
     [self initCells];
     
-
-    UIBarButtonItem *btnEdit;
     if ([YTOUserDefaults IsSyncronized] == NO)
     {
-        btnEdit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(confirmSync)];
-        self.navigationItem.rightBarButtonItem = btnEdit; 
+        //btnEdit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemOrganize target:self action:@selector(confirmSync)];
+        //btnEdit = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"sincronizare.png"] style:UIBarButtonItemStyleBordered target:self action:@selector(confirmSync)];
+        
+        UIButton *a1 = [UIButton buttonWithType:UIButtonTypeCustom];
+        [a1 setFrame:CGRectMake(0.0f, 0.0f, 41.0f, 25.0f)];
+        [a1 addTarget:self action:@selector(confirmSync) forControlEvents:UIControlEventTouchUpInside];
+        [a1 setImage:[UIImage imageNamed:@"sincronizare.png"] forState:UIControlStateNormal];
+        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithCustomView:a1];
+        
+        self.navigationItem.rightBarButtonItem = btnEdit;
+
     }
     
     // Daca nu s-a facut  sincronizarea,
@@ -360,6 +368,11 @@
     
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
+    
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+
+    
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
 														timeoutInterval:30.0];
@@ -379,6 +392,11 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+    }
+    else {
+        vwPopup.hidden = NO;
+        [self hideCustomLoading];
+    }
 }
 
 - (NSString *) XmlRequestForAuto
@@ -486,11 +504,11 @@
             }
             proprietar.nume = [jsonItem objectForKey:@"Nume"];
             proprietar.codUnic = [jsonItem objectForKey:@"CodUnic"];
-            if (proprietar.codUnic.length == 13)
+            if (proprietar.codUnic && proprietar.codUnic.length == 13)
                 proprietar.tipPersoana = @"fizica";
-            else if (proprietar.codUnic.length > 0)
+            else if (proprietar.codUnic && proprietar.codUnic.length > 0)
                 proprietar.tipPersoana = @"juridica";
-            
+                
             NSString * tel = [jsonItem objectForKey:@"Telefon"];
             proprietar.telefon = tel ? tel : @"";
             
@@ -510,6 +528,9 @@
                 [proprietar updatePersoana];
         }
     }
+    else {
+        [self showPopupServiciu:@"Serviciul nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+    }
     
     [self hideCustomLoading];
     [self reloadData];
@@ -522,11 +543,12 @@
 
     [self hideCustomLoading];
 	
-    UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alertView show];
+    //UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	//[alertView show];
+    
+    [self showPopupServiciu:@"Serviciul nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+    
 }
-
-
 
 #pragma mark NSXMLParser Methods
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
@@ -565,7 +587,7 @@
 
 - (void) confirmSync
 {
-    [self showCustomConfirm:@"Sincronizare date" withDescription:@"Daca ai folosit versiunea veche, poti sincroniza aplicatia si incercam sa incarcam informatiile existente. Vrei sa sincronizezi?" withButtonIndex:100];
+    [self showCustomConfirm:@"Sincronizare date" withDescription:@"Daca ai mai folosit aplicatia pe acest telefon, te putem ajuta sa recuperezi datele despre masinile salvate in app. Vrei sa sincronizezi?" withButtonIndex:100];
 }
 
 #pragma mark UIAlertView
@@ -598,13 +620,24 @@
     }
 }
 
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
+}
+
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
 {
     self.navigationItem.hidesBackButton = YES;
-    imgError.image = [UIImage imageNamed:@"confirmare-sincronizare.png"];
+    imgError.image = [UIImage imageNamed:@"recuperezi-datele.png"];
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
     [lblCustomAlertOK setText:@"DA"];
     
     [btnCustomAlertNO setHidden:NO];
@@ -613,6 +646,11 @@
     lblCustomAlertTitle.text = title;
     lblCustomAlertMessage.text = description;
     [vwCustomAlert setHidden:NO];
+}
+
+- (IBAction) hidePopup
+{
+    vwPopup.hidden = YES;
 }
 
 @end

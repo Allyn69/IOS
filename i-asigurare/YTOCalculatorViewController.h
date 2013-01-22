@@ -26,7 +26,7 @@
     IBOutlet UIStepper * dateStepper;
     IBOutlet UIButton * btnAsigurat;
     IBOutlet UIButton * btnMasina; 
-    YTOPersoana * asigurat;
+    //YTOPersoana * asigurat;
     YTOAutovehicul * masina;
     YTOOferta * oferta;
     
@@ -44,6 +44,7 @@
     BOOL cautLegaturaDintreMasinaSiAsigurat;
 }
 
+@property (nonatomic, retain) YTOPersoana *  asigurat;
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSString * Durata;
 

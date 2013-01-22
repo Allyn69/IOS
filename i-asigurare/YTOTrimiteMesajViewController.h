@@ -31,6 +31,10 @@
     IBOutlet UILabel    * lblLoadingOk;
     IBOutlet UIActivityIndicatorView * loading;
     
+    IBOutlet UIView      * vwPopup;
+    IBOutlet UILabel     * lblPopupTitle;
+    IBOutlet UILabel     * lblPopupDescription;
+    
     NSMutableData * capturedCharactes;
 	NSMutableString * currentElementValue;
 	NSString    * responseMessage;
@@ -60,8 +64,11 @@
 
 - (IBAction)callTrimiteMesaj;
 
+- (void) showPopupError:(NSString *)title;
 - (void) showLoading;
 - (IBAction) hideLoading;
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description;
+
+- (IBAction) hidePopupError;
 
 @end

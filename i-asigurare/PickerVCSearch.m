@@ -52,7 +52,7 @@
     //Add the search bar
     if (nomenclator == kJudete || nomenclator == kLocalitati || nomenclator == kMarci)
     {
-        self.tableView.tableHeaderView = searchBar;
+        //self.tableView.tableHeaderView = searchBar;
         searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
     }
     

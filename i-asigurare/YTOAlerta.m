@@ -164,6 +164,50 @@
         {
             [_list addObject:p];
         }
+        
+    }
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dataAlerta" ascending:TRUE];
+    [_list sortUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    return _list;
+}
+
++ (NSMutableArray*)AlerteActive
+{
+    NSMutableArray * _list = [[NSMutableArray alloc] init];
+    
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    NSMutableArray * delegateList = [delegate Alerte];
+                                 
+        NSDate * peste4zile = [NSDate date];
+    for (int i=0; i<delegateList.count; i++) {
+        //YTOObiectAsigurat * ob = (YTOObiectAsigurat *)[delegateList objectAtIndex:i];
+        
+        YTOAlerta * p = [delegateList objectAtIndex:i];
+        
+        NSDate *fromDate;
+        NSDate *toDate;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&fromDate
+                     interval:NULL forDate:peste4zile];
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&toDate
+                     interval:NULL forDate:p.dataAlerta];
+        
+        difference = [calendar components:NSDayCalendarUnit
+                                 fromDate:fromDate toDate:toDate options:0];
+        
+        //NSLog(@"%@",alerta.dataAlerta);
+        //NSLog(@"%@",peste4zile);
+        
+     
+        if(p && ([difference day] <= 10 && [difference day] >= -15))
+        {
+            [_list addObject:p];
+        }
+        
     }
     
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"dataAlerta" ascending:TRUE];
@@ -192,14 +236,14 @@
         [calendar rangeOfUnit:NSDayCalendarUnit startDate:&toDate
                      interval:NULL forDate:alerta.dataAlerta];
         
-        NSDateComponents *difference = [calendar components:NSDayCalendarUnit
+        difference = [calendar components:NSDayCalendarUnit
                                                    fromDate:fromDate toDate:toDate options:0];
         
         //NSLog(@"%@",alerta.dataAlerta);
         //NSLog(@"%@",peste4zile);
               
         NSLog(@"%d",[difference day]);
-        if ([difference day] < 5 && [difference day] >= 0)
+        if ([difference day] <= 10 && [difference day] >= -15)
             count++;
     }
     return count;

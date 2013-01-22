@@ -46,13 +46,14 @@
     BOOL  selectatInfoLocuinta;
     BOOL  shouldSave;
     BOOL  editingMode;
-    BOOL  isOK;
+    BOOL  faraEtaj;
     
     YTOAlerta * alertaLocuinta;
     YTOAlerta * alertaRataLoc;
     
     UITextField * txtAlertaLocuinta;
     UITextField * txtAlertaRataLocuinta;
+    UITextField * txtSuprafata;
 }
 
 @property BOOL goingBack;

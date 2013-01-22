@@ -19,11 +19,15 @@ static sqlite3 *database = nil;
     NSMutableArray * marci = [[NSMutableArray alloc] initWithArray:nil];
     
     if (sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"Select Nume from vehicule_marci";
+		NSString * sqlstring = @"Select Nume from vehicule_marci WHERE NUME not in ('Dacia', 'Opel', 'Volkswagen', 'Ford', 'Daewoo', 'Mercedes', 'Renault', 'Audi', 'Skoda', 'Bmw', 'Peugeot', 'Seat', 'Fiat', 'Toyota', 'Hyundai', 'Citroen', 'Nissan', 'Honda', 'Suzuki', 'Chevrolet', 'Mitsubishi', 'Kia', 'Iveco', 'Volvo', 'Mazda', 'Smart', 'Alfa Romeo')";
 		const char *sql = [sqlstring UTF8String];
 		sqlite3_stmt *selectstmt;
 		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
 			
+            NSArray * top_marci = [[NSArray alloc] initWithObjects:@"Dacia", @"Opel", @"Volkswagen", @"Ford", @"Daewoo", @"Mercedes", @"Renault", @"Audi", @"Skoda", @"Bmw", @"Peugeot", @"Seat", @"Fiat", @"Toyota", @"Hyundai", @"Citroen", @"Nissan", @"Honda", @"Suzuki", @"Chevrolet", @"Mitsubishi", @"Kia", @"Iveco", @"Volvo", @"Mazda", @"Smart", @"Alfa Romeo", nil];
+            
+            [marci addObjectsFromArray:top_marci];
+
 			while(sqlite3_step(selectstmt) == SQLITE_ROW) {
 
                 NSString * marca;
@@ -44,12 +48,17 @@ static sqlite3 *database = nil;
     NSMutableArray * judete = [[NSMutableArray alloc] initWithArray:nil];
     
     if (sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"Select Nume from JUDETE WHERE NUME <> 'Bucuresti'";
+		NSString * sqlstring = @"Select Nume from JUDETE WHERE NUME not in  ('Bucuresti','Caras-Severin','Arges','Suceava','Sibiu','Hunedoara','Dambovita','Giurgiu','Bacau','Olt','Valcea','Vaslui','Bihor','Botosani','Calarasi','Dolj')";
+        
+        NSArray * top_judete = [[NSArray alloc] initWithObjects:@"Bucuresti",@"Caras-Severin",@"Arges",@"Suceava",@"Sibiu",@"Hunedoara",@"Dambovita",@"Giurgiu",@"Bacau",@"Olt",@"Valcea",@"Vaslui",@"Bihor",@"Botosani",@"Calarasi",@"Dolj", nil];
+        
+        [judete addObjectsFromArray:top_judete];
+        
 		const char *sql = [sqlstring UTF8String];
 		sqlite3_stmt *selectstmt;
 		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
 
-			[judete addObject:@"Bucuresti"];
+			//[judete addObject:@"Bucuresti"];
 			
             while(sqlite3_step(selectstmt) == SQLITE_ROW) {
                 

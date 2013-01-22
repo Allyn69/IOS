@@ -261,8 +261,6 @@
         valid = NO;
     if (self.nrLocatari == 0)
         valid = NO;
-    if (!self.areAlarma || !self.areGrilajeGeam || !self.detectieIncendiu || !self.arePaza || !self.zonaIzolata || !self.locuitPermanent || !self.clauzaFurtBunuri || !self.clauzaApaConducta || !self.areTeren)
-        valid = NO;
     
     return valid;
 }

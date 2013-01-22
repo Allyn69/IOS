@@ -52,6 +52,10 @@
     
     UITextField * txtEmailLivrare;
     UITextField * txtTelefonLivrare;
+    
+    YTOPersoana * proprietar;
+    
+    UIView * viewTooltip;
 }
 
 

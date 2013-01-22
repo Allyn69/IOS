@@ -14,6 +14,7 @@
 #import "YTOListaAutoViewController.h"
 #import "YTOAsigurareViewController.h"
 #import "YTOImage.h"
+#import "YTOCASCOViewController.h"
 
 @interface YTOAutovehiculViewController ()
 
@@ -61,8 +62,8 @@
         YTOPersoana * proprietar = [YTOPersoana Proprietar];
         if (proprietar)
         {
-            [self setJudet:proprietar.judet];
             [self setLocalitate:proprietar.localitate];
+            [self setJudet:proprietar.judet];
         }
         
         percentCompletedOnLoad = [autovehicul CompletedPercent];
@@ -373,7 +374,7 @@
 		UIDatePicker *datePicker = [[UIDatePicker alloc] init];
 		datePicker.tag = 101;
 		datePicker.datePickerMode = 1; // date and time view
-		datePicker.minimumDate = [NSDate date];
+		//datePicker.minimumDate = [NSDate date];
         
         YTOAlerta * alerta;
         if (indexPath.row == 2)
@@ -626,17 +627,26 @@
         
         if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
         {
-            // selecteaza masina si ma duce direct in ecranul de calculator
-            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-            [parent setAutovehicul:autovehicul];
-
-            // Nu a apasat pe butonul de salveaza,
-            // il intoarcem la calculator
-            if (shouldSave)
+            if ([autovehicul CompletedPercent] == 1)
             {
+                // selecteaza masina si ma duce direct in ecranul de calculator
                 YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-                [self.navigationController popToViewController:parent animated:YES];
+                [parent setAutovehicul:autovehicul];
+                
+                // Nu a apasat pe butonul de salveaza,
+                // il intoarcem la calculator
+                if (shouldSave)
+                {
+                    YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+                    [self.navigationController popToViewController:parent animated:YES];
+                }
             }
+        }
+        else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+        {
+            // selecteaza masina si ma duce direct in ecranul de calculator
+            YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
+            [parent setAutovehicul:autovehicul];
         }
         else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
         {
@@ -664,6 +674,12 @@
     {
         // selecteaza masina si ma duce direct in ecranul de calculator
         YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+        [self.navigationController popToViewController:parent animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+    {
+        // selecteaza masina si ma duce direct in ecranul de casco
+        YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
         [self.navigationController popToViewController:parent animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOListaAutoViewController class]])
@@ -696,8 +712,8 @@
     [self setMarca:a.marcaAuto];
     [self setModel:a.modelAuto];
     [self setNrInmatriculare:a.nrInmatriculare];
-    [self setJudet:a.judet];
     [self setLocalitate:a.localitate];
+    [self setJudet:a.judet];
     [self setCategorieAuto:a.categorieAuto];
     [self setSubcategorieAuto:a.subcategorieAuto];
     [self setSerieSasiu:a.serieSasiu];
@@ -1032,6 +1048,7 @@
     cellCm3 = [topLevelObjectsCm3 objectAtIndex:0];
     [(UILabel *)[cellCm3 viewWithTag:1] setText:@"CM3"];
 //    [(UITextField *)[cellCm3 viewWithTag:2] setPlaceholder:@"ex.1590"];
+    txtCm3 = (UITextField *)[cellCm3 viewWithTag:2];
     [(UITextField *)[cellCm3 viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellCm3];
     
@@ -1039,6 +1056,7 @@
     cellPutere = [topLevelObjectsPutere objectAtIndex:0];
     [(UILabel *)[cellPutere viewWithTag:1] setText:@"Putere (kW)"];
   //  [(UITextField *)[cellPutere viewWithTag:2] setPlaceholder:@"ex.75"];
+    txtPutere = (UITextField *)[cellPutere viewWithTag:2];
     [(UITextField *)[cellPutere viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellPutere];
     
@@ -1053,6 +1071,7 @@
     cellMasaMaxima = [topLevelObjectsMasaMaxima objectAtIndex:0];
     [(UILabel *)[cellMasaMaxima viewWithTag:1] setText:@"MASA MAXIMA (kg)"];
     //[(UITextField *)[cellMasaMaxima viewWithTag:2] setPlaceholder:@"ex. 1600"];
+    txtGreutate = (UITextField *)[cellMasaMaxima viewWithTag:2];
     [(UITextField *)[cellMasaMaxima viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellMasaMaxima];
     
@@ -1362,7 +1381,7 @@
         if ([((UILabel *)[cellDestinatieAuto viewWithTag:33]).text isEqualToString:@"taxi"])
             [self setDestinatieAuto:@"taxi"];
         else
-            [self setDestinatieAuto:((UILabel *)[cellCombustibil viewWithTag:33]).text];
+            [self setDestinatieAuto:((UILabel *)[cellDestinatieAuto viewWithTag:33]).text];
     }
     else {
         _nomenclatorTip = kDestinatieAuto;
@@ -1702,7 +1721,7 @@
     UITextField * txt = (UITextField *)[cellMasaMaxima viewWithTag:2];
     if (masa > 0)
     {
-        txt.text = [NSString stringWithFormat:@"%d Kg", masa];
+        txtGreutate.text = [NSString stringWithFormat:@"%d Kg", masa];
         autovehicul.masaMaxima = masa;
     }
 }
@@ -1802,8 +1821,8 @@
 {
     if (v != 0)
     {
-        UITextField * txt = (UITextField *)[cellCm3 viewWithTag:2];
-        txt.text = [NSString stringWithFormat:@"%d cm3", v];
+        //UITextField * txt = (UITextField *)[cellCm3 viewWithTag:2];
+        txtCm3.text = [NSString stringWithFormat:@"%d cm3", v];
         autovehicul.cm3 = v;
     }
 }
@@ -1816,8 +1835,8 @@
 {
     if (v != 0)
     {
-        UITextField * txt = (UITextField *)[cellPutere viewWithTag:2];
-        txt.text = [NSString stringWithFormat:@"%d kW", v];
+        //UITextField * txt = (UITextField *)[cellPutere viewWithTag:2];
+        txtPutere.text = [NSString stringWithFormat:@"%d kW", v];
         autovehicul.putere = v;
     }
     

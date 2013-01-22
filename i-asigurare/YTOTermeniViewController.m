@@ -8,6 +8,7 @@
 
 #import "YTOTermeniViewController.h"
 #import "YTOUtils.h"
+#import "VerifyNet.h"
 
 @interface YTOTermeniViewController ()
 
@@ -60,9 +61,10 @@
     
     [self showLoading];
     
-    self.navigationItem.hidesBackButton = YES;
-
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
     
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -83,6 +85,13 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+    }
+    else {
+        
+        [self arataPopup:@"Atentie"];
+        //vwErrorAlert.hidden = NO;
+        
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -186,6 +195,19 @@
     [lblLoadingTitlu setText:title];
     [loading setHidden:YES];
     [vwLoading setHidden:NO];
+}
+
+- (void) arataPopup:(NSString *)title
+{
+    vwPopup.hidden = NO;
+    lblPopupTitle.text = title;
+}
+
+- (IBAction) hidePopup
+{
+    vwPopup.hidden = YES;
+    vwLoading.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma WebView Methods

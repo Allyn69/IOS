@@ -157,8 +157,10 @@
     NSDateComponents *components = [calendar components:NSHourCalendarUnit fromDate:acum];
     int ora = components.hour;
     
-    if (ora >= 21)
+    if (ora >= 20) {
         _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400*2];
+        trecutDeOra = YES;
+    }
     else
         _DataInceput = [[NSDate date] dateByAddingTimeInterval:86400];
 

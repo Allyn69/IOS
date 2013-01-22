@@ -18,6 +18,7 @@
     IBOutlet UIView      *      vwLoading;
     UITextField *               activeTextField;
     
+    UITableViewCell *           cellSerie;
     UITableViewCell *           cellJudetLocalitate;
     UITableViewCell *           cellAdresa;
     UITableViewCell *           cellTelefon;
@@ -28,6 +29,7 @@
     BOOL goingBack;
     
     NSMutableArray * listCells;
+    NSString * seriePasaport;
     NSString * telefonLivrare;
     NSString * emailLivrare;
     int modPlata;
@@ -47,8 +49,12 @@
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
     
+    UITextField * txtSerie;
     UITextField * txtEmailLivrare;
     UITextField * txtTelefonLivrare;
+    
+    UIView * viewTooltip;
+    
 }
 
 @property (nonatomic, retain) YTOOferta         * oferta;

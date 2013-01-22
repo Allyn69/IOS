@@ -161,7 +161,7 @@
                       asigurat.pensionar,
                       asigurat.nrBugetari
                       ];
-    return xml;
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction)calculeazaRCADupaAltaDurata
@@ -219,32 +219,31 @@
         [vwLoading setHidden:NO];
         [self startLoadingAnimantion];
         
-	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
-    
-	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
-															cachePolicy:NSURLRequestUseProtocolCachePolicy
-														timeoutInterval:30.0];
-    
-	NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
-	NSLog(@"Request=%@", parameters);
-	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
-	
-	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/CalculRca4" forHTTPHeaderField:@"SOAPAction"];
-	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
-	[request setHTTPMethod:@"POST"];
-	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
-	
-	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-	
-	if (connection) {
-		self.responseData = [NSMutableData data];
-	}
-    }
-    
-    else {
+        NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@rca.asmx", LinkAPI]];
         
-        vwErrorAlert.hidden = NO;
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                            timeoutInterval:30.0];
+        
+        NSString * parameters = [[NSString alloc] initWithString:[self XmlRequest]];
+        NSLog(@"Request=%@", parameters);
+        NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+        
+        [request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [request addValue:@"http://tempuri.org/CalculRca4" forHTTPHeaderField:@"SOAPAction"];
+        [request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        if (connection) {
+            self.responseData = [NSMutableData data];
+        }
+    }
+    else {
+        [self showPopupWithTitle:@"Atentie!"];// andDescription:@""];
+        //vwErrorAlert.hidden = NO;
         
     }
 }
@@ -277,9 +276,8 @@
 //	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 //	[alertView show];
 
-    //[self showPopupWithTitle:@"Atentie" andDescription:[error localizedDescription]];
-    
-    vwErrorAlert.hidden = NO;
+    [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];    
+    //vwErrorAlert.hidden = NO;
     
 //    YTOCustomPopup * alert = [[YTOCustomPopup alloc] initWithNibName:@"YTOCustomPopupView" bundle:nil];
 //    alert.delegate = self;
@@ -481,11 +479,16 @@
         if (listTarife.count == 0)
         {
             //[self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
-            vwErrorAlert.hidden = NO;
+            //vwErrorAlert.hidden = NO;
+            [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
         }
         else
             [tableView reloadData];
         
+    }
+    else
+    {
+        [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
     }
 }
 
@@ -665,21 +668,46 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-//- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
-//{
-//    [self stopLoadingAnimantion];
-//    //[vwPopup setHidden:NO];
-//    [vwErrorAlert setHidden:NO];
-//    //lblPopupDescription.text = description;
-//    //lblPopupTitle.text = title;
-//}
+- (void) showPopupWithTitle:(NSString *)title// andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopup setHidden:NO];
+    //[vwErrorAlert setHidden:NO];
+    //lblPopupDescription.text = description;
+    lblPopupTitle.text = title;
+}
 
-//- (IBAction)hidePopup:(id)sender
-//{
-//    [vwPopup setHidden:YES];
-//    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-//    [delegate.rcaNavigationController popViewControllerAnimated:YES];
-//}
+- (void) showPopupErrorWithTitle:(NSString *)title andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopupError setHidden:NO];
+    lblPopupErrorTitle.text = title;
+    lblPopupErrorDescription.text = description;
+}
+
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hidePopupError
+{
+    vwPopupError.hidden = YES;
+}
+
+- (IBAction)hidePopup:(id)sender
+{
+    [vwPopup setHidden:YES];
+    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+}
 
 - (IBAction) hideErrorAlert:(id)sender
 {

@@ -27,6 +27,7 @@
 @synthesize Durata = _Durata;
 @synthesize _nomenclatorNrItems, _nomenclatorSelIndex, _nomenclatorTip;
 @synthesize listaCompanii;
+@synthesize asigurat;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -229,10 +230,11 @@
         }
         
         // Daca nu a fost selectata persoana sau datele persoanei nu sunt complete
-        if (!asigurat || asigurat.idIntern.length == 0)
+        if (!asigurat || ![asigurat isValidForCompute])
         {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
             lblCell.textColor = [UIColor redColor];        
+            if (isOK == NO) return;
             isOK = NO;
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
@@ -336,12 +338,20 @@
     UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
     lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblCell.text = @"Alege masina";
+    UILabel * lblCell1 = (UILabel *)[cellMasina viewWithTag:6];
+    lblCell1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCell1.text = @"MASINA ASIGURATA";
+    
     
     NSArray *topLevelObjectsProprietar = [[NSBundle mainBundle] loadNibNamed:@"CellPersoana" owner:self options:nil];
     cellProprietar = [topLevelObjectsProprietar objectAtIndex:0];
     UILabel * lblCellP = (UILabel *)[cellProprietar viewWithTag:2];
     lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblCellP.text = @"Alege proprietar";
+    UILabel * lblCell2 = (UILabel *)[cellProprietar viewWithTag:6];
+    lblCell2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCell2.text = @"PROPRIETAR MASINA (VEZI TALON)";
+    
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
@@ -362,6 +372,7 @@
     
     NSArray *topLevelObjectsDataInceput = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
+    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data inceput asigurare";
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
     [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged]; 
     [YTOUtils setCellFormularStyle:cellDataInceput];
@@ -558,7 +569,10 @@
     NSDate *currentDate = [NSDate date];
     NSDateComponents *comps = [[NSDateComponents alloc] init];
     // set tomorrow (0: today, -1: yesterday)
-    [comps setDay:stepper.value];
+    if (trecutDeOra)
+        [comps setDay:stepper.value + 1];
+    else
+        [comps setDay:stepper.value];
     NSDate *date = [calendar dateByAddingComponents:comps 
                                              toDate:currentDate  
                                             options:0];

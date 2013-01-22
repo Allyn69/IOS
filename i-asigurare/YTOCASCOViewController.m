@@ -149,19 +149,22 @@
     }
     else if (indexPath.row == 7)
     {
-        BOOL isOK = YES;
+        //BOOL isOK = YES;
+        
+        [activeTextField resignFirstResponder];
         
         // Daca nu a fost selectata masina sau datele masinii nu sunt complete
         if (!masina || ![masina isValidForRCA])
         {
             UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
             lblCell.textColor = [UIColor redColor];
-            isOK = NO;
+            //isOK = NO;
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
             [tv scrollToRowAtIndexPath:indexPath
                       atScrollPosition:UITableViewScrollPositionTop
                               animated:YES];
+            return;
         }
         else {
             UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
@@ -173,20 +176,21 @@
         {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
             lblCell.textColor = [UIColor redColor];
-            isOK = NO;
+            //isOK = NO;
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
             [tv scrollToRowAtIndexPath:indexPath
                       atScrollPosition:UITableViewScrollPositionTop
                               animated:YES];
+            return;
         }
         else {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
             lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         }
         
-        if (!isOK)
-            return;
+        //if (!isOK)
+            //return;
         
 //        masina.idProprietar  = asigurat.idIntern;
 //        [masina updateAutovehicul];
@@ -195,7 +199,7 @@
         
         [self doneEditing];
         
-        if (masina.nrKm == 0)
+        if (!masina.nrKm && !isOK)
         {
             [txtNumarKm becomeFirstResponder];
             return;
@@ -206,7 +210,8 @@
             return;
         }
         
-        [self showCustomConfirm:@"Confirmare date" withDescription:@"Aceste informatii vor fi trimise catre un reprezentant i-Asigurare. Mergi mai departe?" withButtonIndex:100];
+        [self showMessage];
+        //[self showCustomConfirm:@"Confirmare date" withDescription:@"" withButtonIndex:100];
     }
 }
 
@@ -260,6 +265,8 @@
         [self setNumarKm:[textField.text intValue]];
     else if (indexPath.row == 4)
         [self setCuloare:textField.text];
+    
+    [self deleteBarButton];
 }
 
 -(IBAction) doneEditing
@@ -371,6 +378,9 @@
     {
         lblCell.text = a.marcaAuto;
         ((UILabel *)[cellMasina viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
+        
+        if (a.cascoLa && ![a.cascoLa isEqualToString:@""])
+            [self setCompanieCasco:a.cascoLa];
     }
     masina = a;
     [self setCompanieCasco:a.cascoLa];
@@ -381,11 +391,13 @@
             [self setAsigurat:prop];
         cautLegaturaDintreMasinaSiAsigurat = NO;
     }
-    if (masina.nrKm > 0)
-        [self setNumarKm:masina.nrKm];
+
+    [self setNumarKm:masina.nrKm];
     
     if (masina.culoare && ![masina.culoare isEqualToString:@""])
         [self setCuloare:masina.culoare];
+    else
+        [self setCuloare:@""];
 
 }
 
@@ -395,6 +407,7 @@
     UITextField * txt = (UITextField *)[cellNrKm viewWithTag:2];
     txt.text = [NSString stringWithFormat:@"%d",v];
     masina.nrKm = v;
+    if (v == 0) isOK = YES;
 
 }
 
@@ -413,16 +426,16 @@
     // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
     if ([v isEqualToString:@"Integral"]) {
         ((UIButton *)[cellNrRate viewWithTag:1]).selected = YES;
-        nrRate = @"Integral";
+        nrRate = 1;
     }
     else if ([v isEqualToString:@"2 Rate"]) {
         ((UIButton *)[cellNrRate viewWithTag:2]).selected = YES;
-        nrRate = @"2 Rate";
+        nrRate = 2;
     }
     else if ([v isEqualToString:@"4 Rate"]) {
         ((UILabel *)[cellNrRate viewWithTag:33]).text = v;
         ((UIButton *)[cellNrRate viewWithTag:3]).selected = YES;
-        nrRate = @"4 Rate";
+        nrRate = 4;
     }
 }
 
@@ -431,6 +444,8 @@
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
+    
+    [activeTextField resignFirstResponder];
     
     if (btn.tag  == 1) {
         [self setNrRate:@"Integral"];
@@ -449,7 +464,10 @@
     ((UIButton *)[cellAsigurareCasco   viewWithTag:1]).selected = ((UIButton *)[cellAsigurareCasco viewWithTag:2]).selected =
     ((UIButton *)[cellAsigurareCasco viewWithTag:3]).selected = ((UIButton *)[cellAsigurareCasco viewWithTag:4]).selected = NO;
     
-    // daca valoarea selectata se afla printre cele 3 butoane, marchez selectat butonul
+    // Daca compania nu este deja selectata, o selectam
+    // altfel o deselectam
+    if (![v isEqualToString:@""])
+    {
     if ([v isEqualToString:@"Allianz"])
         ((UIButton *)[cellAsigurareCasco viewWithTag:1]).selected = YES;
     else if ([v isEqualToString:@"Omniasig"])
@@ -458,14 +476,21 @@
         ((UILabel *)[cellAsigurareCasco viewWithTag:33]).text = v;
         ((UIButton *)[cellAsigurareCasco viewWithTag:3]).selected = YES;
     }
-    else {
+    else if (v.length > 0) {
         ((UILabel *)[cellAsigurareCasco viewWithTag:33]).text = v;
         ((UIButton *)[cellAsigurareCasco viewWithTag:3]).selected = YES;
     }
+        masina.cascoLa = v;
+    }
+    else
+        masina.cascoLa = @"";
 }
 
 - (IBAction)checkboxCompanieCascoSelected:(id)sender
 {
+    [activeTextField resignFirstResponder];
+    
+    
     UIButton * btn = (UIButton *)sender;
     //BOOL checkboxSelected = btn.selected;
     //checkboxSelected = !checkboxSelected;
@@ -598,7 +623,7 @@
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<RequestCasco xmlns=\"http://tempuri.org/\">"
+                      "<RequestCasco2 xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<tip_persoana>%@</tip_persoana>"
@@ -641,10 +666,11 @@
                       "<destinatie_auto>%@</destinatie_auto>"
                       "<culoare>%@</culoare>"
                       "<nr_km>%d</nr_km>"
+                      "<nr_rate>%d</nr_rate>"
                       "<udid>%@</udid>"
                       "<id_intern>%@</id_intern>"
                       "<platforma>%@</platforma>"
-                      "</RequestCasco>"
+                      "</RequestCasco2>"
                       "</soap:Body>"
                       "</soap:Envelope>",
                       asigurat.tipPersoana, asigurat.nume, asigurat.codUnic, asigurat.telefon, asigurat.email,
@@ -654,13 +680,16 @@
                       masina.serieCiv, masina.marcaAuto, masina.modelAuto, masina.nrInmatriculare, masina.serieSasiu, masina.cascoLa,
                       @"nu", // auto nou
                       masina.cm3, masina.putere, masina.combustibil, masina.nrLocuri, masina.masaMaxima, masina.anFabricatie, masina.destinatieAuto,
-                      masina.culoare, masina.nrKm,
+                      masina.culoare, masina.nrKm, nrRate,
                       [[UIDevice currentDevice] uniqueIdentifier], masina.idIntern,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
-    return xml;
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction) callInregistrareComanda {
+    
+    [activeTextField resignFirstResponder];
     
     // Daca masina nu are proprietar SAU
     // Proprietarul masinii este diferit de asigurat, modificam
@@ -688,7 +717,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/RequestCasco" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/RequestCasco2" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -698,14 +727,13 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
-        
     }
     
     else {
         
-        vwErrorAlert.hidden = NO;
-        vwCustomAlert.hidden = YES;
-        
+        //vwErrorAlert.hidden = NO;
+        //vwCustomAlert.hidden = YES;
+        [self showPopup:@"Cerere CASCO"];
     }
     
 }
@@ -737,6 +765,8 @@
     {
         //[self showCustomAlert:@"Cerere CASCO" withDescription:@"Cererea NU a fost transmisa." withError:YES withButtonIndex:4];
         vwErrorAlert.hidden = NO;
+        //[self showPopupServiciu:@"Serviciul CASCO nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+
 	}
     
 }
@@ -747,13 +777,15 @@
 	
     [self hideCustomLoading];
     //[self showCustomAlert:@"Atentie" withDescription:[error localizedDescription] withError:YES withButtonIndex:4];
-    vwErrorAlert.hidden = NO;
+    [self showPopupServiciu:@"Serviciul CASCO nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+    //vwErrorAlert.hidden = NO;
+    
 }
 
 #pragma mark NSXMLParser Methods
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	if ([elementName isEqualToString:@"RequestCascoResult"]) {
+	if ([elementName isEqualToString:@"RequestCasco2Result"]) {
 		responseMessage = [NSString stringWithString:currentElementValue];
 	}
     
@@ -791,14 +823,30 @@
 {
     UIButton * btn = (UIButton *)sender;
     [vwErrorAlert setHidden:YES];
+    [vwCustomAlert setHidden:YES];
     
-    if (btn == btnErrorAlertOK)
+    if (btn == btnErrorAlertOK) {
         [vwDetailErrorAlert setHidden:NO];
+        
+    }
+    
 }
 
 - (IBAction) hideDetailErrorAlert
 {
     [vwDetailErrorAlert setHidden:YES];
+}
+
+- (void) showPopup:(NSString *)title
+{
+    [vwPopup setHidden:NO];
+    
+    lblPopupTitle.text = title;
+}
+
+- (IBAction) hidePopup
+{
+    vwPopup.hidden = YES;
 }
 
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
@@ -835,6 +883,36 @@
 
 }
 
+- (void) showMessage
+{
+    vwMessage.hidden = NO;
+    
+}
+
+- (IBAction) hideMessage:(id)sender
+{
+    vwMessage.hidden = YES;
+    UIButton *btn = (UIButton *)sender;
+    vwCustomAlert.hidden = YES;
+    if (btn == btnMessageOK)
+    {
+        imgError.image = [UIImage imageNamed:@"informatii-trimise.png"];
+        VerifyNet * vn = [[VerifyNet alloc] init];
+        if ([vn hasConnectivity])
+                vwCustomAlert.hidden = NO;
+        else vwCustomAlert.hidden = YES;
+        
+        [lblCustomAlertOK setText:@"OK"];
+        [btnCustomAlertNO setHidden:YES];
+        [lblCustomAlertNO setHidden:YES];
+    }
+    else {
+        vwCustomAlert.hidden = YES;
+
+    }
+    
+}
+
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index
 {
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
@@ -848,7 +926,7 @@
     
     lblCustomAlertTitle.text = title;
     lblCustomAlertMessage.text = description;
-    [vwCustomAlert setHidden:NO];
+    [vwCustomAlert setHidden:YES];
 }
 
 - (void) showPopupDupaComanda
@@ -861,5 +939,16 @@
     [imgLoading setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
 }
 
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
+    //[self.navigationController popViewControllerAnimated:YES];
+}
 
 @end

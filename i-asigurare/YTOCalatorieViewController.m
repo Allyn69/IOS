@@ -203,7 +203,7 @@
     
     NSArray *topLevelObjectsDataInceput = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
-    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data Inceput";
+    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data inceput asigurare";
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
     [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged];
     ((UIImageView *)[cellDataInceput viewWithTag:4]).image = [UIImage imageNamed:@"arrow-calatorie.png"];
@@ -308,9 +308,12 @@
     NSDate *currentDate = [NSDate date];
     NSDateComponents *comps = [[NSDateComponents alloc] init];
     // set tomorrow (0: today, -1: yesterday)
-    [comps setDay:stepper.value];
-    NSDate *date = [calendar dateByAddingComponents:comps 
-                                             toDate:currentDate  
+    if (trecutDeOra)
+        [comps setDay:stepper.value + 1];
+    else
+        [comps setDay:stepper.value];
+    NSDate *date = [calendar dateByAddingComponents:comps
+                                             toDate:currentDate
                                             options:0];
     [self setDataInceput:date];
 }

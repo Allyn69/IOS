@@ -37,6 +37,10 @@
 	NSString	* idOferta;
 	NSString    * mesajFinal;
     
+    IBOutlet UIView      * vwPopup;
+    IBOutlet UILabel     * lblPopupTitle;
+    IBOutlet UILabel     * lblPopupDescription;
+    
     IBOutlet UIImageView * imgError;
     IBOutlet UIView      * vwCustomAlert;
     IBOutlet UILabel     * lblCustomAlertTitle;
@@ -59,12 +63,22 @@
     IBOutlet UIImageView * imgLoading;
     IBOutlet UIButton    * btnClosePopup;
     
+    IBOutlet UIView      * vwServiciu;
+    IBOutlet UILabel     * lblServiciuDescription;
+    
+    IBOutlet UIView      * vwMessage;
+    IBOutlet UIButton    * btnMessageOK;
+    IBOutlet UIButton    * btnMessageNO;
+    
+    
     BOOL cautLegaturaDintreMasinaSiAsigurat;
     
     UITextField * txtNumarKm;
     UITextField * txtCuloare;
     
-    NSString * nrRate;
+    int nrRate;
+    
+    BOOL isOK;
     
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
@@ -94,8 +108,15 @@
 - (void) showCustomLoading;
 - (IBAction) hideCustomLoading;
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
+- (void) showPopup:(NSString*) title;
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
+- (void) showPopupServiciu:description;
+- (void) showMessage;
+
+- (IBAction) hideMessage:(id)sender;
+- (IBAction) hidePopupServiciu;
 - (IBAction) hideCustomAlert:(id)sender;
 - (IBAction) hideErrorAlert:(id)sender;
 - (IBAction) hideDetailErrorAlert;
+- (IBAction) hidePopup;
 @end

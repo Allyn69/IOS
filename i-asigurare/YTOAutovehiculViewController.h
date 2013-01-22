@@ -81,6 +81,10 @@
     UITextField * txtAlertaRovinieta;
     UITextField * txtAlertaCasco;
     UITextField * txtAlertaRataCasco;
+    
+    UITextField * txtPutere;
+    UITextField * txtCm3;
+    UITextField * txtGreutate;
 }
 
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;

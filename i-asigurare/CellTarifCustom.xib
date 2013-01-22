@@ -634,7 +634,7 @@
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="btnComanda">UIButton</string>
-						<string key="imgFransiza">UIImageView</string>
+						<string key="imgFransiza">UILabel</string>
 						<string key="imgLogo">UIImageView</string>
 						<string key="imgSABagaje">UIImageView</string>
 						<string key="imgSAEEI">UIImageView</string>
@@ -649,7 +649,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="imgFransiza">
 							<string key="name">imgFransiza</string>
-							<string key="candidateClassName">UIImageView</string>
+							<string key="candidateClassName">UILabel</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="imgLogo">
 							<string key="name">imgLogo</string>

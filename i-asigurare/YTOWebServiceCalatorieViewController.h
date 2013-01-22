@@ -45,6 +45,13 @@
     
     IBOutlet UIView      * vwDetailErrorAlert;
     IBOutlet UIButton    * btnDetailErrorAlertOK;
+    
+    IBOutlet UIView      * vwPopupError;
+    IBOutlet UILabel     * lblPopupErrorTitle;
+    IBOutlet UILabel     * lblPopupErrorDescription;
+    
+    IBOutlet UIView      * vwServiciu;
+    IBOutlet UILabel     * lblServiciuDescription;
 }
 
 @property (nonatomic, retain) CotatieCalatorie * cotatie;
@@ -58,7 +65,12 @@
 - (void) startLoadingAnimantion;
 - (void) stopLoadingAnimantion;
 
-- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
+- (void) showPopupWithTitle:(NSString *)title;
+- (void) showPopupErrorWithTitle:(NSString *)title andDescription:(NSString *)description;
+- (void) showPopupServiciu:description;
+
+- (IBAction) hidePopupError;
+- (IBAction) hidePopupServiciu;
 - (IBAction)hidePopup:(id)sender;
 - (IBAction)calculeazaDupaAltaSA:(id)sender;
 - (IBAction) hideErrorAlert:(id)sender;

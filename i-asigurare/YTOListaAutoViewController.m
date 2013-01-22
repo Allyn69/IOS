@@ -140,7 +140,7 @@
     }
     else
         cell.imageView.image = [UIImage imageNamed:@"marca-auto.png"];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
     cell.textLabel.text = [a.marcaAuto uppercaseString];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@", a.modelAuto, a.nrInmatriculare];
     
@@ -164,6 +164,11 @@
     lblPercent.backgroundColor = [UIColor clearColor];
     [cell addSubview:progressv];
     [cell addSubview:lblPercent];
+    
+    if (completedPercent < 1)
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    else
+        cell.accessoryType = UITableViewCellAccessoryNone;
     return cell;
 }
 
@@ -275,6 +280,11 @@
     if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
     {
         aView.controller = (YTOCalculatorViewController *)self.controller;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
+    if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+    {
+        aView.controller = (YTOCASCOViewController *)self.controller;
         [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])

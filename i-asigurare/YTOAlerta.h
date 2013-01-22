@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NSDateComponents *difference;
+
 @interface YTOAlerta : NSObject<NSXMLParserDelegate>
 {
     NSMutableData * responseData;
@@ -44,6 +46,7 @@
 + (YTOAlerta *) getAlertaRataCasco:(NSString *)_idIntern andNumarRata:(int)x;
 + (YTOAlerta *) getAlertaRataLocuinta:(NSString *)_idIntern;
 
++ (NSMutableArray*)AlerteActive;
 + (NSMutableArray*)Alerte;
 + (int)GetNrAlerteScadente;
 

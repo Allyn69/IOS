@@ -8,6 +8,7 @@
 
 #import "YTOTrimiteMesajViewController.h"
 #import "YTOUtils.h"
+#import "VerifyNet.h"
 
 @interface YTOTrimiteMesajViewController ()
 
@@ -305,6 +306,9 @@
 
 	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@utils.asmx", LinkAPI]];
     
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+    
 	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
 															cachePolicy:NSURLRequestUseProtocolCachePolicy
 														timeoutInterval:30.0];
@@ -324,6 +328,13 @@
 	if (connection) {
 		self.responseData = [NSMutableData data];
 	}
+    }
+    else {
+        
+        [self showPopupError:@"Atentie"];
+        //vwErrorAlert.hidden = NO;
+        
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -350,7 +361,7 @@
         [self showPopup:@"Mesajul a fost trimis" withDescription:jsonResponse];
     }
 	else {
-        
+
 	}
     
 }
@@ -409,4 +420,17 @@
     [loading setHidden:YES];
     [vwLoading setHidden:NO];
 }
+
+- (void) showPopupError:(NSString *)title
+{
+    vwPopup.hidden = NO;
+    lblPopupTitle.text = title;
+}
+
+- (IBAction) hidePopupError
+{
+    vwLoading.hidden = YES;
+    vwPopup.hidden = YES;
+}
+
 @end

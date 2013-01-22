@@ -24,10 +24,10 @@
 @synthesize controller;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+{    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Alerte", @"Alerte");
+        self.title = NSLocalizedString(@"Vezi Alerte", @"Vezi Alerte");
         self.tabBarItem.image = [UIImage imageNamed:@"menu-alerte.png"];
     }
     return self;
@@ -40,11 +40,13 @@
 
 - (void) viewWillAppear:(BOOL)animated
 {
-    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+   // YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    listAlerte = [delegate Alerte];
+    listAlerte = [YTOAlerta AlerteActive];
     
     [self verifyViewMode];
+    
+    counter = 0;
 }
 
 - (void) verifyViewMode
@@ -200,8 +202,12 @@
 
 #pragma mark - Table view delegate
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    counter++;
+    if (counter == 3) vwPopup.hidden = NO;
+    
     /*
     YTOFormAlertaViewController * aView = [[YTOFormAlertaViewController alloc] init];
     aView.controller = self;
@@ -211,14 +217,24 @@
      */
 }
 
+- (IBAction) countClick
+{
+    counter++;
+    if (counter == 3) vwPopup.hidden = NO;
+}
+
+- (IBAction) hidePopup
+{
+    vwPopup.hidden = YES;
+}
 
 #pragma METHODS
 
 - (void) reloadData
 {
-    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    //YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    listAlerte = [delegate Alerte];
+    listAlerte = [YTOAlerta AlerteActive];
     
     if (listAlerte.count > 0)
     {

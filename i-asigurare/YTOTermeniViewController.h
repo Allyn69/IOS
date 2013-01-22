@@ -22,6 +22,10 @@
 	NSString    * responseMessage;
 	NSString    * jsonResponse;
     
+    IBOutlet UIView      * vwPopup;
+    IBOutlet UILabel     * lblPopupTitle;
+    IBOutlet UILabel     * lblPopupDescription;
+    
     IBOutlet UIWebView * webView;
 }
 
@@ -30,5 +34,7 @@
 - (void) showLoading;
 - (IBAction) hideLoading;
 - (void) showPopup:(NSString *)title withDescription:(NSString *)description;
+- (void) arataPopup:(NSString *)title;
+- (IBAction) hidePopup;
 
 @end

@@ -162,29 +162,46 @@
     }
     else if (indexPath.row == 7)
     {
-        if (locuinta.idIntern.length == 0 || asigurat.idIntern.length == 0)
-            return;
+        //if (locuinta.idIntern.length == 0 || asigurat.idIntern.length == 0)
+           // return;
         
-        BOOL isOK = YES;
+        //BOOL isOK = YES;
+        
+        if (![locuinta isValidForLocuinta])
+        {
+            UILabel * lblCell = (UILabel *)[cellLocuinta viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            //isOK = NO;
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+            return;
+        }
         
         if (![asigurat isValidForCompute])
         {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
             lblCell.textColor = [UIColor redColor];
-            isOK = NO;
+            //isOK = NO;
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
             [tv scrollToRowAtIndexPath:indexPath
                       atScrollPosition:UITableViewScrollPositionTop
                               animated:YES];
+            return;
         }
         else {
             UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
             lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         }
-    
-        if (!isOK)
+        if (locuinta.sumaAsigurata < 10000) {
+            [(UITextField *)[cellSumaAsigurata viewWithTag:2] becomeFirstResponder];
             return;
+        }
+        //if (!isOK)
+            //return;
         
         oferta.tipAsigurare = 3;
         oferta.idAsigurat = asigurat.idIntern;
@@ -214,7 +231,7 @@
     if (indexPath.row == 4 || indexPath.row == 5)
     {
         [self addBarButton];
-        textField.text = [textField.text stringByReplacingOccurrencesOfString:@" EUR" withString:@""];
+        textField.text = [textField.text stringByReplacingOccurrencesOfString:@".00 EUR" withString:@""];
         textField.text = [textField.text stringByReplacingOccurrencesOfString:@" LEI" withString:@""];
     }
 }
@@ -292,6 +309,10 @@
     UIImageView * bg = (UIImageView *)[cellLocuinta viewWithTag:5];
     bg.image = [UIImage imageNamed:@"alege-persoana-locuinta.png"];
     
+    UILabel * lblCell1 = (UILabel *)[cellLocuinta viewWithTag:6];
+    lblCell1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCell1.text = @"LOCUINTA ASIGURATA";
+
     NSArray *topLevelObjectsProprietar = [[NSBundle mainBundle] loadNibNamed:@"CellPersoana" owner:self options:nil];
     cellProprietar = [topLevelObjectsProprietar objectAtIndex:0];
     UILabel * lblCellP = (UILabel *)[cellProprietar viewWithTag:2];
@@ -300,9 +321,14 @@
     UIImageView * bg2 = (UIImageView *)[cellProprietar viewWithTag:5];
     bg2.image = [UIImage imageNamed:@"alege-persoana-locuinta.png"];
     
+    UILabel * lblCell2 = (UILabel *)[cellProprietar viewWithTag:6];
+    lblCell2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblCell2.text = @"PROPRIETAR LOCUINTA";
+
+    
     NSArray *topLevelObjectsSA = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellSumaAsigurata = [topLevelObjectsSA objectAtIndex:0];
-    [(UILabel *)[cellSumaAsigurata viewWithTag:1] setText:@"Suma Asigurata (EUR)"];
+    [(UILabel *)[cellSumaAsigurata viewWithTag:1] setText:@"Suma Asigurata (minim 10000 EUR)"];
 //    [(UITextField *)[cellSumaAsigurata viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellSumaAsigurata viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellSumaAsigurata];
@@ -316,12 +342,12 @@
     
     NSArray *topLevelObjectsDataInceput = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
+    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data inceput asigurare";
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
     ((UIImageView *)[cellDataInceput viewWithTag:4]).image = [UIImage imageNamed:@"arrow-locuinta.png"];
     [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged];
     [YTOUtils setCellFormularStyle:cellDataInceput];
 
-    
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
     UIImageView * img3 = (UIImageView *)[cellCalculeaza viewWithTag:1];
@@ -339,7 +365,10 @@
     NSDate *currentDate = [NSDate date];
     NSDateComponents *comps = [[NSDateComponents alloc] init];
     // set tomorrow (0: today, -1: yesterday)
-    [comps setDay:stepper.value];
+    if (trecutDeOra)
+        [comps setDay:stepper.value + 1];
+    else
+        [comps setDay:stepper.value];
     NSDate *date = [calendar dateByAddingComponents:comps
                                              toDate:currentDate
                                             options:0];
@@ -377,12 +406,13 @@
     ((UILabel *)[cellLocuinta viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@, %d mp", a.judet, a.localitate, a.suprafataUtila];
     locuinta = a;
     
-    if (![locuinta.modEvaluare isEqualToString:@""])
+    if (locuinta.modEvaluare && ![locuinta.modEvaluare isEqualToString:@""])
         [self setModEvaluare:locuinta.modEvaluare];
     else [self setModEvaluare:@"valoare-reala"];
     
-    if (locuinta.sumaAsigurata > 0)
+    if (locuinta.sumaAsigurata >= 10000)
         [self setSumaAsigurata:[NSString stringWithFormat:@"%d",locuinta.sumaAsigurata]];
+    //else [activeTextField becomeFirstResponder];
     if (locuinta.sumaAsigurataRC > 0)
         [self setSumaAsigurataRC:[NSString stringWithFormat:@"%d",locuinta.sumaAsigurataRC]];
     

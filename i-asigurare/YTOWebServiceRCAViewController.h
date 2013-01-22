@@ -49,6 +49,13 @@
     IBOutlet UIView      * vwDetailErrorAlert;
     IBOutlet UIButton    * btnDetailErrorAlertOK;
     
+    IBOutlet UIView      * vwPopupError;
+    IBOutlet UILabel     * lblPopupErrorTitle;
+    IBOutlet UILabel     * lblPopupErrorDescription;
+    
+    IBOutlet UIView      * vwServiciu;
+    IBOutlet UILabel     * lblServiciuDescription;
+    
     NSMutableData * responseCalcul6Luni;
     NSMutableData * responseCalcul12Luni;
 }
@@ -66,8 +73,14 @@
 - (void) startLoadingAnimantion;
 - (void) stopLoadingAnimantion;
 
-- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;
-- (IBAction)hidePopup:(id)sender;
+- (void) showPopupWithTitle:(NSString *)title;// andDescription:(NSString *)description;
+- (void) showPopupErrorWithTitle:(NSString *)title andDescription:(NSString *)description;
+- (void) showPopupServiciu:description;
+
+- (IBAction) hidePopupError;
+- (IBAction) hidePopup:(id)sender;
 - (IBAction) hideErrorAlert:(id)sender;
 - (IBAction) hideDetailErrorAlert;
+- (IBAction) hidePopupServiciu;
+
 @end

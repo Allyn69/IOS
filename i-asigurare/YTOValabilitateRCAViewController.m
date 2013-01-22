@@ -81,13 +81,19 @@
                       "</soap:Body>"
                       "</soap:Envelope>",
                         masina.serieSasiu, masina.nrInmatriculare];
-    return xml;
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction) callVerificaRca {
-    if (!masina && (!masina.serieSasiu || !masina.nrInmatriculare))
+    if (!masina) 
     {
         lblMasina.textColor = [UIColor redColor];
+        return;
+    }
+    if (!masina.serieSasiu.length && !masina.nrInmatriculare.length)
+    {
+        [self arataPopup:@"Atentie!" withDescription:@"Pentru a verifica o polita, trebuie sa introduci seria de sasiu si numarul de inmatriculareale masinii. Mergi in ecranul Datele mele – Masinile mele. Selecteaza masina si completeaza informatiile lipsa."];
         return;
     }
     
@@ -122,7 +128,7 @@
     }
     else {
         
-        vwErrorAlert.hidden = NO;
+        [self arataPopup:@"Atentie!" withDescription:@"Ne pare rau! Polita nu poate fi verificata pentru ca nu esti conectat la internet. Te rugam sa te asiguri ca ai o conexiune la internet activa si calculeaza din nou. Iti multumim!"];
         
     }
 
@@ -150,28 +156,36 @@
 	
 	if (succes) {
         NSError * err = nil;
+        
         NSData *data = [jsonResponse dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
-        dataExpirare = nil;
-        for(NSDictionary *json in jsonArray) {
-            NSString * status = [json objectForKey:@"status"];
-            NSString * mesaj = [json objectForKey:@"mesaj"];
-            
-            NSString * dExpirare =[json objectForKey:@"data-expirare"];
-            if (dExpirare && dExpirare.length >0)
-                dataExpirare = [YTOUtils getDateFromString:dExpirare withFormat:@"dd.MM.yyyy"];
-            
-            if ([status isEqualToString:@"0"])
-                [self showPopup:@"Polita nu a fost gasita!" withDescription:mesaj];
-                //vwErrorAlert.hidden = NO;
-            else if ([status isEqualToString:@"1"])
-                [self showPopup:@"Polita gasita!" withDescription:mesaj];
-            else if ([status isEqualToString:@"2"])
-                [self showPopup:@"Polita valida!" withDescription:mesaj];
+        if (data) {
+            NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
+            dataExpirare = nil;
+            for(NSDictionary *json in jsonArray) {
+                NSString * status = [json objectForKey:@"status"];
+                NSString * mesaj = [json objectForKey:@"mesaj"];
+                
+                NSString * dExpirare =[json objectForKey:@"data-expirare"];
+                if (dExpirare && dExpirare.length >0)
+                    dataExpirare = [YTOUtils getDateFromString:dExpirare withFormat:@"dd.MM.yyyy"];
+                
+                if ([status isEqualToString:@"0"]) {
+                    [self showPopupError:@"Polita nu a fost gasita!" withDescription:mesaj];
+                }
+                else if ([status isEqualToString:@"1"]) {
+                    [self showPopupError:@"Polita gasita!" withDescription:mesaj];
+                }
+                else if ([status isEqualToString:@"2"]) {
+                    [self showPopupError:@"Polita valida!" withDescription:mesaj];
+                }
+            }
+        }
+        else {
+             [self showPopupServiciu:@"Serviciul de verificare a politelor nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
         }
     }
 	else {
-        
+        [self showPopupServiciu:@"Serviciul de verificare a politelor nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
 	}
     
 }
@@ -182,7 +196,12 @@
 	
     [self hideLoading];
     //[self showPopup:@"Polita nu a fost gasita" withDescription:@"Baza de date CEDAM nu a raspuns. Fie nu functioneaza momentan, fie ai introdus gresit seria de sasiu sau numarul de inmatriculare."];
-    vwErrorAlert.hidden = NO;
+    
+    [self showPopupServiciu:@"Serviciul de verificare a politelor nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+
+    
+    ///
+    //[self showPopupError:@"Polita nu a fost gasita" withDescription:@"Serviciul nu functioneaza momentan. Incercati mai tarziu."];       //[NSString stringWithFormat:@"%@", [error localizedDescription]]];
 }
 
 #pragma mark NSXMLParser Methods
@@ -248,7 +267,38 @@
     [lblLoadingDescription setText:description];
     [lblLoadingTitlu setText:title];
     [loading setHidden:YES];
-    [vwLoading setHidden:NO];
+    vwPopup.hidden = NO;
+    //[vwLoading setHidden:NO];
+}
+
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (void) showPopupError:(NSString *)title withDescription:(NSString *)description
+{
+    [vwDetailAlert setHidden:NO];
+    [lblTitlu setText:title];
+    [lblExpira setText:description];
+}
+
+- (void) arataPopup:(NSString *)title withDescription: (NSString *)description
+{
+    vwPopup.hidden = NO;
+    lblPopupTitle.text = title;
+    lblPopupDescription.text = description;
+}
+
+- (IBAction) hidePopup
+{
+    vwPopup.hidden = YES;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
 }
 
 - (IBAction) hideErrorAlert:(id)sender
@@ -258,14 +308,16 @@
     
     if (btn == btnErrorAlertOK)
         [vwDetailErrorAlert setHidden:NO];
-    //else
-      //  [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction) hideDetailErrorAlert
 {
     [vwDetailErrorAlert setHidden:YES];
-    //[self.navigationController popViewControllerAnimated:YES];
+    
 }
 
+- (IBAction) hideDetailAlert
+{
+    [vwDetailAlert setHidden:YES];
+}
 @end

@@ -42,8 +42,8 @@
     
     [self initCells];
     [self setTipPlata:@"cash"];
-    [self setJudet:asigurat.judet];
     [self setLocalitate:asigurat.localitate];
+    [self setJudet:asigurat.judet];
     [self setAdresa:asigurat.adresa];
     [self setTelefon:asigurat.telefon];
     [self setEmail:asigurat.email];
@@ -277,13 +277,13 @@
 - (void) setJudet:(NSString *)judet
 {
     judetLivrare = judet;
+    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
+    lbl.text = [[judetLivrare stringByAppendingString:@","] stringByAppendingString:localitateLivrare];
 }
 
 - (void) setLocalitate:(NSString *)localitate
 {
     localitateLivrare = localitate;
-    UILabel * lbl = (UILabel *)[cellJudetLocalitate viewWithTag:2];
-    lbl.text = [[judetLivrare stringByAppendingString:@","] stringByAppendingString:localitateLivrare];
 }
 
 - (void) setAdresa:(NSString *)adresa
@@ -544,8 +544,8 @@
         imgError.image = [UIImage imageNamed:@"comanda-ok.png"];
     
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
     [lblCustomAlertOK setText:@"OK"];
     [btnCustomAlertNO setHidden:YES];
     [lblCustomAlertNO setHidden:YES];
@@ -587,7 +587,7 @@
                      "&udid=%@",
                      LinkAPI,
                      idOferta, emailLivrare, asigurat.nume, asigurat.adresa, asigurat.localitate, asigurat.judet, telefonLivrare,
-                     @"RCA", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
+                     @"RCA", oferta.prima, oferta.companie, [[[UIDevice currentDevice] uniqueIdentifier] stringByAppendingString:[NSString stringWithFormat:@"---%@",masina.idIntern]]];
         
         NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         [[UIApplication sharedApplication] openURL:nsURL];
@@ -612,8 +612,8 @@
     self.navigationItem.hidesBackButton = YES;
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
     [lblCustomAlertOK setText:@"DA"];
     
     [btnCustomAlertNO setHidden:NO];
@@ -628,17 +628,32 @@
 {
     self.navigationItem.hidesBackButton = YES;
     
-    viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    img.tag = 1;
-    [img setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
-    [viewTooltip addSubview:img];
-    
-    UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnClose.tag = 2;
-    btnClose.frame = CGRectMake(126, 400, 70, 31);
-    [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
-    [viewTooltip addSubview:btnClose];
+    if (IS_IPHONE_5) {
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"popup-dupa-comanda-r4.png"]];
+        [viewTooltip addSubview:img];
+        
+        UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnClose.tag = 2;
+        btnClose.frame = CGRectMake(126, 480, 70, 31);
+        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnClose];
+    }
+    else {
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
+        [viewTooltip addSubview:img];
+        
+        UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnClose.tag = 2;
+        btnClose.frame = CGRectMake(126, 400, 70, 31);
+        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnClose];
+    }
     
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [delegate.window addSubview:viewTooltip];

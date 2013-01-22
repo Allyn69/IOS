@@ -162,6 +162,7 @@
 								<string key="NSFrame">{{145, 408}, {47, 33}}</string>
 								<reference key="NSSuperview" ref="452904699"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -1026,7 +1027,7 @@
 				</array>
 			</object>
 			<object class="IBUITableViewCell" id="783812482">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">292</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="865039875">
@@ -1038,6 +1039,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{20, 31}, {141, 21}}</string>
 								<reference key="NSSuperview" ref="865039875"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1013495863"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -1062,6 +1064,8 @@
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{206, 28}, {94, 27}}</string>
 								<reference key="NSSuperview" ref="865039875"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
@@ -1070,7 +1074,7 @@
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<double key="IBUIValue">1</double>
 								<double key="IBUIMinimumValue">1</double>
-								<double key="IBUIMaximumValue">15</double>
+								<double key="IBUIMaximumValue">30</double>
 							</object>
 							<object class="IBUILabel" id="565797200">
 								<reference key="NSNextResponder" ref="865039875"/>
@@ -1078,6 +1082,7 @@
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
 								<string key="NSFrame">{{20, 7}, {214, 21}}</string>
 								<reference key="NSSuperview" ref="865039875"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="583602394"/>
 								<reference key="IBUIBackgroundColor" ref="329736107"/>
 								<bool key="IBUIOpaque">NO</bool>
@@ -1086,7 +1091,7 @@
 								<int key="IBUITag">1</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">Data inceput</string>
+								<string key="IBUIText">Data inceput asigurare</string>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MCAwLjI2NjY2NjY2NjcgMC40NjI3NDUwOTgAA</bytes>
@@ -1104,6 +1109,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{5, 13}, {10, 10}}</string>
 								<reference key="NSSuperview" ref="865039875"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="565797200"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -1113,6 +1119,7 @@
 						</array>
 						<string key="NSFrameSize">{320, 66}</string>
 						<reference key="NSSuperview" ref="783812482"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="664896953"/>
 						<string key="NSReuseIdentifierKey">_NS:11</string>
 						<reference key="IBUIBackgroundColor" ref="329736107"/>
@@ -1124,6 +1131,8 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 67}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="865039875"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1833,10 +1842,6 @@
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaTouchPlugin.iPhoneOS</string>
-			<real value="1536" key="NS.object.0"/>
-		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">

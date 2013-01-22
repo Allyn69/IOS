@@ -8,6 +8,8 @@
 
 #import "YTOFinalizareCalatorieViewController.h"
 #import "Database.h"
+#import "YTOUserDefaults.h"
+#import "YTOAppDelegate.h"
 
 @interface YTOFinalizareCalatorieViewController ()
 
@@ -108,6 +110,12 @@
     {
         [self doneEditing];
         
+        if (seriePasaport.length == 0)
+        {
+            [txtSerie becomeFirstResponder];
+            return;
+        }
+            
         if (telefonLivrare.length == 0)
         {
             [txtTelefonLivrare becomeFirstResponder];
@@ -118,9 +126,10 @@
             [txtEmailLivrare becomeFirstResponder];
             return;
         }
-        
+
         [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
     }
+
 }
 
 #pragma mark TEXTFIELD
@@ -211,12 +220,13 @@
     for (int i=0; i<listAsigurati.count; i++) {
         YTOPersoana * asigurat = [listAsigurati objectAtIndex:i];
         NSArray *topLevelObjectAsigurat = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
-        UITableViewCell * cell = [topLevelObjectAsigurat objectAtIndex:0];
-        [(UILabel *)[cell viewWithTag:1] setText:[NSString stringWithFormat:@"SERIE DOCUMENT %@", [asigurat.nume uppercaseString]]];
-        [(UITextField *)[cell viewWithTag:2] setPlaceholder:@"seria CI/Pasaport"];
-        [(UITextField *)[cell viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
-        [YTOUtils setCellFormularStyle:cell];
-        [listCells addObject:cell];
+        cellSerie = [topLevelObjectAsigurat objectAtIndex:0];
+        [(UILabel *)[cellSerie viewWithTag:1] setText:[NSString stringWithFormat:@"SERIE DOCUMENT %@", [asigurat.nume uppercaseString]]];
+        txtSerie = (UITextField *)[cellSerie viewWithTag:2];
+        [(UITextField *)[cellSerie viewWithTag:2] setPlaceholder:@"seria CI/Pasaport"];
+        [(UITextField *)[cellSerie viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+        [YTOUtils setCellFormularStyle:cellSerie];
+        [listCells addObject:cellSerie];
     }
     
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
@@ -250,6 +260,7 @@
     asigurat.serieAct = serie;
     UITextField * txt = (UITextField *)[(UITableViewCell*)[listCells objectAtIndex:index] viewWithTag:2];
     txt.text = serie;
+    seriePasaport = serie;
 }
 - (void) setEmail:(NSString *)email
 {
@@ -425,6 +436,53 @@
 {
     self.navigationItem.hidesBackButton = NO;
     [vwLoading setHidden:YES];
+    if (idOferta && ![idOferta isEqualToString:@""] && [YTOUserDefaults IsFirstInsuranceRequest])
+    {
+        [YTOUserDefaults setFirstInsuranceRequest:YES];
+        [self showPopupDupaComanda];
+    }
+}
+
+- (void) showPopupDupaComanda
+{
+    self.navigationItem.hidesBackButton = YES;
+    
+    if (IS_IPHONE_5) {
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"popup-dupa-comanda-r4.png"]];
+        [viewTooltip addSubview:img];
+        
+        UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnClose.tag = 2;
+        btnClose.frame = CGRectMake(126, 480, 70, 31);
+        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnClose];
+    }
+    else {
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"popup-dupa-comanda.png"]];
+        [viewTooltip addSubview:img];
+        
+        UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnClose.tag = 2;
+        btnClose.frame = CGRectMake(126, 400, 70, 31);
+        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnClose];
+    }
+    
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [delegate.window addSubview:viewTooltip];
+}
+
+- (void) closeTooltip
+{
+    self.navigationItem.hidesBackButton = NO;
+    [viewTooltip removeFromSuperview];
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index
@@ -437,8 +495,8 @@
         imgError.image = [UIImage imageNamed:@"comanda-ok.png"];
     
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
     [lblCustomAlertOK setText:@"OK"];
     [btnCustomAlertNO setHidden:YES];
     [lblCustomAlertNO setHidden:YES];
@@ -455,7 +513,12 @@
     UIButton * btn = (UIButton *)sender;
     [vwCustomAlert setHidden:YES];
     if (btn.tag == 1)
+    {
+        if ([YTOUserDefaults IsFirstInsuranceRequest])
+            [self showPopupDupaComanda];
+        else
         [self.navigationController popToRootViewControllerAnimated:YES];
+    }
     else if (btn.tag == 3)
     {
         YTOPersoana * asig1 = [listAsigurati objectAtIndex:0];
@@ -477,6 +540,8 @@
         
         NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
         [[UIApplication sharedApplication] openURL:nsURL];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (btn.tag == 100)
     {
@@ -490,8 +555,8 @@
     
     imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
     btnCustomAlertOK.tag = index;
-    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
-    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
+//    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
+//    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
     [lblCustomAlertOK setText:@"DA"];
     
     [btnCustomAlertNO setHidden:NO];

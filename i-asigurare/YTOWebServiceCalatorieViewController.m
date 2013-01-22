@@ -105,7 +105,8 @@
                       [oferta CalatorieTranzit],
                       oferta.durataAsigurare, taraDestinatie, sumaAsigurata, scopCalatorie, (listAsigurati.count == 1 ? @"individual" : @"grup"), [YTOPersoana getJsonPersoane:listAsigurati], pers1.judet, pers1.localitate,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
-    return xml;
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction)calculeazaDupaAltaSA:(id)sender
@@ -182,7 +183,8 @@
     }
     else {
         
-        vwErrorAlert.hidden = NO;
+        [self showPopupWithTitle:@"Atentie"];
+        //vwErrorAlert.hidden = NO;
         
     }
 }
@@ -212,14 +214,18 @@
             // verific daca nu a intors eroare
             CotatieCalatorie * _cotatie = [listTarife objectAtIndex:0];
             if (listTarife.count == 1 && ![_cotatie.Eroare_ws isEqualToString:@"success"])
-                [self showPopupWithTitle:@"Atentie" andDescription:_cotatie.Eroare_ws];
-                //vwErrorAlert.hidden = NO;
+                //[self showPopupWithTitle:@"Atentie" andDescription:_cotatie.Eroare_ws];
+                vwErrorAlert.hidden = NO;
             else
                 [tableView reloadData];
         }
         else
-            [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+            //[self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
             //vwErrorAlert.hidden = NO;
+            [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+    }
+    else {
+         [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
     }
 }
 
@@ -227,8 +233,9 @@
 	NSLog(@"connection:didFailWithError:");
 	NSLog(@"%@", [error localizedDescription]);
 
-    [self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", [error localizedDescription]]];
-    
+    //[self showPopupErrorWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", [error localizedDescription]]];
+    [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+
     //vwErrorAlert.hidden = NO;
 
 }
@@ -383,12 +390,36 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
+- (void) showPopupWithTitle:(NSString *)title
 {
     [self stopLoadingAnimantion];
     [vwPopup setHidden:NO];
-    lblPopupDescription.text = description;
     lblPopupTitle.text = title;
+}
+
+- (void) showPopupErrorWithTitle:(NSString *)title andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopupError setHidden:NO];
+    lblPopupErrorTitle.text = title;
+    lblPopupErrorDescription.text = description;
+}
+
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hidePopupError
+{
+    vwPopupError.hidden = YES;
 }
 
 - (IBAction)hidePopup:(id)sender

@@ -139,7 +139,8 @@
                       [locuinta.zonaIzolata isEqualToString:@"da"] ? @"da" : @"nu",
                       [[UIDevice currentDevice] uniqueIdentifier],
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
-    return xml;
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction)calculeazaRCADupaAltaDurata
@@ -209,7 +210,8 @@
     }
     else {
     
-        vwErrorAlert.hidden = NO;
+        [self showPopupWithTitle:@"Atentie"];// andDescription:eroare_ws];
+        //vwErrorAlert.hidden = NO;
     
     }
 
@@ -225,7 +227,6 @@
 }
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
 	
-    
 	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
@@ -234,46 +235,57 @@
     {
         NSError * err = nil;
         NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
         
-        for(NSDictionary *item in jsonArray) {
-            cotatie = [[CotatieLocuinta alloc] init];
-            NSString * eroare_ws = [item objectForKey:@"Eroare_ws"];
-            if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
-            {
-                [vwLoading setHidden:YES];
-                //[self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
-                vwErrorAlert.hidden = NO;
-                [self stopLoadingAnimantion];
-                return;
-            }
-            cotatie.cod = [item objectForKey:@"Cod"];
-            cotatie.prima = [item objectForKey:@"Prima"];
-            cotatie.companie = [item objectForKey:@"Companie"];
-            cotatie.sumaAsigurata = [item objectForKey:@"SumaAsigurata"];
-            cotatie.moneda = [item objectForKey:@"Moneda"];
-            cotatie.fransiza = [item objectForKey:@"Fransiza"];
-            cotatie.tipProdus = [item objectForKey:@"TipProdus"];
-            cotatie.saBunuriValoare = [item objectForKey:@"SABunuriValoare"];
-            cotatie.saBunuriGenerale = [item objectForKey:@"SABunuriGenerale"];
-            cotatie.saRaspundere = [item objectForKey:@"SARaspundere"];
-            cotatie.riscFurt = [item objectForKey:@"RiscFurt"];
-            cotatie.riscApaConducta = [item objectForKey:@"RiscApaConducta"];
-            cotatie.linkConditii = [item objectForKey:@"LinkConditii"];
-            cotatie.conditiiHint = [item objectForKey:@"ConditiiHint"];
+        if (data) {
+            NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
             
-            [listTarife addObject:cotatie];
+            for(NSDictionary *item in jsonArray) {
+                cotatie = [[CotatieLocuinta alloc] init];
+                NSString * eroare_ws = [item objectForKey:@"Eroare_ws"];
+                if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
+                {
+                    [vwLoading setHidden:YES];
+                    //trebe decomentat
+                    //[self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
+                    //vwErrorAlert.hidden = NO;
+                    [self stopLoadingAnimantion];
+                    return;
+                }
+                cotatie.cod = [item objectForKey:@"Cod"];
+                cotatie.prima = [item objectForKey:@"Prima"];
+                cotatie.companie = [item objectForKey:@"Companie"];
+                cotatie.sumaAsigurata = [item objectForKey:@"SumaAsigurata"];
+                cotatie.moneda = [item objectForKey:@"Moneda"];
+                cotatie.fransiza = [item objectForKey:@"Fransiza"];
+                cotatie.tipProdus = [item objectForKey:@"TipProdus"];
+                cotatie.saBunuriValoare = [item objectForKey:@"SABunuriValoare"];
+                cotatie.saBunuriGenerale = [item objectForKey:@"SABunuriGenerale"];
+                cotatie.saRaspundere = [item objectForKey:@"SARaspundere"];
+                cotatie.riscFurt = [item objectForKey:@"RiscFurt"];
+                cotatie.riscApaConducta = [item objectForKey:@"RiscApaConducta"];
+                cotatie.linkConditii = [item objectForKey:@"LinkConditii"];
+                cotatie.conditiiHint = [item objectForKey:@"ConditiiHint"];
+                
+                [listTarife addObject:cotatie];
+            }
         }
+        else {
+            [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+        }
+    }
+    else
+    {
+        [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
     }
     
     [vwLoading setHidden:YES];
     [self stopLoadingAnimantion];
     
-    // Daca nu este afisata nicio prima, dau mesaj
+    // Daca serviciul raspunde, dar nu intoarce nicio prima, dau mesaj
     if (listTarife.count == 0)
     {
-//        [self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
-        vwErrorAlert.hidden = NO;
+        [self showPopupServiciu:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+        //vwErrorAlert.hidden = NO;
     }
     else
     {
@@ -285,10 +297,13 @@
 	NSLog(@"connection:didFailWithError:");
 	NSLog(@"%@", [error localizedDescription]);
 	
-	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alertView show];
+//	UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//	[alertView show];
+    
+    [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
+    
+    //[self showPopupErrorWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", [error localizedDescription]]];
 }
-
 
 
 #pragma mark NSXMLParser Methods
@@ -493,20 +508,45 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-//- (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description
-//{
-//    [self stopLoadingAnimantion];
-//    [vwPopup setHidden:NO];
+- (void) showPopupWithTitle:(NSString *)title //andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopup setHidden:NO];
 //    lblPopupDescription.text = description;
-//    lblPopupTitle.text = title;
-//}
+    lblPopupTitle.text = title;
+}
 
-//- (IBAction)hidePopup:(id)sender
-//{
-//    [vwPopup setHidden:YES];
-//    YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-//    [delegate.rcaNavigationController popViewControllerAnimated:YES];
-//}
+- (void) showPopupErrorWithTitle:(NSString *)title andDescription:(NSString *)description
+{
+    [self stopLoadingAnimantion];
+    [vwPopupError setHidden:NO];
+    lblPopupErrorTitle.text = title;
+    lblPopupErrorDescription.text = description;
+}
+
+- (void) showPopupServiciu:description
+{
+    [vwServiciu setHidden:NO];
+    lblServiciuDescription.text = description;
+}
+
+- (IBAction) hidePopupServiciu
+{
+    vwServiciu.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction) hidePopupError
+{
+    vwPopupError.hidden = YES;
+}
+
+- (IBAction)hidePopup:(id)sender
+{
+    [vwPopup setHidden:YES];
+     YTOAppDelegate * delegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate.rcaNavigationController popViewControllerAnimated:YES];
+}
 
 - (IBAction) hideErrorAlert:(id)sender
 {

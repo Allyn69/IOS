@@ -28,6 +28,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self copyDatabaseIfNeeded];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
@@ -36,7 +37,12 @@
 
     //[self syncDataFromOldVersion];
     
-    UIViewController *viewController0 = [[YTOSetariViewController alloc] initWithNibName:@"YTOSetariViewController" bundle:nil];
+    UIViewController *viewController0;
+    if (IS_IPHONE_5)
+        viewController0 = [[YTOSetariViewController alloc] initWithNibName:@"YTOSetariViewController_R4" bundle:nil];
+    else
+        viewController0 = [[YTOSetariViewController alloc] initWithNibName:@"YTOSetariViewController" bundle:nil];
+        
     self.setariNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController0];
     self.setariNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
     
@@ -45,7 +51,11 @@
     self.rcaNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
 
    // self.tabBarController.tabBar.tintColor = [self colorFromHexString:@"#4a4a4a"];
-    UIViewController *viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
+    YTOAlerteViewController * viewController2;
+    if (IS_IPHONE_5)
+         viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController_R4" bundle:nil];
+    else viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
+    //UIViewController *viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
     self.alerteNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.alerteNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
     
@@ -69,7 +79,6 @@
     // stergem badge-urile cand intra in aplicatie..indiferent
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
     
-    [self copyDatabaseIfNeeded];
     
     id scheduledLocalNotification = nil;
     scheduledLocalNotification = 
@@ -164,11 +173,11 @@
         [def setObject:versionPlist forKey:@"VersionApp"];
 	}
 	else {
-		NSString * versionApp = [def objectForKey:@"VersionApp"];
-		if (![versionPlist isEqualToString:versionApp]) {
-			[def setObject:versionPlist forKey:@"VersionApp"];		
-			[self writeNewDatabaseCopy];
-		}
+		//NSString * versionApp = [def objectForKey:@"VersionApp"];
+		//if (![versionPlist isEqualToString:versionApp]) {
+		//	[def setObject:versionPlist forKey:@"VersionApp"];
+			//[self writeNewDatabaseCopy];
+		//}
 	}
 }
 
@@ -493,13 +502,34 @@
 - (void) showTooltip
 {
     indexTooltip = 0;
-    listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1.png",@"tooltip2.png", @"tooltip3.png", nil];
     
-    viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-    img.tag = 1;
-    [img setImage:[UIImage imageNamed:@"tooltip1.png"]];
-    [viewTooltip addSubview:img];
+    if (IS_IPHONE_5) {
+        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1-r4.png",@"tooltip2-r4.png", @"tooltip3-r4.png", nil];
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"tooltip1-r4.png"]];
+        [viewTooltip addSubview:img];
+
+        UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnClose.tag = 2;
+        btnClose.frame = CGRectMake(16, 448, 67, 37);
+        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnClose];
+        
+        UIButton * btnNext = [UIButton buttonWithType:UIButtonTypeCustom];
+        btnNext.frame = CGRectMake(95, 448, 67, 37);
+        [btnNext addTarget:self action:@selector(nextTooltip) forControlEvents:UIControlEventTouchUpInside];
+        [viewTooltip addSubview:btnNext];
+    }
+    else {
+        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1.png",@"tooltip2.png", @"tooltip3.png", nil];
+    
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        img.tag = 1;
+        [img setImage:[UIImage imageNamed:@"tooltip1.png"]];
+        [viewTooltip addSubview:img];
     
     UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
     btnClose.tag = 2;
@@ -511,6 +541,7 @@
     btnNext.frame = CGRectMake(95, 397, 67, 37);
     [btnNext addTarget:self action:@selector(nextTooltip) forControlEvents:UIControlEventTouchUpInside];
     [viewTooltip addSubview:btnNext];
+    }
     
     [self.window addSubview:viewTooltip];
     
@@ -523,7 +554,11 @@
     if (indexTooltip == 2)
     {
         UIButton * btnClose = (UIButton *)[viewTooltip viewWithTag:2];
-        btnClose.frame = CGRectMake(245, 397, 67, 37);
+        if (IS_IPHONE_5) {
+            btnClose.frame = CGRectMake(245, 482, 67, 37);
+        }
+        else
+            btnClose.frame = CGRectMake(245, 397, 67, 37);
     }
     UIImageView * img = (UIImageView *)[viewTooltip viewWithTag:1];
     img.image = [UIImage imageNamed:[listImgTooltip objectAtIndex:indexTooltip]];
