@@ -10,6 +10,9 @@
 #import "PickerVCSearch.h"
 #import "YTOOferta.h"
 #import "YTOPersoana.h"
+#import <Social/Social.h>
+
+#import "CotatieCalatorie.h"
 
 @interface YTOFinalizareCalatorieViewController : UIViewController<NSXMLParserDelegate, UIAlertViewDelegate,UITableViewDelegate, UITableViewDataSource, PickerVCSearchDelegate>
 {
@@ -25,6 +28,7 @@
     UITableViewCell *           cellEmail;
     IBOutlet UITableViewCell *  cellPlata;
     UITableViewCell *           cellCalculeaza;
+       
     
     BOOL goingBack;
     
@@ -40,7 +44,7 @@
 	NSString        * idOferta;
 	NSString        * mesajFinal;
     
-    IBOutlet UIImageView * imgError;
+
     IBOutlet UIView      * vwCustomAlert;
     IBOutlet UILabel     * lblCustomAlertTitle;
     IBOutlet UILabel     * lblCustomAlertMessage;
@@ -48,18 +52,31 @@
     IBOutlet UILabel     * lblCustomAlertOK;
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
+    IBOutlet UIButton    * btnCustomFacebook;
+    IBOutlet UILabel     * lblCustomFacebook;
+    IBOutlet UIButton    * btnCustomTwitter;
+    IBOutlet UILabel     * lblCustomTwitter;
     
     UITextField * txtSerie;
     UITextField * txtEmailLivrare;
     UITextField * txtTelefonLivrare;
     
+    IBOutlet UILabel     * lblSeIncarca;
+    IBOutlet UILabel     * lblOnlineCuCardul;
+    IBOutlet UILabel     * lblModPlata;
+    IBOutlet UILabel * lblEroare;
+    
     UIView * viewTooltip;
+    SLComposeViewController *mySLComposerSheet;
+    
+    IBOutlet UITableViewCell * cellHeader;
     
 }
 
 @property (nonatomic, retain) YTOOferta         * oferta;
 @property (nonatomic, retain) NSMutableArray    * listAsigurati;
 @property (nonatomic, retain) NSMutableData     * responseData;
+@property (nonatomic, retain) CotatieCalatorie * cotatie;
 
 - (void) initCells;
 - (void) addBarButton;
@@ -68,8 +85,6 @@
 - (void) setSerieAct:(NSString *)serie forIndex:(int)index;
 - (void) setEmail:(NSString *)email;
 - (void) setTelefon:(NSString *)telefon;
-- (void) showListaJudete:(NSIndexPath *)index;
-- (IBAction)btnTipPlata_Clicked:(id)sender;
 - (void) setTipPlata:(NSString *)p;
 
 - (void) showCustomLoading;
@@ -77,5 +92,6 @@
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
 - (IBAction) hideCustomAlert:(id)sender;
+- (IBAction) hideButtonSocialMedia:(id)sender;
 
 @end

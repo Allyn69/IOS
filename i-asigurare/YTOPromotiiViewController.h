@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface YTOPromotiiViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;

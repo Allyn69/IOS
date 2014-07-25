@@ -26,6 +26,8 @@
 @synthesize dataInceput;
 @synthesize durataAsigurare;
 @synthesize dataSfarsit;
+@synthesize idReducere;
+@synthesize primaReducere;
 @synthesize _isDirty;
 
 -(id)initWithGuid:(NSString*)guid
@@ -202,6 +204,7 @@
                            (self.moneda ? self.moneda : @""), @"moneda",
                            dataInceputString, @"data_inceput",
                            dataSfarsitString, @"data_sfarsit",
+                           [NSNumber numberWithFloat:primaReducere], @"prima_reducere",
                            [NSNumber numberWithInt:self.durataAsigurare], @"durata_asigurare",                           
                            nil];
     
@@ -236,7 +239,7 @@
     NSString * dataSfarsitString = [item objectForKey:@"data_sfarsit"];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
     [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    
+    self.primaReducere = [[item objectForKey:@"prima_reducere"] floatValue];
     self.dataInceput = [dateFormat dateFromString:dataInceputString];
     self.dataSfarsit = [dateFormat dateFromString:dataSfarsitString];
     self.durataAsigurare = [[item objectForKey:@"durata_asigurare"] intValue];

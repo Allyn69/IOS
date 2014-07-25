@@ -15,21 +15,31 @@
 #import "YTOWelcomeViewController.h"
 #import "YTOAlerta.h"
 #import "YTOUserDefaults.h"
+#import "Crittercism.h"
 
+#import "YTOLoginViewController.h"
+#import "VerifyNet.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation YTOAppDelegate
 
+@synthesize responseData;
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
 @synthesize setariNavigationController;
 @synthesize rcaNavigationController;
 @synthesize alteleNavigationController;
 @synthesize alerteNavigationController;
+@synthesize contNavigationController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
     [self copyDatabaseIfNeeded];
 
+   [YTOUserDefaults setLanguage:@"en"];
+//    [YTOUserDefaults setLanguage:@"hu"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
 
@@ -46,9 +56,15 @@
     self.setariNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController0];
     self.setariNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
     
-    UIViewController *viewController1 = [[YTOAsigurariViewController alloc] initWithNibName:@"YTOAsigurariViewController" bundle:nil];
+    
+    UIViewController *viewController1;
+    if (IS_IPHONE_5)
+        viewController1 = [[YTOAsigurariViewController alloc] initWithNibName:@"YTOAsigurariViewController_R4" bundle:nil];
+    else
+        viewController1= [[YTOAsigurariViewController alloc] initWithNibName:@"YTOAsigurariViewController" bundle:nil];
     self.rcaNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController1];
     self.rcaNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+
 
    // self.tabBarController.tabBar.tintColor = [self colorFromHexString:@"#4a4a4a"];
     YTOAlerteViewController * viewController2;
@@ -58,13 +74,25 @@
     //UIViewController *viewController2 = [[YTOAlerteViewController alloc] initWithNibName:@"YTOAlerteViewController" bundle:nil];
     self.alerteNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController2];
     self.alerteNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+
+    UIImageView *navImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"p"]];
+    [navImage setCenter:CGPointMake(0, 0)];
+    [self.alerteNavigationController.navigationBar addSubview: navImage];
     
     UIViewController *viewController3 = [[YTOAlteleViewController alloc] initWithNibName:@"YTOAlteleViewController" bundle:nil];
     self.alteleNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController3];
     self.alteleNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
+
+    
+    UIViewController *viewController4;
+    if (IS_IPHONE_5)
+        viewController4 = [[YTOLoginViewController alloc] initWithNibName:@"YTOLoginViewController_R4" bundle:nil];
+    else viewController4 = [[YTOLoginViewController alloc] initWithNibName:@"YTOLoginViewController" bundle:nil];
+    self.contNavigationController = [[UINavigationController alloc] initWithRootViewController:viewController4];
+    self.contNavigationController.navigationBar.tintColor = [YTOUtils colorFromHexString:@"#4a4a4a"];
     
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:setariNavigationController, rcaNavigationController, alerteNavigationController, alteleNavigationController, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:rcaNavigationController, setariNavigationController,alerteNavigationController,contNavigationController, alteleNavigationController, nil];
     
     
     [self setAlerteBadge];
@@ -72,13 +100,13 @@
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     
-    if ([YTOUserDefaults IsFirstTime])
+//    if ([YTOUserDefaults IsFirstTime])
         [self showTooltip];
     //[self.window addSubview: [viewWelcome view]];
   
     // stergem badge-urile cand intra in aplicatie..indiferent
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
-    
+   //     
     
     id scheduledLocalNotification = nil;
     scheduledLocalNotification = 
@@ -98,6 +126,31 @@
         
     }
     
+    //NU FUNCTIONEAZA   
+  //  [Crittercism enableWithAppID: @"512620888cb83166c1000a68"];
+    
+//    [[GAITracker sharedTracker] startTrackerWithAccountID:@"UA-15609865-3"
+//                                           dispatchPeriod:10
+//                                                 delegate:nil];
+    
+    //when the user first launches the app
+//    NSError *error;
+//    if (![[GAITracker sharedTracker] trackPageview:@"/app_launched"
+//                                         withError:&amperror]) {
+//        // Handle error here
+//    }
+    
+    // Optional: automatically send uncaught exceptions to Google Analytics.
+    //[GAI sharedInstance].trackUncaughtExceptions = YES;
+    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
+    //[GAI sharedInstance].dispatchInterval = 20;
+    // Optional: set debug to YES for extra debugging information.
+//    [GAI sharedInstance].debug = NO;
+//    // Create tracker instance.
+//    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-8624521-11"];
+//
+//    [GAI sharedInstance].optOut = YES;
+    
     NSLog(@"Registering for push notifications...");
     [[UIApplication sharedApplication]
      registerForRemoteNotificationTypes:
@@ -105,11 +158,204 @@
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
     
+    version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    
+    //NSLog(@"apel new udid");
+    
+    
+    [YTOUserDefaults setLanguage:@"en"];
+   // [YTOUserDefaults setLanguage:@"hu"];
+
+    
     return YES;
+    
+}
+
+
+
+- (void) registerUdidUpdated
+{
+//    NSLog(@"%@",[NSString stringWithFormat:@"Udid updated: %d, version: %@", [YTOUserDefaults isUdidUpdated], version]);
+//    
+//    VerifyNet * vn = [[VerifyNet alloc] init];
+//    if (![YTOUserDefaults isUdidUpdated] && [vn hasConnectivity])
+//    {
+//        NSString * idInternRca=@"";
+//        NSString * serieSasiu=@"";
+//        NSString * email=@"";
+//        NSString * codUnic=@"";
+//        if ([self.Masini count] > 0)
+//        {
+//            YTOAutovehicul * masina = (YTOAutovehicul*)[self.Masini objectAtIndex:0];
+//            idInternRca = masina != nil ? masina.idIntern : @"";
+//            serieSasiu = masina != nil ? masina.serieSasiu : @"";
+//        }
+//        
+//        NSString * idInternLocuinta = @"";
+//        if ([self.Locuinte count] > 0)
+//        {
+//            YTOLocuinta * locuinta = (YTOLocuinta*)[self.Locuinte objectAtIndex:0];
+//            idInternLocuinta = locuinta != nil ? locuinta.idIntern : @"";
+//        }
+//        
+//        NSString * idInternPersoana = @"";
+//        YTOPersoana * persoana = [YTOPersoana Proprietar];
+//        if (persoana == nil && [self.Persoane count] > 0)
+//        {
+//            persoana = (YTOPersoana*)[self.Persoane objectAtIndex:0];
+//        }
+//        if (persoana != nil)
+//        {
+//            idInternPersoana = persoana != nil ? persoana.idIntern :@"";
+//            email = persoana != nil ? persoana.email : @"";
+//            codUnic = persoana != nil ? persoana.codUnic : @"";
+//        }
+//        
+//        NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+//                                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+//                                 "<soap:Body>"
+//                                 "<RegisterNewUdid xmlns=\"http://tempuri.org/\">"
+//                                 "<user>vreaurca</user>"
+//                                 "<password>123</password>"
+//                                 "<push_token>%@</push_token>"
+//                                 "<idintern_rca>%@</idintern_rca>"
+//                                 "<idintern_locuinta>%@</idintern_locuinta>"
+//                                 "<idintern_persoana>%@</idintern_persoana>"
+//                                 "<cod_unic>%@</cod_unic>"
+//                                 "<email>%@</email>"                                 
+//                                 "<serie_sasiu>%@</serie_sasiu>"
+//                                 "<new_udid>%@</new_udid>"
+//                                 "<platforma>%@</platforma>"
+//                                 "</RegisterNewUdid>"
+//                                 "</soap:Body>"
+//                                 "</soap:Envelope>",
+//                                 pushToken == nil ? @"" : pushToken,
+//                                 idInternRca,
+//                                 idInternLocuinta,
+//                                 idInternPersoana, codUnic, email, serieSasiu, [[UIDevice currentDevice] xUniqueDeviceIdentifier],
+//                                 [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+//        
+//        NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+//        
+//        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+//                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+//                                                            timeoutInterval:10.0];
+//        
+//        NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+//        NSLog(@"Request=%@", parameters);
+//        NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+//        
+//        [request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//        [request addValue:@"http://tempuri.org/RegisterNewUdid" forHTTPHeaderField:@"SOAPAction"];
+//        [request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+//        [request setHTTPMethod:@"POST"];
+//        [request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+//        
+//        NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//        
+//        if (connection) {
+//            self.responseData = [NSMutableData data];
+//        }
+//    }
+//    else
+    if (pushToken != nil && pushToken.length > 0 && hasVisitedSaveDeviceToken == NO)
+    {
+        [self saveDeviceToken:pushToken];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self.responseData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self.responseData appendData:data];
+}
+
+- (void) connectionDidFinishLoading:(NSURLConnection *)connection {
+	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+	NSLog(@"Response string: %@", responseString);
+
+    NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:responseData];
+	xmlParser.delegate = self;
+	BOOL succes = [xmlParser parse];
+
+    if (succes) {
+        
+        if ([newUdidResult isEqualToString:@"ok"])
+        [YTOUserDefaults setUdidUpdated:YES];
+        
+    }
+
+    if (pushToken != nil && pushToken.length > 0 && hasVisitedSaveDeviceToken == NO)
+        [self saveDeviceToken:pushToken];
+}
+
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+	NSLog(@"connection:didFailWithError:");
+	NSLog(@"%@", [error localizedDescription]);
+    
+    if (pushToken != nil && pushToken.length > 0 && hasVisitedSaveDeviceToken == NO)
+        [self saveDeviceToken:pushToken];
+    
+}
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
+	attributes:(NSDictionary *)attributeDict {
+	
+	if ([elementName isEqualToString:@"return"])
+		return;
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
+  namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+
+    if ([elementName isEqualToString:@"RegisterNewUdidResult"])
+        newUdidResult = currentElementValue;
+    
+	currentElementValue = nil;
+}
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+	if(!currentElementValue)
+		currentElementValue = [[NSMutableString alloc] initWithString:string];
+	else
+		[currentElementValue appendString:string];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+//    UIApplication *app = [UIApplication sharedApplication];
+//    
+//    bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+//        [app endBackgroundTask:bgTask];
+//        bgTask = UIBackgroundTaskInvalid;
+//    }];
+//    
+//    UIDevice * device = [UIDevice currentDevice];
+//    BOOL backgroundTasksSupported = NO;
+//    
+//    if ([device respondsToSelector:@selector(isMultitaskingSupported)]) {
+//        backgroundTasksSupported = device.multitaskingSupported;
+//    }
+//    
+//    if (backgroundTasksSupported) {
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        
+//        [[GAI sharedInstance] dispatch];
+//        
+//        [app endBackgroundTask:bgTask];
+//        bgTask = UIBackgroundTaskInvalid;
+//    });
+//    }
+//    else {
+//        [[GAI sharedInstance] dispatch];
+//    }
+    
+    
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
@@ -123,11 +369,25 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    YTOAsigurariViewController * view = [[YTOAsigurariViewController alloc] init];
+    [view setButtonNotificariBackground ];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    
+    // stergem badge-urile cand intra in aplicatie..indiferent
+  //
+//  [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+    
+    [FBSettings publishInstall:@"437288059690040"];
+//    [YTOUserDefaults setSyncronized:NO];
+    [YTOUserDefaults setLanguage:@"en"];//SET LANGUAGE
+    [YTOUserDefaults setIsFirstCalc:NO];
+   // [YTOUserDefaults setPassword:@"4d0741ab3d52b5caf5699e8da434384d"];
+    
+  //  [YTOUserDefaults setLanguage:@"hu"];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -353,7 +613,7 @@
     localNotif.alertAction = @"i-Asigurare";
     
     localNotif.soundName = UILocalNotificationDefaultSoundName;
-    localNotif.applicationIconBadgeNumber = 1;
+    localNotif.applicationIconBadgeNumber++; //
     
 	// Specify custom data for the notification
     NSDictionary *infoDict = [NSDictionary dictionaryWithObject:@"someValue" forKey:@"someKey"];
@@ -428,41 +688,45 @@
    
 }
 
-
 #pragma PUSH NOTIFICATION
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     
     NSString *str = [NSString
                      stringWithFormat:@"%@",deviceToken];
-    [self saveDeviceToken:[[[str stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""]];
+    NSString * token = [[[str stringByReplacingOccurrencesOfString:@" " withString:@""] stringByReplacingOccurrencesOfString:@"<" withString:@""] stringByReplacingOccurrencesOfString:@">" withString:@""];
+
+    pushToken =token; //token;
     
+   [self registerUdidUpdated];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
     
     NSString *str = [NSString stringWithFormat: @"Error: %@", err];
     NSLog(@"%@",str);
-    
+
+    [self registerUdidUpdated];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
     for (id key in userInfo) {
         NSLog(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
-    }    
-    
+    }
 }
 
 -(void)saveDeviceToken:(NSString *)token
 {
     @autoreleasepool
     {
+        hasVisitedSaveDeviceToken = YES;
+        
         NSString *  kLogCallUrl = [NSString stringWithFormat:@"%@sync.asmx", LinkAPI];
         
-        NSString *	udid = [UIDevice currentDevice].uniqueIdentifier;
+        NSString *	udid = [[UIDevice currentDevice] xUniqueDeviceIdentifier];
         NSString *  platforma = [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"];
         //NSString *params = [NSURL URLWithString:[NSString stringWithFormat:@"udid=%@&token=%@&platforma=%@", udid,token, platforma]];
-        
+        NSLog(@"%@",token);
         NSString * xml = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
         "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
             "<soap:Body>"
@@ -475,6 +739,7 @@
                 "</SaveDeviceToken>"
             "</soap:Body>"
         "</soap:Envelope>", udid, token, platforma];
+        [YTOUserDefaults setPushToken:token];
         
         NSURL * url = [NSURL URLWithString:kLogCallUrl];
         
@@ -504,41 +769,52 @@
     indexTooltip = 0;
     
     if (IS_IPHONE_5) {
-        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1-r4.png",@"tooltip2-r4.png", @"tooltip3-r4.png", nil];
-        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
-        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 568)];
+        UISwipeGestureRecognizer *swipeGestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(previousTooltip)];
+        [swipeGestureRight setDirection:UISwipeGestureRecognizerDirectionRight];
+        UISwipeGestureRecognizer *swipeGestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextTooltip)];
+        [swipeGestureLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip11.png",@"tooltip12.png", @"tooltip13.png", nil];
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0,68, 320, 455)];
+        [viewTooltip addGestureRecognizer: swipeGestureRight];
+        [viewTooltip addGestureRecognizer: swipeGestureLeft];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 455)];
         img.tag = 1;
-        [img setImage:[UIImage imageNamed:@"tooltip1-r4.png"]];
+        [img setImage:[UIImage imageNamed:@"tooltip11.png"]];
         [viewTooltip addSubview:img];
 
         UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
         btnClose.tag = 2;
-        btnClose.frame = CGRectMake(16, 448, 67, 37);
-        [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+        btnClose.frame = CGRectMake(5, 341, 85, 35);
+        [btnClose addTarget:self action:@selector(previousTooltip) forControlEvents:UIControlEventTouchUpInside];
         [viewTooltip addSubview:btnClose];
         
         UIButton * btnNext = [UIButton buttonWithType:UIButtonTypeCustom];
-        btnNext.frame = CGRectMake(95, 448, 67, 37);
+        btnNext.frame = CGRectMake(235, 341, 150, 35);
         [btnNext addTarget:self action:@selector(nextTooltip) forControlEvents:UIControlEventTouchUpInside];
         [viewTooltip addSubview:btnNext];
     }
     else {
-        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip1.png",@"tooltip2.png", @"tooltip3.png", nil];
-    
-        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
-        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+        listImgTooltip = [[NSMutableArray alloc] initWithObjects:@"tooltip11.png",@"tooltip12.png", @"tooltip13.png", nil];
+        UISwipeGestureRecognizer *swipeGestureRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(previousTooltip)];
+        [swipeGestureRight setDirection:UISwipeGestureRecognizerDirectionRight];
+        UISwipeGestureRecognizer *swipeGestureLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(nextTooltip)];
+        [swipeGestureLeft setDirection:UISwipeGestureRecognizerDirectionLeft];
+        viewTooltip = [[UIView alloc] initWithFrame:CGRectMake(0, 68, 320, 416)];
+        [viewTooltip addGestureRecognizer: swipeGestureRight];
+        [viewTooltip addGestureRecognizer: swipeGestureLeft];
+        UIImageView * img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 416)];
         img.tag = 1;
-        [img setImage:[UIImage imageNamed:@"tooltip1.png"]];
+        [img setImage:[UIImage imageNamed:@"tooltip11.png"]];
         [viewTooltip addSubview:img];
     
     UIButton * btnClose = [UIButton buttonWithType:UIButtonTypeCustom];
     btnClose.tag = 2;
-    btnClose.frame = CGRectMake(16, 397, 67, 37);
-    [btnClose addTarget:self action:@selector(closeTooltip) forControlEvents:UIControlEventTouchUpInside];
+    btnClose.frame = CGRectMake(0, 320, 85, 35);
+    [btnClose addTarget:self action:@selector(previousTooltip) forControlEvents:UIControlEventTouchUpInside];
     [viewTooltip addSubview:btnClose];
     
     UIButton * btnNext = [UIButton buttonWithType:UIButtonTypeCustom];
-    btnNext.frame = CGRectMake(95, 397, 67, 37);
+    btnNext.frame = CGRectMake(169, 320, 150, 35);
     [btnNext addTarget:self action:@selector(nextTooltip) forControlEvents:UIControlEventTouchUpInside];
     [viewTooltip addSubview:btnNext];
     }
@@ -548,26 +824,29 @@
     [YTOUserDefaults setFirstTime:YES];
 }
 
+
 - (void)nextTooltip
 {
-    indexTooltip++;
-    if (indexTooltip == 2)
-    {
-        UIButton * btnClose = (UIButton *)[viewTooltip viewWithTag:2];
-        if (IS_IPHONE_5) {
-            btnClose.frame = CGRectMake(245, 482, 67, 37);
-        }
-        else
-            btnClose.frame = CGRectMake(245, 397, 67, 37);
+    if (indexTooltip >= 2){
+        [viewTooltip removeFromSuperview];
+        return;
     }
+    indexTooltip++;
     UIImageView * img = (UIImageView *)[viewTooltip viewWithTag:1];
     img.image = [UIImage imageNamed:[listImgTooltip objectAtIndex:indexTooltip]];
     
 }
 
-- (void) closeTooltip
+
+
+- (void) previousTooltip
 {
-    [viewTooltip removeFromSuperview];
+    if (indexTooltip == 0){
+        return;
+    }
+    indexTooltip--;
+    UIImageView * img = (UIImageView *)[viewTooltip viewWithTag:1];
+    img.image = [UIImage imageNamed:[listImgTooltip objectAtIndex:indexTooltip]];
 }
 
 - (void) setAlerteBadge
@@ -579,4 +858,25 @@
         [[[self.tabBarController.tabBar items] objectAtIndex:2] setBadgeValue:nil];
 }
 
++ (void)initialize
+{
+    //configure iRate
+    [iRate sharedInstance].appStoreID = 451967152;
+
+    //[iRate sharedInstance].debug = YES;
+    [iRate sharedInstance].previewMode = NO;
+    [iRate sharedInstance].onlyPromptIfLatestVersion = NO;
+    [iRate sharedInstance].usesCount ++;
+    [iRate sharedInstance].eventCount=0;
+    [iRate sharedInstance].promptAtLaunch = NO;
+}
+
+
+@end
+
+@implementation UINavigationBar(MyNavigationBar)
+- (void)drawRect:(CGRect)rect {
+    UIImage *image = [UIImage imageNamed: @"powered_by_vdf.png"];
+    [image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+}
 @end

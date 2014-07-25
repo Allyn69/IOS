@@ -18,6 +18,7 @@
 #import "YTOUtils.h"
 #import "YTOAlerta.h"
 
+
 @interface YTOAutovehiculViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PickerVCSearchDelegate, YTONomenclatorDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
 {
     IBOutlet UITableView * tableView;
@@ -25,6 +26,12 @@
     IBOutlet UIBarButtonItem * btnDone;
     IBOutlet UIView * vwTooltip;
     IBOutlet UILabel * lblTootlip;
+    
+    IBOutlet UIView * vwTooltipAtentie;
+    IBOutlet UILabel * lblTooltipAtentie;
+    //BOOL tooltipAtentieisShowing;
+    
+    IBOutlet UIView * vwPopup;
 
     IBOutlet UIView *   vwKeyboardAddon;
     IBOutlet UIView *   vwNomenclator;
@@ -41,6 +48,7 @@
     UITableViewCell          * cellMarcaAuto;
     UITableViewCell          * cellModelAuto;
     UITableViewCell          * cellJudetLocalitate;
+    UITableViewCell          * cellAdresa;
     IBOutlet UITableViewCell * cellSubcategorieAuto;
     UITableViewCell          * cellNrInmatriculare;
     UITableViewCell          * cellSerieSasiu;
@@ -84,16 +92,48 @@
     
     UITextField * txtPutere;
     UITextField * txtCm3;
+    UITextField * txtNumarLocuri;
     UITextField * txtGreutate;
+    
+    UITextField * txtModelAuto;
+    UITextField * txtAdresa;
+    UITextField * txtNrInmatriculare;
+    UITextField * txtSerieSasiu;
+    UITextField * txtAnFabricatie;
+    UITextField * txtSerieTalon;
+    
+    BOOL keyboardFirstTimeActive;
+    
+    IBOutlet UILabel * lblCategorieAuto;
+    IBOutlet UILabel * lblAutoturism;
+    IBOutlet UILabel * lblAutoturimDeTeren;
+    IBOutlet UILabel * lblMotocicleta;
+    
+    IBOutlet UILabel * lblCombustibil;
+    IBOutlet UILabel * lblBenzina;
+    IBOutlet UILabel * lblMotorina;
+    IBOutlet UILabel * lblGpl;
+    
+    IBOutlet UILabel * lblDestinatieAuto;
+    IBOutlet UILabel * lblInteresPersonal;
+    IBOutlet UILabel * lblDistributieMarfa;
+    
+    IBOutlet UILabel * lblInfoAutovehicul;
+    IBOutlet UILabel * lblAlerte;
+    
+    IBOutlet UILabel * lblPentruAlerte;
+    IBOutlet UILabel * lblCumAlerte;
+    
 }
 
+@property (nonatomic, retain) NSMutableArray * fieldArray;
 @property (nonatomic, retain) YTOAutovehicul * autovehicul;
 @property (nonatomic, retain) UIViewController * controller;
 
 @property int _nomenclatorNrItems;
 @property int _nomenclatorSelIndex;
 @property (readwrite) Nomenclatoare _nomenclatorTip;
-
+@property BOOL isWrong;
 - (IBAction) selectMarcaAuto;
 - (IBAction) chooseImage;
 
@@ -117,6 +157,8 @@
 - (IBAction)checkboxDestinatieSelected:(id)sender;
 - (IBAction)btnInfoAlerte_OnClick:(id)sender;
 
+- (IBAction)hidePopup;
+
 - (void) btnEditShouldAppear;
 
 - (void) showNomenclator;
@@ -124,6 +166,10 @@
 
 - (void) showTooltip:(NSString *)tooltip;
 - (void) hideTooltip;
+
+- (void) showTooltipAtentie:(NSString *)tooltipAtentie;
+- (void) hideTooltipAtentie;
+
 // PROPRIETATI
 - (NSString *) getJudet;
 - (void) setJudet:(NSString *)judet;
@@ -133,6 +179,9 @@
 
 - (NSString *) getMarca;
 - (void) setMarca:(NSString *)marca;
+
+- (NSString *) getAdresa;
+- (void) setAdresa:(NSString *)adresa;
 
 - (NSString *) getModel;
 - (void) setModel:(NSString *)model;

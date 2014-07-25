@@ -13,7 +13,9 @@
 #import "YTOUtils.h"
 #import "CellAlertaCustom.h"
 #import <QuartzCore/QuartzCore.h>
+#import "YTOUserDefaults.h"
 #import "YTOAutovehicul.h"
+#import "UILabel+dynamicSizeMe.h"
 
 @interface YTOAlerteViewController ()
 
@@ -27,7 +29,11 @@
 {    
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Vezi Alerte", @"Vezi Alerte");
+        if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+            self.title = @"Riasztások";
+        else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+            self.title = @"See alerts";
+        else self.title = @"Vezi alerte";
         self.tabBarItem.image = [UIImage imageNamed:@"menu-alerte.png"];
     }
     return self;
@@ -36,6 +42,60 @@
 - (void) viewDidLoad
 {
     [super viewDidLoad];
+  //  //self.trackedViewName = @"YTOAlerteViewController";
+    lblPentruAlerte.text = NSLocalizedStringFromTable(@"i475", [YTOUserDefaults getLanguage],@"Pentru a salva alerte trebuie sa completezi informatiile in \"Datele Mele\".");
+    lblZeroAlerte.text = NSLocalizedStringFromTable(@"i207", [YTOUserDefaults getLanguage],@"Nu exista alerte setate.\nPoti salva alerte pentru masini si\nlocuinte in \"Datele mele\"");
+    lblCumAlerte.text = NSLocalizedStringFromTable(@"i803", [YTOUserDefaults getLanguage],@"Cum editezi alerte?");
+    lblCumAlerte.textColor = [YTOUtils colorFromHexString:verde];
+    [YTOUtils rightImageVodafone:self.navigationItem];
+    [lblZeroAlerte resizeToFit];
+    
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    if ([iRate sharedInstance].shouldPromptForRating)
+        [[iRate sharedInstance] promptForRating];
+    if (![[YTOUserDefaults getUserName] isEqualToString:@""] && ![[YTOUserDefaults getPassword] isEqualToString:@""] && [YTOUserDefaults getUserName] != nil && [YTOUserDefaults getPassword] != nil  )
+    {
+        [tableView reloadData];
+    }
+    
+    int i = [YTOAlerta getPositionToScroll];
+    if (i!=0)
+        [tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:i ]  atScrollPosition:1 animated:YES];
+    
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        self.title = @"Riasztások";
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        self.title = @"See alerts";
+    else self.title = @"Vezi alerte";
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 = NSLocalizedStringFromTable(@"i706", [YTOUserDefaults getLanguage],@"Alertele");
+    NSString *string2 = NSLocalizedStringFromTable(@"i707", [YTOUserDefaults getLanguage],@"tale");
+    NSString *string  = [[NSString alloc]initWithFormat:@"%@ %@",string1,string2];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:albastruAlerte] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:albastruAlerte]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i708", [YTOUserDefaults getLanguage],@"i-Asigurare tine minte pentru tine");
 }
 
 - (void) viewWillAppear:(BOOL)animated
@@ -152,43 +212,43 @@
     UIImage * img = nil;
     if (alerta.tipAlerta == 1) // RCA
     {
-        detaliu = @"expirare polita";
+        detaliu = NSLocalizedStringFromTable(@"i476", [YTOUserDefaults getLanguage],@"expirare\nasigurare");
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rca.png"];
     }
     else if (alerta.tipAlerta == 2) // ITP
     {
-        detaliu = @"expirare ITP";
+        detaliu = NSLocalizedStringFromTable(@"i479", [YTOUserDefaults getLanguage],@"expirare\nITP");
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-itp.png"];
     }
     else if (alerta.tipAlerta == 3) // Rovinieta
     {
-        detaliu = @"expirare Rovinieta";
+        detaliu = NSLocalizedStringFromTable(@"i477", [YTOUserDefaults getLanguage],@"expirare\nRovinieta");
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rovinieta.png"];
     }
     else if (alerta.tipAlerta == 5) // CASCO
     {
-        detaliu = @"asigurare casco";
+        detaliu = NSLocalizedStringFromTable(@"i476", [YTOUserDefaults getLanguage],@"expirare\nasigurare");
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-casco.png"];
     }
     else if (alerta.tipAlerta == 6) // Locuinta
     {
-        detaliu = @"expirare locuinta";
+        detaliu = NSLocalizedStringFromTable(@"i476", [YTOUserDefaults getLanguage],@"expirare\nasigurare");
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
         img = [UIImage imageNamed:@"icon-alerta-locuinta.png"];
     }
     else if (alerta.tipAlerta == 7)
     {
-        detaliu = @"expirare rata";
+        detaliu = NSLocalizedStringFromTable(@"i478", [YTOUserDefaults getLanguage],@"rata\nscadenta");
         val = masina ? [NSString stringWithFormat:@"%@, %@", masina.marcaAuto, masina.nrInmatriculare] : @"";
         img = [UIImage imageNamed:@"icon-alerta-rata-casco.png"];
     }
     else if (alerta.tipAlerta == 8)
     {
-        detaliu = @"expirare rata";
+        detaliu = NSLocalizedStringFromTable(@"i478", [YTOUserDefaults getLanguage],@"rata\nscadenta");
         val = [NSString stringWithFormat:@"%@, %d mp2", locuinta.judet, locuinta.suprafataUtila];
         img = [UIImage imageNamed:@"icon-alerta-rata-locuinta.png"];
     }

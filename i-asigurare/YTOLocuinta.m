@@ -11,6 +11,7 @@
 #import "YTOObiectAsigurat.h"
 #import "YTOAlerta.h"
 #import "Database.h"
+#import "YTOUserDefaults.h"
 
 @implementation YTOLocuinta
 
@@ -36,11 +37,15 @@
 @synthesize judet;
 @synthesize localitate;
 @synthesize adresa;
+@synthesize codPostal;
 @synthesize modEvaluare;
 @synthesize nrRate;
 @synthesize sumaAsigurata;
 @synthesize sumaAsigurataRC;
 @synthesize idProprietar;
+@synthesize cuiBanca;
+@synthesize cesiune;
+@synthesize mentiuneCesiune;
 @synthesize _dataCreare;
 
 @synthesize _isDirty;
@@ -56,7 +61,7 @@
 
 //IdIntern, Tip, Structura, Inaltime, Etaj, AnConstructie, NrCamere, Suprafata, NrLocatari, TipGeam, AreAlarma, AreGrilajeGeam, zonaIzolata, ClauzaFurtBunuri, ClauzaApaConducta, DetectieIncendiu, ArePaza, LocuitPermanent, Judet, Localitate, Adresa, ModEvaluare, NrRate, SumaAsigurata, SumaAsigurataRC, IdProprietar, _dataCreare
 
-- (void) addLocuinta
+- (void) addLocuinta:(BOOL) local
 {
     YTOObiectAsigurat * locuinta = [[YTOObiectAsigurat alloc] init];
     locuinta.IdIntern = self.idIntern;
@@ -65,22 +70,32 @@
     [locuinta addObiectAsigurat];
     self._isDirty = YES;
     
+    if (!local) {
+        
     [self showLoading];
     [self performSelectorInBackground:@selector(registerLocuinta) withObject:nil];
     
+    }
+    
     [self refresh];
+    
 }
 
-- (void) updateLocuinta
+- (void) updateLocuinta: (BOOL) local
 {
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
    
+    if (!local) {
+        
     [self showLoading];
     [self performSelectorInBackground:@selector(registerLocuinta) withObject:nil];
     
+    }
+        
     [self refresh];
+    
 }
 
 - (void) deleteLocutina
@@ -92,16 +107,16 @@
     [self showLoading];
     [self performSelectorInBackground:@selector(markLocuintaAsDeleted) withObject:nil];
     
-    [self refresh];
-    
     // dupa ce sterg locuinta,
     // sterg si alertele, in caz ca exista
     YTOAlerta * alertaLocuinta = [YTOAlerta getAlertaLocuinta:self.idIntern];
     if (alertaLocuinta)
-        [alertaLocuinta deleteAlerta];
+        [alertaLocuinta deleteAlerta:NO];
     YTOAlerta * alertaRataLocuinta = [YTOAlerta getAlertaRataLocuinta:self.idIntern];
     if (alertaRataLocuinta)
-        [alertaRataLocuinta deleteAlerta];
+        [alertaRataLocuinta deleteAlerta:NO];
+    
+    [self refresh];
 }
 
 + (YTOLocuinta *) getLocuinta:(NSString *)_idIntern
@@ -178,11 +193,14 @@
                            (self.judet ? self.judet : @""), @"judet",
                            (self.localitate ? self.localitate : @""), @"localitate",
                            (self.adresa ? self.adresa : @""), @"adresa",
+                           (self.codPostal ? self.codPostal : @""), @"cod_postal",
                            (self.modEvaluare ? self.modEvaluare : @""), @"mod_evaluare",
                            [NSNumber numberWithInt:self.nrRate], @"nr_rate",
                            [NSNumber numberWithInt:self.sumaAsigurata], @"suma_asigurata",
                            [NSNumber numberWithInt:self.sumaAsigurataRC], @"suma_asigurata_rc",
                            (self.idProprietar ? self.idProprietar : @""), @"id_proprietar",
+                           (self.cuiBanca ? self.cuiBanca : @""), @"cui_banca",
+                           (self.mentiuneCesiune ? self.mentiuneCesiune : @""), @"mentiune_cesiune",
                            dateString, @"data_creare",
                            nil];
     
@@ -221,11 +239,15 @@
     self.judet = [item objectForKey:@"judet"];
     self.localitate = [item objectForKey:@"localitate"];
     self.adresa = [item objectForKey:@"adresa"];
+    self.codPostal = [item objectForKey:@"cod_postal"];
     self.modEvaluare = [item objectForKey:@"mod_evaluare"];
     self.nrRate = [[item objectForKey:@"nr_rate"] intValue];
     self.sumaAsigurata = [[item objectForKey:@"suma_asigurata"] intValue];
     self.sumaAsigurataRC = [[item objectForKey:@"suma_asigurata_rc"] intValue];
     self.idProprietar = [item objectForKey:@"id_proprietar"];
+    self.cuiBanca = [item objectForKey:@"cui_banca"];
+    self.cesiune = NO;
+    self.mentiuneCesiune = [item objectForKey:@"mentiune_cesiune"];
     
     NSString * dataString = [item objectForKey:@"data_creare"];
     NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
@@ -248,12 +270,12 @@
         valid = NO;
     if (!self.structuraLocuinta || self.structuraLocuinta.length == 0)
         valid = NO;
-    if (self.regimInaltime == 0)
+    if (self.regimInaltime == 0 && [tipLocuinta isEqualToString:@"apartament-in-bloc"])
         valid = NO;
     if ([tipLocuinta isEqualToString:@"apartament-in-bloc"])
         if (self.etaj == 0)
         valid = NO;
-    if (self.anConstructie == 0)
+    if (self.anConstructie <= 1950)
         valid = NO;
     if (self.nrCamere == 0)
         valid = NO;
@@ -265,10 +287,30 @@
     return valid;
 }
 
+- (BOOL) isValidForGothaer
+{
+    BOOL valid = YES;
+    if (!self.tipLocuinta || self.tipLocuinta.length == 0)
+        valid = NO;
+    if (!self.structuraLocuinta || self.structuraLocuinta.length == 0 || [self.structuraLocuinta isEqualToString:@"chirpici-paiata"] || [self.structuraLocuinta isEqualToString:@"lemn"] || [self.structuraLocuinta isEqualToString:@"zidarie-lemn"]|| [self.structuraLocuinta isEqualToString:@"caramida-nearsa"])
+        valid = NO;
+    if (self.anConstructie == 0 || self.anConstructie < 1950)
+        valid = NO;
+    if (!self.codPostal || self.codPostal.length == 0)
+        valid = NO;
+    if (!self.adresa || self.adresa.length == 0)
+        valid = NO;
+    if (self.suprafataUtila == 0)
+        valid = NO;
+    if (![self.locuitPermanent isEqualToString:@"da"])
+        valid = NO;
+    return valid;
+}
+
 
 - (float) CompletedPercent
 {
-    int numarCampuri = 10;
+    int numarCampuri = 11;
     float campuriCompletate = 0;
     
     if (self.judet && self.judet.length > 0)
@@ -281,10 +323,14 @@
         campuriCompletate ++;
     if (self.structuraLocuinta && self.structuraLocuinta.length > 0)
         campuriCompletate ++;
-    if (self.regimInaltime > 0)
+    if (self.regimInaltime > 0 && [tipLocuinta isEqualToString:@"apartament-in-bloc"])
         campuriCompletate ++;
-//    if ( [self.tipLocuinta isEqualToString:@"apartament-in-bloc"] self.etaj > 0 && )
-//        campuriCompletate ++;
+    else if (self.regimInaltime >= 0 && ![tipLocuinta isEqualToString:@"apartament-in-bloc"])
+        campuriCompletate ++;
+    if ( [self.tipLocuinta isEqualToString:@"apartament-in-bloc"] &&  self.etaj > 0)
+        campuriCompletate ++;
+    else if (![self.tipLocuinta isEqualToString:@"apartament-in-bloc"] &&  self.etaj >= 0)
+        campuriCompletate ++;
     if (self.anConstructie > 0)
         campuriCompletate ++;
     if (self.nrCamere > 0)
@@ -302,6 +348,7 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate refreshLocuinte];
+    [appDelegate setAlerteBadge];
 }
 
 - (void) registerLocuinta
@@ -310,7 +357,7 @@
     NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                              "<soap:Body>"
-                             "<RegisterLocuinta xmlns=\"http://tempuri.org/\">"
+                             "<RegisterLocuinta2 xmlns=\"http://tempuri.org/\">"
                              "<user>vreaurca</user>"
                              "<password>123</password>"
                              "<tip_locuinta>%@</tip_locuinta>"
@@ -341,7 +388,11 @@
                              "<udid>%@</udid>"
                              "<id_locuinta>%@</id_locuinta>"
                              "<platforma>%@</platforma>"
-                             "</RegisterLocuinta>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "<limba>%@</limba>"
+                             "<versiune>%@</versiune>"
+                             "</RegisterLocuinta2>"
                              "</soap:Body>"
                              "</soap:Envelope>",
                              self.tipLocuinta, self.structuraLocuinta, self.regimInaltime, self.etaj, self.anConstructie,
@@ -350,8 +401,9 @@
                              self.areAlarma, self.areGrilajeGeam, self.zonaIzolata,
                              self.clauzaFurtBunuri, self.clauzaApaConducta, self.detectieIncendiu, self.arePaza, self.areTeren, self.locuitPermanent,
                              self.judet, self.localitate, self.adresa, self.modEvaluare, self.nrRate, self.sumaAsigurata, self.sumaAsigurataRC,
-                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern,
-                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idIntern,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                             [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -364,7 +416,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/RegisterLocuinta" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/RegisterLocuinta2" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -383,15 +435,20 @@
     NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                              "<soap:Body>"
-                             "<DeleteLocuinta xmlns=\"http://tempuri.org/\">"
+                             "<DeleteLocuinta2 xmlns=\"http://tempuri.org/\">"
                              "<user>vreaurca</user>"
                              "<password>123</password>"
                              "<udid>%@</udid>"
                              "<id_locuinta>%@</id_locuinta>"
-                             "</DeleteLocuinta>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "<limba>%@</limba>"
+                             "<versiune>%@</versiune>"
+                             "</DeleteLocuinta2>"
                              "</soap:Body>"
                              "</soap:Envelope>",
-                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idIntern,
+                             [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -404,7 +461,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/DeleteLocuinta" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/DeleteLocuinta2" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];

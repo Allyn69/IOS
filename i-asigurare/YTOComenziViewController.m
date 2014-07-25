@@ -9,6 +9,7 @@
 #import "YTOComenziViewController.h"
 #import "YTOAsigurareViewController.h"
 #import "YTOAppDelegate.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOComenziViewController ()
 
@@ -22,7 +23,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Lista asigurari", @"Lista asigurari");
+        self.title = NSLocalizedStringFromTable(@"i433", [YTOUserDefaults getLanguage],@"Lista asigurari");
     }
     return self;
 }
@@ -30,12 +31,35 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOComenziViewController";
+    lblZeroComenzi.text = NSLocalizedStringFromTable(@"i174", [YTOUserDefaults getLanguage],@"Nu ai comandat nicio asigurare.\nAsigurarile comandate din\n aplicatie vor aparea automat.");
     list = [YTOOferta Oferte];
     
     [self  verifyViewMode];
     ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#6f6e6e"];
     ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
     
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 = NSLocalizedStringFromTable(@"i749", [YTOUserDefaults getLanguage],@"Istoric");
+    NSString *string2 = NSLocalizedStringFromTable(@"i750", [YTOUserDefaults getLanguage],@"comenzi");
+    NSString *string  = [[NSString alloc]initWithFormat:@"%@ %@",string1,string2];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:verde] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:verde]];
+    }
+    
+    lbl22.text = NSLocalizedStringFromTable(@"i751", [YTOUserDefaults getLanguage],@"aici vezi toate asigurarile comandate");
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -43,7 +67,8 @@
 {
     if (list.count == 0)
     {
-        self.navigationItem.rightBarButtonItem = nil;
+        //self.navigationItem.rightBarButtonItem = nil;
+         [YTOUtils rightImageVodafone:self.navigationItem];
         [vwEmpty setHidden:NO];
     }
     else
@@ -89,7 +114,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"CellView";
     UITableViewCell *cell; // = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
@@ -102,23 +127,26 @@
     //cell.textLabel.text = oferta.numeAsigurare;
     //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
     
-    UILabel * lblProdus = [[UILabel alloc] initWithFrame:CGRectMake(95, 7, 150, 20)];
+    UILabel * lblProdus = [[UILabel alloc] initWithFrame:CGRectMake(140, 7, 150, 20)];
     lblProdus.backgroundColor = [UIColor clearColor];
     lblProdus.text = [oferta.numeAsigurare stringByReplacingOccurrencesOfString:@"Asigurare" withString:@""];
     lblProdus.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblProdus.textAlignment = NSTextAlignmentCenter;
     lblProdus.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
     [cell.contentView addSubview:lblProdus];
     
-    UILabel * lblPrima = [[UILabel alloc] initWithFrame:CGRectMake(95, 30, 180, 20)];
+    UILabel * lblPrima = [[UILabel alloc] initWithFrame:CGRectMake(140, 30, 180, 20)];
     lblPrima.backgroundColor = [UIColor clearColor];
-    lblPrima.text = [NSString stringWithFormat:@"%.2f %@", oferta.prima, [oferta.moneda uppercaseString]];
+    lblPrima.text = [NSString stringWithFormat:@"%.2f %@", (oferta.primaReducere>0? oferta.primaReducere : oferta.prima), [oferta.moneda uppercaseString]];
     lblPrima.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblPrima.textAlignment = NSTextAlignmentCenter;
     lblPrima.font = [UIFont fontWithName:@"Arial" size:13];
     [cell.contentView addSubview:lblPrima];
     
     UILabel *lblDataLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 7, 100, 20)];
     lblDataLabel.backgroundColor = [UIColor clearColor];
     lblDataLabel.text = @"Data inceput";
+    lblDataLabel.textAlignment = NSTextAlignmentCenter;
     lblDataLabel.textColor = [YTOUtils colorFromHexString:ColorTitlu];
     lblDataLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
     [cell.contentView addSubview:lblDataLabel];
@@ -127,6 +155,7 @@
     lblData.backgroundColor = [UIColor clearColor];
     lblData.text = [YTOUtils formatDate:oferta.dataInceput withFormat:@"dd.MM.yyyy"];
     lblData.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblData.textAlignment = NSTextAlignmentCenter;
     lblData.font = [UIFont fontWithName:@"Arial" size:13];
     [cell.contentView addSubview:lblData];
     
@@ -188,6 +217,8 @@
 //            [parent reloadData];
 //        }
     }
+    if (list.count == 0)
+         [YTOUtils rightImageVodafone:self.navigationItem];
     [tableView reloadData];
     [self verifyViewMode];
 }

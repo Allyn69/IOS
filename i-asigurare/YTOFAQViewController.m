@@ -32,6 +32,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOFAQViewController";
+    
     // Do any additional setup after loading the view from its nib.
     tipFAQ = @"rca";
     [self callGetFAQ];

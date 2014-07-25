@@ -10,6 +10,7 @@
 #import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
+#import "YTOUserDefaults.h"
 
 @implementation YTOAlerta
 
@@ -26,6 +27,8 @@
 
 @synthesize responseData;
 
+NSString * myFirstAlertaPosition = @"0";
+
 - (id)initWithGuid:(NSString*)guid
 {
     self = [super init];
@@ -34,7 +37,7 @@
     return self;
 }
 
-- (void) addAlerta
+- (void) addAlerta:(BOOL) local
 {
     YTOObiectAsigurat * alerta = [[YTOObiectAsigurat alloc] init];
     alerta.IdIntern = self.idIntern;
@@ -43,32 +46,42 @@
     [alerta addObiectAsigurat];
     self._isDirty = YES;
 
-    [self showLoading];
-    [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    if (!local) {
+    
+        [self showLoading];
+        [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    
+    }
     
     [self refresh];
 }
 
-- (void) updateAlerta
+- (void) updateAlerta:(BOOL) local
 {
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
 
-    [self showLoading];
-    [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    if (!local) {
+        
+        [self showLoading];
+        [self performSelectorInBackground:@selector(callInregistrareAlerta) withObject:nil];
+    
+    }
     
     [self refresh];
 }
 
-- (void) deleteAlerta
+- (void) deleteAlerta:(BOOL) local
 {
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
 
-    [self showLoading];
-    [self performSelectorInBackground:@selector(markAlertaAsDeleted) withObject:nil];
+    if (!local) {
+        [self showLoading];
+        [self performSelectorInBackground:@selector(markAlertaAsDeleted) withObject:nil];
+    }
     
     [self refresh];
 }
@@ -203,10 +216,10 @@
         //NSLog(@"%@",peste4zile);
         
      
-        if(p && ([difference day] <= 10 && [difference day] >= -15))
-        {
+        //if(p && ([difference day] <= 10 && [difference day] >= -15))
+        //{
             [_list addObject:p];
-        }
+        //}
         
     }
     
@@ -218,6 +231,7 @@
 
 + (int)GetNrAlerteScadente
 {
+    
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
     int count=0;
@@ -249,6 +263,39 @@
     return count;
 }
 
++(int) getPositionToScroll
+{ 
+    
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    NSMutableArray * list = [delegate Alerte];
+    NSDate * peste4zile = [NSDate date];
+    for (int i=0; i<list.count; i++)
+    {
+        YTOAlerta * alerta = [list objectAtIndex:i];
+        
+        NSDate *fromDate;
+        NSDate *toDate;
+        NSCalendar *calendar = [NSCalendar currentCalendar];
+        
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&fromDate
+                     interval:NULL forDate:peste4zile];
+        [calendar rangeOfUnit:NSDayCalendarUnit startDate:&toDate
+                     interval:NULL forDate:alerta.dataAlerta];
+        
+        difference = [calendar components:NSDayCalendarUnit
+                                 fromDate:fromDate toDate:toDate options:0];
+        
+        //NSLog(@"%@",alerta.dataAlerta);
+        //NSLog(@"%@",peste4zile);
+        
+        NSLog(@"%d",[difference day]);
+        if ([difference day] <= 10 && [difference day] >= -15)
+            return i;
+    }
+    return 0;
+}
+
 - (NSString *) toJSON
 {
     NSError * error;
@@ -275,6 +322,7 @@
     
     return text;
 }
+
 
 - (void) fromJSON:(NSString *)p
 {
@@ -318,7 +366,7 @@
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<InregistrareAlerte3 xmlns=\"http://tempuri.org/\">"
+                      "<InregistrareAlerte4 xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<tip>%d</tip>"
@@ -330,17 +378,22 @@
                       "<id_intern>%@</id_intern>"
                       "<platforma>%@</platforma>"
                       "<email>%@</email>"
-                      "</InregistrareAlerte3>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "<limba>%@</limba>"
+                      "<versiune>%@</versiune>"
+                      "</InregistrareAlerte4>"
                       "</soap:Body>"
                       "</soap:Envelope>",
                       self.tipAlerta, [YTOUtils formatDate:self.dataAlerta withFormat:@"dd.MM.yyyy"],
                       self.numarRata,
                       0.0,      // prima
                       @"lei",   // moneda
-                      [[UIDevice currentDevice] uniqueIdentifier],
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier],
                       self.idObiect,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                      (proprietar != nil ?  proprietar.email : @"fara email")];
+                      (proprietar != nil ?  proprietar.email : @"fara email"),
+                    [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     return xml;
 }
 
@@ -358,7 +411,7 @@
                              "</DisableAlert>"
                              "</soap:Body>"
                              "</soap:Envelope>",
-                             [[UIDevice currentDevice] uniqueIdentifier], self.idObiect, self.tipAlerta];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idObiect, self.tipAlerta];
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -398,7 +451,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/InregistrareAlerte3" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/InregistrareAlerte4" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -446,7 +499,7 @@
 #pragma mark NSXMLParser Methods
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	if ([elementName isEqualToString:@"InregistrareAlerte3Result"]) {
+	if ([elementName isEqualToString:@"InregistrareAlerte4Result"]) {
         raspuns = currentElementValue;
 	}
     

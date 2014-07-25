@@ -14,13 +14,17 @@
 
 }
 
-@property NSInteger idCompanie;
-@property (nonatomic, retain) NSString * nume;
-@property (nonatomic, retain) NSString * codOferta;
-@property (nonatomic, retain) NSString * prima;
-@property (nonatomic, retain) NSString * clasa_bm;
+@property (nonatomic, retain ) NSString * prima;
+@property (nonatomic, retain ) NSString * primaReducere;
+@property (nonatomic, retain ) NSString * Reducere;
+@property (nonatomic, retain ) NSString * numeCompanie;
+@property (nonatomic, retain ) NSString * codOferta;
+@property (nonatomic, retain ) NSString * clasaBM;
+@property (nonatomic, retain ) NSString * eroare_ws;
+@property (nonatomic, retain ) NSString * idReducere;
 
 - (float) primaInt;
+- (float) primaReducereInt;
 
 @end
 

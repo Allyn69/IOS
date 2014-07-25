@@ -43,16 +43,20 @@
 @property (nonatomic, retain) NSString * localitate;
 @property (nonatomic, retain) NSString * adresa;
 @property (nonatomic, retain) NSString * modEvaluare;
+@property (nonatomic, retain) NSString * codPostal;
 @property int                            nrRate;
 @property int                            sumaAsigurata;
 @property int                            sumaAsigurataRC;
 @property (nonatomic, retain) NSString * idProprietar;
+@property (nonatomic, retain) NSString * cuiBanca;
+@property BOOL * cesiune;
+@property (nonatomic, retain) NSString * mentiuneCesiune;
 @property (nonatomic, retain) NSDate   * _dataCreare;
 
 @property BOOL _isDirty;
 
-- (void) addLocuinta;
-- (void) updateLocuinta;
+- (void) addLocuinta:(BOOL) local;
+- (void) updateLocuinta:(BOOL) local;
 - (void) deleteLocutina;
 + (YTOLocuinta *) getLocuinta:(NSString *)_idIntern;
 + (YTOLocuinta *) getLocuintaByProprietar:(NSString *)_idProprietar;
@@ -63,6 +67,7 @@
 - (void) fromJSON:(NSString *)p;
 - (float) CompletedPercent;
 - (BOOL) isValidForLocuinta;
+- (BOOL) isValidForGothaer;
 
 - (void) refresh;
 

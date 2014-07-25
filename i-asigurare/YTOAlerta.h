@@ -32,9 +32,11 @@ NSDateComponents *difference;
 @property (nonatomic, retain) NSMutableData * responseData;
 
 -(id)initWithGuid:(NSString*)guid;
-- (void) addAlerta;
-- (void) updateAlerta;
-- (void) deleteAlerta;
+- (void) addAlerta:(BOOL) local;
+- (void) updateAlerta:(BOOL) local;
+- (void) deleteAlerta:(BOOL) local;
+- (void) refresh;
+
 + (YTOAlerta *) getAlerta:(NSString *)_idIntern;
 + (YTOAlerta *) getAlerta:(NSString *)_idIntern forType:(int)tip;
 + (YTOAlerta *) getAlertaRCA:(NSString *)_idIntern;
@@ -49,6 +51,7 @@ NSDateComponents *difference;
 + (NSMutableArray*)AlerteActive;
 + (NSMutableArray*)Alerte;
 + (int)GetNrAlerteScadente;
++ (int) getPositionToScroll;
 
 - (NSString *) toJSON;
 - (void) fromJSON:(NSString *)p;

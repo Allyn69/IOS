@@ -10,6 +10,8 @@
 #import "YTOAppDelegate.h"
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
+#import "YTOUserDefaults.h"
+#import "UIDevice+IdentifierAddition.h"
 
 @implementation YTOPersoana
 
@@ -41,6 +43,7 @@
 @synthesize telefon;
 @synthesize email;
 @synthesize proprietar;
+@synthesize codPostal;
 
 @synthesize _isDirty;
 
@@ -48,11 +51,11 @@
 {
     self = [super init];
     self.idIntern = guid;
-
+    
     return self;
 }
 
-- (void) addPersoana
+- (void) addPersoana:(BOOL) local
 {
     YTOObiectAsigurat * persoana = [[YTOObiectAsigurat alloc] init];
     persoana.IdIntern = self.idIntern;
@@ -61,28 +64,35 @@
     [persoana addObiectAsigurat];
     self._isDirty = YES;
     
-    [self showLoading];
-    
-    if ([self.tipPersoana isEqualToString:@"fizica"] && [self.proprietar isEqualToString:@"da"])
-        [self performSelectorInBackground:@selector(createAccount) withObject:nil];
-    else
-        [self performSelectorInBackground:@selector(registerPersoana) withObject:nil];
+    if (!local){
+        
+        [self showLoading];
+        
+        if ([self.tipPersoana isEqualToString:@"fizica"] && [self.proprietar isEqualToString:@"da"])
+            [self performSelectorInBackground:@selector(createAccount) withObject:nil];
+        else if (![self.tipPersoana isEqualToString:@"fizica"] && [self.proprietar isEqualToString:@"da"])
+            [self performSelectorInBackground:@selector(registerFirmaMea) withObject:nil];
+        else
+            [self performSelectorInBackground:@selector(registerPersoana) withObject:nil];
+    }
     [self refresh];
 }
 
-- (void) updatePersoana
+- (void) updatePersoana:(BOOL) local
 {
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob updateObiectAsigurat];
     
-    [self showLoading];
-
-    if ([self.tipPersoana isEqualToString:@"fizica"] && [self.proprietar isEqualToString:@"da"])
-        [self performSelectorInBackground:@selector(createAccount) withObject:nil];
-    else
-        [self performSelectorInBackground:@selector(registerPersoana) withObject:nil];
-    
+    if (!local) {
+        
+        [self showLoading];
+        
+        if ([self.tipPersoana isEqualToString:@"fizica"] && [self.proprietar isEqualToString:@"da"])
+            [self performSelectorInBackground:@selector(createAccount) withObject:nil];
+        else
+            [self performSelectorInBackground:@selector(registerPersoana) withObject:nil];
+    }
     [self refresh];
 }
 
@@ -91,7 +101,7 @@
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:self.idIntern];
     ob.JSONText = [self toJSON];
     [ob deleteObiectAsigurat];
-
+    
     [self showLoading];
     
     [self showLoading];
@@ -100,7 +110,7 @@
     [self refresh];
 }
 
-+ (YTOPersoana *) getPersoana:(NSString *)_idIntern 
++ (YTOPersoana *) getPersoana:(NSString *)_idIntern
 {
     YTOObiectAsigurat * ob = [YTOObiectAsigurat getObiectAsigurat:_idIntern];
     
@@ -109,7 +119,7 @@
         YTOPersoana * p = [[YTOPersoana alloc] init];
         [p fromJSON:ob.JSONText];
         p.idIntern = _idIntern;
-    
+        
         return p;
     }
     return nil;
@@ -118,7 +128,7 @@
 + (YTOPersoana *) getPersoanaByCodUnic:(NSString *)_codUnic
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
-
+    
     NSMutableArray * list = [appDelegate Persoane];
     for (int i=0; i<list.count; i++) {
         YTOPersoana * p = [list objectAtIndex:i];
@@ -129,13 +139,13 @@
     return nil;
 }
 
-- (NSMutableArray*)getPersoane 
+- (NSMutableArray*)getPersoane
 {
     NSMutableArray * _list = [[NSMutableArray alloc] init];
     
     NSMutableArray * jsonList = [YTOObiectAsigurat getListaByTipObiect:1];
     
-    for (int i=0; i<jsonList.count; i++) {        
+    for (int i=0; i<jsonList.count; i++) {
         YTOObiectAsigurat * ob = (YTOObiectAsigurat *)[jsonList objectAtIndex:i];
         
         YTOPersoana * p = [[YTOPersoana alloc] init];
@@ -149,14 +159,14 @@
     return _list;
 }
 
-+ (NSMutableArray*)AltePersoane 
++ (NSMutableArray*)AltePersoane
 {
     NSMutableArray * _list = [[NSMutableArray alloc] init];
     
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSMutableArray * listPersoane = [appDelegate Persoane];
     
-    for (int i=0; i<listPersoane.count; i++) {        
+    for (int i=0; i<listPersoane.count; i++) {
         YTOPersoana * p = [listPersoane objectAtIndex:i];
         
         if(![p.proprietar isEqualToString:@"da"])
@@ -219,11 +229,12 @@
     NSError * error;
     
     NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-                           self.nume, @"nume_asigurat",
+                           (self.nume ? self.nume : @""), @"nume_asigurat",
                            (self.codUnic ? self.codUnic : @""), @"cod_unic",
                            (self.judet ? self.judet : @""), @"judet",
                            (self.localitate ? self.localitate : @""), @"localitate",
                            (self.adresa ? self.adresa : @""), @"adresa",
+                           (self.codPostal ? self.codPostal : @""), @"codPostal",
                            (self.tipPersoana ? self.tipPersoana : @""), @"tip_persoana",
                            (self.casatorit ? self.casatorit : @""), @"casatorit",
                            (self.copiiMinori ? self.copiiMinori : @""), @"copii_minori",
@@ -240,15 +251,15 @@
                            (self.boliAparatRespirator ? self.boliAparatRespirator : @""), @"boli_aparat_respirator",
                            (self.alteBoli ? self.alteBoli : @""), @"alte_boli",
                            (self.boliDefinitive ? self.boliDefinitive : @""), @"boli_definitive",
-                           (self.stareSanatate ? self.stareSanatate : @""), @"stare_sanatate", 
+                           (self.stareSanatate ? self.stareSanatate : @""), @"stare_sanatate",
                            (self.telefon ? self.telefon : @""), @"telefon",
-                           (self.email ? self.email : @""), @"email",                           
+                           (self.email ? self.email : @""), @"email",
                            (self.proprietar ? self.proprietar : @"nu"), @"proprietar",
                            nil];
-
-    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict 
+    
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:dict
                                                        options:NSJSONWritingPrettyPrinted error:&error];
-    NSString * text = [[NSString alloc] initWithData:jsonData                                        
+    NSString * text = [[NSString alloc] initWithData:jsonData
                                             encoding:NSUTF8StringEncoding];
     
     return text;
@@ -265,6 +276,7 @@
     self.judet = [item objectForKey:@"judet"];
     self.localitate = [item objectForKey:@"localitate"];
     self.adresa = [item objectForKey:@"adresa"];
+    self.codPostal = [item objectForKey:@"codPostal"];
     self.tipPersoana = [item objectForKey:@"tip_persoana"];
     self.casatorit = [item objectForKey:@"casatorit"];
     self.copiiMinori = [item objectForKey:@"copii_minori"];
@@ -300,7 +312,9 @@
     NSString * jsonText = @"[";
     for (int i=0; i<list.count; i++) {
         YTOPersoana * p = (YTOPersoana *)[list objectAtIndex:i];
+        p.varsta = [YTOUtils getVarsta:p.codUnic];
         
+        if (!p.varsta) return nil;
         NSDictionary * dict = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                                @"buna", @"stare_sanatate",
                                p.alteBoli, @"alte_boli",
@@ -310,7 +324,7 @@
                                p.boliDefinitive, @"boli_definitive",
                                p.boliAparatRespirator, @"boli_aparat_respirator",
                                p.boliCardio, @"boli_cardio",
-                               @"28", @"varsta",
+                               p.varsta, @"varsta",
                                p.elevStudent, @"elev",
                                @"nu", @"sport_agrement",
                                @"0", @"sa_bagaje",
@@ -352,7 +366,43 @@
         valid = NO;
     if (!self.localitate || self.localitate.length == 0)
         valid = NO;
+    
+    return  valid;
+}
 
+- (BOOL) isValidForGothaer
+{
+    BOOL valid = YES;
+    
+    if (!self.nume || self.nume.length == 0)
+        valid = NO;
+    if (!self.codUnic || self.codUnic.length == 0)
+        valid = NO;
+    if (!self.judet || self.judet.length == 0)
+        valid = NO;
+    if (!self.localitate || self.localitate.length == 0)
+        valid = NO;
+    if (!self.codPostal || self.codPostal.length ==0)
+        valid = NO;
+    
+    return  valid;
+}
+
+- (BOOL) isValidForComputeCalatorie
+{
+    BOOL valid = YES;
+    
+    if (!self.nume || self.nume.length == 0)
+        valid = NO;
+    if (!self.codUnic || self.codUnic.length == 0)
+        valid = NO;
+    if (!self.judet || self.judet.length == 0)
+        valid = NO;
+    if (!self.localitate || self.localitate.length == 0)
+        valid = NO;
+    if (!self.serieAct || self.serieAct.length == 0)
+        valid = NO;
+    
     return  valid;
 }
 
@@ -362,24 +412,33 @@
     
     NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-                                "<soap:Body>"
-                                    "<CreateAccount xmlns=\"http://tempuri.org/\">"
-                                    "<user>vreaurca</user>"
-                                    "<password>123</password>"
-                                    "<nume>%@</nume>"
-                                    "<cod_unic>%@</cod_unic>"
-                                    "<judet>%@</judet>"
-                                    "<localitate>%@</localitate>"
-                                    "<adresa>%@</adresa>"
-                                    "<telefon>%@</telefon>"
-                                    "<email>%@</email>"
-                                    "<udid>%@</udid>"
-                                    "<platforma>%@</platforma>"
-                                    "</CreateAccount>"
-                                "</soap:Body>"
+                             "<soap:Body>"
+                             "<CreateAccount4 xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<nume>%@</nume>"
+                             "<cod_unic>%@</cod_unic>"
+                             "<judet>%@</judet>"
+                             "<localitate>%@</localitate>"
+                             "<adresa>%@</adresa>"
+                             "<telefon>%@</telefon>"
+                             "<email>%@</email>"
+                             "<udid>%@</udid>"
+                             "<idintern>%@</idintern>"
+                             "<platforma>%@</platforma>"
+                             "<operator_tel>%@</operator_tel>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "</CreateAccount4>"
+                             "</soap:Body>"
                              "</soap:Envelope>", self.nume, self.codUnic, self.judet, self.localitate, self.adresa, self.telefon, self.email,
-                             [[UIDevice currentDevice] uniqueIdentifier],
-                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier],
+                             self.idIntern,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                             [YTOUserDefaults getOperator],
+                             [YTOUserDefaults getUserName],
+                             [YTOUserDefaults getPassword]];
+    
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -392,7 +451,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/CreateAccount" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/CreateAccount4" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -412,7 +471,7 @@
     NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                              "<soap:Body>"
-                             "<RegisterPersoana xmlns=\"http://tempuri.org/\">"
+                             "<RegisterPersoana2 xmlns=\"http://tempuri.org/\">"
                              "<user>vreaurca</user>"
                              "<password>123</password>"
                              "<nume>%@</nume>"
@@ -427,11 +486,16 @@
                              "<id_intern>%@</id_intern>"
                              "<proprietar>%@</proprietar>"
                              "<platforma>%@</platforma>"
-                             "</RegisterPersoana>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "<limba>%@</limba>"
+                             "<versiune>%@</versiune>"
+                             "</RegisterPersoana2>"
                              "</soap:Body>"
                              "</soap:Envelope>", self.nume, self.tipPersoana, self.codUnic, self.judet, self.localitate, self.adresa, self.telefon, self.email,
-                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern, self.proprietar,
-                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idIntern, self.proprietar,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                             [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -444,7 +508,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/RegisterPersoana" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/RegisterPersoana2" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -463,15 +527,20 @@
     NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                              "<soap:Body>"
-                             "<DeletePersoana xmlns=\"http://tempuri.org/\">"
+                             "<DeletePersoana2 xmlns=\"http://tempuri.org/\">"
                              "<user>vreaurca</user>"
                              "<password>123</password>"
                              "<udid>%@</udid>"
                              "<id_persoana>%@</id_persoana>"
-                             "</DeletePersoana>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "<limba>%@</limba>"
+                             "<versiune>%@</versiune>"
+                             "</DeletePersoana2>"
                              "</soap:Body>"
                              "</soap:Envelope>",
-                             [[UIDevice currentDevice] uniqueIdentifier], self.idIntern];
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idIntern,
+                             [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
     
     NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
     
@@ -484,7 +553,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/DeletePersoana" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/DeletePersoana2" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -497,6 +566,66 @@
     
     [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
 }
+
+- (void) registerFirmaMea
+{
+    
+    NSString * xmlRequest = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                             "<soap:Body>"
+                             "<RegisterFirmaMea xmlns=\"http://tempuri.org/\">"
+                             "<user>vreaurca</user>"
+                             "<password>123</password>"
+                             "<nume>%@</nume>"
+                             "<tip_persoana>juridica</tip_persoana>"
+                             "<cod_unic>%@</cod_unic>"
+                             "<judet>%@</judet>"
+                             "<localitate>%@</localitate>"
+                             "<adresa>%@</adresa>"
+                             "<telefon>%@</telefon>"
+                             "<email>%@</email>"
+                             "<udid>%@</udid>"
+                             "<id_intern>%@</id_intern>"
+                             "</proprietar>%@</proprietar>"
+                             "<platforma>%@</platforma>"
+                             "<cont_user>%@</cont_user>"
+                             "<cont_parola>%@</cont_parola>"
+                             "<limba>%@</limba>"
+                             "<versiune>%@</versiune>"
+                             "</RegisterFirmaMea>"
+                             "</soap:Body>"
+                             "</soap:Envelope>", self.nume, self.codUnic, self.judet, self.localitate, self.adresa, self.telefon, self.email,
+                             [[UIDevice currentDevice] xUniqueDeviceIdentifier], self.idIntern, self.proprietar,
+                             [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                             [YTOUserDefaults getUserName],[YTOUserDefaults getPassword],[YTOUserDefaults getLanguage],[NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]]];
+    
+    
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@sync.asmx", LinkAPI]];
+    
+	NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+															cachePolicy:NSURLRequestUseProtocolCachePolicy
+														timeoutInterval:10.0];
+    
+	NSString * parameters = [[NSString alloc] initWithString:xmlRequest];
+	NSLog(@"Request=%@", parameters);
+	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+	
+	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[request addValue:@"http://tempuri.org/RegisterFirmaMea" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPMethod:@"POST"];
+	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	
+	if (connection) {
+		self.responseData = [NSMutableData data];
+	}
+    
+    [self performSelectorOnMainThread:@selector(hideLoading) withObject:nil waitUntilDone:NO];
+}
+
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
 	NSLog(@"Response: %@", [response textEncodingName]);
@@ -533,6 +662,180 @@
 {
     UIApplication* app = [UIApplication sharedApplication];
     app.networkActivityIndicatorVisible = NO;
+}
+
+- (NSString *) mesajOneFieldWrong
+{
+    int i =0;
+    NSString * mesaj = [[NSString alloc] init];
+    if ([self.tipPersoana isEqualToString:@"fizica"])
+    {
+        if (!self.nume || self.nume.length == 0)
+        {
+            i++;
+            mesaj =  NSLocalizedStringFromTable(@"i629", [YTOUserDefaults getLanguage],@"Introdu numele complet (nume + prenume).");
+        }
+        if (!self.codUnic || self.codUnic.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i630", [YTOUserDefaults getLanguage],@"Completeaza codul numeric personal.");
+        }
+        else if (self.codUnic.length != 13)
+        {
+            i++;
+            mesaj =  NSLocalizedStringFromTable(@"i631", [YTOUserDefaults getLanguage],@"Corecteaza codul numeric personal.");
+        }
+        if (!self.adresa || self.adresa.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i633", [YTOUserDefaults getLanguage],@"Introdu adresa completa din buletin.");
+        }
+        if (!self.judet || self.judet.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i633", [YTOUserDefaults getLanguage],@"Introdu adresa completa din buletin.");
+        }
+    }else{
+        if (!self.nume || self.nume.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i634", [YTOUserDefaults getLanguage],@"Completeaza denumirea firmei.");
+        }
+        if (!self.codUnic || self.codUnic.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i635", [YTOUserDefaults getLanguage],@"Completeaza codul unic de identificare.");
+        }
+        else if (![YTOUtils validateCUI:(self.codUnic)] )
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i636", [YTOUserDefaults getLanguage],@"Corecteaza codul unic de identificare.");
+        }
+        if (!self.adresa || self.adresa.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i637", [YTOUserDefaults getLanguage],@"Selecteaza judetul si localitatea firmei.");
+        }
+        if (!self.judet || self.judet.length == 0)
+        {
+            i++;
+            mesaj = NSLocalizedStringFromTable(@"i639", [YTOUserDefaults getLanguage],@"Selecteaza judetul si localitatea imobilului.");
+        }
+    }
+    if (i == 1)
+        return mesaj;
+    else return @"";
+}
+
+- (NSString *) mesajOneFieldWrongCalatorie
+{
+    int i =0;
+    NSString * mesaj = [[NSString alloc] init];
+    if (!self.nume || self.nume.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i629", [YTOUserDefaults getLanguage],@"Introdu numele complet (nume + prenume).");
+    }
+    if (!self.codUnic || self.codUnic.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i630", [YTOUserDefaults getLanguage],@"Completeaza codul numeric personal.");
+    }
+    else if (self.codUnic.length != 13)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i631", [YTOUserDefaults getLanguage],@"Corecteaza codul numeric personal.");
+    }
+    if (!self.adresa || self.adresa.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i633", [YTOUserDefaults getLanguage],@"Introdu adresa completa din buletin.");
+    }
+    if (!self.judet || self.judet.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i632", [YTOUserDefaults getLanguage],@"Selecteaza judetul si localitatea.");
+    }
+    if (!self.serieAct || self.serieAct.length == 0)
+    {
+        i++;
+        mesaj = @"Completeaza Seria cartii de identitate (pentru UE) sau a pasaportului (UE + alte tari).";
+    }
+    if (!self.codPostal || self.codPostal.length == 0)
+    {
+        i++;
+        mesaj = @"Completeaza codul postal necesar pentru produsul \"My travels\".";
+    }
+    if (i == 1)
+        return mesaj;
+    else return @"";
+}
+
+- (NSString *) mesajOneFieldWrongMyTravels
+{
+    int i =0;
+    NSString * mesaj = [[NSString alloc] init];
+    if (!self.nume || self.nume.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i629", [YTOUserDefaults getLanguage],@"Introdu numele complet (nume + prenume).");
+    }
+    if (!self.codUnic || self.codUnic.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i630", [YTOUserDefaults getLanguage],@"Completeaza codul numeric personal.");
+    }
+    else if (self.codUnic.length != 13)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i631", [YTOUserDefaults getLanguage],@"Corecteaza codul numeric personal.");
+    }
+    if (!self.adresa || self.adresa.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i633", [YTOUserDefaults getLanguage],@"Introdu adresa completa din buletin.");
+    }
+    if (!self.judet || self.judet.length == 0)
+    {
+        i++;
+        mesaj = NSLocalizedStringFromTable(@"i632", [YTOUserDefaults getLanguage],@"Selecteaza judetul si localitatea.");
+    }
+    if (!self.codPostal || self.codPostal.length == 0)
+    {
+        i++;
+        mesaj = @"Completeaza codul postal necesar pentru produsul \"My travels\".";
+    }
+    if (i == 1)
+        return mesaj;
+    else return @"";
+}
+
+
+-(int) getWrongLabel                        // 1 rca,loc
+{                                           // 2 calatorie
+    int i =0;                               // 3 my travels
+    
+    if (!self.nume || self.nume.length == 0)
+    {
+        i = 2;
+    }
+    else if (!self.codUnic || self.codUnic.length == 0 || self.codUnic.length != 13)
+    {
+        i = 3;
+    }
+    else if (!self.adresa || self.adresa.length == 0)
+    {
+        i = 4;
+    }
+    else if (!self.serieAct || self.serieAct.length == 0)
+    {
+        i = 5;
+    }
+    else if (!self.codPostal || self.codPostal.length == 0)
+    {
+        i = 6;
+    }
+    return i;
 }
 
 @end

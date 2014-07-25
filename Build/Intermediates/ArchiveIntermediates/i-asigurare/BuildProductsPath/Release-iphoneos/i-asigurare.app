@@ -1,0 +1,1 @@
+/Users/administrator/Desktop/i-asigurare 2.1 v2/Build/Intermediates/ArchiveIntermediates/i-asigurare/InstallationBuildProductsLocation/Applications/i-asigurare.app

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "YTOPersoana.h"
 
+
 @interface YTOTrimiteMesajViewController : UIViewController<NSXMLParserDelegate, UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 {
     IBOutlet UITableView * tableView;
@@ -35,6 +36,11 @@
     IBOutlet UILabel     * lblPopupTitle;
     IBOutlet UILabel     * lblPopupDescription;
     
+    IBOutlet UILabel     * lblNoInternet;
+    IBOutlet UILabel     * lblMsgTau;
+    
+    IBOutlet UILabel * lblEroare;
+    
     NSMutableData * capturedCharactes;
 	NSMutableString * currentElementValue;
 	NSString    * responseMessage;
@@ -49,6 +55,8 @@
     UITextField * txtTelefon;
     UITextField * txtSubiect;
     UITextField * txtDescriere;
+    
+    IBOutlet UITableViewCell * cellHead;
 }
 
 @property (nonatomic, retain) NSMutableData * responseData;

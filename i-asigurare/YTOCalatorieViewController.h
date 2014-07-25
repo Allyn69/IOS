@@ -10,6 +10,7 @@
 #import "PickerVCSearch.h"
 #import "YTOOferta.h"
 
+
 @interface YTOCalatorieViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PickerVCSearchDelegate>
 {
     IBOutlet UITableView * tableView;
@@ -34,9 +35,17 @@
     NSString * tranzit;
     NSString * sumaAsigurata;
     
+    IBOutlet UILabel * lblSumaAsig;
+    IBOutlet UILabel * lblScop;
+    IBOutlet UILabel * lblAfaceri;
+    IBOutlet UILabel * lblTurism;
+    IBOutlet UILabel * lblSofer;
+    IBOutlet UILabel * lblStudii;
 }
 
 @property (nonatomic, retain) NSDate *   DataInceput;
+@property (nonatomic, retain) UIViewController * controller;
+
 
 - (IBAction) nrZileStepper_Changed:(id)sender;
 - (IBAction) dateStepper_Changed:(id)sender;

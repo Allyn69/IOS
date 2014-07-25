@@ -12,6 +12,11 @@
 
 @synthesize Eroare_ws;
 @synthesize Prima;
+@synthesize Reducere;
+@synthesize PrimaReducere;
+@synthesize ProcentReducere;
+@synthesize IdReducere;
+@synthesize PromoVodafone;
 @synthesize Companie;
 @synthesize Cod;
 @synthesize Clasa_bm;

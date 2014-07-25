@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOAsigurareViewController";
     
     [self initCells];
     
@@ -552,7 +553,7 @@
         lbl.frame = CGRectMake(1, 5, 67, 34);
         lbl.backgroundColor = [UIColor clearColor];
         lbl.numberOfLines = 0;
-        [lbl setTextAlignment:UITextAlignmentCenter];
+        [lbl setTextAlignment:NSTextAlignmentCenter];
         lbl.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lbl.font = [UIFont fontWithName:@"Arial" size:12];
         lbl.text = [[item.value stringByReplacingOccurrencesOfString:@"/" withString:@"/ "] stringByReplacingOccurrencesOfString:@"-" withString:@" - "];

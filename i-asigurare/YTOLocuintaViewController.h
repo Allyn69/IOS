@@ -11,6 +11,7 @@
 #import "YTOPersoana.h"
 #import "YTOOferta.h"
 
+
 @interface YTOLocuintaViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate>
 {
     IBOutlet UITableView * tableView;
@@ -23,6 +24,13 @@
     UITableViewCell *           cellSumaAsigurataRC;
     UITableViewCell *           cellDataInceput;
     UITableViewCell *           cellCalculeaza;
+    UITableViewCell *           cellCesionareBanca;
+    
+    IBOutlet UILabel * lblModEvaluare;
+    IBOutlet UILabel * lblValReala;
+    IBOutlet UILabel * lblValPiata;
+    IBOutlet UILabel * lblEvalBanca;
+    IBOutlet UILabel * lblValInloc;
 
     YTOOferta *    oferta; 
     UITextField * activeTextField;
@@ -34,6 +42,8 @@
 @property (nonatomic, retain) YTOLocuinta *  locuinta;
 
 @property (nonatomic, retain) NSDate *   DataInceput;
+
+@property BOOL isWrongLoc;
 - (IBAction)btnModeEvaluare_Clicked:(id)sender;
 
 - (void) initCells;

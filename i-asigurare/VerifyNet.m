@@ -11,8 +11,6 @@
 #import <netinet/in.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 
-
-
 @implementation VerifyNet
 
 -(BOOL)hasConnectivity {

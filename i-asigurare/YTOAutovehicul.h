@@ -22,6 +22,7 @@
 @property (nonatomic, retain) NSString * idIntern;
 @property (nonatomic, retain) NSString * judet;
 @property (nonatomic, retain) NSString * localitate;
+@property (nonatomic, retain) NSString * adresa;
 @property int                            categorieAuto;
 @property (nonatomic, retain) NSString * subcategorieAuto;
 @property (nonatomic, retain) NSString * nrInmatriculare;
@@ -49,13 +50,15 @@
 @property (nonatomic, retain) NSString * idFirmaLeasing;
 @property (nonatomic, retain) NSString * idProprietar;
 @property (nonatomic, retain) NSString * idImage;
-@property (nonatomic, retain) NSDate   * _dataCreare;                     
+@property (nonatomic, retain) NSDate   * _dataCreare;
+@property (nonatomic, retain) NSString * savedInCont; //da nu
 
 @property BOOL _isDirty;
 
-- (void) addAutovehicul;
-- (void) updateAutovehicul;
+- (void) addAutovehicul:(BOOL) local;
+- (void) updateAutovehicul:(BOOL) local;
 - (void) deleteAutovehicul;
+- (void) deleteAutovehicul2;
 + (YTOAutovehicul *) getAutovehicul:(NSString *)_idIntern;
 + (YTOAutovehicul *) getAutovehiculByProprietar:(NSString *)_idProprietar;
 + (NSMutableArray*)Masini;

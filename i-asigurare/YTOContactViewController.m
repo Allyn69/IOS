@@ -9,6 +9,7 @@
 #import "YTOContactViewController.h"
 #import "YTOAppDelegate.h"
 #import "YTOUtils.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOContactViewController ()
 
@@ -20,7 +21,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Contact", @"Contact");
+        self.title = NSLocalizedStringFromTable(@"i488", [YTOUserDefaults getLanguage],@"CONTACT");
     }
     return self;
 }
@@ -28,12 +29,42 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+    //self.trackedViewName = @"YTOContactViewController";
+     [YTOUtils rightImageVodafone:self.navigationItem];
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 =  NSLocalizedStringFromTable(@"i725", [YTOUserDefaults getLanguage],@"Contact");
+    NSString *string2 =  NSLocalizedStringFromTable(@"i726", [YTOUserDefaults getLanguage],@"i-Asigurare");
+    NSString *string  =  [[NSString alloc] initWithFormat:@"%@ %@",string1,string2];
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:verde] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:verde]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i727", [YTOUserDefaults getLanguage],@"datele de contact unde ne poti gasi");
     // Do any additional setup after loading the view from its nib.
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    
+  
     // Dispose of any resources that can be recreated.
 }
 
@@ -112,7 +143,7 @@
     {
         cell.textLabel.font = [UIFont fontWithName:@"Arial" size:14];
         cell.imageView.image = [UIImage imageNamed:@"contact-adresa.png"];
-        cell.textLabel.text = @"Strada Vasile Lucaciu, nr.10, et.2";
+        cell.textLabel.text = @"Strada Romulus, nr.49";
         cell.detailTextLabel.text = @"Sector 3, Bucuresti";
     }
     else if (indexPath.row == 8)

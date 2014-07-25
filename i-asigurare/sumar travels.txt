@@ -1,0 +1,93 @@
+ (NSString *) XmlRequestInregistrareComanda
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"yyyy-MM-dd";
+    YTOPersoana * proprietar = [YTOPersoana Proprietar];
+    YTOPersoana * proprietarPJ = [YTOPersoana ProprietarPJ];
+    NSString *email;
+    if (proprietar.email && proprietar.email.length > 0)
+        email = proprietar.email;
+    else if (proprietarPJ.email && proprietarPJ.email.length > 0)
+        email = proprietarPJ.email;
+    NSString * xml = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<CallInregistrareComandaMyTravels3 xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<udid>%@</udid>"
+                      "<id_intern>%@</id_intern>"
+                      "<nume_asigurat>%@</nume_asigurat>"
+                      "<cod_unic>%@</cod_unic>"
+                      "<data_inceput>%@</data_inceput>"
+                      "<mod_plata>%@</mod_plata>"
+                      "<telefon>%@</telefon>"
+                      "<email>%@</email>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "</CallInregistrareComandaMyTravels3>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier],
+                      asigurat.idIntern,
+                      asigurat.nume,
+                      asigurat.codUnic,
+                      [formatter stringFromDate:_DataInceput],
+                      @"3",// numar
+                      asigurat.telefon,
+                      email,
+                      [YTOUserDefaults getUserName],
+                      [YTOUserDefaults getPassword]];
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
+}
+
+- (void) calculInregistrareComanda {
+    
+    paramForRequest1 = 2;
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@gothaer.asmx", LinkAPI]];
+    
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+        
+        [vwLoading setHidden:NO];
+        [self showLoading];
+        
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                            timeoutInterval:30.0];
+        
+        NSString * parameters = [[NSString alloc] initWithString:[self XmlRequestInregistrareComanda]];
+        NSLog(@"Request=%@", parameters);
+        NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+        
+        [request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [request addValue:@"http://tempuri.org/CallInregistrareComandaMyTravels3" forHTTPHeaderField:@"SOAPAction"];
+        [request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        
+        NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        if (connection) {
+            self->responseData = [NSMutableData data];
+            NSLog(@"%@",responseData);
+        }
+    }
+    else {
+        [self showPopupServiciu:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !") ];// andDescription:eroare_ws];
+    }
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"Response: %@", [response textEncodingName]);
+	[self->responseData setLength:0];
+}
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+	NSLog(@"connection:DidReceiveData");
+	[self->responseData appendData:data];
+    if (paramForRequest1 == 1)
+        oferta = [[YTOOferta alloc] init];
+}

@@ -11,9 +11,20 @@
 
 @implementation TarifRCA
 
-@synthesize idCompanie, prima, nume, codOferta, clasa_bm;
+@synthesize prima,
+primaReducere,
+Reducere,
+numeCompanie,
+codOferta,
+clasaBM,
+eroare_ws,
+idReducere;
 
 - (float) primaInt {
 	return [prima floatValue];
+}
+
+- (float) primaReducereInt {
+	return [primaReducere floatValue];
 }
 @end

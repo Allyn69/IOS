@@ -1,4 +1,4 @@
-//
+  //
 //  YTOWebViewController.m
 //  i-asigurare
 //
@@ -7,6 +7,7 @@
 //
 
 #import "YTOWebViewController.h"
+#import "YTOUtils.h"
 
 @interface YTOWebViewController ()
 
@@ -29,6 +30,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
     if (URL && ![URL isEqualToString:@""])
     {
         NSLog(@"%@", URL);
@@ -36,11 +42,21 @@
         NSURLRequest * req = [[NSURLRequest alloc] initWithURL:url];
         webView.delegate = self;
         [webView loadRequest:req];
+        if ([URL rangeOfString:@"pre-pay.aspx"].location != NSNotFound)
+        {
+            UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(homeAction:)];
+            self.navigationItem.leftBarButtonItem = newButton;
+        }
     }
     else if (HTMLContent && ![HTMLContent isEqualToString:@""])
     {
         [webView loadHTMLString:HTMLContent baseURL:nil];
     }
+     [YTOUtils rightImageVodafone:self.navigationItem];
+}
+
+-(IBAction)homeAction:(id)sender {
+    [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -51,7 +67,7 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-   // [self showLoading];
+    [self showLoading];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -63,7 +79,7 @@
 {
     NSLog(@"didFailLoadWithError: %@", [error localizedDescription]);
     [self showPopupWithTitle:@"Conexiune esuata" andDescription:@"Pagina nu este disponibila. Verificati conexiunea la internet."];
-    goBack = YES;
+    //goBack = YES;
 }
 
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description

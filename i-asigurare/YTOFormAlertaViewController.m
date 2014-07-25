@@ -35,6 +35,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOFormAlertaViewController";
+    
     // Do any additional setup after loading the view from its nib.
     [self initCells];
 
@@ -192,7 +194,8 @@
 		UIDatePicker *datePicker = [[UIDatePicker alloc] init];
 		datePicker.tag = 101;
 		datePicker.datePickerMode = 1; // date and time view
-		datePicker.minimumDate = [NSDate date];
+		//datePicker.minimumDate = [NSDate date];
+        datePicker.minimumDate = [[NSDate date] dateByAddingTimeInterval:86400];
 
         //[actionSheet showFromTabBar:self.tabBarController.tabBar];
         //[actionSheet showFromToolbar:self.navigationController.toolbar];
@@ -277,14 +280,14 @@
     //{
         if (alerta._isDirty)
         {
-            [alerta updateAlerta];
+            [alerta updateAlerta:NO];
         }
         else {
             //            if (autovehicul.marcaAuto.length > 0 && autovehicul.modelAuto.length > 0 && autovehicul.nrInmatriculare
             //                && autovehicul.judet.length > 0 && autovehicul.localitate.length > 0 && autovehicul.categorieAuto > 0
             //                && autovehicul.subcategorieAuto.length > 0 && autovehicul.serieSasiu.length > 0 && autovehicul.serieCiv.length > 0)
             //            {
-            [alerta addAlerta];
+            [alerta addAlerta:NO];
             
             //}
         }
@@ -499,7 +502,7 @@
         lbl.frame = CGRectMake(1, 5, 67, 34);
         lbl.backgroundColor = [UIColor clearColor];
         lbl.numberOfLines = 0;
-        [lbl setTextAlignment:UITextAlignmentCenter];
+        [lbl setTextAlignment:NSTextAlignmentCenter];
         lbl.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lbl.font = [UIFont fontWithName:@"Arial" size:12];
         lbl.text = [[item.value stringByReplacingOccurrencesOfString:@"/" withString:@"/ "] stringByReplacingOccurrencesOfString:@"-" withString:@" - "];

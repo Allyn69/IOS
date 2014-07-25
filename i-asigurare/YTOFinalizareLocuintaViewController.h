@@ -11,6 +11,8 @@
 #import "YTOOferta.h"
 #import "YTOPersoana.h"
 #import "YTOLocuinta.h"
+#import <Social/Social.h>
+
 
 @interface YTOFinalizareLocuintaViewController : UIViewController<NSXMLParserDelegate, UIAlertViewDelegate,UITableViewDelegate, UITableViewDataSource, PickerVCSearchDelegate>
 {
@@ -23,8 +25,17 @@
     UITableViewCell *           cellAdresa;
     UITableViewCell *           cellTelefon;
     UITableViewCell *           cellEmail;
+    UITableViewCell *           cellCesiune;
+    UITableViewCell *           cellCuiBanca;
     IBOutlet UITableViewCell *  cellPlata;
     UITableViewCell *           cellCalculeaza;
+    IBOutlet UIButton    * btnCustomFacebook;
+    IBOutlet UILabel     * lblCustomFacebook;
+    IBOutlet UIButton    * btnCustomTwitter;
+    IBOutlet UILabel     * lblCustomTwitter;
+    
+    SLComposeViewController *mySLComposerSheet;
+
     
     BOOL goingBack;
     
@@ -41,7 +52,6 @@
 	NSString	* idOferta;
 	NSString    * mesajFinal;
     
-    IBOutlet UIImageView * imgError;
     IBOutlet UIView      * vwCustomAlert;
     IBOutlet UILabel     * lblCustomAlertTitle;
     IBOutlet UILabel     * lblCustomAlertMessage;
@@ -52,8 +62,20 @@
     
     UITextField * txtEmailLivrare;
     UITextField * txtTelefonLivrare;
+    UITextField * txtCesiune;
+    UITextField * txtCuiBanca;
+    
+    IBOutlet UILabel * lblEroare;
+    IBOutlet UILabel     * lblModPlata;
+    IBOutlet UILabel     * lblPlataOP;
+    IBOutlet UILabel     * lblCard;
+    IBOutlet UILabel     * lblLoading;
+    
+
     
     YTOPersoana * proprietar;
+    
+    IBOutlet UITableViewCell * cellHeader;
     
     UIView * viewTooltip;
 }
@@ -81,5 +103,6 @@
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
 - (IBAction) hideCustomAlert:(id)sender;
+- (IBAction) hideButtonSocialMedia:(id)sender;
 
 @end

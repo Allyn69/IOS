@@ -11,6 +11,7 @@
 #import "YTOAutovehicul.h"
 #import "YTOLocuinta.h"
 
+
 @interface YTOFormAlertaViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 {
     IBOutlet UITableView     * tableView;
@@ -45,7 +46,6 @@
 - (void) setTipAlerta:(NSString *) v;
 - (void) setDataAlerta:(NSString *) v;
 - (void) setEsteRata:(NSString *)v;
-- (void) loadListTipAlerta;
 
 - (void) showNomenclator;
 -(IBAction) hideNomenclator;

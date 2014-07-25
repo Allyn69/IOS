@@ -11,15 +11,18 @@
 #import "YTOAutovehicul.h"
 #import "YTOOferta.h"
 
-@interface YTOCASCOViewController : UIViewController<NSXMLParserDelegate, UITableViewDataSource, UITableViewDelegate>
+#import <Social/Social.h>
+
+@interface YTOCASCOViewController : UIViewController<NSXMLParserDelegate, UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 {
     IBOutlet UITableView     *  tableView;
-    UITableViewCell          *  cellHeader;
     UITableViewCell          *  cellMasina;
     UITableViewCell          *  cellProprietar;
     UITableViewCell          *  cellNrKm;
     UITableViewCell          *  cellCuloare;
     IBOutlet UITableViewCell *  cellNrRate;
+    IBOutlet UITableViewCell *  cellPF;
+    IBOutlet UILabel         *  lblPF;
     UITableViewCell          *  cellCalculeaza;
     IBOutlet UITableViewCell *  cellAsigurareCasco;
     
@@ -41,7 +44,6 @@
     IBOutlet UILabel     * lblPopupTitle;
     IBOutlet UILabel     * lblPopupDescription;
     
-    IBOutlet UIImageView * imgError;
     IBOutlet UIView      * vwCustomAlert;
     IBOutlet UILabel     * lblCustomAlertTitle;
     IBOutlet UILabel     * lblCustomAlertMessage;
@@ -70,6 +72,45 @@
     IBOutlet UIButton    * btnMessageOK;
     IBOutlet UIButton    * btnMessageNO;
     
+    IBOutlet UIView      * vwDateleMele;
+    IBOutlet UIButton    * btnDateleMele;
+    IBOutlet UILabel     * lblDateleMele;
+    
+    IBOutlet UIButton    * btnCustomFacebook;
+    IBOutlet UILabel     * lblCustomFacebook;
+    IBOutlet UIButton    * btnCustomTwitter;
+    IBOutlet UILabel     * lblCustomTwitter;
+    
+    IBOutlet UILabel * lblInfoReduceri;
+    IBOutlet UILabel * lblAlegeCasco;
+    
+    IBOutlet UILabel * lblCumPlatesti;
+    IBOutlet UILabel * lblIntegral;
+    IBOutlet UILabel * lbl2Rate;
+    IBOutlet UILabel * lbl4Rate;
+    
+    IBOutlet UIView     * vwPlatinum;
+    IBOutlet UILabel    * lblPlatinum;
+    IBOutlet UILabel    * lblBtnOkPlatinum;
+    IBOutlet UILabel    * lblBtnNoPlatinum;
+    
+    IBOutlet UITableViewCell  * cellHeader;
+    
+    IBOutlet UILabel * lblMultumim1;
+    IBOutlet UILabel * lblMultumim2;
+    IBOutlet UILabel * lblMultumim3;
+    IBOutlet UILabel * lblMultumim4;
+    IBOutlet UILabel * lblSorry1;
+    IBOutlet UILabel * lblSorry2;
+    IBOutlet UILabel * lblDetaliiErr1;
+    IBOutlet UILabel * lblImportant;
+    IBOutlet UILabel * lblEroare;
+    IBOutlet UILabel * lblComandaOK1;
+    IBOutlet UILabel * lblDateIncomplete;
+
+    
+    
+    SLComposeViewController *mySLComposerSheet;
     
     BOOL cautLegaturaDintreMasinaSiAsigurat;
     
@@ -78,7 +119,11 @@
     
     int nrRate;
     
+    int index;
+    
     BOOL isOK;
+    //BOOL updateOnServer;
+    
     
 }
 @property (nonatomic, retain) NSDate *   DataInceput;
@@ -94,6 +139,10 @@
 - (void) showNomenclator;
 - (IBAction) hideNomenclator;
 - (IBAction) btnNomenclator_Clicked:(id)sender;
+
+
+
+@property BOOL isWrongAuto;
 // END for vwNomenclator
 
 - (void) initCells;
@@ -112,6 +161,7 @@
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
 - (void) showPopupServiciu:description;
 - (void) showMessage;
+- (void) showDateleMele:description;
 
 - (IBAction) hideMessage:(id)sender;
 - (IBAction) hidePopupServiciu;
@@ -119,4 +169,7 @@
 - (IBAction) hideErrorAlert:(id)sender;
 - (IBAction) hideDetailErrorAlert;
 - (IBAction) hidePopup;
+- (IBAction) hideDateleMele;
+- (IBAction) hideButtonSocialMedia:(id)sender;
+
 @end

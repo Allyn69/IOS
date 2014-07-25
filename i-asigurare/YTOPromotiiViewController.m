@@ -27,6 +27,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOPromotiiViewController";
+     [YTOUtils rightImageVodafone:self.navigationItem];
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -45,7 +47,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 4;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -79,11 +81,11 @@
         cell.textLabel.text = @"Livrare imediata";
         cell.detailTextLabel.text = @"Toate politele de asigurare se livreaza electronic in cateva minute.";
     }
-    else
+    else if (indexPath.row == 3)
     {
-        cell.imageView.image = [UIImage imageNamed:@"promotie-livrare-imediata.png"];
-        cell.textLabel.text = @"Reducere 10%";
-        cell.detailTextLabel.text = @"Beneficiezi de reducere 10% la orice asigurare medicala de calatorie.";
+        cell.imageView.image = [UIImage imageNamed:@"promotie-vodafone.png"];
+        cell.textLabel.text = @"i-Asigurare & Vodafone";
+        cell.detailTextLabel.text = @"Daca esti client Vodafone beneficiezi de 20% reducere la asigurarea de calatorie.";
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

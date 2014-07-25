@@ -11,7 +11,9 @@
 #import "YTOAutovehicul.h"
 #import "YTOListaAutoViewController.h"
 #import "YTOUtils.h"
+#import "YTOAutovehiculViewController.h"
 #import "VerifyNet.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOValabilitateRCAViewController ()
 
@@ -25,7 +27,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Verifica RCA", @"Verifica RCA");
+        self.title = NSLocalizedStringFromTable(@"i21", [YTOUserDefaults getLanguage],@"Verifica RCA");
     }
     return self;
 }
@@ -33,6 +35,54 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
+    //self.trackedViewName = @"YTOValabilitateRCAViewController";
+     [YTOUtils rightImageVodafone:self.navigationItem];
+    
+    lbl2.text = NSLocalizedStringFromTable(@"i218", [YTOUserDefaults getLanguage],@"Valabilitatea politei RCA se verifica dupa seria de sasiu a autovehiculului.\nAsigura-te ca este corect introdusa!");
+    lbl3.text = NSLocalizedStringFromTable(@"i209", [YTOUserDefaults getLanguage],@"CEDAM");
+    lblAlege.text = NSLocalizedStringFromTable(@"i147", [YTOUserDefaults getLanguage],@"Alege autovehicul");
+    lblVerifica.text = NSLocalizedStringFromTable(@"i21", [YTOUserDefaults getLanguage],@"Verifica RCA");
+    
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 =  NSLocalizedStringFromTable(@"i718", [YTOUserDefaults getLanguage],@"Valabilitate");
+    NSString *string2 =  NSLocalizedStringFromTable(@"i719", [YTOUserDefaults getLanguage],@"RCA");
+    NSString *string  =  [[NSString alloc] initWithFormat:@"%@ %@",string1,string2];
+    
+    lblMultumim1.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblMultumim2.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblSorry1.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblSorry2.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblDetaliiErr1.text = NSLocalizedStringFromTable(@"i819", [YTOUserDefaults getLanguage],@"detalii eroare");
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    
+    lblMultumim1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblMultumim2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblDetaliiErr1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:movValabilitate] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:movValabilitate]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i720", [YTOUserDefaults getLanguage],@"verifica valabilitatea politei RCA");
     // Do any additional setup after loading the view from its nib.
 }
 
@@ -51,7 +101,15 @@
         YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
         aView.controller = self;
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+    }else {
+        YTOAutovehiculViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+        else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
+        aView.controller = self;
+        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
+
 }
 
 - (void) setAutovehicul:(YTOAutovehicul *)m
@@ -59,12 +117,12 @@
     masina = m;
     
     lblMasina.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    if (masina.marcaAuto.length > 0)
-    {
+    //if (masina.marcaAuto.length > 0)
+    //{
         lblMasina.text = [NSString stringWithFormat:@"%@, %@", m.marcaAuto, m.modelAuto];
         lblSerie.text = [NSString stringWithFormat:@"%@, %@", m.nrInmatriculare, m.serieSasiu];
         lblMasina.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    }
+    //}
 }
 
 #pragma mark Consume WebService
@@ -128,7 +186,7 @@
     }
     else {
         
-        [self arataPopup:@"Atentie!" withDescription:@"Ne pare rau! Polita nu poate fi verificata pentru ca nu esti conectat la internet. Te rugam sa te asiguri ca ai o conexiune la internet activa si calculeaza din nou. Iti multumim!"];
+        [self arataPopup:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !") withDescription:NSLocalizedStringFromTable(@"i450", [YTOUserDefaults getLanguage],@"Ne pare rau! \nCererea nu a fost trimisa pentru ca nu esti conectat la internet. \nTe rugam sa te asiguri ca ai o conexiune la internet activa si sa incerci din nou.\n Iti multumim!")];
         
     }
 
@@ -168,16 +226,25 @@
                 NSString * dExpirare =[json objectForKey:@"data-expirare"];
                 if (dExpirare && dExpirare.length >0)
                     dataExpirare = [YTOUtils getDateFromString:dExpirare withFormat:@"dd.MM.yyyy"];
+
                 
                 if ([status isEqualToString:@"0"]) {
-                    [self showPopupError:@"Polita nu a fost gasita!" withDescription:mesaj];
+                
+                    NSString *str = NSLocalizedStringFromTable(@"i501", [YTOUserDefaults getLanguage],@"Polita nu a fost gasita");
+                    [self showPopupError:str withDescription:mesaj];
+                    NSLog(@"MESAJUL ESTE :  %@" , str);
                 }
                 else if ([status isEqualToString:@"1"]) {
-                    [self showPopupError:@"Polita gasita!" withDescription:mesaj];
+                    
+                    [self showPopupError:NSLocalizedStringFromTable(@"i499", [YTOUserDefaults getLanguage],@"Polita invalida") withDescription:mesaj];
+                    [iRate sharedInstance].eventCount++;
                 }
                 else if ([status isEqualToString:@"2"]) {
-                    [self showPopupError:@"Polita valida!" withDescription:mesaj];
+                    
+                    [self showPopupError:NSLocalizedStringFromTable(@"i500", [YTOUserDefaults getLanguage],@"Polita valida") withDescription:mesaj];
+                    [iRate sharedInstance].eventCount++;
                 }
+                
             }
         }
         else {
@@ -228,7 +295,7 @@
     [btnLoadingOk setHidden:YES];
     [lblLoadingOk setHidden:YES];
     [lblLoadingDescription setHidden:YES];
-    [lblLoadingTitlu setText:@"Verificam polita..."];
+    [lblLoadingTitlu setText:NSLocalizedStringFromTable(@"i498", [YTOUserDefaults getLanguage],@"verificam polita...")];
     [loading setHidden:NO];
     [vwLoading setHidden:NO];
 }
@@ -281,7 +348,28 @@
 {
     [vwDetailAlert setHidden:NO];
     [lblTitlu setText:title];
-    [lblExpira setText:description];
+    //[lblExpira setText:description];
+    
+    NSString* htmlContentString = [NSString stringWithFormat:
+                                   @"<html xmlns='http://www.w3.org/1999/xhtml'>"
+                                   "<head>"
+                                   "<title>%@</title>"
+                                   "</head>"
+                                   "<body style='font-family:Arial; font-size:.8em; color:#464646;'>"
+                                   "<span style='font:.9em'> %@ </span>"
+                                   "<br /><br /><strong style='color:#574d83'>INFO</strong><br />%@"
+                                   "<br /><br />"
+                                   "%@"
+                                   "<ul>"
+                                   "<li>%@</li>"
+                                   "<li>%@</li>"
+                                   "<li>%@</li>"
+                                   "</ul>"
+                                   "</body>"
+                                   "</html>",NSLocalizedStringFromTable(@"i501", [YTOUserDefaults getLanguage],@"Polita nu a fost gasita"), description,NSLocalizedStringFromTable(@"i569", [YTOUserDefaults getLanguage],@"Polita nu a fost gasita") , NSLocalizedStringFromTable(@"i570", [YTOUserDefaults getLanguage],@"Polita nu a fost gasita") ,NSLocalizedStringFromTable(@"i31", [YTOUserDefaults getLanguage],@"fie societatea de asigurare nu a transmis datele catre CEDAM, ori le-a transmis gresit"),NSLocalizedStringFromTable(@"i202", [YTOUserDefaults getLanguage],@"fie baza de date CEDAM nu este actualizata (poate dura pana la 2-3 luni de la emiterea politei pana la inregistrarea ei in baza de date CEDAM)"),NSLocalizedStringFromTable(@"i203", [YTOUserDefaults getLanguage],@"fie autovehiculul nu are asigurare RCA")];
+    
+    [webView loadHTMLString:htmlContentString baseURL:nil];
+    
 }
 
 - (void) arataPopup:(NSString *)title withDescription: (NSString *)description

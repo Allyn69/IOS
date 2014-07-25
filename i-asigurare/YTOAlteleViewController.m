@@ -13,9 +13,11 @@
 #import "YTOTrimiteMesajViewController.h"
 #import "YTOFAQViewController.h"
 #import "YTOTermeniViewController.h"
-#import "YTOPromotiiViewController.h"
+#import "YTOPromotiiFromWebViewController.h"
 #import "YTOSocietatiViewController.h"
 #import "YTOContactViewController.h"
+#import "YTONotificare.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOAlteleViewController ()
 
@@ -27,7 +29,11 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Altele", @"Altele");
+        if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+            self.title = @"Egyebek";
+        else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+            self.title = @"Others";
+        else self.title = @"Mai mult";
         self.tabBarItem.image = [UIImage imageNamed:@"menu-altele.png"];
     }
     return self;
@@ -36,7 +42,49 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOAlteleViewController";
+     [YTOUtils rightImageVodafone:self.navigationItem];
     // Do any additional setup after loading the view from its nib.
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    tableView.reloadData;
+    if ([iRate sharedInstance].shouldPromptForRating)
+        [iRate sharedInstance].promptForRating;
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        self.title = @"Egyebek";
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        self.title = @"Others";
+    else self.title = @"Mai mult";
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+
+    NSString *string1 = NSLocalizedStringFromTable(@"i709", [YTOUserDefaults getLanguage],@"Alte");
+    NSString *string2 =  NSLocalizedStringFromTable(@"i710", [YTOUserDefaults getLanguage],@"informatii");
+    NSString *string  = [[NSString alloc]initWithFormat:@"%@ %@",string1,string2];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:verde] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:verde]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i711", [YTOUserDefaults getLanguage],@"te tinem mereu la curent si informat");
+        lbl22.adjustsFontSizeToFitWidth = YES;
+    
 }
 
 - (void)viewDidUnload
@@ -77,14 +125,20 @@
     cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:@"#888888"];
     cell.detailTextLabel.font = [UIFont fontWithName:@"Myriad Pro" size:16];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//    if (indexPath.row == 0) {
+//        cell.textLabel.text = @"NOTIFICARI";
+//        cell.detailTextLabel.text = @"alertele primite de tine";
+//        cell.imageView.image = [UIImage imageNamed:@"notifications-icon.png"];
+//    }
     if (indexPath.row == 0) {
-        cell.textLabel.text = @"PROMOTII";
-        cell.detailTextLabel.text = @"ofertele i-Asigurare";
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i480", [YTOUserDefaults getLanguage],@"PROMOTII");
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i481", [YTOUserDefaults getLanguage],@"ofertele i-Asigurare");
         cell.imageView.image = [UIImage imageNamed:@"promotii.png"];
     }
     else if (indexPath.row == 1) {
-        cell.textLabel.text = @"VREI SA NE SPUI CEVA?";
-        cell.detailTextLabel.text = @"trimite-ne un mesaj";        
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i482", [YTOUserDefaults getLanguage],@"VREI SA NE SPUI CEVA?");
+            cell.textLabel.adjustsFontSizeToFitWidth = YES;
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i483", [YTOUserDefaults getLanguage],@"trimite-ne un mesaj");    
         cell.imageView.image = [UIImage imageNamed:@"trimite-mesaj.png"];
     }
 //    else if (indexPath.row == 2) {
@@ -98,19 +152,24 @@
 //        cell.imageView.image = [UIImage imageNamed:@"contact-companii.png"];        
 //    }
     else if (indexPath.row == 2) {
-        cell.textLabel.text = @"VALABILITATE RCA";
-        cell.detailTextLabel.text = @"verifica polita ta RCA";        
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i484", [YTOUserDefaults getLanguage],@"VALABILITATE RCA");
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i485", [YTOUserDefaults getLanguage],@"verifica polita ta RCA");    
         cell.imageView.image = [UIImage imageNamed:@"valabilitate-rca.png"];
     }
     else if (indexPath.row == 3) {
-        cell.textLabel.text = @"TERMENI & CONDITII";
-        cell.detailTextLabel.text = @"citeste regulile";        
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i486", [YTOUserDefaults getLanguage],@"TERMENI");
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i487", [YTOUserDefaults getLanguage],@"citeste regulile");        
         cell.imageView.image = [UIImage imageNamed:@"termeni.png"];
     }
     else if (indexPath.row == 4) {
-        cell.textLabel.text = @"CONTACT";
-        cell.detailTextLabel.text = @"cum ne gasesti";
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i488", [YTOUserDefaults getLanguage],@"CONTACT");
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i489", [YTOUserDefaults getLanguage],@"cum ne gasesti");
         cell.imageView.image = [UIImage imageNamed:@"contact-iasigurare.png"];
+    }
+    else if (indexPath.row == 5) {
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i495", [YTOUserDefaults getLanguage],@"SETARI");
+        cell.detailTextLabel.text = NSLocalizedStringFromTable(@"i489", [YTOUserDefaults getLanguage],@"cum ne gasesti");
+        cell.imageView.image = [UIImage imageNamed:@"promotii.png"];
     }
     return cell;
 }
@@ -125,9 +184,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    if (indexPath.row == 0)
+//    {
+//        YTONotificariViewController * aView;
+//        if (IS_IPHONE_5)
+//            aView = [[YTONotificariViewController alloc] initWithNibName:@"YTONotificariViewControler_R4" bundle:nil];
+//        else aView = [[YTONotificariViewController alloc] initWithNibName:@"YTONotificariViewController" bundle:nil];
+//        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+//    }
     if (indexPath.row == 0)
     {
-        YTOPromotiiViewController * aView = [[YTOPromotiiViewController alloc] init];
+        YTOPromotiiFromWebViewController * aView ;
+        if (IS_IPHONE_5)
+            aView = [[YTOPromotiiFromWebViewController alloc] initWithNibName:@"YTOPromotiiFromWebViewController_R4" bundle:nil];
+        else aView = [[YTOPromotiiFromWebViewController alloc] initWithNibName:@"YTOPromotiiFromWebViewController" bundle:nil];
         [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 1)
@@ -158,19 +228,11 @@
     }
     else if (indexPath.row == 3)
     {
-        YTOTermeniViewController * aView;
-        if (IS_IPHONE_5)
-            aView = [[YTOTermeniViewController alloc] initWithNibName:@"YTOTermeniViewController_R4" bundle:nil];
-        else aView = [[YTOTermeniViewController alloc] initWithNibName:@"YTOTermeniViewController" bundle:nil];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+       
     }
     else if (indexPath.row == 4)
     {
-        YTOContactViewController * aView;
-        if (IS_IPHONE_5)
-            aView = [[YTOContactViewController alloc] initWithNibName:@"YTOContactViewController_R4" bundle:nil];
-        else aView = [[YTOContactViewController alloc] initWithNibName:@"YTOContactViewController" bundle:nil];
-        [appDelegate.alteleNavigationController pushViewController:aView animated:YES];
+       
     }
 }
 

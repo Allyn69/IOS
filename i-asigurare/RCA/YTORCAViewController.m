@@ -7,6 +7,7 @@
 //
 
 #import "YTORCAViewController.h"
+#import "YTOUserDefaults.h"
 
 @interface YTORCAViewController ()
 
@@ -19,7 +20,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"RCA", @"RCA");
+        self.title = NSLocalizedStringFromTable(@"i348", [YTOUserDefaults getLanguage],@"RCA");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
@@ -28,6 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [YTOUtils rightImageVodafone:self.navigationItem];
     // Do any additional setup after loading the view from its nib.
 }
 

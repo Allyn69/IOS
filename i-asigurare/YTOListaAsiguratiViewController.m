@@ -15,6 +15,10 @@
 #import "YTOSetariViewController.h"
 #import "YTOAsiguratViewController.h"
 #import "Database.h"
+#import "UILabel+dynamicSizeMe.h"
+#import "YTOUserDefaults.h"
+#import "YTOMyTravelsViewController.h"
+#import "YTOCasaMeaViewController.h"
 
 @interface YTOListaAsiguratiViewController ()
 
@@ -24,13 +28,14 @@
 
 @synthesize controller;
 @synthesize produsAsigurare;
-@synthesize listaAsiguratiSelectati, listAsiguratiIndecsi;
+@synthesize listaAsiguratiSelectati, listAsiguratiIndecsi, tagViewControllerFrom;
+//@synthesize indexAsigurat;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Lista persoane", @"Lista persoane");
+        self.title = NSLocalizedStringFromTable(@"i417", [YTOUserDefaults getLanguage],@"Lista persoane");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
@@ -39,26 +44,43 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+    //self.trackedViewName = @"YTOListaAsiguratiViewController";
+    //indexAsigurat = -1;
+    tableView.allowsSelectionDuringEditing = YES;
     goingBack = YES;
     
     // Do any additional setup after loading the view from its nib.
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (produsAsigurare == RCA || produsAsigurare == Locuinta)
-        ((UILabel *)[self.view viewWithTag:2]).text = @"Adauga asigurat";
-    
+    lblWvEmpty1.text =  NSLocalizedStringFromTable(@"i419", [YTOUserDefaults getLanguage],@"Adauga asigurat");
+    lblWvEmpty2.text =  NSLocalizedStringFromTable(@"i168", [YTOUserDefaults getLanguage],@"Adauga asigurat");
+    lblEditeaza.textColor = [YTOUtils colorFromHexString:@"#78a9b9"];
+    lblAdauga.textColor = [YTOUtils colorFromHexString:@"#78a9b9"];
+    if (produsAsigurare == RCA || produsAsigurare == Locuinta){
+        lblAdauga.text = NSLocalizedStringFromTable(@"i418", [YTOUserDefaults getLanguage],@"Adauga asigurat");
+    }
     if (produsAsigurare == Calatorie)
     {
-        ((UILabel *)[self.view viewWithTag:2]).text = @"Adauga calator";
+        lblAdauga.text = NSLocalizedStringFromTable(@"i15", [YTOUserDefaults getLanguage],@"Adauga calator");
         [self checkVisibilityForOk];
         listaAsigurati = [YTOPersoana PersoaneFizice];
         if (listaAsiguratiSelectati.count == 0)
-        {   
+        {
             listaAsiguratiSelectati = [[NSMutableArray alloc] init];
             listAsiguratiIndecsi = [[NSMutableArray alloc] init];
             
         }
+    }
+    if (produsAsigurare == MyTravels)
+    {
+        lblAdauga.text = NSLocalizedStringFromTable(@"i15", [YTOUserDefaults getLanguage],@"Adauga calator");
+        [self checkVisibilityForOk];
+        listaAsigurati = [YTOPersoana PersoaneFizice];
     }
     else {
         if ([controller isKindOfClass:[YTOSetariViewController class]])
@@ -69,15 +91,37 @@
     
     ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#f15a24"];
     ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
-
+    
+    lblStudent.text = NSLocalizedStringFromTable(@"i2", [YTOUserDefaults getLanguage],@"Elev/\nStudent");
+    lblBoliCardio.text = NSLocalizedStringFromTable(@"i5", [YTOUserDefaults getLanguage],@"Boli\nCardio");
+    lblSportAgrement.text = NSLocalizedStringFromTable(@"i3", [YTOUserDefaults getLanguage],@"Sport\nAgrement");
+    lblReduceriMajorari.text = NSLocalizedStringFromTable(@"i11", [YTOUserDefaults getLanguage],@"Reduceri/Majorari");
+    lblBoliAfectiuni.text = NSLocalizedStringFromTable(@"i0", [YTOUserDefaults getLanguage],@"Boli/Afectiuni");
+    lblBoliNeuro.text = NSLocalizedStringFromTable(@"i6", [YTOUserDefaults getLanguage],@"Boli\nNeuro");
+    lblBoliInterne.text = NSLocalizedStringFromTable(@"i7", [YTOUserDefaults getLanguage],@"Boli\nInterne");
+    lblBoliAparatResp.text = NSLocalizedStringFromTable(@"i8", [YTOUserDefaults getLanguage],@"Boli aparat\nRespirator");
+    lblBoliDef.text = NSLocalizedStringFromTable(@"i9", [YTOUserDefaults getLanguage],@"Boli\ndefinitive");
+    lblAlteBoli.text = NSLocalizedStringFromTable(@"i10", [YTOUserDefaults getLanguage],@"Alte\nBoli");
+    lblGradInv.text = NSLocalizedStringFromTable(@"i4", [YTOUserDefaults getLanguage],@"Grad\nInvalidate");
+    
+    lblVarsta.text = NSLocalizedStringFromTable(@"i811", [YTOUserDefaults getLanguage],@"Este indicat sa faci o comanda separata pentru persoanele care au peste 65 de ani sau cele mai mici de 2 ani, deoarece nu toate companiile ofera asigurari de calatorie pentru acestea");
+    lblContinua.text = NSLocalizedStringFromTable(@"i813", [YTOUserDefaults getLanguage],@"Continua");
+    lblDeAcord.text = NSLocalizedStringFromTable(@"i812", [YTOUserDefaults getLanguage],@"De acord");
+    lblAtentie.text =NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie");
+    
+    varstaNeg = NO;
+    conditieVarstaChecked = NO;
+    
     [self verifyViewMode];
 }
+
 
 - (void) verifyViewMode
 {
     if (listaAsigurati.count == 0)
     {
-        self.navigationItem.rightBarButtonItem = nil;
+        //self.navigationItem.rightBarButtonItem = nil;
+        [YTOUtils rightImageVodafone:self.navigationItem];
         [vwEmpty setHidden:NO];
     }
     else if ([controller isKindOfClass:[YTOSetariViewController class]])
@@ -93,6 +137,8 @@
             btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
     }
+    if (![controller isKindOfClass:[YTOSetariViewController class]])
+        [YTOUtils rightImageVodafone:self.navigationItem];
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -141,7 +187,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-
+    
     if (produsAsigurare == Calatorie)
     {
         [self checkVisibilityForOk];
@@ -149,9 +195,23 @@
         [cell setAccessoryType:UITableViewCellAccessoryNone];
         for (int i = 0; i < listAsiguratiIndecsi.count; i++) {
             NSUInteger num = [[listAsiguratiIndecsi objectAtIndex:i] intValue];
+            YTOPersoana * p = [listaAsiguratiSelectati objectAtIndex:i];
             
+            //tagViewControllerForm e 2, inseamna ca vine din asiguratviewcontroller, altfel din calculator calatorie
+            
+            //cu lastRow aflu ultimul rand, ca sa stiu sa nu pun bifa, daca e adaugat un calator
+            NSInteger lastRow = [tableView numberOfRowsInSection:[indexPath section]];
             if (num == indexPath.row) {
-                [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                //trebe sa vad daca e corect
+                if ([p isValidForComputeCalatorie]) {
+                    if (self.tagViewControllerFrom == 2 && num == lastRow)
+                        [cell setAccessoryType:UITableViewCellAccessoryNone];
+                    else
+                        [cell setAccessoryType:UITableViewCellAccessoryCheckmark];
+                }
+                else
+                    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
+                
                 // Once we find a match there is no point continuing the loop
                 break;
             }
@@ -159,10 +219,19 @@
     }
     else
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabel.font = [UIFont fontWithName:@"Myriad Pro" size:20];
+    
+    if (!editingMode){
+        cell.textLabel.font = [UIFont fontWithName:@"Arial-Regular" size:20];
+    }else{
+        cell.textLabel.font = [UIFont fontWithName:@"Arial-ItalicMT" size:17];
+    }
     cell.textLabel.textColor = [YTOUtils colorFromHexString:@"#3e3e3e"];
     cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:@"#888888"];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Myriad Pro" size:16];
+    if (!editingMode){
+        cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:16];
+    }else{
+        cell.detailTextLabel.font = [UIFont fontWithName:@"Arial-ItalicMT" size:16];
+    }
     YTOPersoana * p = (YTOPersoana *)[listaAsigurati objectAtIndex:indexPath.row];
     if ([p.proprietar isEqualToString:@"da"])
     {
@@ -196,127 +265,247 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   if (produsAsigurare == Calatorie)
-   {
-       YTOPersoana * p = [listaAsigurati objectAtIndex:indexPath.row];
-       
-       UITableViewCell *thisCell = [tv cellForRowAtIndexPath:indexPath];
-       if (thisCell.accessoryType == UITableViewCellAccessoryNone) {
-           
-           thisCell.accessoryType = UITableViewCellAccessoryCheckmark;
-           //add object in an array
-
-           BOOL exista = NO;
-           for (int i=0; i< listaAsiguratiSelectati.count; i++)
-           {
-               YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
-               if ([ps.idIntern isEqualToString:p.idIntern])
-               {
-                   exista = YES;
-                   break;
-               }
-           }
-           
-           YTOCalatorieViewController * parent = (YTOCalatorieViewController *)self.controller;
-           [parent setCuloareCellCalatori];
-           
-           if (!exista)
-           {
-               [listaAsiguratiSelectati addObject:p];
-               [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", indexPath.row]];
-               
-               [vwInfoCalatorie setHidden:NO];
-               activePersoana = p;
-               [lblPersoanaActiva setText:[NSString stringWithFormat:@"Despre %@", p.nume]];
-               [self loadInfoCalatorie];
-           }
-       }
-       else{
-           
-           thisCell.accessoryType = UITableViewCellAccessoryNone;
-           //remove the object at the index from array
-           for (int i=0; i< listaAsiguratiSelectati.count; i++)
-           {
-               YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
-               if ([ps.idIntern isEqualToString:p.idIntern])
-               {
-                   [listaAsiguratiSelectati removeObjectAtIndex:i];
-                   break;
-               }
-           }
-           [listAsiguratiIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
-       }
-       [self checkVisibilityForOk];
-   }
-   else 
-   {
-       YTOPersoana * persoana = [listaAsigurati objectAtIndex:indexPath.row];
-       YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-       
-//       if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
-//       {
-//           YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-//           [parent setAsigurat:persoana];
-//           [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
-//       }
-       if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
-       {
-           YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
-           [parent setAsigurat:persoana];
-           [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
-       }
-       else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
-       {
-           YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
-           
-           // TRUE -  Daca persoana este valida, se poate
-           //         folosi pentru calculatia asigurarii de locuinta
-           // FALSE - Se incarca formularul de persoana, iar la
-           //         salvare, se afiseaza calculatorul de asigurare de locuinta
-           if ([parent.asigurat isValidForCompute])
-           {
-               [parent setAsigurat:persoana];
-               [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
-           }
-           else
-           {
-               YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
-               aView.asigurat = parent.asigurat;
-               aView.controller = self;
-               [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
-           }
-       }
-       else if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
-       {
-           YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
-           
-           // TRUE -  Daca persoana este valida, se poate
-           //         folosi pentru calculatia asigurarii de locuinta
-           // FALSE - Se incarca formularul de persoana, iar la
-           //         salvare, se afiseaza calculatorul de asigurare de locuinta
-           if ([parent.asigurat isValidForCompute])
-           {
-               [parent setAsigurat:persoana];
-               [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
-           }
-           else
-           {
-               YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
-               aView.asigurat = parent.asigurat;
-               aView.controller = self;
-               [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
-           }
-
-           
-       }
-       else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
-       {
-           YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
-           aView.asigurat = persoana;
-           aView.controller = self;
-           [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
-       }
-   }
+    if (produsAsigurare == Calatorie)
+    {
+        YTOPersoana * p = [listaAsigurati objectAtIndex:indexPath.row];
+        YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        UITableViewCell *thisCell = [tv cellForRowAtIndexPath:indexPath];
+        if (editingMode){
+            YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            if (IS_IPHONE_5)
+                aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+            else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+            aView.asigurat = p;
+            aView.controller = self.controller;
+            aView.produsAsigurare = self.produsAsigurare;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+        // sa intre in formular daca nu sunt completate toate campurile
+        else if (![p isValidForComputeCalatorie]) {
+            
+            //thisCell.accessoryType = UITableViewCellAccessoryNone;
+            //remove the object at the index from array
+            for (int i=0; i< listaAsiguratiSelectati.count; i++)
+            {
+                YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
+                if ([ps.idIntern isEqualToString:p.idIntern])
+                {
+                    [listaAsiguratiSelectati removeObjectAtIndex:i];
+                    break;
+                }
+            }
+            [listAsiguratiIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+            
+            YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            if (IS_IPHONE_5)
+                aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+            else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+            aView.asigurat = p;
+            aView.controller = self.controller;
+            // Retin indexul asiguratului pentru a bifa persoana cand revine din formular
+            // indexAsigurat = indexPath.row;
+            // aView.indexAsigurat = indexAsigurat;
+            aView.produsAsigurare = self.produsAsigurare;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            
+            return;
+        }
+        
+        if (thisCell.accessoryType == UITableViewCellAccessoryNone) {
+            
+            thisCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            //add object in an array
+            
+            BOOL exista = NO;
+            for (int i=0; i< listaAsiguratiSelectati.count; i++)
+            {
+                YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
+                if ([ps.idIntern isEqualToString:p.idIntern])
+                {
+                    exista = YES;
+                    break;
+                }
+            }
+            
+            YTOCalatorieViewController * parent = (YTOCalatorieViewController *)self.controller;
+            [parent setCuloareCellCalatori];
+            
+            if (!exista)
+            {
+                if (!conditieVarstaChecked && ([[YTOUtils getVarsta:p.codUnic] intValue] <= 3 || [[YTOUtils getVarsta:p.codUnic] intValue] >= 65))
+                    varstaNeg = YES;
+                if (varstaNeg && [listaAsiguratiSelectati count] >=1 ){
+                    [self vWVarstaShow:p];
+                    persoanaVarsta = p;
+                    indexPersoana = indexPath.row;
+                }else{
+                    [listaAsiguratiSelectati addObject:p];
+                    [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+                    [self checkVisibilityForOk];
+                    
+                    [vwInfoCalatorie setHidden:NO];
+                    activePersoana = p;
+                    [lblPersoanaActiva setText:[NSString stringWithFormat:@"%@ %@",NSLocalizedStringFromTable(@"i469", [YTOUserDefaults getLanguage],@"Despre"), p.nume]];
+                    [self loadInfoCalatorie];
+                }
+            }
+        }
+        else{
+            if (!editingMode){
+                thisCell.accessoryType = UITableViewCellAccessoryNone;
+                //remove the object at the index from array
+                for (int i=0; i< listaAsiguratiSelectati.count; i++)
+                {
+                    YTOPersoana * ps = [listaAsiguratiSelectati objectAtIndex:i];
+                    if ([ps.idIntern isEqualToString:p.idIntern])
+                    {
+                        [listaAsiguratiSelectati removeObjectAtIndex:i];
+                        break;
+                    }
+                }
+                [listAsiguratiIndecsi removeObject:[NSString stringWithFormat:@"%d", indexPath.row]];
+                
+                [self checkVisibilityForOk];
+            }else if (editingMode){
+                YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+                if (IS_IPHONE_5)
+                    aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+                else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+                aView.asigurat = p;
+                aView.controller = self.controller;
+                aView.produsAsigurare = self.produsAsigurare;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+        }
+        
+    }
+    else
+    {
+        YTOPersoana * persoana = [listaAsigurati objectAtIndex:indexPath.row];
+        YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+        
+        if (!editingMode && [self.controller isKindOfClass:[YTOCalculatorViewController class]] && persoana.isValidForCompute)
+        {
+            YTOCalculatorViewController * parent = (YTOCalculatorViewController *)self.controller;
+            [parent setAsigurat:persoana];
+            [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+        }else if ((editingMode || !persoana.isValidForCompute) && [self.controller isKindOfClass:[YTOCalculatorViewController class]]) {
+            YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            if (IS_IPHONE_5)
+                aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+            else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+            aView.asigurat = persoana;
+            aView.controller = self.controller;
+            aView.produsAsigurare = self.produsAsigurare;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+//        if ([self.controller isKindOfClass:[YTOCASCOViewController class]])
+//        {
+//            YTOCASCOViewController * parent = (YTOCASCOViewController *)self.controller;
+//            
+//            if ([persoana isValidForCompute] && !editingMode)
+//            {
+//                [parent setAsigurat:persoana];
+//                [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+//            }
+//            else
+//            {
+//                YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+//                if (IS_IPHONE_5)
+//                    aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+//                else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+//                aView.asigurat = persoana;
+//                aView.controller = self.controller;
+//                aView.produsAsigurare = self.produsAsigurare;
+//                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+//            }
+//        }
+        else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+        {
+            YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
+            
+            // TRUE -  Daca persoana este valida, se poate
+            //         folosi pentru calculatia asigurarii de locuinta
+            // FALSE - Se incarca formularul de persoana, iar la
+            //         salvare, se afiseaza calculatorul de asigurare de locuinta
+            if ([persoana isValidForCompute] && !editingMode)
+            {
+                [parent setAsigurat:persoana];
+                [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+            }
+            else
+            {
+                YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+                if (IS_IPHONE_5)
+                    aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+                else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+                aView.asigurat = persoana;
+                aView.controller = self.controller;
+                aView.produsAsigurare = self.produsAsigurare;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+        }
+        
+        else if ([self.controller isKindOfClass:[YTOCasaMeaViewController class]])
+        {
+            YTOCasaMeaViewController * parent = (YTOCasaMeaViewController *)self.controller;
+            
+            if ([persoana isValidForCompute] && !editingMode)
+            {
+                parent.asigurat = persoana;
+                [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+            }
+            else
+            {
+                YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+                //YTOPersoana *pers = persoana;
+                if (IS_IPHONE_5)
+                    aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+                else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+                aView.asigurat = persoana;
+                aView.controller = self.controller;
+                aView.produsAsigurare = self.produsAsigurare;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+            
+            
+        }
+        else if ([self.controller isKindOfClass:[YTOMyTravelsViewController class]])
+        {
+            YTOMyTravelsViewController * parent = (YTOMyTravelsViewController *)self.controller;
+            
+            if ([persoana isValidForGothaer] && !editingMode)
+            {
+                parent.asigurat = persoana;
+                [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+            }
+            else
+            {
+                YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+                //YTOPersoana *pers = persoana;
+                if (IS_IPHONE_5)
+                    aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+                else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+                aView.asigurat = persoana;
+                aView.controller = self.controller;
+                aView.produsAsigurare = self.produsAsigurare;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+            
+            
+        }
+        else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+        {
+            YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            if (IS_IPHONE_5)
+                aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+            else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
+            aView.asigurat = persoana;
+            aView.controller = self;
+            [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+        }
+    }
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -329,15 +518,52 @@
     }
 }
 
+- (void) vWVarstaShow: (YTOPersoana *) p
+{
+    vwVarsta.hidden = NO;
+}
+
+- (void) vWVarstaHide
+{
+    vwVarsta.hidden = YES;
+}
+
+- (IBAction)btnContinua_clicked:(id)sender
+{
+    conditieVarstaChecked = YES;
+    varstaNeg = NO;
+    [listaAsiguratiSelectati addObject:persoanaVarsta];
+    [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", indexPersoana]];
+    vwVarsta.hidden = YES;
+    [vwInfoCalatorie setHidden:NO];
+    activePersoana = persoanaVarsta;
+    [lblPersoanaActiva setText:[NSString stringWithFormat:@"%@ %@",NSLocalizedStringFromTable(@"i469", [YTOUserDefaults getLanguage],@"Despre"), persoanaVarsta.nume]];
+    [self loadInfoCalatorie];
+}
+
+- (IBAction)btnDeAcord_clicked:(id)sender
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:indexPersoana inSection:0];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    conditieVarstaChecked = YES;
+    varstaNeg = NO;
+    vwVarsta.hidden = YES;
+}
+
 - (IBAction)adaugaPersoana:(id)sender
 {
     goingBack = NO;
     
-    YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+    YTOAsiguratViewController * aView;
+    if (IS_IPHONE_5)
+        aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+    else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
-    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]])
+    if ([self.controller isKindOfClass:[YTOCalculatorViewController class]] || [self.controller isKindOfClass:[YTOCasaMeaViewController class]] ||[self.controller isKindOfClass:[YTOMyTravelsViewController class]])
     {
         aView.controller = (YTOCalculatorViewController *)self.controller;
+        
         [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
@@ -358,7 +584,7 @@
     else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
     {
         aView.controller = self;
-        [appDelegate.setariNavigationController pushViewController:aView animated:YES];        
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];
     }
     
 }
@@ -367,37 +593,51 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [appDelegate refreshPersoane];
+    
     if ([controller isKindOfClass:[YTOSetariViewController class]])
         listaAsigurati = [YTOPersoana AltePersoane];
+    else if ([controller isKindOfClass:[YTOCalatorieViewController class]])
+        listaAsigurati = [YTOPersoana PersoaneFizice];
     else
         listaAsigurati = [appDelegate Persoane];
     
     
     if (listaAsigurati.count > 0)
     {
-        [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", (listaAsigurati.count -1)]];
-        [listaAsiguratiSelectati addObject:[listaAsigurati objectAtIndex:(listaAsigurati.count -1)]];
+        // [listAsiguratiIndecsi addObject:[NSString stringWithFormat:@"%d", (listaAsigurati.count -1)]];
+        // [listaAsiguratiSelectati addObject:[listaAsigurati objectAtIndex:(listaAsigurati.count -1)]];
         
-        [vwEmpty setHidden:YES];    
+        [vwEmpty setHidden:YES];
         if ([self.controller isKindOfClass:[YTOSetariViewController class]])
         {
             YTOSetariViewController * parent = (YTOSetariViewController *)self.controller;
             [parent reloadData];
         }
     }
+    if (listaAsigurati.count == 0)
+        [YTOUtils rightImageVodafone:self.navigationItem];
     [tableView reloadData];
     [self verifyViewMode];
+    
+    
+    // inseamna ca a ajuns in formularul de persoana,
+    // a modificat persoana -> trebuie selectata
+    //    if (indexAsigurat != -1)
+    //    {
+    //        NSIndexPath * _indexPath = [NSIndexPath indexPathForRow:indexAsigurat inSection:0];
+    //        [self tableView:tableView didDeselectRowAtIndexPath:_indexPath];
+    //    }
 }
 
 - (void) loadInfoCalatorie
-{ 
-     if ([activePersoana.elevStudent isEqualToString:@"da"])
-         ((UIButton *)[vwInfoCalatorie viewWithTag:1]).selected = YES;
-     else 
-     { 
+{
+    if ([activePersoana.elevStudent isEqualToString:@"da"])
+        ((UIButton *)[vwInfoCalatorie viewWithTag:1]).selected = YES;
+    else
+    {
         ((UIButton *)[vwInfoCalatorie viewWithTag:1]).selected = NO;
-         activePersoana.elevStudent = @"nu";
-     }
+        activePersoana.elevStudent = @"nu";
+    }
     
     if ([activePersoana.handicapLocomotor isEqualToString:@"da"])
         ((UIButton *)[vwInfoCalatorie viewWithTag:3]).selected = YES;
@@ -407,7 +647,7 @@
         activePersoana.handicapLocomotor = @"nu";
     }
     
-
+    
     if([activePersoana.boliCardio isEqualToString:@"da"])
         ((UIButton *)[vwInfoCalatorie viewWithTag:4]).selected = YES;
     else {
@@ -421,8 +661,6 @@
         ((UIButton *)[vwInfoCalatorie viewWithTag:5]).selected = NO;
         activePersoana.boliNeuro = @"nu";
     }
-    
-    
     if([activePersoana.boliInterne isEqualToString:@"da"])
         ((UIButton *)[vwInfoCalatorie viewWithTag:6]).selected = YES;
     else {
@@ -455,7 +693,7 @@
 - (IBAction)hideInfoCalatorie:(id)sender
 {
     [vwInfoCalatorie setHidden:YES];
-    [activePersoana updatePersoana];
+    [activePersoana updatePersoana:NO];
     activePersoana = nil;
     [lblPersoanaActiva setText:@""];
 }
@@ -474,8 +712,8 @@
     btn.selected = k;
     if (btn.tag == 1) // Elev/Student
         activePersoana.elevStudent = (k ? @"da" : @"nu");
-//    else if (btn.tag == 2) // Sport Agrement
-//        activePersoana.
+    //    else if (btn.tag == 2) // Sport Agrement
+    //        activePersoana.
     else if (btn.tag == 3) // Grad Invaliditate
         activePersoana.handicapLocomotor = (k ? @"da" : @"nu");
     else if (btn.tag == 4) // Boli cardio
@@ -492,11 +730,12 @@
         activePersoana.alteBoli = (k ? @"da" : @"nu");
 }
 
-- (void) callEditItems
+- (IBAction) callEditItems
 {
     if (!editingMode)
     {
         editingMode = YES;
+        [tableView reloadData];
         [tableView setEditing:YES];
         UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
                                                                     style:UIBarButtonItemStylePlain
@@ -504,19 +743,24 @@
                                                                    action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnDone;
         [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+        lblEditeaza.font = [UIFont fontWithName:@"ChalkboardSE-Bold" size:14];
     }
     else
     {
         editingMode = NO;
+        [tableView reloadData];
         [tableView setEditing:NO];
         UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
         [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
+        [YTOUtils rightImageVodafone:self.navigationItem];
+        lblEditeaza.font = [UIFont fontWithName:@"ChalkboardSE-Regular" size:14];
     }
 }
 
 - (IBAction)doneSelecting:(id)sender
 {
+    goingBack = YES;
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (void) checkVisibilityForOk

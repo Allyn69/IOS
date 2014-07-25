@@ -9,6 +9,7 @@
 #import "YTOWebServiceLocuintaViewController.h"
 #import "YTOSumarLocuintaViewController.h"
 #import "VerifyNet.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOWebServiceLocuintaViewController ()
 
@@ -19,11 +20,13 @@
 @synthesize responseData, listTarife, oferta;
 @synthesize locuinta, asigurat;
 
+YTOSumarLocuintaViewController * viewIfPlatinum;// trimit view pentru cazul in care e ok platinum in weekend
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Produse asigurare", @"Produse asigurare");
+        self.title = NSLocalizedStringFromTable(@"i463", [YTOUserDefaults getLanguage],@"Produse asigurare");
     }
     return self;
 }
@@ -31,9 +34,86 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    //self.trackedViewName = @"YTOWebServiceLocuintaViewController";
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
     listTarife = [[NSMutableArray alloc] init];
 	[self calculLocuinta];
+     [YTOUtils rightImageVodafone:self.navigationItem];
+    
+    lblCauze1.text = NSLocalizedStringFromTable(@"i585", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze2.text = NSLocalizedStringFromTable(@"i586", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze3.text = NSLocalizedStringFromTable(@"i587", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze4.text = NSLocalizedStringFromTable(@"i588", [YTOUserDefaults getLanguage],@"cauzele");
+    
+    lblLoad0.text = NSLocalizedStringFromTable(@"i176", [YTOUserDefaults getLanguage],@"Cautam \n cele mai mici tarife \n direct \n de la companiile \n de asigurare");
+    lblLoad1.text = NSLocalizedStringFromTable(@"i73", [YTOUserDefaults getLanguage],@"Tarifele sunt obtinute direct de la companiile de asigurare.");
+    lblLoad2.text = NSLocalizedStringFromTable(@"i78", [YTOUserDefaults getLanguage],@"Plata asigurarii de locuinta se efectueaza online cu cardul.");
+    lblLoad3.text = NSLocalizedStringFromTable(@"i75", [YTOUserDefaults getLanguage],@"Vei primi polita prin email,in cateva minute dupa efectuarea platii.");
+    
+    lblNointernet2.text = lblNointernet1.text = NSLocalizedStringFromTable(@"i219", [YTOUserDefaults getLanguage],@"Ne pare rau!\nTarifele nu s-au calculat pentru ca nu esti conectat la internet.\n Te rugam sa te asiguri ca ai o conexiune la internet activa si calculeaza din nou.\nIti multumim!");
+    
+    lblTarifeleNu.text = NSLocalizedStringFromTable(@"i219", [YTOUserDefaults getLanguage],@"Ne pare rau!\nTarifele nu s-au calculat pentru ca nu esti conectat la internet.\n Te rugam sa te asiguri ca ai o conexiune la internet activa si calculeaza din nou.\nIti multumim!");
+    
+    lblAtentiePlatinum.text = NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"atentie");
+    lblPlatinum.text = NSLocalizedStringFromTable(@"i649", [YTOUserDefaults getLanguage],@"ai ales gothaer");
+    lblBtnNoPlatinum.text = NSLocalizedStringFromTable(@"i650", [YTOUserDefaults getLanguage],@"alta companie");
+    lblBtnOkPlatinum.text = NSLocalizedStringFromTable(@"i651", [YTOUserDefaults getLanguage],@"sunt de acord");
+    
+    lblMultumim1.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblMultumim2.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblSorry1.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblSorry2.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblDetaliiErr1.text = NSLocalizedStringFromTable(@"i819", [YTOUserDefaults getLanguage],@"detalii eroare");
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    lblEroare2.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    
+    lblMultumim1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblMultumim2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblDetaliiErr1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    lblEroare2.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    UIImageView *image = (UIImageView *) [cellHead viewWithTag:100];
+    
+    NSString *img = @"header-tarife-locuinta.png";
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        img = @"header-tarife-locuinta-hu.png";
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        img = @"header-tarife-locuinta-en.png";
+    else img = @"header-tarife-locuinta";
+    
+    [image setImage:[UIImage imageNamed:img]];
+    
+    
+    NSString *string1 = NSLocalizedStringFromTable(@"i788", [YTOUserDefaults getLanguage],@"Tarife");
+    NSString *string2 = NSLocalizedStringFromTable(@"i789", [YTOUserDefaults getLanguage],@"de asigurare");
+    NSString *string  = [[NSString alloc]initWithFormat:@"%@ %@",string1,string2];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:albastruLocuinta] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:albastruLocuinta]];
+    }
+    
+    lbl22.text = NSLocalizedStringFromTable(@"i790", [YTOUserDefaults getLanguage],@"cele mai mici tarife pentru casa ta");
+    UILabel * lblView1 = (UILabel *) [cellHead viewWithTag:111];
+    lblView1.backgroundColor = [YTOUtils colorFromHexString:albastruLocuinta];
+
 }
 
 - (void)viewDidUnload
@@ -58,7 +138,7 @@
     NSString * xml = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<CallCalculLocuinta xmlns=\"http://tempuri.org/\">"
+                      "<CallCalculLocuintaSmartphone xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<id_intern>%@</id_intern>"
@@ -83,12 +163,12 @@
                       "<localitate>%@</localitate>"
                       "<tip_strada>Strada</tip_strada>"
                       "<strada>%@</strada>"
-                      "<nr_strada>2</nr_strada>"
+                      "<nr_strada>-</nr_strada>"
                       "<cod_strada>021177</cod_strada>"
-                      "<etaj>2</etaj>"
+                      "<etaj>%d</etaj>"
                       "<bloc>A</bloc>"
                       "<scara>A</scara>"
-                      "<apartament>12</apartament>"
+                      "<apartament>-</apartament>"
                       "<mod_evaluare>%@</mod_evaluare>"
                       "<sa_locuinta>%d</sa_locuinta>"
                       "<sa_bunuri_generale>0</sa_bunuri_generale>"
@@ -116,14 +196,16 @@
                       "<zona_izolata>%@</zona_izolata>"
                       "<udid>%@</udid>"
                       "<platforma>%@</platforma>"
-                      "</CallCalculLocuinta>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "</CallCalculLocuintaSmartphone>"
                       "</soap:Body>"
                       "</soap:Envelope>",
-                      locuinta.idIntern, asigurat.nume, asigurat.codUnic, asigurat.telefon, asigurat.email,
+                      locuinta.idIntern, asigurat.nume, asigurat.codUnic, asigurat.telefon, @"email@gmail.com",
                       [formatter stringFromDate:oferta.dataInceput],
                       oferta.moneda,
                       asigurat.tipPersoana,
-                      locuinta.judet, locuinta.localitate, locuinta.adresa, locuinta.modEvaluare,
+                      locuinta.judet, locuinta.localitate, locuinta.adresa, locuinta.etaj, locuinta.modEvaluare,
                       locuinta.sumaAsigurata, locuinta.sumaAsigurataRC,
                       [locuinta.clauzaFurtBunuri isEqualToString:@"da"] ? @"da" : @"nu",
                       [locuinta.clauzaApaConducta isEqualToString:@"da"] ? @"da" : @"nu",
@@ -137,8 +219,10 @@
                       [locuinta.arePaza isEqualToString:@"da"] ? @"da" : @"nu",
                       [locuinta.locuitPermanent isEqualToString:@"da"] ? @"da" : @"nu",
                       [locuinta.zonaIzolata isEqualToString:@"da"] ? @"da" : @"nu",
-                      [[UIDevice currentDevice] uniqueIdentifier],
-                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier],
+                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                      [YTOUserDefaults getUserName],
+                      [YTOUserDefaults getPassword]];
     
     return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
@@ -195,7 +279,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/CallCalculLocuinta" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/CallCalculLocuintaSmartphone" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -210,7 +294,7 @@
     }
     else {
     
-        [self showPopupWithTitle:@"Atentie"];// andDescription:eroare_ws];
+        [self showPopupWithTitle:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !") ];// andDescription:eroare_ws];
         //vwErrorAlert.hidden = NO;
     
     }
@@ -246,7 +330,7 @@
                 {
                     [vwLoading setHidden:YES];
                     //trebe decomentat
-                    //[self showPopupWithTitle:@"Atentie" andDescription:eroare_ws];
+                    [self showPopupErrorWithTitle:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !")  andDescription:eroare_ws];
                     //vwErrorAlert.hidden = NO;
                     [self stopLoadingAnimantion];
                     return;
@@ -289,6 +373,7 @@
     }
     else
     {
+        [iRate sharedInstance].eventCount++;
         [tableView reloadData];
     }
 }
@@ -319,7 +404,7 @@
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName 
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	if (![elementName isEqualToString:@"CallCalculLocuintaResponse"] 
+	if (![elementName isEqualToString:@"CallCalculLocuintaSmartphoneResponse"]
         && ![elementName isEqualToString:@"soap:Envelope"]
         && ![elementName isEqualToString:@"soap:Body"]
         && ![elementName isEqualToString:@"ns1:calcul_prima_incendiuResponse"]
@@ -370,7 +455,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Produse asigurare locuinta";
+    return NSLocalizedStringFromTable(@"i464", [YTOUserDefaults getLanguage],@"Produse asigurare locuinta");
 //    return [NSString stringWithFormat:@"%d %@, %d zile in %@", listAsigurati.count, (listAsigurati.count == 1 ? @"asigurare" : @"asigurari"), 5, @"Turcia"];
 }
 
@@ -395,10 +480,10 @@
     [cell setNumeProdus:c.tipProdus];
     [cell setLogo:[NSString stringWithFormat:@"%@.jpg", [c.companie lowercaseString]]];
     [cell setPrima:[NSString stringWithFormat:@"%.2f  %@", [c.prima floatValue], [oferta.moneda uppercaseString]]];
-    [cell setCol1:c.fransiza andLabel:@"Fransiza"];
-    [cell setCol2:c.riscApaConducta andLabel:@"Acop. apa conducta"];
-    [cell setCol3:c.riscFurt andLabel:@"Acop. furt"];
-    [cell setCol4:c.saRaspundere andLabel:@"Rasp. civila"];
+    [cell setCol1:c.fransiza andLabel:NSLocalizedStringFromTable(@"i140", [YTOUserDefaults getLanguage],@"Fransiza")];
+    [cell setCol2:c.riscApaConducta andLabel:NSLocalizedStringFromTable(@"i16", [YTOUserDefaults getLanguage],@"Acop. apa conducta")];
+    [cell setCol3:c.riscFurt andLabel:NSLocalizedStringFromTable(@"i34", [YTOUserDefaults getLanguage],@"Acop. furt")];
+    [cell setCol4:c.saRaspundere andLabel:NSLocalizedStringFromTable(@"i45", [YTOUserDefaults getLanguage],@"Rasp. civila") andVineDin:@"Locuinta"];
     
     cell.btnComanda.tag = indexPath.row;
     
@@ -482,8 +567,15 @@
     aView.asigurat = asigurat;
     aView.locuinta = locuinta;
     
+    if ([oferta.companie isEqualToString:@"Platinum"] && [YTOUtils isWeekend])
+    {
+        viewIfPlatinum = [[YTOSumarLocuintaViewController alloc] init];
+        viewIfPlatinum = aView;
+        vwPlatinum.hidden = NO;
+    }else{
     YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [delegate.rcaNavigationController pushViewController:aView animated:YES];
+    }
 }
 
 
@@ -563,6 +655,18 @@
 {
     [vwDetailErrorAlert setHidden:YES];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)noPlatinum:(id)sender
+{
+    vwPlatinum.hidden = YES;
+}
+
+- (IBAction)okPlatinum:(id)sender
+{
+    YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
+    [delegate.rcaNavigationController pushViewController:viewIfPlatinum animated:YES];
+    vwPlatinum.hidden = YES;
 }
 
 @end

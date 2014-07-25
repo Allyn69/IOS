@@ -9,6 +9,7 @@
 #import "YTOTermeniViewController.h"
 #import "YTOUtils.h"
 #import "VerifyNet.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOTermeniViewController ()
 
@@ -22,7 +23,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Termeni si Conditii", @"Termeni si Conditii");
+        self.title = NSLocalizedStringFromTable(@"i486", [YTOUserDefaults getLanguage],@"TERMENI");
     }
     return self;
 }
@@ -30,9 +31,44 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
+    //self.trackedViewName = @"YTOTermeniViewController";
+     [YTOUtils rightImageVodafone:self.navigationItem];
+    lblNoInternet.text = NSLocalizedStringFromTable(@"i450", [YTOUserDefaults getLanguage],@"Ne pare rau! \nCererea nu a fost trimisa pentru ca nu esti conectat la internet. \nTe rugam sa te asiguri ca ai o conexiune la internet activa si sa incerci din nou.\n Iti multumim!");
+    lblSeIncarca.text = NSLocalizedStringFromTable(@"i444", [YTOUserDefaults getLanguage],@"se incarca...");
     // Do any additional setup after loading the view from its nib.
     
     [self callGetTermeni];
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 =  NSLocalizedStringFromTable(@"i721", [YTOUserDefaults getLanguage],@"Termeni");
+    NSString *string2 =  NSLocalizedStringFromTable(@"i722", [YTOUserDefaults getLanguage],@"si");
+    NSString *string3 =  NSLocalizedStringFromTable(@"i723", [YTOUserDefaults getLanguage],@"conditii");
+    NSString *string  =  [[NSString alloc] initWithFormat:@"%@ %@ %@",string1,string2,string3];
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:rosuTermeni] range:NSMakeRange(0, string1.length)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length, string2.length+2)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:rosuTermeni]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i724", [YTOUserDefaults getLanguage],@"termeni de utilizare a aplicatiei");
+        lbl11.adjustsFontSizeToFitWidth = YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -88,7 +124,7 @@
     }
     else {
         
-        [self arataPopup:@"Atentie"];
+        [self arataPopup:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !")];
         //vwErrorAlert.hidden = NO;
         
     }
@@ -177,7 +213,7 @@
     [btnLoadingOk setHidden:YES];
     [lblLoadingOk setHidden:YES];
     [lblLoadingDescription setHidden:YES];
-    [lblLoadingTitlu setText:@"Se incarca..."];
+    [lblLoadingTitlu setText:NSLocalizedStringFromTable(@"i444", [YTOUserDefaults getLanguage],@"se incarca...")];
     [loading setHidden:NO];
     [vwLoading setHidden:NO];
 }

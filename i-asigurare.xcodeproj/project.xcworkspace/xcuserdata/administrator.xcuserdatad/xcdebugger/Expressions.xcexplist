@@ -3,10 +3,183 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[YTOAsiguratViewController textFieldShouldBeginEditing:]:YTOAsiguratViewController.m">
+         contextName = "-[YTOCasaMeaViewController hideCustomAlert:]:YTOCasaMeaViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "textField.superview">
+               value = "btn.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOMyTravelsViewController tableView:didSelectRowAtIndexPath:]:YTOMyTravelsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOSetariViewController connectionDidFinishLoading:]:YTOSetariViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "locuinta.structuraLocuinta">
+            </PersistentString>
+            <PersistentString
+               value = "[item objectForKey:@&quot;StructuraLocuinta&quot;]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCasaViewController showRightTextForWrongField]:YTOCasaViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "locuinta.CompletedPercent">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCasaViewController showNomenclator]:YTOCasaViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "locuinta.structuraLocuinta">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOAsiguratViewController showRightTextForWrongField]:YTOAsiguratViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "asigurat.getWrongLabel ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCalculatorViewController btnNomenclator_Clicked:]:YTOCalculatorViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCasaMeaViewController XmlRequest]:YTOCasaMeaViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "locuinta.sumaAsigurata">
+            </PersistentString>
+            <PersistentString
+               value = "locuinta.codPostal">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCalculatorViewController showNomenclator]:YTOCalculatorViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "i">
+            </PersistentString>
+            <PersistentString
+               value = "masina.cascoLa">
+            </PersistentString>
+            <PersistentString
+               value = "selectedItemIndex">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCasaViewController tableView:didSelectRowAtIndexPath:]:YTOCasaViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOMyTravelsViewController parser:didEndElement:namespaceURI:qualifiedName:]:YTOMyTravelsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "_DataInceput">
+            </PersistentString>
+            <PersistentString
+               value = "currentElementValue">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCasaMeaViewController tableView:cellForRowAtIndexPath:]:YTOCasaMeaViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOFinalizareRCAViewController hideCustomAlert:]:YTOFinalizareRCAViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "btn.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOCalculatorViewController setCompanieCasco:]:YTOCalculatorViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = " masina.cascoLa">
+            </PersistentString>
+            <PersistentString
+               value = "masina.cascoLa">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOAppDelegate saveDeviceToken:]:YTOAppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "token">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOAppDelegate nextTooltip]:YTOAppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexTooltip">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOLoginViewController connectionDidFinishLoading:]:YTOLoginViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[item objectForKey:@&quot;RegimInaltime&quot;] ">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOAppDelegate previousTooltip]:YTOAppDelegate.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexTooltip">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOMyTravelsViewController showCustomAlert:withDescription:withError:withButtonIndex:]:YTOMyTravelsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "description">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOMyTravelsViewController showCustomConfirm:withDescription:withButtonIndex:]:YTOMyTravelsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "oferta">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[YTOMyTravelsViewController hideCustomAlert:]:YTOMyTravelsViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "oferta">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

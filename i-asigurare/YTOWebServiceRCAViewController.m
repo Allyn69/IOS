@@ -11,6 +11,9 @@
 #import "YTOSumarRCAViewController.h"
 #import "YTOUtils.h"
 #import "VerifyNet.h"
+#import "YTOUserDefaults.h"
+#import "CellTarifRCARedus.h"
+#import "UILabel+dynamicSizeMe.h"
 #import "YTOCalculatorViewController.h"
 
 @interface YTOWebServiceRCAViewController ()
@@ -27,7 +30,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Calculator", @"Calculator");
+        self.title = NSLocalizedStringFromTable(@"i446", [YTOUserDefaults getLanguage],@"Calculator");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
@@ -37,7 +40,93 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
+    //self.trackedViewName = @"YTOWebServiceViewController";
+    B0Closed = NO;
+    [YTOUtils rightImageVodafone:self.navigationItem];
 	[self calculRCA];
+    lblDetaliiEroare.text = NSLocalizedStringFromTable(@"i580", [YTOUserDefaults getLanguage],@"detalii");
+    lblTarifeleNu.text = NSLocalizedStringFromTable(@"i579", [YTOUserDefaults getLanguage],@"nu s-au calculat");
+    lbl6Luni.text = NSLocalizedStringFromTable(@"i196", [YTOUserDefaults getLanguage],@"6 luni");
+    lbl12Luni.text =NSLocalizedStringFromTable(@"i197", [YTOUserDefaults getLanguage],@"12 luni");
+    lblB01.text = NSLocalizedStringFromTable(@"i582", [YTOUserDefaults getLanguage],@"ai obtinut b0");
+    lblB02.text =NSLocalizedStringFromTable(@"i583", [YTOUserDefaults getLanguage],@"cauze");
+    lblB04.text =NSLocalizedStringFromTable(@"i584", [YTOUserDefaults getLanguage],@"tarife mai mari ");
+    lblB03.text = NSLocalizedStringFromTable(@"i221", [YTOUserDefaults getLanguage],@"cauzele");
+    
+//    lblB01.resizeToFit;
+//    lblB02.resizeToFit;
+//    lblB03.resizeToFit;
+//    lblB04.resizeToFit;
+    
+    lblCauze1.text = NSLocalizedStringFromTable(@"i585", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze2.text = NSLocalizedStringFromTable(@"i586", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze3.text = NSLocalizedStringFromTable(@"i587", [YTOUserDefaults getLanguage],@"cauzele");
+    lblCauze4.text = NSLocalizedStringFromTable(@"i588", [YTOUserDefaults getLanguage],@"cauzele");
+    
+    lblLoad0.text = NSLocalizedStringFromTable(@"i176", [YTOUserDefaults getLanguage],@"Cautam \n cele mai mici tarife \n direct \n de la companiile \n de asigurare");
+    lblLoad1.text = NSLocalizedStringFromTable(@"i73", [YTOUserDefaults getLanguage],@"Tarifele sunt obtinute direct de la companiile de asigurare.");
+    lblLoad2.text = NSLocalizedStringFromTable(@"i91", [YTOUserDefaults getLanguage],@"Polita de asigurare RCA se livreaza GRATUIT prin curier rapid.");
+//    if ([YTOUserDefaults isRedus]){
+//        lblLoad2.hidden = YES;
+//        imgArrow.hidden = YES;
+//    }
+    
+    lblNointernet.text = NSLocalizedStringFromTable(@"i219", [YTOUserDefaults getLanguage],@"Ne pare rau!\nTarifele nu s-au calculat pentru ca nu esti conectat la internet.\n Te rugam sa te asiguri ca ai o conexiune la internet activa si calculeaza din nou.\nIti multumim!");
+    
+    lblMultumim1.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblMultumim2.text = NSLocalizedStringFromTable(@"i798", [YTOUserDefaults getLanguage],@"Iti multumim pentru intelegere");
+    lblSorry1.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblSorry2.text = NSLocalizedStringFromTable(@"i806", [YTOUserDefaults getLanguage],@":( ne pare rau");
+    lblDetaliiErr1.text = NSLocalizedStringFromTable(@"i819", [YTOUserDefaults getLanguage],@"detalii eroare");
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    lblEroare2.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    
+    lblMultumim1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblMultumim2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblSorry2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblDetaliiErr1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    lblEroare2.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+
+    
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    UIImageView *image = (UIImageView *) [cellHead viewWithTag:100];
+    
+    NSString *img = @"header-tarife-rca.png";
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        img = @"header-tarife-rca-hu.png";
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        img = @"header-tarife-rca-en.png";
+    else img = @"header-tarife-rca.png";
+    
+    [image setImage:[UIImage imageNamed:img]];
+    
+    
+    NSString *string1 = NSLocalizedStringFromTable(@"i788", [YTOUserDefaults getLanguage],@"Tarife");
+    NSString *string2 = NSLocalizedStringFromTable(@"i789", [YTOUserDefaults getLanguage],@"de asigurare");
+    NSString *string  = [[NSString alloc]initWithFormat:@"%@ %@",string1,string2];
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:verde] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:verde]];
+    }
+    
+    lbl22.text = NSLocalizedStringFromTable(@"i763", [YTOUserDefaults getLanguage],@"cele mai mici tarife pentru masina ta");
 }
 
 
@@ -63,6 +152,7 @@
 	//listTarife = nil;
 }
 
+
 #pragma mark Consume WebService
 
 - (NSString *) XmlRequest
@@ -74,7 +164,7 @@
                       @"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<CalculRca4 xmlns=\"http://tempuri.org/\">"
+                      "<CalculRca5JSON xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<nume>%@</nume>"
@@ -120,11 +210,15 @@
                       "<copii_minori>%@</copii_minori>"
                       "<pensionar>%@</pensionar>"
                       "<nr_bugetari>%@</nr_bugetari>"
-                      "</CalculRca4>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "<limba>%@</limba>"
+                      "<versiune>%@</versiune>"
+                      "</CalculRca5JSON>"
                       "</soap:Body>"
                       "</soap:Envelope>",
                       asigurat.nume, asigurat.codUnic, 
-                      asigurat.telefon, asigurat.email, asigurat.adresa,
+                      asigurat.telefon, asigurat.email, masina.adresa,
                       masina.judet,                     
                       masina.marcaAuto, 
                       masina.modelAuto, 
@@ -149,7 +243,7 @@
                       0,  // self.AniFaraDaune, 
                       oferta.durataAsigurare,
                       [formatter stringFromDate:oferta.dataInceput],
-                      [[UIDevice currentDevice] uniqueIdentifier],
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier],
                       masina.idIntern,
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
                       ([asigurat.tipPersoana isEqualToString:@"juridica"] ? asigurat.codCaen : @"01"),
@@ -159,21 +253,18 @@
                       asigurat.casatorit,
                       asigurat.copiiMinori,
                       asigurat.pensionar,
-                      asigurat.nrBugetari
+                      asigurat.nrBugetari,
+                      [YTOUserDefaults getUserName],
+                      [YTOUserDefaults getPassword],
+                      [YTOUserDefaults getLanguage],
+                      [NSBundle mainBundle].infoDictionary[@"CFBundleVersion"]
                       ];
+    NSLog(@"%@",xml);
     return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 - (IBAction)calculeazaRCADupaAltaDurata
 {
-//    if (oferta.durataAsigurare == 6)
-//    {
-//        oferta.durataAsigurare = 12;
-//    }
-//    else
-//    {
-//        oferta.durataAsigurare = 6;
-//    }
     
     oferta.durataAsigurare = (oferta.durataAsigurare == 6 ? 12 : 6);
 
@@ -230,7 +321,7 @@
         NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
         
         [request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-        [request addValue:@"http://tempuri.org/CalculRca4" forHTTPHeaderField:@"SOAPAction"];
+        [request addValue:@"http://tempuri.org/CalculRca5JSON" forHTTPHeaderField:@"SOAPAction"];
         [request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -259,14 +350,19 @@
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection {
 	NSString * responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
     
+    NSLog(@"%@",responseString);
+    NSLog(@"RESPONSE DATA : %@",responseData);
+    
     if (oferta.durataAsigurare == 6)
         responseCalcul6Luni = responseData;
     else
         responseCalcul12Luni = responseData;
     
+    [self parseRcaResponse:responseData];
+    
 	NSLog(@"Response string: %@", responseString);
 	
-	[self parseRcaResponse:responseData];
+	
 }
 
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -286,235 +382,96 @@
 
 - (void) parseRcaResponse:(NSMutableData *) response
 {
-	NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:response];
+    
+    NSXMLParser * xmlParser = [[NSXMLParser alloc] initWithData:response];
 	xmlParser.delegate = self;
 	BOOL succes = [xmlParser parse];
-	//cotatie.eroare_ws = @"xx";
-    if (succes && cotatie != nil && cotatie.eroare_ws != nil && cotatie.eroare_ws.length > 0) {
-        NSLog(@"Error = %@", cotatie.eroare_ws);
-        //    		UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:@"Atentie!" message:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        //    		[alertView show];
+    listTarife = [[NSMutableArray alloc] init];
+    
+	if (succes)
+    {
+        NSError * err = nil;
+        NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         
-        //[self showPopupWithTitle:@"Atentie!" andDescription:[NSString stringWithFormat:@"%@", cotatie.eroare_ws]];
-        
-        //            YTOCustomPopup * alert = [[YTOCustomPopup alloc] init];
-        //            [alert showAlert:@"Atentie" withMessage:[NSString stringWithFormat:@"%@", cotatie.eroare_ws] andImage:[UIImage imageNamed:@"comanda-eroare.png"] delegate:self];
-        vwErrorAlert.hidden = NO;
-    }
-    else if (succes && cotatie != nil) {
-        
-        listTarife = [[NSMutableArray alloc] init];
-        
-        NSString * errorMsgs;
-        
-        
-        if ([cotatie.Astra_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif0 = [[TarifRCA alloc] init];
-            tarif0.idCompanie = 4;
-            tarif0.nume = @"Astra";
-            tarif0.codOferta = cotatie.Astra_cod_oferta;
-            tarif0.prima = (cotatie.Astra_prima != nil ? cotatie.Astra_prima : @"0");
-            tarif0.clasa_bm = cotatie.Astra_clasa_bm;
+        if (data) {
+            NSDictionary * jsonArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&err];
             
-            if ([tarif0.prima intValue] > 0)
-                [listTarife addObject:tarif0];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare]];
-        //else errorMsgs = [NSString stringWithFormat:@"- %@\n", cotatie.Astra_mesaj_eroare];
-        
-        
-        if ([cotatie.Allianz_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif1 = [[TarifRCA alloc] init];
-            tarif1.idCompanie = 5;
-            tarif1.nume = @"Allianz";
-            tarif1.codOferta = cotatie.Allianz_cod_oferta;
-            tarif1.prima = (cotatie.Allianz_prima != nil ? cotatie.Allianz_prima : @"0");
-            tarif1.clasa_bm = cotatie.Allianz_clasa_bm;
-            
-            if ([tarif1.prima intValue] > 0)
-                [listTarife addObject:tarif1];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Allianz_mesaj_eroare]];
-        
-        if ([cotatie.Omniasig_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif2 = [[TarifRCA alloc] init];
-            tarif2.idCompanie = 6;
-            tarif2.nume = @"Omniasig";
-            tarif2.codOferta = cotatie.Omniasig_cod_oferta;
-            tarif2.prima = (cotatie.Omniasig_prima != nil ? cotatie.Omniasig_prima : @"0");
-            tarif2.clasa_bm = cotatie.Omniasig_clasa_bm;
-            
-            if ([tarif2.prima intValue] > 0)
-                [listTarife addObject:tarif2];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Omniasig_mesaj_eroare]];
-        
-        if ([cotatie.Groupama_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif3 = [[TarifRCA alloc] init];
-            tarif3.idCompanie = 7;
-            tarif3.nume = @"Groupama";
-            tarif3.codOferta = cotatie.Groupama_cod_oferta;
-            tarif3.prima = (cotatie.Groupama_prima != nil ? cotatie.Groupama_prima : @"0");
-            tarif3.clasa_bm = cotatie.Groupama_clasa_bm;
-            
-            if ([tarif3.prima intValue] > 0)
-                [listTarife addObject:tarif3];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Groupama_mesaj_eroare]];
-        
-        if ([cotatie.BCR_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif4 = [[TarifRCA alloc] init];
-            tarif4.idCompanie = 8;
-            tarif4.nume = @"BCR";
-            tarif4.codOferta = cotatie.BCR_cod_oferta;
-            tarif4.prima = (cotatie.BCR_prima != nil ? cotatie.BCR_prima : @"0");
-            tarif4.clasa_bm = cotatie.BCR_clasa_bm;
+            for(NSDictionary *item in jsonArray) {
+                cotatie = [[CotatieRCA2 alloc] init];
+                NSString * eroare_ws = [item objectForKey:@"Eroare_ws"];
+                if (eroare_ws && ![eroare_ws isEqualToString:@"success"])
+                {
+                    [vwLoading setHidden:YES];
+                    //trebe decomentat
+                    [self showPopupErrorWithTitle:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !")  andDescription:eroare_ws];
+                    //vwErrorAlert.hidden = NO;
+                    [self stopLoadingAnimantion];
+                    return;
+                }
+                cotatie.prima = [NSString stringWithFormat:@"%.02f",[[item valueForKey:@"Prima"] doubleValue] ];
+                cotatie.primaReducere = [NSString stringWithFormat:@"%.02f",[[item valueForKey:@"PrimaReducere"] doubleValue] ];
+                cotatie.Reducere = [[item objectForKey:@"Reducere"] boolValue]? @"true": @"false" ;
+
+                cotatie.idReducere = [item objectForKey:@"IdReducere"];
+                cotatie.numeCompanie = [item objectForKey:@"Companie"];
+                cotatie.codOferta = [item objectForKey:@"Cod"];
+                cotatie.clasaBM = [item objectForKey:@"Clasa_bm"];
+                if ([cotatie.clasaBM isEqualToString:@"B0"])
+                    cellB0.hidden = NO;;
+                [listTarife addObject:cotatie];
+            }
            
-            if ([tarif4.prima intValue] > 0)
-                [listTarife addObject:tarif4];
         }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.BCR_mesaj_eroare]];
-        
-        if ([cotatie.Asirom_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif5 = [[TarifRCA alloc] init];
-            tarif5.idCompanie = 9;
-            tarif5.nume = @"Asirom";
-            tarif5.codOferta = cotatie.Asirom_cod_oferta;
-            tarif5.prima = (cotatie.Asirom_prima != nil ? cotatie.Asirom_prima : @"0");
-            tarif5.clasa_bm = cotatie.Asirom_clasa_bm;
-
-            if ([tarif5.prima intValue] > 0)
-                [listTarife addObject:tarif5];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Asirom_mesaj_eroare]];
-        
-        if ([cotatie.Uniqa_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif6 = [[TarifRCA alloc] init];
-            tarif6.idCompanie = 10;
-            tarif6.nume = @"Uniqa";
-            tarif6.codOferta = cotatie.Uniqa_cod_oferta;
-            tarif6.prima = (cotatie.Uniqa_prima != nil ? cotatie.Uniqa_prima : @"0");
-            tarif6.clasa_bm = cotatie.Uniqa_clasa_bm;
-            
-            if ([tarif6.prima intValue] > 0)
-                [listTarife addObject:tarif6];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Uniqa_mesaj_eroare]];
-        
-        if ([cotatie.Generali_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif7 = [[TarifRCA alloc] init];
-            tarif7.idCompanie = 11;
-            tarif7.nume = @"Generali";
-            tarif7.codOferta = cotatie.Generali_cod_oferta;
-            tarif7.prima = (cotatie.Generali_prima != nil ? cotatie.Generali_prima : @"0");
-            tarif7.clasa_bm = cotatie.Generali_clasa_bm;
-
-            if ([tarif7.prima intValue] > 0)
-                [listTarife addObject:tarif7];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Generali_mesaj_eroare]];
-        
-        if ([cotatie.Euroins_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif8 = [[TarifRCA alloc] init];
-            tarif8.idCompanie = 12;
-            tarif8.nume = @"Euroins";
-            tarif8.codOferta = cotatie.Euroins_cod_oferta;
-            tarif8.prima = (cotatie.Euroins_prima != nil ? cotatie.Euroins_prima : @"0");
-            tarif8.clasa_bm = cotatie.Euroins_clasa_bm;
-            
-            if ([tarif8.prima intValue] > 0)
-                [listTarife addObject:tarif8];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Euroins_mesaj_eroare]];
-        
-        if ([cotatie.Carpatica_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif9 = [[TarifRCA alloc] init];
-            tarif9.idCompanie = 13;
-            tarif9.nume = @"Carpatica";
-            tarif9.codOferta = cotatie.Carpatica_cod_oferta;
-            tarif9.prima = (cotatie.Carpatica_prima != nil ? cotatie.Carpatica_prima : @"0");
-            tarif9.clasa_bm = cotatie.Carpatica_clasa_bm;
-            
-            if ([tarif9.prima intValue] > 0)
-                [listTarife addObject:tarif9];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Carpatica_mesaj_eroare]];
-        
-        if ([cotatie.Ardaf_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif11 = [[TarifRCA alloc] init];
-            tarif11.idCompanie = 14;
-            tarif11.nume = @"Ardaf";
-            tarif11.codOferta = cotatie.Ardaf_cod_oferta;
-            tarif11.prima = (cotatie.Ardaf_prima != nil ? cotatie.Ardaf_prima : @"0");
-            tarif11.clasa_bm = cotatie.Ardaf_clasa_bm;
-            
-            if ([tarif11.prima intValue] > 0)
-                [listTarife addObject:tarif11];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
-        
-        if ([cotatie.City_status_response isEqualToString:@"true"]) {
-            TarifRCA * tarif12 = [[TarifRCA alloc] init];
-            tarif12.idCompanie = 15;
-            tarif12.nume = @"City";
-            tarif12.codOferta = cotatie.City_cod_oferta;
-            tarif12.prima = (cotatie.City_prima != nil ? cotatie.City_prima : @"0");
-            tarif12.clasa_bm = cotatie.City_clasa_bm;
-            
-            if ([tarif12.prima intValue] > 0)
-                [listTarife addObject:tarif12];
-        }
-        else [errorMsgs stringByAppendingString:[NSString stringWithFormat:@"- %@\n", cotatie.Ardaf_mesaj_eroare]];
-        
-        NSSortDescriptor * sortDescriptor;
-        sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"primaInt" ascending:YES];
-        
-        NSMutableArray * sortDescriptors = [NSArray arrayWithObject:sortDescriptor];
-        [listTarife sortUsingDescriptors:sortDescriptors];
-        
-        [vwLoading setHidden:YES];
-        [self stopLoadingAnimantion];
-        self.navigationItem.hidesBackButton = NO;
-        
-        if (listTarife.count == 0)
-        {
-            //[self showPopupWithTitle:@"Atentie" andDescription:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
-            //vwErrorAlert.hidden = NO;
+        else {
             [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
         }
-        else
-            [tableView reloadData];
-        
     }
     else
     {
         [self showPopupServiciu:@"Serviciul care calculeaza tarife nu functioneaza momentan. Te rugam sa revii putin mai tarziu. Intre timp incercam sa remediem aceasta problema."];
     }
+    
+    [vwLoading setHidden:YES];
+    [self stopLoadingAnimantion];
+    
+    // Daca serviciul raspunde, dar nu intoarce nicio prima, dau mesaj
+    if (listTarife.count == 0)
+    {
+        [self showPopupServiciu:@"Serverul companiilor de asigurare nu afiseaza tarifele. Te rugam sa verifici ca datele introduse sunt complete si corecte si apoi sa refaci calculatia."];
+        //vwErrorAlert.hidden = NO;
+    }
+    else
+    {
+        [iRate sharedInstance].eventCount++;
+        [tableView reloadData];
+    }
 }
-
 #pragma mark NSXMLParser Methods
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName
 	attributes:(NSDictionary *)attributeDict {
 	
-	if ([elementName isEqualToString:@"return"]) {
-		cotatie = [[CotatieRCA alloc] init];
+	if ([elementName isEqualToString:@"ResponsePrima"]) {
+        //	cotatie = [[CotatieCalatorie alloc] init];
+        //    [listTarife addObject:cotatie];
 	}
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName
   namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	if (![elementName isEqualToString:@"return"] && ![elementName isEqualToString:@"ns1:calcul_prima_rcaResponse"]
-		&& ![elementName isEqualToString:@"SOAP-ENV:Body"]
-		&& ![elementName isEqualToString:@"SOAP-ENV:Envelope"]) {
+	if (![elementName isEqualToString:@"CalculRca5JSONResponse"]
+        && ![elementName isEqualToString:@"soap:Envelope"]
+        && ![elementName isEqualToString:@"soap:Body"]
+        && ![elementName isEqualToString:@"return"]) {
 		
 		//TarifRCA * tarif = [[TarifRCA alloc] init];
-		if (cotatie == nil)
-			cotatie = [[CotatieRCA alloc] init];
-		
+        //	if (cotatie == nil) {
+        //		cotatie = [[CotatieCalatorie alloc] init];
+        //   }
+		jsonString = currentElementValue;
 		NSLog(@"%@=%@\n", elementName, currentElementValue);
-		if ([cotatie respondsToSelector:NSSelectorFromString(elementName)])
-			[cotatie setValue:currentElementValue forKey:elementName];
+        //	if ([cotatie respondsToSelector:NSSelectorFromString(elementName)])
+        //		[cotatie setValue:currentElementValue forKey:elementName];
 	}
     
 	currentElementValue = nil;
@@ -526,6 +483,7 @@
 	else
 		[currentElementValue appendString:string];
 }
+
 
 #pragma mark UIAlertView
 -(void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -541,6 +499,9 @@
 #pragma mark - Table view data source
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    TarifRCA * tarif = (TarifRCA *)[listTarife objectAtIndex:indexPath.row];
+    if ([tarif.Reducere isEqualToString:@"true"])
+        return 72;
     return 55;
 }
 
@@ -556,34 +517,53 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    TarifRCA * tarif = (TarifRCA *)[listTarife objectAtIndex:indexPath.row];
+ 
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+    CellTarifRCARedus *cellRedus;
     
-    if (cell == nil) {
+    if (cell == nil && ![tarif.Reducere isEqualToString:@"true"])
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+
+    if (cellRedus == nil && [tarif.Reducere isEqualToString:@"true"]){
+        cellRedus = (CellTarifRCARedus *)[tv dequeueReusableCellWithIdentifier:CellIdentifier];
+        cellRedus = [[CellTarifRCARedus alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier withReducere:YES];
     }
+   
+    if ([tarif.Reducere isEqualToString:@"true"]){
+        [cellRedus setPrima: [NSString stringWithFormat:@"%@ lei",tarif.prima]];
+        [cellRedus setPrimaReducere: [NSString stringWithFormat:@"%@ lei",tarif.primaReducere]];
+        [cellRedus setClasaBM:tarif.clasaBM];
+        [cellRedus setLogo:[tarif.numeCompanie lowercaseString]];
+        
+        cellRedus.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    else {
+        cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [tarif.numeCompanie lowercaseString]]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ lei", tarif.prima];
+        cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:14];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"Clasa B/M: %@", tarif.clasaBM];
+        cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:12];
     
-    TarifRCA * tarif = (TarifRCA *)[listTarife objectAtIndex:indexPath.row];
-    cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.jpg", [tarif.nume lowercaseString]]];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ lei", tarif.prima];
-    cell.textLabel.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:16];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"Clasa B/M: %@", tarif.clasa_bm];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:14];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"adauga-in-cos.png"]];
+        cell.accessoryView = imageView;
+        UILabel * lbl = [[UILabel alloc] initWithFrame:CGRectMake(32, 0, 80, 40)];
+        lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:12];
+        [lbl setText:NSLocalizedStringFromTable(@"i581", [YTOUserDefaults getLanguage],@"in cos")];
+        [lbl setNumberOfLines:2];
+        [lbl setTextAlignment:NSTextAlignmentCenter];
+        [lbl setBackgroundColor:[UIColor clearColor]];
+        [lbl setTextColor:[UIColor whiteColor]];
+        [cell.accessoryView addSubview:lbl];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"adauga-in-cos.png"]];
-    cell.accessoryView = imageView;
-    UILabel * lbl = [[UILabel alloc] initWithFrame:CGRectMake(32, 0, 80, 40)];
-    lbl.font = [UIFont fontWithName:@"Arial Rounded MT Bold" size:12];
-    [lbl setText:@"Adauga in cos"];
-    [lbl setNumberOfLines:2];
-    [lbl setTextAlignment:UITextAlignmentCenter];
-    [lbl setBackgroundColor:[UIColor clearColor]];
-    [lbl setTextColor:[UIColor whiteColor]];
-    [cell.accessoryView addSubview:lbl];
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    return cell;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    self.navigationItem.hidesBackButton = NO;
+    if ([tarif.Reducere isEqualToString:@"true"])
+        return cellRedus;
+    else return cell;
 }
 
 /*
@@ -630,18 +610,32 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     TarifRCA * tarif = [listTarife objectAtIndex:indexPath.row];
-    oferta.prima = tarif.primaInt;
-    oferta.companie = tarif.nume;
+    if ([tarif.Reducere isEqualToString:@"true"]){
+        oferta.prima = tarif.primaInt;
+        NSLog(@"%@",tarif.idReducere);
+        oferta.primaReducere = tarif.primaReducereInt;
+        oferta.idReducere = [NSString stringWithFormat:@"%@",tarif.idReducere];
+    }
+    else{
+        oferta.prima = tarif.primaInt;
+        oferta.primaReducere = 0.0;
+        oferta.idReducere = @"";
+    }
+    oferta.companie = tarif.numeCompanie;
     oferta.dataSfarsit = [YTOUtils getDataSfarsitPolita:oferta.dataInceput andDurataInLuni:oferta.durataAsigurare];
     oferta.numeAsigurare = [NSString stringWithFormat:@"RCA, %@", masina.nrInmatriculare];
     oferta.moneda = @"RON";
     oferta.codOferta = tarif.codOferta;
-    [oferta setRCABonusMalus:tarif.clasa_bm];
+    [oferta setRCABonusMalus:tarif.clasaBM];
+    
     
     YTOSumarRCAViewController * aView = [[YTOSumarRCAViewController alloc] init];
     aView.masina = masina;
     aView.asigurat = asigurat;
     aView.oferta = oferta;
+    if ([tarif.Reducere isEqualToString:@"true"])
+        aView.pretRedus = YES;
+    else aView.pretRedus = NO;
     
     YTOAppDelegate * delegate =  (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     [delegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -700,6 +694,7 @@
 - (IBAction) hidePopupError
 {
     vwPopupError.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)hidePopup:(id)sender
@@ -724,6 +719,11 @@
 {
     [vwDetailErrorAlert setHidden:YES];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (IBAction)hideB0:(id)sender
+{
+    cellB0.hidden = YES;
 }
 
 @end

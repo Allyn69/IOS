@@ -12,15 +12,17 @@
 #import "YTOLocuinta.h"
 #import "CotatieLocuinta.h"
 
+
 @interface YTOSumarLocuintaViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView *tableView;
     
-    UITableViewCell * cellHeader;
     UITableViewCell * cellPers1;
     UITableViewCell * cellSumar1;
     UITableViewCell * cellProdus;
     UITableViewCell * cellCalculeaza;
+    
+    IBOutlet UITableViewCell * cellHeader;
 }
 
 @property (nonatomic, retain) YTOOferta         * oferta;

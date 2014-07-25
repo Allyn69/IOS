@@ -9,45 +9,67 @@
 #import "YTOObiectAsigurat.h"
 #import "Database.h"
 
+
+static sqlite3 *database = nil;
+static sqlite3_stmt *deleteStmt = nil;
+static sqlite3_stmt *addStmt = nil;
+static sqlite3_stmt *updateStmt = nil;
+
 @implementation YTOObiectAsigurat
 
 @synthesize IdIntern, TipObiect, JSONText, _isDirty;
 
++ (void) finalizeStatements {
+	
+	if(database) sqlite3_close(database);
+	if(deleteStmt) sqlite3_finalize(deleteStmt);
+	if(addStmt) sqlite3_finalize(addStmt);
+    if (updateStmt) sqlite3_finalize(updateStmt);
+}
+
 - (void) addObiectAsigurat
 {
-    sqlite3 *database;
+    sqlite3 *database = nil;
     sqlite3_stmt *addStmt = nil;
     
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
+    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK)
     {
-        
-        if(addStmt == nil) {
-            const char *sql = "INSERT INTO ObiectAsigurat (IdIntern, TipObiect, JSONText) Values(?, ?, ?)";
-            if(sqlite3_prepare_v2(database, sql, -1, &addStmt, NULL) != SQLITE_OK)
-                NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
+        @try {
+            if(addStmt == nil) {
+                const char *sql = "INSERT INTO ObiectAsigurat (IdIntern, TipObiect, JSONText) Values(?, ?, ?)";
+                if(sqlite3_prepare_v2(database, sql, -1, &addStmt, NULL) != SQLITE_OK)
+                    NSAssert1(0, @"Error while creating add statement. '%s'", sqlite3_errmsg(database));
+            }
+            
+            sqlite3_bind_text(addStmt, 1, [IdIntern UTF8String], -1, SQLITE_TRANSIENT);
+            sqlite3_bind_int(addStmt, 2, TipObiect);
+            sqlite3_bind_text(addStmt, 3, [JSONText UTF8String], -1, SQLITE_TRANSIENT);
+            
+            
+            if(SQLITE_DONE != sqlite3_step(addStmt))
+                NSAssert1(0, @"Error while inserting data. '%s'", sqlite3_errmsg(database));
+            else {
+                //            sqlite3_finalize(addStmt);
+                //            sqlite3_close(database);
+            }
         }
-        
-        sqlite3_bind_text(addStmt, 1, [IdIntern UTF8String], -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(addStmt, 2, TipObiect); 
-        sqlite3_bind_text(addStmt, 3, [JSONText UTF8String], -1, SQLITE_TRANSIENT);
-                             
-        
-        if(SQLITE_DONE != sqlite3_step(addStmt))
-            NSAssert1(0, @"Error while inserting data. '%s'", sqlite3_errmsg(database));
-        else {
-            sqlite3_finalize(addStmt);
-            sqlite3_close(database);
+        @catch (NSException *exception) {
+            NSLog(@"Error inserting into the database");
         }
-        
+        @finally {
+        }
     }
+    sqlite3_reset(addStmt);
+    addStmt = nil;
+    
 }
 
 - (void) updateObiectAsigurat
 {
-    sqlite3 *database;
+    sqlite3 *database = nil;
     sqlite3_stmt *updateStmt = nil;
     
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
+    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK)
     {
         
         if(updateStmt == nil) {
@@ -57,23 +79,30 @@
                 NSAssert1(0, @"Error while creating update statement. '%s'", sqlite3_errmsg(database));
         }
         
-        sqlite3_bind_text(updateStmt, 1, [JSONText UTF8String], -1, SQLITE_TRANSIENT);                       
+        sqlite3_bind_text(updateStmt, 1, [JSONText UTF8String], -1, SQLITE_TRANSIENT);
         
         if(SQLITE_DONE != sqlite3_step(updateStmt))
             NSAssert1(0, @"Error while updating data. '%s'", sqlite3_errmsg(database));
         else {
-            sqlite3_finalize(updateStmt);
-            sqlite3_close(database);
+            //            sqlite3_finalize(updateStmt);
+            //            sqlite3_close(database);
         }
-    } 
+    }
+    
+    sqlite3_finalize(updateStmt);
+    updateStmt = nil;
+    //else
+    //sqlite3_finalize(updateStmt);
+    
+    //sqlite3_close(database);
 }
 
 - (void) deleteObiectAsigurat
 {
-    sqlite3 *database;
+    sqlite3 *database = nil;
     sqlite3_stmt *deleteStmt = nil;
     
-    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK) 
+    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK)
     {
         
         if(deleteStmt == nil) {
@@ -86,10 +115,51 @@
         if(SQLITE_DONE != sqlite3_step(deleteStmt))
             NSAssert1(0, @"Error while deleting data. '%s'", sqlite3_errmsg(database));
         else {
-            sqlite3_finalize(deleteStmt);
-            sqlite3_close(database);
+            //            sqlite3_finalize(deleteStmt);
+            //            sqlite3_close(database);
         }
+        //sqlite3_finalize(deleteStmt);
     }
+    
+    sqlite3_finalize(deleteStmt);
+    deleteStmt = nil;
+    
+    //else
+    //sqlite3_finalize(deleteStmt);
+    
+    //sqlite3_close(database);
+}
+
++ (void) deleteAllRecordsFromObiectAsigurat
+{
+    sqlite3 *database = nil;
+    sqlite3_stmt *deleteStmt = nil;
+    
+    if(sqlite3_open([[Database getDBPath] UTF8String], &database) == SQLITE_OK)
+    {
+        
+        if(deleteStmt == nil) {
+            NSString *delete = [NSString stringWithFormat:@"DELETE FROM ObiectAsigurat"];
+            
+            if(sqlite3_prepare_v2(database, [delete UTF8String], -1, &deleteStmt, NULL) != SQLITE_OK)
+                NSAssert1(0, @"Error while creating delete statement. '%s'", sqlite3_errmsg(database));
+        }
+        
+        if(SQLITE_DONE != sqlite3_step(deleteStmt))
+            NSAssert1(0, @"Error while deleting data. '%s'", sqlite3_errmsg(database));
+        else {
+            //            sqlite3_finalize(deleteStmt);
+            //            sqlite3_close(database);
+        }
+        //sqlite3_finalize(deleteStmt);
+    }
+    
+    sqlite3_finalize(deleteStmt);
+    deleteStmt = nil;
+    //else
+    //sqlite3_finalize(deleteStmt);
+    
+    //sqlite3_close(database);
 }
 
 + (YTOObiectAsigurat *) getObiectAsigurat:(NSString *)idIntern
@@ -112,10 +182,9 @@
 				ob.JSONText = [NSString stringWithUTF8String:(char *)sqlite3_column_text(selectstmt, 2)];
 			}
 		}
-        sqlite3_finalize(selectstmt);
 	}
-    
-	sqlite3_close(database);
+    else
+        sqlite3_close(database);
     
     return ob;
 }
@@ -144,10 +213,9 @@
 				[_list addObject:ob];
 			}
 		}
-        sqlite3_finalize(selectstmt);
 	}
-    
-	sqlite3_close(database);
+    else
+        sqlite3_close(database);
     
     return _list;
 }

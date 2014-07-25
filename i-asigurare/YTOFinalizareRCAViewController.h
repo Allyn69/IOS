@@ -11,6 +11,9 @@
 #import "YTOOferta.h"
 #import "YTOPersoana.h"
 #import "YTOAutovehicul.h"
+#import <Social/Social.h>
+#import <Accounts/Accounts.h>
+
 
 @interface YTOFinalizareRCAViewController : UIViewController<NSXMLParserDelegate, UIAlertViewDelegate,UITableViewDelegate, UITableViewDataSource, PickerVCSearchDelegate>
 {
@@ -20,9 +23,15 @@
     UITableViewCell *           cellJudetLocalitate;
     UITableViewCell *           cellAdresa;
     UITableViewCell *           cellTelefon;
-    UITableViewCell *           cellEmail;    
+    UITableViewCell *           cellEmail;
+    UITableViewCell *           cellTotal;
+    UITableViewCell *           cellSumar;
     IBOutlet UITableViewCell *  cellPlata;
     UITableViewCell *           cellCalculeaza;
+    UITableViewCell *           cellCostLivrare;
+    UITableViewCell *           cellVoucher;
+    
+    IBOutlet UIActivityIndicatorView * loadCost;
     
     BOOL goingBack;
     
@@ -31,15 +40,17 @@
     NSString * adresaLivrare;
     NSString * telefonLivrare;
     NSString * emailLivrare;
+    float costVoucher;
     int modPlata;
+    BOOL firstTime;
     
    	NSMutableData * capturedCharactes;
 	NSMutableString * currentElementValue;
 	NSString    * responseMessage;
 	NSString	* idOferta;
 	NSString    * mesajFinal;
+    int comanda1cost2;
     
-    IBOutlet UIImageView * imgError;
     IBOutlet UIView      * vwCustomAlert;
     IBOutlet UILabel     * lblCustomAlertTitle;
     IBOutlet UILabel     * lblCustomAlertMessage;
@@ -47,6 +58,10 @@
     IBOutlet UILabel     * lblCustomAlertOK;
     IBOutlet UIButton    * btnCustomAlertNO;
     IBOutlet UILabel     * lblCustomAlertNO;
+    IBOutlet UIButton    * btnCustomFacebook;
+    IBOutlet UILabel     * lblCustomFacebook;
+    IBOutlet UIButton    * btnCustomTwitter;
+    IBOutlet UILabel     * lblCustomTwitter;
     
     IBOutlet UIView      *      vwLoading;
     IBOutlet UILabel     * lblLoading;
@@ -60,6 +75,20 @@
     
     UITextField * txtEmailLivare;
     UITextField * txtTelefonLivrare;
+    UITextField * txtCodVoucher;
+    
+    SLComposeViewController *mySLComposerSheet;
+    
+    IBOutlet UILabel     * lblModPlata;
+    IBOutlet UILabel     * lblCashLaLivrare;
+    IBOutlet UILabel     * lblPrinOP;
+    IBOutlet UILabel     * lblOnlineCuCard;
+    IBOutlet UILabel * lblEroare;
+    
+    IBOutlet UITableViewCell * cellHeader;
+    
+    NSString * costLivrare;
+    NSString * idLivrare;
 }
 
 @property (nonatomic, retain) YTOOferta *       oferta;
@@ -84,4 +113,5 @@
 - (void) showCustomAlert:(NSString*) title withDescription:(NSString *)description withError:(BOOL) error withButtonIndex:(int) index;
 - (void) showCustomConfirm:(NSString *) title withDescription:(NSString *) description withButtonIndex:(int) index;
 - (IBAction) hideCustomAlert:(id)sender;
+- (IBAction) hideButtonSocialMedia:(id)sender;
 @end

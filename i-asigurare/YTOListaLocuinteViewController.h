@@ -9,12 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "YTOUtils.h"
 
+
 @interface YTOListaLocuinteViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;
     NSMutableArray * listaLocuinte;
     IBOutlet UIView * vwEmpty;
     BOOL editingMode;
+    
+    IBOutlet UILabel * lblAdaugaLocuinta;
+    IBOutlet UILabel * lblWvEmpty1;
+    IBOutlet UILabel * lblWvEmpty2;
+    
+    IBOutlet UILabel * lblEditeaza;
+    IBOutlet UILabel * lblAdauga;
 }
 
 @property (nonatomic, retain) UIViewController * controller;
@@ -23,5 +31,6 @@
 - (IBAction)adaugaLocuinta:(id)sender;
 - (void) reloadData;
 - (void) verifyViewMode;
+- (IBAction) callEditItems;
 
 @end

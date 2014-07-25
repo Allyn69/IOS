@@ -11,15 +11,17 @@
 #import "YTOOferta.h"
 #import "CotatieCalatorie.h"
 
+
 @interface YTOSumarCalatorieViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView *tableView;
     
-    UITableViewCell * cellHeader;
+    IBOutlet UITableViewCell * cellHeader;
     UITableViewCell * cellPers1;
     UITableViewCell * cellSumar1;
     UITableViewCell * cellProdus;
     UITableViewCell * cellCalculeaza;
+    
 }
 
 @property (nonatomic, retain) NSMutableArray   * listAsigurati;

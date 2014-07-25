@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface YTOAlteleViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;
+    IBOutlet UITableViewCell * cellHead;
 }
 
 @end

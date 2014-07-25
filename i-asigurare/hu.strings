@@ -1,0 +1,2354 @@
+/* 
+  hu.strings
+  i-asigurare
+
+  Created by Stern Edi on 8/22/13.
+
+*/
+
+/*
+ * Loco ios export: iOS Localizable.strings
+ * Project: Localizable.strings conversion
+ * Release: Working copy
+ * Locale: ro_RO, Romanian
+ * Exported at: Thu, 22 Aug 2013 14:36:50 +0100
+ */
+
+/* Asset: description */
+"description" = "";
+
+/* Asset: app_name */
+"app_name" = "i-Asigurare";
+
+/* Asset: menu_settings */
+"menu_settings" = "";
+
+/* Asset: tag */
+"tag" = "1";
+
+/* Asset: prev */
+"prev" = "előző";
+
+/* Asset: next */
+"next" = "következő";
+
+/* Asset: i353 */
+"i353" = "";
+
+/* Asset: i0 */
+"i0" = "Betegségek/Bántalmak";
+
+/* Asset: i1 */
+"i1" = "i-Asigurare";
+
+/* Asset: i2 */
+"i2" = "Tanuló/egyetemista";
+
+/* Asset: i3 */
+"i3" = "Szorakoztato sport";
+
+/* Asset: i4 */
+"i4" = "Súlyos\nÉrvénytelenség";
+
+/* Asset: i5 */
+"i5" = "Szivbetegség\n";
+
+/* Asset: i6 */
+"i6" = "Idegbetegség\n";
+
+/* Asset: i7 */
+"i7" = "Belgyogyászati betegség";
+
+/* Asset: i8 */
+"i8" = "Légzőszervi\nbetegségek";
+
+/* Asset: i9 */
+"i9" = "Folyamatos betegségek";
+
+/* Asset: i10 */
+"i10" = "Más betegségek";
+
+/* Asset: i11 */
+"i11" = "Árcsökkentések/Áremelkedések";
+
+/* Asset: i12 */
+"i12" = "Ha tetszik az i-Asigurare , tudsz szánni ránk egy percet, hogy értékeld az aplikációt a Google Play áruházban?";
+
+/* Asset: i13 */
+"i13" = "Tetszik az i-Asigurare";
+
+/* Asset: i14 */
+"i14" = "Értékeld most";
+
+/* Asset: i15 */
+"i15" = "Utas hozzáadása";
+
+/* Asset: i16 */
+"i16" = "Csőrepedés lefedése";
+
+/* Asset: i17 */
+"i17" = "Folytat";
+
+/* Asset: i18 */
+"i18" = "Lakás biztositás";
+
+/* Asset: i19 */
+"i19" = "Az összes alábbi információ a jármű tulajdonosára vonatkozik :";
+
+/* Asset: i20 */
+"i20" = "Emlékeztess késöbb";
+
+/* Asset: i21 */
+"i21" = "RCA ellenörzése";
+
+/* Asset: i22 */
+"i22" = "Értesitések";
+
+/* Asset: i23 */
+"i23" = "OK";
+
+/* Asset: i24 */
+"i24" = "Információi";
+
+/* Asset: i25 */
+"i25" = "Email cimed";
+
+/* Asset: i26 */
+"i26" = "Telefonszámod";
+
+/* Asset: i27 */
+"i27" = "Az űzenet alanya";
+
+/* Asset: i28 */
+"i28" = "...";
+
+/* Asset: i29 */
+"i29" = "A te űzeneted";
+
+/* Asset: i30 */
+"i30" = "Kűldes";
+
+/* Asset: i31 */
+"i31" = "a biztositó társaság nem küldte el az adatokat a CEDAM-ba vagy pedig hibásan küldte el azokat.";
+
+/* Asset: i32 */
+"i32" = "FÉRŐHELYEK SZÁMA";
+
+/* Asset: i33 */
+"i33" = "ÖSSY SÚJA";
+
+/* Asset: i34 */
+"i34" = "Lopás lefedése";
+
+/* Asset: i35 */
+"i35" = "GYÁRTÁSI ÉVE";
+
+/* Asset: i36 */
+"i36" = "ÜZEMANYAG";
+
+/* Asset: i37 */
+"i37" = "benzin";
+
+/* Asset: i38 */
+"i38" = "Magán célra";
+
+/* Asset: i39 */
+"i39" = "OK";
+
+/* Asset: i40 */
+"i40" = "Miért aktiváld a  Push Notification-t :";
+
+/* Asset: i41 */
+"i41" = "taxi";
+
+/* Asset: i42 */
+"i42" = "áru\nszállitás";
+
+/* Asset: i43 */
+"i43" = "TÖRZSKÖNYV SZÁMA";
+
+/* Asset: i44 */
+"i44" = "CÉL AUTÓ";
+
+/* Asset: i45 */
+"i45" = "Felelösség biztositás";
+
+/* Asset: i46 */
+"i46" = "Teljes ár";
+
+/* Asset: i47 */
+"i47" = "Biztositott érték min 10000 EUR";
+
+/* Asset: i48 */
+"i48" = "Biztositott érték álltalános felelösség biztositásnál EUR";
+
+/* Asset: i49 */
+"i49" = "Ujraéppitési\nár";
+
+/* Asset: i50 */
+"i50" = "Valós\nérték";
+
+/* Asset: i51 */
+"i51" = "Piaci\nérték";
+
+/* Asset: i52 */
+"i52" = "Bank\nfelmérése";
+
+/* Asset: i53 */
+"i53" = "Ajánlat\nkérése";
+
+/* Asset: i54 */
+"i54" = "CSALÁD ÉS KERESZTNÉV";
+
+/* Asset: i55 */
+"i55" = "Vodafone kliens ár";
+
+/* Asset: i56 */
+"i56" = "CNP";
+
+/* Asset: i57 */
+"i57" = "EMAIL";
+
+/* Asset: i58 */
+"i58" = "VALASSZ SZOLGALTATOT";
+
+/* Asset: i59 */
+"i59" = "Szemelyazonossagi/Utlevel szeriaszama";
+
+/* Asset: i60 */
+"i60" = "MEGYE, HELYSÉG";
+
+/* Asset: i61 */
+"i61" = "MEGYE, HELYSÉG";
+
+/* Asset: i62 */
+"i62" = "CIM";
+
+/* Asset: i63 */
+"i63" = "TELEFON";
+
+/* Asset: i64 */
+"i64" = "CAEN kod";
+
+/* Asset: i65 */
+"i65" = "Turizmus";
+
+/* Asset: i66 */
+"i66" = "Lemond";
+
+/* Asset: i67 */
+"i67" = "Mentés";
+
+/* Asset: i68 */
+"i68" = "LEASINGES GÉPJÁRMŰ";
+
+/* Asset: i69 */
+"i69" = "LEASING TÉARSASÁG NEVE";
+
+/* Asset: i70 */
+"i70" = "Válaszd ki a lakást";
+
+/* Asset: i71 */
+"i71" = "Üzlet";
+
+/* Asset: i72 */
+"i72" = "Keresés";
+
+/* Asset: i73 */
+"i73" = "Az árakat direkt a biztositó társaságoktol kaptuk.";
+
+/* Asset: i74 */
+"i74" = "Az utazási biztositás kifizetése online, kártyával történik.";
+
+/* Asset: i75 */
+"i75" = "A szelvényt emailben megkapod, néhány perccel a kifizetés után.";
+
+/* Asset: i76 */
+"i76" = "Az árakat direkt a biztositó társaságoktol kaptuk.";
+
+/* Asset: i77 */
+"i77" = "Biztositott lakás";
+
+/* Asset: i78 */
+"i78" = "Plata asigurarii de locuinta se efectueaza online cu cardul.";
+
+/* Asset: i79 */
+"i79" = "motorina";
+
+/* Asset: i80 */
+"i80" = "Megkapod a szelvényt emailben pár perc múlva a kifizetés után.";
+
+/* Asset: i81 */
+"i81" = "Profi soför";
+
+/* Asset: i82 */
+"i82" = "Tanulmányok";
+
+/* Asset: i83 */
+"i83" = "Nap";
+
+/* Asset: i84 */
+"i84" = "gáz";
+
+/* Asset: i85 */
+"i85" = "Cél ország";
+
+/* Asset: i86 */
+"i86" = "Lakás tulajdonosa";
+
+/* Asset: i87 */
+"i87" = "5";
+
+/* Asset: i88 */
+"i88" = "Felértékelisi lehetöségek";
+
+/* Asset: i89 */
+"i89" = "Az árakat direkt a biztositó társaságoktól kapjuk.";
+
+/* Asset: i90 */
+"i90" = "Válaszd ki a fizetés modját";
+
+/* Asset: i91 */
+"i91" = "A kötelező gépjármű biztositási szelvény INGYEN házhoz küldödik gyorspostával";
+
+/* Asset: i92 */
+"i92" = "Igen";
+
+/* Asset: i93 */
+"i93" = "LAKÁSTIPUSA";
+
+/* Asset: i94 */
+"i94" = "Tömbházlakás";
+
+/* Asset: i95 */
+"i95" = "Adószám";
+
+/* Asset: i96 */
+"i96" = "Megrendel";
+
+/* Asset: i97 */
+"i97" = "Casa - vila comuna";
+
+/* Asset: i98 */
+"i98" = "nem";
+
+/* Asset: i99 */
+"i99" = "EMELET";
+
+/* Asset: i100 */
+"i100" = "SZOBÁK SZÁMA";
+
+/* Asset: i101 */
+"i101" = "AUTÓ MÁRKÁJA";
+
+/* Asset: i102 */
+"i102" = "SASSZÉSZÁM";
+
+/* Asset: i103 */
+"i103" = "CM3";
+
+/* Asset: i104 */
+"i104" = "AUTÓ MODELLJE";
+
+/* Asset: i105 */
+"i105" = "ERŐ";
+
+/* Asset: i106 */
+"i106" = "AUTÓ TIPUSA";
+
+/* Asset: i107 */
+"i107" = "ÉPITÉSI ÉVE";
+
+/* Asset: i108 */
+"i108" = "Szemely autó";
+
+/* Asset: i109 */
+"i109" = "Motorbicikli";
+
+/* Asset: i110 */
+"i110" = "MEGYE, TALON HELYSÉGE";
+
+/* Asset: i111 */
+"i111" = "Rendszám";
+
+/* Asset: i112 */
+"i112" = "Terepjármű";
+
+/* Asset: i113 */
+"i113" = "ÉPÜLET MAGASSÁGA  SZINT";
+
+/* Asset: i114 */
+"i114" = "EGYÉBB INFOK";
+
+/* Asset: i115 */
+"i115" = "FELÜLETE";
+
+/* Asset: i116 */
+"i116" = "2";
+
+/* Asset: i117 */
+"i117" = "LAKOSOK SZÁMA";
+
+/* Asset: i118 */
+"i118" = "ÉPÜLET SZERKEZETE";
+
+/* Asset: i119 */
+"i119" = "Magánház";
+
+/* Asset: i120 */
+"i120" = "KÉZBESITÉS (MEGYE, HELYSÉG)";
+
+/* Asset: i121 */
+"i121" = "KÉZBESITÉS : UTCA, SZÁM, TÖMBHÁZ";
+
+/* Asset: i122 */
+"i122" = "MEGNEVEZÉS";
+
+/* Asset: i123 */
+"i123" = "A szelvény nem található.";
+
+/* Asset: i124 */
+"i124" = "Szolgáltató";
+
+/* Asset: i125 */
+"i125" = "Kérünk egészitsd ki a telefonszámoddal és az email cimeddel az ADATAIM - PROFILOM menürészben.Erre azért van szükség, hogy elküldhessük az ajánlatot.";
+
+/* Asset: i126 */
+"i126" = "A biztositott összeg";
+
+/* Asset: i127 */
+"i127" = "Biztositás elkezdésének dátuma";
+
+/* Asset: i128 */
+"i128" = "Számol";
+
+/* Asset: i129 */
+"i129" = "Vodafone";
+
+/* Asset: i130 */
+"i130" = "Orange";
+
+/* Asset: i131 */
+"i131" = "AKARSZ NEKUNK MONDANI VALAMIT?";
+
+/* Asset: i132 */
+"i132" = "Cosmote";
+
+/* Asset: i133 */
+"i133" = "tasfwe fewfe";
+
+/* Asset: i134 */
+"i134" = "te";
+
+/* Asset: i135 */
+"i135" = "RÉSZLETFIZETÉS DÁTUMA CASCO";
+
+/* Asset: i136 */
+"i136" = "utolsó érvényességi dátum";
+
+/* Asset: i137 */
+"i137" = "Start";
+
+/* Asset: i138 */
+"i138" = "RÉSZLETFIZETÉS DÁTUMA CASCO";
+
+/* Asset: i139 */
+"i139" = "11.11.11";
+
+/* Asset: i140 */
+"i140" = "Önrész";
+
+/* Asset: i141 */
+"i141" = "nélkül";
+
+/* Asset: i142 */
+"i142" = "Sport lefedése";
+
+/* Asset: i143 */
+"i143" = "Elektronikus";
+
+/* Asset: i144 */
+"i144" = "Csomagokra";
+
+/* Asset: i145 */
+"i145" = "Törlés megerösitése";
+
+/* Asset: i146 */
+"i146" = "Nyomd meg az IGEN-t e bejegyzés törléséhez, ha nem szeretnéd törölni a bejegyzést, nyomd meg a NEM-et";
+
+/* Asset: i147 */
+"i147" = "Válaszd ki a járművet";
+
+/* Asset: i148 */
+"i148" = "Válaszd ki a tulajdonost";
+
+/* Asset: i149 */
+"i149" = "JÁRMŰ TULAJDONOSA (NÉZD A TALONT)";
+
+/* Asset: i150 */
+"i150" = "Gépkocsi kilómeteróra állása";
+
+/* Asset: i151 */
+"i151" = "Gepkocsi szine";
+
+/* Asset: i152 */
+"i152" = "Ha az autonak van CASCO-ja válaszd ki a biztositó társaságot";
+
+/* Asset: i153 */
+"i153" = "Allianz";
+
+/* Asset: i154 */
+"i154" = "Omniasig";
+
+/* Asset: i155 */
+"i155" = "Generali";
+
+/* Asset: i156 */
+"i156" = "információ ÁRCSÖKKENTÉSEKRŐL";
+
+/* Asset: i157 */
+"i157" = "válassz a listábol";
+
+/* Asset: i158 */
+"i158" = "BEBIZTOSITOTT AUTÓ";
+
+/* Asset: i159 */
+"i159" = "Ez teszi tranzit?";
+
+/* Asset: i160 */
+"i160" = "i";
+
+/* Asset: i161 */
+"i161" = "Fizetési lehetöségek";
+
+/* Asset: i162 */
+"i162" = "Kirándulás célja";
+
+/* Asset: i163 */
+"i163" = "egyben";
+
+/* Asset: i164 */
+"i164" = "2 részletben";
+
+/* Asset: i165 */
+"i165" = "4 részletben";
+
+/* Asset: i166 */
+"i166" = "\"Autó hozzáadása\"";
+
+/* Asset: i167 */
+"i167" = "\"Lakásadatok\nbevezetése\"";
+
+/* Asset: i168 */
+"i168" = "\"Személy\nbevezetése\"";
+
+/* Asset: i169 */
+"i169" = "Teljes\nfeltételek";
+
+/* Asset: i170 */
+"i170" = "Lefedések\nösszegzése";
+
+/* Asset: i171 */
+"i171" = "Nincs elmentett személy.Egy új személy adatainak bevezetéséhez nyomd meg a gombot";
+
+/* Asset: i172 */
+"i172" = "Nincs elmentett lakás.Egy új lakás adatainak bevezetéséhez nyomd meg a gombot";
+
+/* Asset: i173 */
+"i173" = "Nincsenek elmentett autók. Egy új autó hozzáadásához nyomd meg az gombot.";
+
+/* Asset: i174 */
+"i174" = "Nincs rendelésed. Az összes rendeléseim automatikus megjelenése.";
+
+/* Asset: i175 */
+"i175" = "titlu";
+
+/* Asset: i176 */
+"i176" = "Kikeressük a\nlegalacsonyabb\nárakat direkt\na biztositoktól.";
+
+/* Asset: i177 */
+"i177" = "Készpénz\nkézbesitéskor";
+
+/* Asset: i178 */
+"i178" = "OP banki/\nátutalás";
+
+/* Asset: i179 */
+"i179" = "ONLINE,\nkártyával";
+
+/* Asset: i180 */
+"i180" = "E-MAIL";
+
+/* Asset: i181 */
+"i181" = "TELEFON";
+
+/* Asset: i182 */
+"i182" = "Ezek az információk át lesznek küldve egy i-Asigurare munkatársnak. Igyekszünk megkapni a te autodnak a legalacsonyabb árakat.A túl sok megrendelésnek/keresnek köszönhetően eltarthat 3 napig amig elküdjük neked az árakat, mivelhogy minden kérést külön elemzünk.Ebből kifolyolag kerünk, hogy csak akkor kérj ajánlatot, ha az autodnak tényleg szüksége van CASCO-ra az elkövetkező 30 napban.";
+
+/* Asset: i183 */
+"i183" = "Teszt volt. Visszamondom";
+
+/* Asset: i184 */
+"i184" = "Megértettem. Kerem a CASCOT";
+
+/* Asset: i185 */
+"i185" = "5.000\nEUR";
+
+/* Asset: i186 */
+"i186" = "10.000\nEUR";
+
+/* Asset: i187 */
+"i187" = "30.000\nEUR";
+
+/* Asset: i188 */
+"i188" = "50.000\nEUR";
+
+/* Asset: i189 */
+"i189" = "5.000 €";
+
+/* Asset: i190 */
+"i190" = "10.000 €";
+
+/* Asset: i191 */
+"i191" = "30.000 €";
+
+/* Asset: i192 */
+"i192" = "50.000 €";
+
+/* Asset: i193 */
+"i193" = "B0 bónuszt kaptál.Az árak magasabbak lehetnek. Lehetséges okok :";
+
+/* Asset: i194 */
+"i194" = "Válasszon utazók\ntöbb szemely választásának lehetősége";
+
+/* Asset: i195 */
+"i195" = "Valós\nérték";
+
+/* Asset: i196 */
+"i196" = "6 hónap";
+
+/* Asset: i197 */
+"i197" = "12 hónap";
+
+/* Asset: i198 */
+"i198" = "Piaci\n érték";
+
+/* Asset: i199 */
+"i199" = "Bank\n felmérése";
+
+/* Asset: i200 */
+"i200" = "Meglehet, hogy a CEDAM adatbázis nem volt frissitve(eltarthat 2-3 hónapig is a kibocsájtás és az adatbázisba kerülés közt\nMegtörténhet, hogy az autonak nincs RCA-ja.Ha a szelvényt nem találod, akkor a következök lehetnek :";
+
+/* Asset: i201 */
+"i201" = "a biztositó társaság nem küldte el az adatokat a CEDAM-ba vagy pedig hibásan küldte el azokat.";
+
+/* Asset: i202 */
+"i202" = "fie baza de date CEDAM nu este actualizata (poate dura pana la 2-3 luni de la emiterea politei pana la inregistrarea ei in baza de date CEDAM)";
+
+/* Asset: i203 */
+"i203" = "fie autovehiculul nu are asigurare RCA";
+
+/* Asset: i204 */
+"i204" = "Ujraéppitési ár";
+
+/* Asset: i205 */
+"i205" = "Kiskorú\ngyerekek";
+
+/* Asset: i206 */
+"i206" = "Mozgássérült\n";
+
+/* Asset: i207 */
+"i207" = "Nincsenek elöre beállitott riasztások.Elmenthetsz riasztásokat autoknak és lakásoknak az \"Adataim\" menüben";
+
+/* Asset: i208 */
+"i208" = "nu exista";
+
+/* Asset: i209 */
+"i209" = "Egy biztositási szelvény érvényességét a CSA CEDAM adatbázisa alapján ellenörizd : http:\cedam.csa-isc.ro. Hozzávetőlegesen 1 honapot vesz igénybe, hogy egy ujonnan kiadott szelvény bevezetödjön a CEDAM adatbázisba";
+
+/* Asset: i210 */
+"i210" = "Általánosságok";
+
+/* Asset: i211 */
+"i211" = "Házas";
+
+/* Asset: i212 */
+"i212" = "Nyugdijas";
+
+/* Asset: i213 */
+"i213" = "A család állam által eltartott tagjai";
+
+/* Asset: i214 */
+"i214" = "Hajtási jogositvány megszerzésének éve";
+
+/* Asset: i215 */
+"i215" = "Figyelem : egyes biztositási társaságok kérhetnek igazolásokat (fogyatékosság,állam általi eltartottság)";
+
+/* Asset: i216 */
+"i216" = "Megtetted az első lépést az\ni-Asigurare tapasztalatában.\nKészülj fel, hogy megtudd milyen az ha minden biztositásod ott található a zsebeidben.";
+
+/* Asset: i217 */
+"i217" = " Mielött elkezdenéd kerünk válaszd ki a mobil szolgáltatod : ";
+
+/* Asset: i218 */
+"i218" = "Az RCA szelvény ervenyesseget az auto sasszeszamjanak alapjan ellenorizd";
+
+/* Asset: i219 */
+"i219" = "Sajnáljuk, az árakat nem sikerült kiszámolni, mert nincs internetkapcsolatod. Kérünk nézd meg, hogy az internet kapcsolatod aktiv-e és szamold ujra. Köszönjük!";
+
+/* Asset: i220 */
+"i220" = "Idáig nem kaptál jelentéseket. Bizonyosodj meg hogy a Push Notification funkció az i-Asigurare aktiv.";
+
+/* Asset: i221 */
+"i221" = "●hibásan irtad be a sasszészámot;\n●hibásan irtad be a személyi számot / fiszkális kodot;\n●más személyi számot vagy fiszkális kodot irtál be mint a tulajdonosé;\n●Nincs nyoma ennek az auto-tulajdonos kapcsolatnak, ebben az esetben kerünk ne vedd figyelembe ezt a figyelmeztétest.";
+
+/* Asset: i222 */
+"i222" = "Romana";
+
+/* Asset: i223 */
+"i223" = "Magyar";
+
+/* Asset: i224 */
+"i224" = "English";
+
+/* Asset: i225 */
+"i225" = "Adatok szinkronizálása";
+
+/* Asset: i226 */
+"i226" = "Visszaszerzed az adatokat?";
+
+/* Asset: i227 */
+"i227" = "Ha már használtad ezt az aplikációt ezen a telefonon, segithetünk, hogy visszaszerezd az elmentett adatokat.Akarod szinkronizálni?";
+
+/* Asset: i228 */
+"i228" = "Adataim";
+
+/* Asset: i229 */
+"i229" = "i-Asigurare aplikáció";
+
+/* Asset: i230 */
+"i230" = "Biztosits okosan a telefonodról.";
+
+/* Asset: i231 */
+"i231" = "Profilom";
+
+/* Asset: i232 */
+"i232" = "Profil konfigurálása";
+
+/* Asset: i233 */
+"i233" = "Kontóm";
+
+/* Asset: i234 */
+"i234" = "Ezek a te informácioid";
+
+/* Asset: i235 */
+"i235" = "Magamról";
+
+/* Asset: i236 */
+"i236" = "az adatok hibásak lehetnek";
+
+/* Asset: i237 */
+"i237" = "CSALÁD ÉS KERESZTNÉV";
+
+/* Asset: i238 */
+"i238" = "Töltsd ki a család- és keresztneveddel";
+
+/* Asset: i239 */
+"i239" = "CNP";
+
+/* Asset: i240 */
+"i240" = "Szemelyi szam";
+
+/* Asset: i241 */
+"i241" = "MEGYE, HELYSÉG";
+
+/* Asset: i242 */
+"i242" = "CIM";
+
+/* Asset: i243 */
+"i243" = "A személyazonossági igazolványban szereplő teljes cim";
+
+/* Asset: i244 */
+"i244" = "TELEFON";
+
+/* Asset: i245 */
+"i245" = "Telefonszám amelyen elerhető vagy";
+
+/* Asset: i246 */
+"i246" = "EMAIL";
+
+/* Asset: i247 */
+"i247" = "Levelezési email cim (megrendelésekre, biztositási szerződésekre, figyelmeztetésekre)";
+
+/* Asset: i248 */
+"i248" = "VALASSZ SZOLGALTATOT";
+
+/* Asset: i249 */
+"i249" = "Kérünk válaszd ki a mobil szolgáltatódat";
+
+/* Asset: i250 */
+"i250" = "Szemelyazonossagi/Utlevel szeriaszama";
+
+/* Asset: i251 */
+"i251" = "A személyazonossági igazolvány szériaszáma (EU) vagy az útlevél szériaszáma(UE+más országok). Erre azért van szükség, hogy ki lehessen számolni az utazási biztositások árát";
+
+/* Asset: i252 */
+"i252" = "Cégem";
+
+/* Asset: i253 */
+"i253" = "MEGNEVEZÉS";
+
+/* Asset: i254 */
+"i254" = "Ird be a cég megnevezését";
+
+/* Asset: i255 */
+"i255" = "Adószám";
+
+/* Asset: i256 */
+"i256" = "Adószám - ennek alapján megprobálunk informáciokat beszerezni, mint peldául a cég megnevezése és székhelye";
+
+/* Asset: i257 */
+"i257" = "CIM";
+
+/* Asset: i258 */
+"i258" = "A cég székhelye";
+
+/* Asset: i259 */
+"i259" = "CAEN kod";
+
+/* Asset: i260 */
+"i260" = "Szolgáltató";
+
+/* Asset: i261 */
+"i261" = "Gépjárműveim";
+
+/* Asset: i262 */
+"i262" = "autó";
+
+/* Asset: i263 */
+"i263" = "autói";
+
+/* Asset: i264 */
+"i264" = "Autók listája";
+
+/* Asset: i265 */
+"i265" = "Nincsenek elmentett autók. Egy új autó hozzáadásához nyomd meg az \"AUTÓ HOZZÁADÁSA\" gombot.";
+
+/* Asset: i266 */
+"i266" = "Autó hozzáadása";
+
+/* Asset: i267 */
+"i267" = "új autó";
+
+/* Asset: i268 */
+"i268" = "Töltsd ki az alábbi adatokat";
+
+/* Asset: i269 */
+"i269" = "A jármű információi";
+
+/* Asset: i270 */
+"i270" = "megváltoztathatod az alábbi adatokat:";
+
+/* Asset: i271 */
+"i271" = "autók jelentése";
+
+/* Asset: i272 */
+"i272" = "válaszd ki lennebb a biztositások lejárásának dátumát";
+
+/* Asset: i273 */
+"i273" = "Jármű Információi";
+
+/* Asset: i274 */
+"i274" = "Jelentések";
+
+/* Asset: i275 */
+"i275" = "AUTÓ MÁRKÁJA";
+
+/* Asset: i276 */
+"i276" = "Autó márkája";
+
+/* Asset: i277 */
+"i277" = "Keresés";
+
+/* Asset: i278 */
+"i278" = "AUTÓ MODELLJE";
+
+/* Asset: i279 */
+"i279" = "Ird be az autó modeljét, pl Logan, Golf, Astra";
+
+/* Asset: i280 */
+"i280" = "AUTÓ TIPUSA";
+
+/* Asset: i281 */
+"i281" = "Válaszd ki az autó tipusát";
+
+/* Asset: i282 */
+"i282" = "Szemely autó";
+
+/* Asset: i283 */
+"i283" = "Közös autó";
+
+/* Asset: i284 */
+"i284" = "Terepjármű";
+
+/* Asset: i285 */
+"i285" = "Motorbicikli";
+
+/* Asset: i286 */
+"i286" = "Moped";
+
+/* Asset: i287 */
+"i287" = "Oldalkocsi";
+
+/* Asset: i288 */
+"i288" = "Robogó";
+
+/* Asset: i289 */
+"i289" = "ATV";
+
+/* Asset: i290 */
+"i290" = "Mentőautó";
+
+/* Asset: i291 */
+"i291" = "Lakókocsi";
+
+/* Asset: i292 */
+"i292" = "Mikrobusz";
+
+/* Asset: i293 */
+"i293" = "Rövidtávu busz";
+
+/* Asset: i294 */
+"i294" = "Hosszú távú busz";
+
+/* Asset: i295 */
+"i295" = "Kisteherautó";
+
+/* Asset: i296 */
+"i296" = "Autófurgon";
+
+/* Asset: i297 */
+"i297" = "Teherautó";
+
+/* Asset: i298 */
+"i298" = "Kamion";
+
+/* Asset: i299 */
+"i299" = "Nyergesvontató";
+
+/* Asset: i300 */
+"i300" = "Traktor";
+
+/* Asset: i301 */
+"i301" = "Pótkocsi";
+
+/* Asset: i302 */
+"i302" = "Utánfutó";
+
+/* Asset: i303 */
+"i303" = "MEGYE, TALON HELYSÉGE";
+
+/* Asset: i304 */
+"i304" = "Megyék";
+
+/* Asset: i305 */
+"i305" = "Helységek";
+
+/* Asset: i306 */
+"i306" = "Rendszám";
+
+/* Asset: i307 */
+"i307" = "Ha az autó beiratásra vár, vezesd be-";
+
+/* Asset: i308 */
+"i308" = "SASSZÉSZÁM";
+
+/* Asset: i309 */
+"i309" = "Ird be helyesen a sasszészámot, hogy reális kötelező biztositási árat kaphass.Új forgalmi esetén E pozició, régi esetén 3";
+
+/* Asset: i310 */
+"i310" = "CM3";
+
+/* Asset: i311 */
+"i311" = "Új forgalmi engedély esetén P.1 pozició, régi esetén a 17 pozició";
+
+/* Asset: i312 */
+"i312" = "ERŐ";
+
+/* Asset: i313 */
+"i313" = "Új forgalmi engedély esetén P.2 pozició, régi esetén a 17 pozició";
+
+/* Asset: i314 */
+"i314" = "FÉRŐHELYEK SZÁMA";
+
+/* Asset: i315 */
+"i315" = "Új forgalmi engedély esetén S.1 pozició, régi esetén a 13 pozició";
+
+/* Asset: i316 */
+"i316" = "ÖSSY SÚJA";
+
+/* Asset: i317 */
+"i317" = "Új forgalmi engedély esetén F.1 pozició, regi esetén a 11 pozició";
+
+/* Asset: i318 */
+"i318" = "GYÁRTÁSI ÉVE";
+
+/* Asset: i319 */
+"i319" = "Új forgalmi engedély esetén B pozició, régi esetén a 15 pozició";
+
+/* Asset: i320 */
+"i320" = "TÖRZSKÖNYV SZÁMA";
+
+/* Asset: i321 */
+"i321" = "Új forgalmi engedély esetén X pozició, régi esetén a 4 pozició";
+
+/* Asset: i322 */
+"i322" = "CÉL AUTÓ";
+
+/* Asset: i323 */
+"i323" = "Válaszd ki az autó kategoriáját";
+
+/* Asset: i324 */
+"i324" = "magán célra";
+
+/* Asset: i325 */
+"i325" = "áru szállitás";
+
+/* Asset: i326 */
+"i326" = "személy szállitás";
+
+/* Asset: i327 */
+"i327" = "nemzetközi szállitás";
+
+/* Asset: i328 */
+"i328" = "őrző-védő szolgálat";
+
+/* Asset: i329 */
+"i329" = "taxi";
+
+/* Asset: i330 */
+"i330" = "maxi-taxi";
+
+/* Asset: i331 */
+"i331" = "soföriskola";
+
+/* Asset: i332 */
+"i332" = "bérbeadás";
+
+/* Asset: i333 */
+"i333" = "gyorsposta";
+
+/* Asset: i334 */
+"i334" = "egyébb célra";
+
+/* Asset: i335 */
+"i335" = "ÜZEMANYAG";
+
+/* Asset: i336 */
+"i336" = "benzin";
+
+/* Asset: i337 */
+"i337" = "motorina";
+
+/* Asset: i338 */
+"i338" = "gáz";
+
+/* Asset: i339 */
+"i339" = "hibrid";
+
+/* Asset: i340 */
+"i340" = "üzemanyag nélkül";
+
+/* Asset: i341 */
+"i341" = "LEASINGES GÉPJÁRMŰ";
+
+/* Asset: i342 */
+"i342" = "LEASING TÉARSASÁG NEVE";
+
+/* Asset: i343 */
+"i343" = "IGEN";
+
+/* Asset: i344 */
+"i344" = "NEM";
+
+/* Asset: i345 */
+"i345" = "Riasztások módositása";
+
+/* Asset: i346 */
+"i346" = "Info";
+
+/* Asset: i347 */
+"i347" = "A risztások beállitásához szüksér van az autó adatainak a kitöltéséhez";
+
+/* Asset: i348 */
+"i348" = "KÖTELEZŐ GÉPJÁRMŰ BIZTOSITÁS";
+
+/* Asset: i349 */
+"i349" = "GÉPJÁRMŰ MŰSZAKI VIZSGÁJA";
+
+/* Asset: i350 */
+"i350" = "UTADÓ";
+
+/* Asset: i351 */
+"i351" = "CASCO";
+
+/* Asset: i352 */
+"i352" = "RÉSZLETFIZETÉS DÁTUMA CASCO";
+
+/* Asset: i354 */
+"i354" = "utolsó érvényességi dátum";
+
+/* Asset: i355 */
+"i355" = "Lemondok";
+
+/* Asset: i356 */
+"i356" = "Lemond";
+
+/* Asset: i357 */
+"i357" = "Mentés";
+
+/* Asset: i358 */
+"i358" = "Lakásaim";
+
+/* Asset: i359 */
+"i359" = "lakás";
+
+/* Asset: i360 */
+"i360" = "lakás";
+
+/* Asset: i361 */
+"i361" = "Lakások listája";
+
+/* Asset: i362 */
+"i362" = "Nincs elmentett lakás.Egy új lakás adatainak bevezetéséhez nyomd meg a Lakásadatok bevezetése gombot";
+
+/* Asset: i363 */
+"i363" = "Lakásadatok bevezetése";
+
+/* Asset: i364 */
+"i364" = "Lakás";
+
+/* Asset: i365 */
+"i365" = "Új lakás";
+
+/* Asset: i366 */
+"i366" = "tölds ki az alábbi adatokat";
+
+/* Asset: i367 */
+"i367" = "lakásról infok";
+
+/* Asset: i368 */
+"i368" = "adatok a lakásrok";
+
+/* Asset: i369 */
+"i369" = "modosithatod az alábbi adatokat";
+
+/* Asset: i370 */
+"i370" = "Riasztás";
+
+/* Asset: i371 */
+"i371" = "Lakással kapcsolatos riasztás";
+
+/* Asset: i372 */
+"i372" = "Riasztások beállitása";
+
+/* Asset: i373 */
+"i373" = "Riasztások mentéséhez szükséges kitölteni a lakással kapcsolatos adatokat";
+
+/* Asset: i374 */
+"i374" = "CIM";
+
+/* Asset: i375 */
+"i375" = "Teljes cim  utca, szám, tömbház, stb.";
+
+/* Asset: i376 */
+"i376" = "LAKÁSTIPUSA";
+
+/* Asset: i377 */
+"i377" = "Tömbházlakás";
+
+/* Asset: i378 */
+"i378" = "Ikerház";
+
+/* Asset: i379 */
+"i379" = "Magánház";
+
+/* Asset: i380 */
+"i380" = "ÉPÜLET SZERKEZETE";
+
+/* Asset: i381 */
+"i381" = "Válaszd ki az épület szerkezetét";
+
+/* Asset: i382 */
+"i382" = "vasbeton";
+
+/* Asset: i383 */
+"i383" = "beton";
+
+/* Asset: i384 */
+"i384" = "bca";
+
+/* Asset: i385 */
+"i385" = "tégla";
+
+/* Asset: i386 */
+"i386" = "ki nem égetett tégla";
+
+/* Asset: i387 */
+"i387" = "vályogház";
+
+/* Asset: i388 */
+"i388" = "fa";
+
+/* Asset: i389 */
+"i389" = "tégla-fa";
+
+/* Asset: i390 */
+"i390" = "ÉPÜLET MAGASSÁGA  SZINT";
+
+/* Asset: i391 */
+"i391" = "Emeletek száma";
+
+/* Asset: i392 */
+"i392" = "EMELET";
+
+/* Asset: i393 */
+"i393" = "Hányadik emeleten helyezkedik el az ingatlan";
+
+/* Asset: i394 */
+"i394" = "ÉPITÉSI ÉVE (>=1900)";
+
+/* Asset: i395 */
+"i395" = "Épitési éve";
+
+/* Asset: i396 */
+"i396" = "SZOBÁK SZÁMA";
+
+/* Asset: i397 */
+"i397" = "FELÜLETE";
+
+/* Asset: i398 */
+"i398" = "Kihasználható lakófelület  mp";
+
+/* Asset: i399 */
+"i399" = "LAKOSOK SZÁMA";
+
+/* Asset: i400 */
+"i400" = "EGYÉBB INFOK";
+
+/* Asset: i401 */
+"i401" = "Lakás adatai";
+
+/* Asset: i402 */
+"i402" = "Van riasztó";
+
+/* Asset: i403 */
+"i403" = "Van az ablakokon rács";
+
+/* Asset: i404 */
+"i404" = "Tüz érzékelő riasztó";
+
+/* Asset: i405 */
+"i405" = "Van";
+
+/* Asset: i406 */
+"i406" = "Elszigetelt terület";
+
+/* Asset: i407 */
+"i407" = "Folyamatosan lakott";
+
+/* Asset: i408 */
+"i408" = "Lopás kiterjesztése javakra";
+
+/* Asset: i409 */
+"i409" = "Csőrepedés kiterjesztése";
+
+/* Asset: i410 */
+"i410" = "House föld";
+
+/* Asset: i411 */
+"i411" = "LAKÁS";
+
+/* Asset: i412 */
+"i412" = "LAKÁS BIZTOSITÁS RÉSZLET";
+
+/* Asset: i413 */
+"i413" = "válaszd ki a lejárandó adatokat";
+
+/* Asset: i414 */
+"i414" = "Más biztositandó személyek";
+
+/* Asset: i415 */
+"i415" = "személy";
+
+/* Asset: i416 */
+"i416" = "személy";
+
+/* Asset: i417 */
+"i417" = "Személyek listája";
+
+/* Asset: i418 */
+"i418" = "Személy\nbevezetése";
+
+/* Asset: i419 */
+"i419" = "Nincs elmentett személy.Egy új személy adatainak bevezetéséhez nyomd meg a Személy  bevezetése gombot";
+
+/* Asset: i420 */
+"i420" = "új személy";
+
+/* Asset: i421 */
+"i421" = "tölds ki az alábbi adatokat";
+
+/* Asset: i422 */
+"i422" = "Magán személy";
+
+/* Asset: i423 */
+"i423" = "jogi személy";
+
+/* Asset: i424 */
+"i424" = "adatok keresése";
+
+/* Asset: i425 */
+"i425" = "Személy adatai";
+
+/* Asset: i426 */
+"i426" = "megválltoztathatod az alábbi adatokat";
+
+/* Asset: i427 */
+"i427" = "Rendeléseim";
+
+/* Asset: i428 */
+"i428" = "biztositás";
+
+/* Asset: i429 */
+"i429" = "biztositás";
+
+/* Asset: i430 */
+"i430" = "rendelések";
+
+/* Asset: i431 */
+"i431" = "összes rendeléseim";
+
+/* Asset: i432 */
+"i432" = "Nincs rendelésed. Az összes rendeléseim automatikus megjelenése.";
+
+/* Asset: i433 */
+"i433" = "Biztositások listája";
+
+/* Asset: i434 */
+"i434" = "hogy töltse le az adatokat ...";
+
+/* Asset: i435 */
+"i435" = "Az alkalmazás bezárul.\n Re Biztos, hogy bezárjuk az alkalmazást? ";
+
+/* Asset: i436 */
+"i436" = "Biztositás megkötése";
+
+/* Asset: i437 */
+"i437" = "Adataim";
+
+/* Asset: i438 */
+"i438" = "Riasztások";
+
+/* Asset: i439 */
+"i439" = "Egyebek";
+
+/* Asset: i440 */
+"i440" = "Autó";
+
+/* Asset: i441 */
+"i441" = "Ha az autó bérelt, írja be a nevét a lízingcég.";
+
+/* Asset: i442 */
+"i442" = "Kérünk töltsd ki az üres mezőket vagy javitsd ki a hibás információkat";
+
+/* Asset: i443 */
+"i443" = "Személy";
+
+/* Asset: i444 */
+"i444" = "Terhelés...";
+
+/* Asset: i446 */
+"i446" = "Számoló";
+
+/* Asset: i447 */
+"i447" = "Biztositás megkötése";
+
+/* Asset: i448 */
+"i448" = "Biztositási árak";
+
+/* Asset: i449 */
+"i449" = "Megrendelés véglegesitése";
+
+/* Asset: i450 */
+"i450" = "Sajnáljuk, az árakat nem sikerült kiszámolni, mert nincs internetkapcsolatod. Kérünk nézd meg, hogy az internet kapcsolatod aktiv-e és szamold ujra. Köszönjük!";
+
+/* Asset: i451 */
+"i451" = "Adatok megerösitése";
+
+/* Asset: i452 */
+"i452" = "Nyomd meg az IGEN-t megerösitésként, hogy a bevitt adatok helyesek és el akarod küldeni a rendelést. Ha nem szeretnéd folytatni, nyomd meg a NEM-et.";
+
+/* Asset: i453 */
+"i453" = "A véglegesitésért megnyilik a böngészödben egy levédett oldal, ahol ki tudod fizetni a biztositásod.Az aplikácio bezárodik.";
+
+/* Asset: i454 */
+"i454" = "Kötelező gépjármű szelvény véglegesitése";
+
+/* Asset: i455 */
+"i455" = "A megrendelés regisztrálva van.";
+
+/* Asset: i456 */
+"i456" = "Utazási egészségögyi biztositás";
+
+/* Asset: i457 */
+"i457" = "személyek száma";
+
+/* Asset: i458 */
+"i458" = "Válasszon utazók";
+
+/* Asset: i459 */
+"i459" = "több szemely választásának lehetősége";
+
+/* Asset: i460 */
+"i460" = "persoana zile tara";
+
+/* Asset: i461 */
+"i461" = "kirándulás célja :";
+
+/* Asset: i462 */
+"i462" = "biztositás idötartama :";
+
+/* Asset: i463 */
+"i463" = "Biztositási termékek";
+
+/* Asset: i464 */
+"i464" = "Lakásbiztositási termékek";
+
+/* Asset: i465 */
+"i465" = "Lakásbiztositás összesités";
+
+/* Asset: i466 */
+"i466" = "Összefoglalás";
+
+/* Asset: i467 */
+"i467" = "nap";
+
+/* Asset: i468 */
+"i468" = "nap";
+
+/* Asset: i469 */
+"i469" = "Róla";
+
+/* Asset: i470 */
+"i470" = "Megrendelés véglegesitése";
+
+/* Asset: i471 */
+"i471" = "hogy adatokat küldjön ...";
+
+/* Asset: i472 */
+"i472" = "Köszönjük.";
+
+/* Asset: i473 */
+"i473" = "Kérünk nézd meg, hogy az internet kapcsolatod aktiv-e és szamold ujra. Köszönjük!";
+
+/* Asset: i474 */
+"i474" = "biztositott érték :";
+
+/* Asset: i475 */
+"i475" = "Pentru a salva alerte trebuie sa completezi informatiile in \"Datele Mele\".";
+
+/* Asset: i476 */
+"i476" = "Biztositás lejárása";
+
+/* Asset: i477 */
+"i477" = "Útadó lejárása";
+
+/* Asset: i478 */
+"i478" = "részlet fizetésénk\nszkadens dátuma";
+
+/* Asset: i479 */
+"i479" = "Gépjármű műszaki\nvizsgájának";
+
+/* Asset: i480 */
+"i480" = "PROMÓCIOK";
+
+/* Asset: i481 */
+"i481" = "i-Asigurare ajánlatok";
+
+/* Asset: i482 */
+"i482" = "AKARSZ NEKUNK MONDANI VALAMIT?";
+
+/* Asset: i483 */
+"i483" = "kuldj egy uzenetet";
+
+/* Asset: i484 */
+"i484" = "RCA érvenyesség";
+
+/* Asset: i485 */
+"i485" = "ellenorizd RCA szelvényed";
+
+/* Asset: i486 */
+"i486" = "ÁLLTALÁNOS FELTÉTELEK";
+
+/* Asset: i487 */
+"i487" = "olvasd el a feltételeket";
+
+/* Asset: i488 */
+"i488" = "Szerzödés";
+
+/* Asset: i489 */
+"i489" = "Hogyan találsz meg";
+
+/* Asset: i490 */
+"i490" = "Egyébb";
+
+/* Asset: i491 */
+"i491" = "Egyébb informáciok";
+
+/* Asset: i492 */
+"i492" = "mindig informálva és naprakész adatokkal leszel ellátva";
+
+/* Asset: i493 */
+"i493" = "ÁLLTALÁNOS";
+
+/* Asset: i494 */
+"i494" = "FELTÉTELEK";
+
+/* Asset: i495 */
+"i495" = "Beállítások";
+
+/* Asset: i496 */
+"i496" = "Űzenet kűldése";
+
+/* Asset: i497 */
+"i497" = "se trimite mesajul...";
+
+/* Asset: i498 */
+"i498" = "verificam polita...";
+
+/* Asset: i499 */
+"i499" = "A szelvény nem található.";
+
+/* Asset: i500 */
+"i500" = "Érvényes szelvény";
+
+/* Asset: i501 */
+"i501" = "A szelvény nem található.";
+
+/* Asset: i502 */
+"i502" = "Lejárt szelvény";
+
+/* Asset: i503 */
+"i503" = "Válaszd ki az épület szerkezetét";
+
+/* Asset: i504 */
+"i504" = "vasbeton";
+
+/* Asset: i505 */
+"i505" = "beton";
+
+/* Asset: i506 */
+"i506" = "bca";
+
+/* Asset: i507 */
+"i507" = "tégla";
+
+/* Asset: i508 */
+"i508" = "ki nem égetett tégla";
+
+/* Asset: i509 */
+"i509" = "vályogház";
+
+/* Asset: i510 */
+"i510" = "fa";
+
+/* Asset: i511 */
+"i511" = "tégla-fa";
+
+/* Asset: i512 */
+"i512" = "Válaszd ki az autó kategoriáját";
+
+/* Asset: i513 */
+"i513" = "magán\ncélra";
+
+/* Asset: i514 */
+"i514" = "áru\nszállitás";
+
+/* Asset: i515 */
+"i515" = "személy\nszállitás";
+
+/* Asset: i516 */
+"i516" = "nemzetközi\nszállitás";
+
+/* Asset: i517 */
+"i517" = "őrző-védő\nszolgálat";
+
+/* Asset: i518 */
+"i518" = "taxi\n";
+
+/* Asset: i519 */
+"i519" = "maxi-taxi\n";
+
+/* Asset: i520 */
+"i520" = "soföriskola\n";
+
+/* Asset: i521 */
+"i521" = "bérbeadás\n";
+
+/* Asset: i522 */
+"i522" = "gyorsposta\n";
+
+/* Asset: i523 */
+"i523" = "egyébb\ncélra";
+
+/* Asset: i524 */
+"i524" = "CÉL AUTÓ";
+
+/* Asset: i525 */
+"i525" = "benzin";
+
+/* Asset: i526 */
+"i526" = "motorina";
+
+/* Asset: i527 */
+"i527" = "gáz";
+
+/* Asset: i528 */
+"i528" = "hibrid";
+
+/* Asset: i529 */
+"i529" = "üzemanyag nélkül";
+
+/* Asset: i530 */
+"i530" = "Válaszd ki a biztositót ahol a CASCO-d van";
+
+/* Asset: i531 */
+"i531" = "AUTÓ TIPUSA";
+
+/* Asset: i532 */
+"i532" = "Válaszd ki az autó tipusát";
+
+/* Asset: i533 */
+"i533" = "Szemely\nautó";
+
+/* Asset: i534 */
+"i534" = "Közös\nautó";
+
+/* Asset: i535 */
+"i535" = "Terepjármű\n";
+
+/* Asset: i536 */
+"i536" = "Motorbicikli\n";
+
+/* Asset: i537 */
+"i537" = "Moped\n";
+
+/* Asset: i538 */
+"i538" = "Oldalkocsi\n";
+
+/* Asset: i539 */
+"i539" = "Robogó\n";
+
+/* Asset: i540 */
+"i540" = "ATV\n";
+
+/* Asset: i541 */
+"i541" = "Mentőautó\n";
+
+/* Asset: i542 */
+"i542" = "Lakókocsi\n";
+
+/* Asset: i543 */
+"i543" = "Mikrobusz\n";
+
+/* Asset: i544 */
+"i544" = "Rövidtávu\nbusz";
+
+/* Asset: i545 */
+"i545" = "Hosszú\ntávú busz";
+
+/* Asset: i546 */
+"i546" = "Kisteherautó\n";
+
+/* Asset: i547 */
+"i547" = "Autófurgon\n";
+
+/* Asset: i548 */
+"i548" = "Teherautó\n";
+
+/* Asset: i549 */
+"i549" = "Kamion\n";
+
+/* Asset: i550 */
+"i550" = "Nyergesvontató\n";
+
+/* Asset: i551 */
+"i551" = "Traktor\n";
+
+/* Asset: i552 */
+"i552" = "Pótkocsi\n";
+
+/* Asset: i553 */
+"i553" = "Utánfutó\n";
+
+/* Asset: i554 */
+"i554" = "Lakás adatai";
+
+/* Asset: i555 */
+"i555" = "Van riasztó";
+
+/* Asset: i556 */
+"i556" = "Van az ablakokon rács";
+
+/* Asset: i557 */
+"i557" = "Tüz érzékelő riasztó";
+
+/* Asset: i558 */
+"i558" = "Van";
+
+/* Asset: i559 */
+"i559" = "Elszigetelt terület";
+
+/* Asset: i560 */
+"i560" = "Folyamatosan lakott";
+
+/* Asset: i561 */
+"i561" = "Lopás kiterjesztése javakra";
+
+/* Asset: i562 */
+"i562" = "Csőrepedés kiterjesztése";
+
+/* Asset: i563 */
+"i563" = "House föld";
+
+/* Asset: i564 */
+"i564" = "Mesajul a fost trimis.";
+
+/* Asset: i565 */
+"i565" = "\"Autó hozzáadása\"";
+
+/* Asset: i566 */
+"i566" = "\"Lakásadatok bevezetése\"";
+
+/* Asset: i567 */
+"i567" = "\"Személy bevezetése\"";
+
+/* Asset: i568 */
+"i568" = "Árcsökkentések";
+
+/* Asset: i569 */
+"i569" = "Az eredményeket a CEDAM adatbázis fele küldik, nem pedig az i-Asigurare aplikáció fele.Abban az esetben ha a kapott válasz hibás, azt jelenti , hogy a biztositó társaság amelynél megkötötted a szelvényt nem küldte helyesen az informáciokat a CEDAM fele vagy rosszul vitte be az auto rendszámát vagy sasszészámát.";
+
+/* Asset: i570 */
+"i570" = "Ha a szelvényt nem találod, akkor a következök lehetnek :";
+
+/* Asset: i571 */
+"i571" = "Megtetted az első lépést az i-Asigurare tapasztalatában.";
+
+/* Asset: i572 */
+"i572" = "Készülj fel, hogy megtudd milyen az ha minden biztositásod ott található a zsebeidben. Mielött elkezdenéd kerünk válaszd ki a mobil szolgáltatod";
+
+/* Asset: i573 */
+"i573" = "Miért aktiváld a  Push Notification-t :";
+
+/* Asset: i574 */
+"i574" = "kiskorú gyerekek";
+
+/* Asset: i575 */
+"i575" = "mozgássérült";
+
+/* Asset: i576 */
+"i576" = "házas";
+
+/* Asset: i577 */
+"i577" = "nyugdijas";
+
+/* Asset: i578 */
+"i578" = "költségvetés";
+
+/* Asset: i579 */
+"i579" = "Az árak nincsenek kiszámolva. Kérünk számold újra";
+
+/* Asset: i580 */
+"i580" = "Nézd meg a hibajelentés részleteit";
+
+/* Asset: i581 */
+"i581" = "Tedd a kosárba";
+
+/* Asset: i582 */
+"i582" = "B0 bónuszt kaptál";
+
+/* Asset: i583 */
+"i583" = "Lehetséges okok :";
+
+/* Asset: i584 */
+"i584" = "Az árak magasabbak lehetnek.";
+
+/* Asset: i585 */
+"i585" = "Posibile cauze si solutii ale erorii";
+
+/* Asset: i586 */
+"i586" = "Probléma van az árakat kiszámitó szolgáltatással :";
+
+/* Asset: i587 */
+"i587" = "kérjük csináld újra számitásaid pár perc múlva.";
+
+/* Asset: i588 */
+"i588" = "Zárd be az aplikációt és inditsd ujra ha standby-ban volt.";
+
+/* Asset: i589 */
+"i589" = "Időtartam";
+
+/* Asset: i590 */
+"i590" = "hónap";
+
+/* Asset: i591 */
+"i591" = "Gépjármű szelvény összefoglálasa";
+
+/* Asset: i592 */
+"i592" = "Oszd meg Facebook-on!";
+
+/* Asset: i593 */
+"i593" = "Irj egy Tweet-et!";
+
+/* Asset: i594 */
+"i594" = "elzár";
+
+/* Asset: i595 */
+"i595" = "vissza";
+
+/*Asset :i471*/
+"i471" = "adatok küldése...";
+
+/*Asset :i475*/
+"i475" = "Riasztások elmentéséhez megkérem kitölteni az Adataim mappát ";
+
+/*Asset :i497*/
+"i497" = "üzenet küldése folyamatban...";
+
+/*Asset :i498*/
+"i498" = "Szerződés ellenörzése...";
+
+/*Asset :i564*/
+"i564" = "Üzenet elküldve.";
+
+/*Asset :i40*/
+"i40" = "Értesitést kapsz az álltalad beállitott riasztásokról, tudni fogod mikor vannak a promóciok";
+
+/*Asset :i435*/
+"i435" = " Az alkalmazás bezárul.\n Biztos benne,hogy ki szeretne lépni az alkalmazásból ";
+
+/*Asset :i202*/
+"i202" = "lehet a CEDAM adatbázis nincs frissitve (akar 2-3 honapig is eltarthat a folyamat amig a kiállitott szerzödés a CEDAM rendszerbe kerül ";
+
+/*Asset :i203*/
+"i203" = "vagy nincs a gépjárműnek kötelező biztositása";
+
+/*Asset :i600*/
+"i600" = "A lejárati dátum nagyobb kell legyen mint az aktuális dátum !";
+
+/*Asset :i601*/
+"i601" = "Az alkalmazás bezárul.\n Biztos benne,hogy be szeretné zárni az alkalmazást";
+
+/*Asset :i602*/
+"i602" = "Figyelem: A Gothaer biztositó néha problémákkal küzködhet a szerzödés elektronikus kiállitásakor. A biztositás érvényben van , viszont megtörténhet, hogy emailban nem küldödik el. Iyen esetben, hétfőn postázzuk a szerzödést .";
+
+/*Asset :i603*/
+"i603" = "Más társaság választása";
+
+/*Asset :i604*/
+"i604" = "Jóváirom";
+
+/*Asset :i605*/
+"i605" = "Ha egy másik böngészöt állitottál be mint az alapértelmezett, előfordulhat, hogy nem tudod megnyittani az PayU oldalt. Az alapértelmezett böngészőt kell használnod..Ha segitségre van szükséged, elérhetsz minket telefonon vagy e-mailben.";
+
+/*Asset :i606*/
+"i606" = "Telefonszám megadása";
+
+/*Asset :i607*/
+"i607" = "Telefonszám téves beirása";
+
+/*Asset :i608*/
+"i608" = "Irja be a szallitáshoz a cimet";
+
+/*Asset :i609*/
+"i609" = "Irja be az email cimét";
+
+/*Asset :i610*/
+"i610" = " Email cim téves beirása ";
+
+/*Asset :i611*/
+"i611" = " Irja be a szallitáshoz a megyét és városát ";
+
+/*Asset :i612*/
+"i612" = "A kötelező gépjármű biztositást számitó program jelenleg nem müködik. Probálja késöbb";
+
+/*Asset :i613*/
+"i613" = "Kérése elküldve. Az üzenet beérkezését követöen rövid idön belül felvesszük Önnel a kapcsolatot.Smart choice:Kötelező Gépjármű biztositásom az IPhonom segitségével rendeltem.";
+
+/*Asset :i614*/
+"i614" = " A kötelező gépjármű biztositást számitó program jelenleg nem müködik. Probálja késöbb ";
+
+/*Asset :i615*/
+"i615" = " Értesitést kapsz az álltalad beállitott riasztásokról, tudni fogod mikor vannak a promóciok, kedvezmények. ";
+
+/*Asset :i616*/
+"i616" = "Válassza ki a gépjárművet.";
+
+/*Asset :i617*/
+"i617" = "Válassza ki a gépjármű modelljét . Pl: Logan, Golf, Astra";
+
+/*Asset :i618*/
+"i618" = "Válassza ki megyét és a helységet (a bejegyzési igazolvány alapján).";
+
+/*Asset :i619*/
+"i619" = "Irja be rendszámot.";
+
+/*Asset :i620*/
+"i620" = "Irja be az alvázszámot. Nézze meg a forgalmi engedély pozícióját E (új modell) vagy 3-as pozíció (régi modell).";
+
+/*Asset :i621*/
+"i621" = " Változtassa meg az alvázszámot. Nézze meg a forgalmi engedély pozícióját E (új modell) vagy 3-as pozíció (régi modell).";
+
+/*Asset :i622*/
+"i622" = "Irja be a lökettérfogatot. Nézze meg a forgalmi engedély pozícióját P 1 (új modell) vagy 17-es pozíció (régi modell).";
+
+/*Asset :i623*/
+"i623" = "Irja be a loerőt (kw).Nézze meg a forgalmi engedély pozícióját P 2 (új modell) vagy 17-es pozíció (régi modell).";
+
+/*Asset :i624*/
+"i624" = "Irja be az ülőhelyek számát.Nézze meg a forgalmi engedély pozícióját S.1 (új modell) vagy 13-es pozíció (régi modell).";
+
+/*Asset :i625*/
+"i625" = "Irja be az összsúlyát.Nézze meg a forgalmi engedély pozícióját F.1 (új modell) vagy 11-es pozíció (régi modell).";
+
+/*Asset :i626*/
+"i626" = "Irja be az évjáratát.Nézze meg a forgalmi engedély pozícióját B (új modell) vagy 15-es pozíció (régi modell).";
+
+/*Asset :i627*/
+"i627" = "Irja be a forgalmi engedély sorozatszámát.Nézze meg a forgalmi engedély pozícióját X (új modell) vagy 4-es pozíció (régi modell).";
+
+/*Asset :i628*/
+"i628" = " Változtassa meg a forgalmi engedély sorozatszámát. Nézze meg a forgalmi engedély pozícióját X (új modell) vagy 4-es pozíció (régi modell).";
+
+/*Asset :i629*/
+"i629" = "Irja be a nevét (név + keresztnév).";
+
+/*Asset :i630*/
+"i630" = "Irja be a személyi számát.";
+
+/*Asset :i631*/
+"i631" = "Személyi szám kijavitása.";
+
+/*Asset :i632*/
+"i632" = "Válassza ki a megyét és a helységet.";
+
+/*Asset :i633*/
+"i633" = "Irja be a személy hivatalos cimét.";
+
+/*Asset :i634*/
+"i634" = "Cég neve.";
+
+/*Asset :i635*/
+"i635" = "Cég bejegyzési száma.";
+
+/*Asset :i636*/
+"i636" = " Bejegyzési szám válltoztatása.";
+
+/*Asset :i637*/
+"i637" = "Cég megye és székhelyének kiválasztása .";
+
+/*Asset :i638*/
+"i638" = "Cég székhelyének beirása.";
+
+/*Asset :i639*/
+"i639" = "Ingatlan cime megye és város) .";
+
+/*Asset :i640*/
+"i640" = "Ingatlan cime.";
+
+/*Asset :i641*/
+"i641" = "Irja be ay igatlan emeleteinek számát.";
+
+/*Asset :i642*/
+"i642" = " Irja be az ingatlan szintjét.";
+
+/*Asset :i643*/
+"i643" = " Az ingatlan emelete – nem lehet nagyobb mint az össz szintek száma.";
+
+/*Asset :i644*/
+"i644" = " Igatlan épitési éve.";
+
+/*Asset :i645*/
+"i645" = " Az  ingatlannak 1900 kellet épülnie. Másként nem biztositható .";
+
+/*Asset :i646*/
+"i646" = " Az ingatlan épitési éve nem lehet nagyobb mint a folyoév.";
+
+/*Asset :i647*/
+"i647" = "Irja be az ingatlan lakófelületét négyzetméterben.";
+
+/*Asset :i648*/
+"i648" = " Ha egy másik böngészöt állitottál be mint az alapértelmezett, előfordulhat, hogy nem tudod megnyittani az PayU oldalt. Az alapértelmezett böngészőt kell használnod..Ha segitségre van szükséged, elérhetsz minket telefonon vagy e-mailben.";
+
+/*Asset :i649*/
+"i649" = " A Gothaer biztositó néha problémákkal küzködhet a szerzödés elektronikus kiállitásakor. A biztositás érvényben van , viszont megtörténhet, hogy emailban nem küldödik el. Iyen esetben, hétfőn postázzuk a szerzödést.";
+
+/*Asset :i650*/
+"i650" = "Más társaság kiválasztása";
+
+/*Asset :i651*/
+"i651" = "Jóváirom ";
+
+/*Asset :i700*/
+"i700" = "Biztositási";
+
+/*Asset :i701*/
+"i701" = "szelvény";
+
+/*Asset :i702*/
+"i702" = "számold ki az árat és rendeld meg a biztositást";
+
+/*Asset :i703*/
+"i703" = "i-Asigurare";
+
+/*Asset :i704*/
+"i704" = "app";
+
+/*Asset :i705*/
+"i705" = "biztosits okosan a telefonodról";
+
+/*Asset :i706*/
+"i706" = "Saját";
+
+/*Asset :i707*/
+"i707" = "riasztásaim";
+
+/*Asset :i708*/
+"i708" = "i-Asigurare helyetted észben tartja";
+
+/*Asset :i709*/
+"i709" = "Egyébb";
+
+/*Asset :i710*/
+"i710" = "informáciok";
+
+/*Asset :i711*/
+"i711" = "mindig informálva és naprakész adatokkal leszel ellátva";
+
+/*Asset :i712*/
+"i712" = "PROMÓCIOK";
+
+/*Asset :i713*/
+"i713" = "neked";
+
+/*Asset :i714*/
+"i714" = "légy naprakész az ajánlatainkkal";
+
+/*Asset :i715*/
+"i715" = "A te";
+
+/*Asset :i716*/
+"i716" = "űzeneted";
+
+/*Asset :i717*/
+"i717" = "kommunikálj az I-Biztositás csapatával";
+
+/*Asset :i718*/
+"i718" = "RCA";
+
+/*Asset :i719*/
+"i719" = "érvenyesség";
+
+/*Asset :i720*/
+"i720" = "RCA érvényességének ellenörzése";
+
+/*Asset :i721*/
+"i721" = "Álltalános";
+
+/*Asset :i722*/
+"i722" = "szerzödési";
+
+/*Asset :i723*/
+"i723" = "feltételek";
+
+/*Asset :i724*/
+"i724" = "Program feltételeinek alkalmazása";
+
+/*Asset :i725*/
+"i725" = "Kapcsolat";
+
+/*Asset :i726*/
+"i726" = "i-Asigurare";
+
+/*Asset :i727*/
+"i727" = "elérhetöségeink";
+
+/*Asset :i728*/
+"i728" = "Profilom";
+
+/*Asset :i729*/
+"i729" = "";
+
+/*Asset :i730*/
+"i730" = "Ezek a te informácioid";
+
+/*Asset :i731*/
+"i731" = "Új";
+
+/*Asset :i732*/
+"i732" = "autó";
+
+/*Asset :i733*/
+"i733" = "töltsd ki az alábbi adatokat";
+
+/*Asset :i734*/
+"i734" = "A jármű";
+
+/*Asset :i735*/
+"i735" = "információi";
+
+/*Asset :i736*/
+"i736" = "megváltoztathatod az alábbi adatokat";
+
+/*Asset :i737*/
+"i737" = "Új";
+
+/*Asset :i738*/
+"i738" = "lakás";
+
+/*Asset :i739*/
+"i739" = "tölds ki az alábbi adatokat";
+
+/*Asset :i740*/
+"i740" = "Adatok a";
+
+/*Asset :i741*/
+"i741" = "lakásrok";
+
+/*Asset :i742*/
+"i742" = "modosithatod az alábbi adatokat";
+
+/*Asset :i743*/
+"i743" = "Új";
+
+/*Asset :i744*/
+"i744" = "Személy";
+
+/*Asset :i745*/
+"i745" = "tölds ki az alábbi adatokat";
+
+/*Asset :i746*/
+"i746" = "Személy";
+
+/*Asset :i747*/
+"i747" = "adatai";
+
+/*Asset :i748*/
+"i748" = "megválltoztathatod az alábbi adatokat";
+
+/*Asset :i749*/
+"i749" = "Rendelések";
+
+/*Asset :i750*/
+"i750" = "";
+
+/*Asset :i751*/
+"i751" = "összes rendeléseim";
+
+/*Asset :i752*/
+"i752" = "Lakással";
+
+/*Asset :i753*/
+"i753" = "kapcsolatos riasztás";
+
+/*Asset :i754*/
+"i754" = "válaszd ki a lejárandó adatokat";
+
+/*Asset :i755*/
+"i755" = "Autók";
+
+/*Asset :i756*/
+"i756" = "jelentése";
+
+/*Asset :i757*/
+"i757" = "válaszd ki lennebb a biztositások lejárásának dátumát";
+
+
+/* Asset: i758 */
+"i758" = "Kötelező gépjármű biztositás";
+
+/* Asset: i759 */
+"i759" = "● Árak közvetlenül a biztositási társaságoktól";
+
+/* Asset: i760 */
+"i760" = "● Ingyenes házhozszállitás gyorspostával";
+
+/* Asset: i761 */
+"i761" = "Biztositási";
+
+/* Asset: i762 */
+"i762" = "árak";
+
+/* Asset: i763 */
+"i763" = "legalacsonyabb árak az autodnak";
+
+/* Asset: i764 */
+"i764" = "Összefoglalás";
+
+/* Asset: i765 */
+"i765" = "Figyelmesen nézd meg a bevitt adatokat";
+
+/* Asset: i766 */
+"i766" = "és bizonyosodj be , hogy helyesek";
+
+/* Asset: i767 */
+"i767" = "Megrendelés véglegesitése";
+
+/* Asset: i768 */
+"i768" = "● Ingyenes házhozszállitás bárhol az országban";
+
+/* Asset: i769 */
+"i769" = "● Ajándék : egy auto légfrissitő";
+
+/* Asset: i770 */
+"i770" = "Casco biztositás";
+
+/* Asset: i771 */
+"i771" = "● Biztositó tarsaságok árai";
+
+/* Asset: i772 */
+"i772" = "● Személzre szabott ajánlatok";
+
+/* Asset: i773 */
+"i773" = "Utazási egészségögyi biztositás";
+
+/* Asset: i774 */
+"i774" = "● Árak közvetlenül a biztositási társaságoktól";
+
+/* Asset: i775 */
+"i775" = "● 5 percen belüli elektronikus küldés";
+
+/* Asset: i776 */
+"i776" = "Biztositási";
+
+/* Asset: i777 */
+"i777" = "árak";
+
+/* Asset: i778 */
+"i778" = "legalacsonyabb árak az autodnak";
+
+/* Asset: i779 */
+"i779" = "Összefoglalás";
+
+/* Asset: i780 */
+"i780" = "Figyelmesen nézd meg a bevitt adatokat";
+
+/* Asset: i781 */
+"i781" = "és bizonyosodj be , hogy helyesek";
+
+/* Asset: i782 */
+"i782" = "Megrendelés véglegesitése";
+
+/* Asset: i783 */
+"i783" = "Megkapod a szelvényt emailben";
+
+/* Asset: i784 */
+"i784" = "pár perc múlva a kifizetés után.";
+
+/* Asset: i785 */
+"i785" = "Lakás biztositás";
+
+/* Asset: i786 */
+"i786" = "● Árak közvetlenül a biztositási társaságoktól";
+
+/* Asset: i787 */
+"i787" = "● 5 percen belüli elektronikus küldés";
+
+/* Asset: i788 */
+"i788" = "Biztositási";
+
+/* Asset: i789 */
+"i789" = "árak";
+
+/* Asset: i790 */
+"i790" = "legkisebb ár a lakásodnak";
+
+/* Asset: i791 */
+"i791" = "Összefoglalás";
+
+/* Asset: i792 */
+"i792" = "Figyelmesen nézd meg a bevitt adatokat";
+
+/* Asset: i793 */
+"i793" = "és bizonyosodj be , hogy helyesek";
+
+/* Asset: i794 */
+"i794" = "Megrendelés véglegesitése";
+
+/* Asset: i795 */
+"i795" = "Megkapod a szelvényt emailben";
+
+/* Asset: i796 */
+"i796" = "pár perc múlva a kifizetés után.";
+
+/* Asset: i797 */
+"i797" = "Hiányos adatok";
+
+/* Asset: i798 */
+"i798" = "Köszönjük a megértést.";
+
+/* Asset: i799 */
+"i799" = "Hibajelentés !";
+
+/* Asset: i800 */
+"i800" = "Szeretnéd törölni ?";
+
+/* Asset: i801 */
+"i801" = "Az aplikáción keresztül\nmegrendelt biztositások automatikusan\nbekerülnek az ADATAIM - MEGRENDELÉSEIM -be";
+
+/* Asset: i802 */
+"i802" = "Fontos";
+
+/* Asset: i803 */
+"i803" = "Riasztások beállitása ?";
+
+/* Asset: i804 */
+"i804" = "Biztos vagy benne, hogy ki akar lépni ?";
+
+/* Asset: i805 */
+"i805" = "informáciok elküldve";
+
+/* Asset: i806 */
+"i806" = ":( ajnáljuk!";
+
+/* Asset: i807 */
+"i807" = "Visszaszerzed az adatokat?";
+
+/* Asset: i808 */
+"i808" = "Helyesek az adatok?";
+
+/* Asset: i809 */
+"i809" = "A megrendelés regisztrálva van.";
+
+/* Asset: i810 */
+"i810" = "Gépjármű szelvény összefoglálasa";
+
+//
+//
+///
+//
+///
+//
+//
+//
+// NU SUNT TEXTE IN MAGHIARA SI TREBUIESC TRADUSE,CRED CA NU SUNT SINGURELE :D
+/* Asset: i811 */
+"i811" = "Este indicat sa faci o comanda separata pentru persoanele care au peste 65 de ani sau cele mai mici de 2 ani, deoarece nu toate companiile ofera asigurari de calatorie pentru acestea";
+
+/* Asset: i812 */
+"i812" = "De acord";
+
+/* Asset: i813 */
+"i813" = "Continua";
+

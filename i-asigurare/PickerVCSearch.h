@@ -33,6 +33,8 @@
     id<PickerVCSearchDelegate> delegate;
     NSString * titlu;
     
+    IBOutlet UIBarButtonItem *backBtn;
+    
     NSString * judet;
 }
 
@@ -44,6 +46,7 @@
 @property (nonatomic, retain) NSMutableArray *copListOfItems;
 @property (nonatomic, retain) NSIndexPath * _indexPath;
 @property (readwrite) Nomenclatoare nomenclator;
+@property (nonatomic, retain) UIViewController * controller;
 
 - (void) searchTableView;
 - (void) doneSearching_Clicked:(id)sender;

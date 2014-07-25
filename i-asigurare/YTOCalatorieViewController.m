@@ -11,6 +11,8 @@
 #import "YTOUtils.h"
 #import "YTOListaAsiguratiViewController.h"
 #import "YTOWebServiceCalatorieViewController.h"
+#import "YTOPersoana.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOCalatorieViewController ()
 
@@ -19,12 +21,13 @@
 @implementation YTOCalatorieViewController
 
 @synthesize DataInceput = _DataInceput;
+@synthesize controller;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Calculator", @"Calculator");
+        self.title = NSLocalizedStringFromTable(@"i446", [YTOUserDefaults getLanguage],@"Calculator");
         self.tabBarItem.image = [UIImage imageNamed:@"menu-asigurari.png"];
     }
     return self;
@@ -33,6 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    //self.trackedViewName = @"YTOCalatorieViewController";
     
     [self initCells];
     [self setScopCalatorie:@"turism"];
@@ -41,12 +45,25 @@
     [self setNrZile:5];
     [self setTranzit:@"nu"];
     
+    lblSumaAsig.text = NSLocalizedStringFromTable(@"i126", [YTOUserDefaults getLanguage],@"Suma asigurata");
+    lblScop.text = NSLocalizedStringFromTable(@"i162", [YTOUserDefaults getLanguage],@"Scop calatorie");
+    lblAfaceri.text = NSLocalizedStringFromTable(@"i71", [YTOUserDefaults getLanguage],@"Afaceri");
+    lblTurism.text = NSLocalizedStringFromTable(@"i65", [YTOUserDefaults getLanguage],@"Turism");
+    lblSofer.text =NSLocalizedStringFromTable(@"i81", [YTOUserDefaults getLanguage],@"Sofer profesionist");
+    lblStudii.text =NSLocalizedStringFromTable(@"i82", [YTOUserDefaults getLanguage],@"Studii");
     
     _DataInceput = [YTOUtils getDataMinimaInceperePolita];
     [self setDataInceput:_DataInceput];
+    [YTOUtils rightImageVodafone:self.navigationItem];
     
     // Do any additional setup after loading the view from its nib.
 }
+
+//- (void) viewDidAppear:(BOOL)animated
+//{
+//    
+//    [self setCuloareCellCalatori];
+//}
 
 - (void)viewDidUnload
 {
@@ -119,10 +136,12 @@
         aView.listaAsiguratiSelectati = listaAsigurati;
         aView.listAsiguratiIndecsi = listaAsiguratiIndecsi;
         aView.controller = self;
+        aView.tagViewControllerFrom = 1;
+        
         [delegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 8)
-    {        
+    {
         if (!listaAsigurati.count)
         {
             UILabel * lblCell = (UILabel *)[cellCalatori viewWithTag:2];
@@ -145,10 +164,27 @@
         oferta.obiecteAsigurate = [[NSMutableArray alloc] init];
         
         for (int i=0; i<listaAsigurati.count; i++) {
-            YTOPersoana * p = (YTOPersoana *)[listaAsigurati objectAtIndex:i];  
-            if (i == 0)
-                oferta.idAsigurat = p.idIntern;      
-            [oferta.obiecteAsigurate addObject:p.idIntern];
+            YTOPersoana * p = (YTOPersoana *)[listaAsigurati objectAtIndex:i];
+            if ([p isValidForCompute]) {
+                
+                if (i == 0)
+                    oferta.idAsigurat = p.idIntern;
+                [oferta.obiecteAsigurate addObject:p.idIntern];
+            
+            }
+            else {
+                
+                UILabel * lblCell = (UILabel *)[cellCalatori viewWithTag:2];
+                lblCell.textColor = [UIColor redColor];
+                
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:2 inSection:0];
+                [tv scrollToRowAtIndexPath:indexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:YES];
+                return;
+                
+            }
+            
         }
         
         [oferta setCalatorieScop:scopCalatorie];
@@ -191,6 +227,7 @@
     actionPicker._indexPath = index;
     actionPicker.delegate = self;
     actionPicker.titlu = @"Tara Destinatie";
+   // [YTOUtils rightImageVodafone:actionPicker.navigationItem]
     [self presentModalViewController:actionPicker animated:YES];
 }
 
@@ -198,12 +235,34 @@
 {
     NSArray *topLevelObjectsProdus = [[NSBundle mainBundle] loadNibNamed:@"CellProdusAsigurareHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsProdus objectAtIndex:0];
-    UIImageView * img = (UIImageView *)[cellHeader viewWithTag:1];
-    img.image = [UIImage imageNamed:@"calculator-calatorie.png"];
+    UIImageView * img = (UIImageView *)[cellHeader viewWithTag:100];
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        img.image = [UIImage imageNamed:@"asig-calatorie-hu.png"];
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        img.image = [UIImage imageNamed:@"asig-calatorie-en.png"];
+    else img.image = [UIImage imageNamed:@"asig-calatorie.png"];
+    UILabel * lblView1 = (UILabel *) [cellHeader viewWithTag:11];
+    UILabel * lblView2 = (UILabel *) [cellHeader viewWithTag:22];
+    lblView1.backgroundColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    lblView2.backgroundColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    
+    UILabel *lbl1 = (UILabel *) [cellHeader viewWithTag:1];
+    UILabel *lbl2 = (UILabel *) [cellHeader viewWithTag:2];
+    UILabel *lbl3 = (UILabel *) [cellHeader viewWithTag:3];
+    lbl1.textColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    
+    lbl1.text = NSLocalizedStringFromTable(@"i773", [YTOUserDefaults getLanguage],@"Asigurare calatorie");
+    lbl2.text = NSLocalizedStringFromTable(@"i771", [YTOUserDefaults getLanguage],@"● Tarife direct de la companii");
+    lbl3.text = NSLocalizedStringFromTable(@"i775", [YTOUserDefaults getLanguage],@"● Livrare electronica in 5 minute");
+    lbl1.adjustsFontSizeToFitWidth = YES;
+    lbl2.adjustsFontSizeToFitWidth = YES;
+    lbl3.adjustsFontSizeToFitWidth = YES;
+    cellHeader.userInteractionEnabled = NO;
+
     
     NSArray *topLevelObjectsDataInceput = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
-    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data inceput asigurare";
+    ((UILabel *)[cellDataInceput viewWithTag:1]).text = NSLocalizedStringFromTable(@"i127", [YTOUserDefaults getLanguage],@"Data inceput");
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
     [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged];
     ((UIImageView *)[cellDataInceput viewWithTag:4]).image = [UIImage imageNamed:@"arrow-calatorie.png"];
@@ -211,7 +270,7 @@
     
     NSArray *topLevelObjectsNrZile = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellNrZile = [topLevelObjectsNrZile objectAtIndex:0];
-    ((UILabel *)[cellNrZile viewWithTag:1]).text = @"Numar zile";    
+    ((UILabel *)[cellNrZile viewWithTag:1]).text = NSLocalizedStringFromTable(@"i83", [YTOUserDefaults getLanguage],@"Numar zile");   
     UIStepper * stepperNrZile = (UIStepper *)[cellNrZile viewWithTag:3];
     stepperNrZile.value = 5;
     stepperNrZile.minimumValue = 2;
@@ -222,12 +281,12 @@
     
     NSArray *topLevelObjectsTara = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellTaraDestinatie = [topLevelObjectsTara objectAtIndex:0];
-    [(UILabel *)[cellTaraDestinatie viewWithTag:1] setText:@"Tara destinatie"];
+    [(UILabel *)[cellTaraDestinatie viewWithTag:1] setText:NSLocalizedStringFromTable(@"i85", [YTOUserDefaults getLanguage],@"Tara Destinatie")];
     [YTOUtils setCellFormularStyle:cellTaraDestinatie];
  
     NSArray *topLevelObjectsTranzit = [[NSBundle mainBundle] loadNibNamed:@"CellView_DaNu" owner:self options:nil];
     cellTranzit = [topLevelObjectsTranzit objectAtIndex:0];
-    [(UILabel *)[cellTranzit viewWithTag:6] setText:@"Se face tranzit ?"];
+    [(UILabel *)[cellTranzit viewWithTag:6] setText:NSLocalizedStringFromTable(@"i159", [YTOUserDefaults getLanguage],@"Se face tranzit")];
     UIImageView * imgTranzit = (UIImageView *)[cellTranzit viewWithTag:5];
     [imgTranzit setImage:[UIImage imageNamed:@"da-nu-nu-calatorie.png"]];
     UIButton * btnTranzitDa = (UIButton *)[cellTranzit viewWithTag:1];
@@ -239,8 +298,8 @@
     cellCalatori = [topLevelObjectsCalator objectAtIndex:0];
     UILabel * lblCellP = (UILabel *)[cellCalatori viewWithTag:2];
     lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellP.text = @"Alege calatori";
-    ((UILabel *)[cellCalatori viewWithTag:3]).text = @"poti alege mai multe persoane";
+    lblCellP.text = NSLocalizedStringFromTable(@"i458", [YTOUserDefaults getLanguage],@"Alege Calatori");
+    ((UILabel *)[cellCalatori viewWithTag:3]).text = NSLocalizedStringFromTable(@"i459", [YTOUserDefaults getLanguage],@"Poti alege mai multe persoane");
     UIImageView * imgBg = (UIImageView *)[cellCalatori viewWithTag:5];
     imgBg.image = [UIImage imageNamed:@"alege-calator.png"];
     
@@ -250,7 +309,7 @@
     img2.image = [UIImage imageNamed:@"calculeaza-calatorie.png"];
     UILabel * lblCellC = (UILabel *)[cellCalculeaza viewWithTag:2];
     lblCellC.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellC.text = @"Calculeaza";
+    lblCellC.text = NSLocalizedStringFromTable(@"i128", [YTOUserDefaults getLanguage],@"Calculeaza");
 }
 
 #pragma Events
@@ -261,6 +320,23 @@
     checkboxSelected = !checkboxSelected;
     if (!btn.selected)
         [btn setSelected:checkboxSelected];
+    
+    if (btn.tag == 1)
+    {
+        [self setScopCalatorie:@"turism"];
+    }
+    if (btn.tag == 2)
+    {
+        [self setScopCalatorie:@"afaceri"];
+    }
+    if (btn.tag == 3)
+    {
+        [self setScopCalatorie:@"sofer-profesionist"];
+    }
+    if (btn.tag == 4)
+    {
+        [self setScopCalatorie:@"studii"];
+    }
 
     for (int i=1; i<=4; i++) {
         UIButton * _btn = (UIButton *)[cellScopCalatorie viewWithTag:i];
@@ -389,7 +465,7 @@
 - (void) setListaAsigurati:(NSMutableArray *) list withIndex:(NSMutableArray *) indexList;
 {
     listaAsigurati = list;
-    ((UILabel *)[cellCalatori viewWithTag:2]).text = [NSString stringWithFormat:@"Numar Calatori %d", listaAsigurati.count];
+    ((UILabel *)[cellCalatori viewWithTag:2]).text = [NSString stringWithFormat:@"%@ %d",NSLocalizedStringFromTable(@"i457", [YTOUserDefaults getLanguage],@"Numar calatori"), listaAsigurati.count];
     listaAsiguratiIndecsi = indexList;
 }
      
@@ -404,6 +480,8 @@
         img.image = [UIImage imageNamed:@"da-nu-nu-calatorie.png"];
         lblDA.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lblNU.textColor = [UIColor whiteColor];
+        lblDA.text = NSLocalizedStringFromTable(@"i92", [YTOUserDefaults getLanguage],@"DA");
+        lblNU.text = NSLocalizedStringFromTable(@"i98", [YTOUserDefaults getLanguage],@"NU");
         tranzit = @"nu";
     }
     else if ([v isEqualToString:@"da"])

@@ -15,7 +15,9 @@
 #import "YTOUtils.h"
 #import "YTOWebServiceRCAViewController.h"
 #import "Database.h"
+#import "YTOReduceriViewController.h"
 #import "YTOCustomPopup.h"
+#import "YTOUserDefaults.h"
 
 @interface YTOCalculatorViewController ()
 
@@ -28,12 +30,14 @@
 @synthesize _nomenclatorNrItems, _nomenclatorSelIndex, _nomenclatorTip;
 @synthesize listaCompanii;
 @synthesize asigurat;
+@synthesize isWrongAuto;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Calculator", @"Calculator");
+        self.title = NSLocalizedStringFromTable(@"i446", [YTOUserDefaults getLanguage],@"Calculator");
         self.tabBarItem.image = [UIImage imageNamed:@"menu-asigurari.png"];
     }
     return self;
@@ -42,10 +46,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+   // //self.trackedViewName = @"YTOCalculatorViewController";
     [self initCells];
     [self initCustomValues];
+    [YTOUtils rightImageVodafone:self.navigationItem];
+    lblAlegeCasco.text = NSLocalizedStringFromTable(@"i152", [YTOUserDefaults getLanguage],@"Daca masina are CASCO selecteaza compania");
+    lblInfoReduceri.text = NSLocalizedStringFromTable(@"i156", [YTOUserDefaults getLanguage],@"Informatii pentru REDUCERI");
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+
 }
+
+-(void) viewDidAppear:(BOOL)animated
+{
+    isWrongAuto = NO;
+    if ([asigurat.tipPersoana isEqualToString:@"fizica"]){
+    UILabel *lbl = (UILabel *)[cellPF viewWithTag:1];
+    lbl.text = [self setTextInLabel];
+    }
+ 
+}
+
 
 - (void)viewDidUnload
 {
@@ -70,7 +94,7 @@
     else if (indexPath.row == 3)
     {
         if ([asigurat.tipPersoana isEqualToString:@"fizica"])
-            return 230;
+            return 67;
         else if ([asigurat.tipPersoana isEqualToString:@"juridica"])
             return 67;
         else return 0;
@@ -109,8 +133,12 @@
     else if (indexPath.row == 2) cell = cellProprietar;
     else if (indexPath.row == 3) 
     {
-        if ([asigurat.tipPersoana isEqualToString:@"fizica"])
+        if ([asigurat.tipPersoana isEqualToString:@"fizica"]){
             cell = cellPF;
+            UILabel *lbl = (UILabel *)[cellPF viewWithTag:1];
+            lbl.text = [self setTextInLabel];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
         else if ([asigurat.tipPersoana isEqualToString:@"juridica"])
             cell = cellPJ;
         else cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
@@ -120,6 +148,42 @@
     else if (indexPath.row == 6) cell = cellCalculeaza;
     
     return cell;
+}
+
+- (NSString *) setTextInLabel
+{
+    NSString *txt = [[NSString alloc] init];
+    if (asigurat.nrBugetari.intValue > 0 )
+        {
+            
+            NSString *str;
+            if ([asigurat.nrBugetari isEqualToString:@"1"])
+                 str = @" bugetar";
+            else str = NSLocalizedStringFromTable(@"i578", [YTOUserDefaults getLanguage],@" bugetari");
+            txt = [NSString stringWithFormat:@"%@%@%@%@",txt,asigurat.nrBugetari,str,@" | "];
+        }
+   if ([asigurat.casatorit isEqualToString:@"da"])
+        {
+            NSString *str = NSLocalizedStringFromTable(@"i576", [YTOUserDefaults getLanguage],@"Casatorit");
+            txt  = [NSString stringWithFormat:@"%@%@%@",txt,str,@" | "];
+        }
+    if ([asigurat.pensionar isEqualToString:@"da"])
+        {
+            NSString *str = NSLocalizedStringFromTable(@"i577", [YTOUserDefaults getLanguage],@"Pensionar");
+            txt  = [NSString stringWithFormat:@"%@%@%@",txt,str,@" | "];
+        }
+    if ([asigurat.copiiMinori isEqualToString:@"da"])
+        {
+            NSString *str = NSLocalizedStringFromTable(@"i574", [YTOUserDefaults getLanguage],@"Copii\nminori");
+            txt  = [NSString stringWithFormat:@"%@%@%@",txt,str,@" | "];
+        }
+    if ([asigurat.handicapLocomotor isEqualToString:@"da"])
+        {
+            NSString *str = NSLocalizedStringFromTable(@"i575", [YTOUserDefaults getLanguage],@"Handicap\nlocomotor");
+            txt  = [NSString stringWithFormat:@"%@%@%@",txt,str,@" | "];
+        }
+    if ([txt isEqualToString:@""]) txt = NSLocalizedStringFromTable(@"i157", [YTOUserDefaults getLanguage],@"alege din lista");
+    return txt;
 }
 
 /*
@@ -169,18 +233,28 @@
     if (indexPath.row == 1)
     {        
         // Daca exista masini salvate, afisam lista
-        if ([appDelegate Masini].count > 0)
-        {
-            YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
-            aView.controller = self;
-            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
-        }
-        else {
+        if ((isWrongAuto && masina==nil) || !isWrongAuto){
+            if ([appDelegate Masini].count > 0)
+            {
+                YTOListaAutoViewController * aView = [[YTOListaAutoViewController alloc] init];
+                aView.controller = self;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+            else {
+                YTOAutovehiculViewController * aView;
+                if (IS_IPHONE_5)
+                    aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
+                else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
+                aView.controller = self;
+                [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+            }
+        }else if (isWrongAuto && masina !=nil){
             YTOAutovehiculViewController * aView;
             if (IS_IPHONE_5)
                 aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController_R4" bundle:nil];
             else aView = [[YTOAutovehiculViewController alloc] initWithNibName:@"YTOAutovehiculViewController" bundle:nil];
             aView.controller = self;
+            aView.autovehicul = masina;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
     }
@@ -199,6 +273,9 @@
         }
         else {
             YTOAsiguratViewController * aView = [[YTOAsiguratViewController alloc] init];
+            if (IS_IPHONE_5)
+                aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController-R4" bundle:nil];
+            else aView = [[YTOAsiguratViewController alloc] initWithNibName:@"YTOAsiguratViewController" bundle:nil];
             aView.controller = self;
             aView.proprietar = YES;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -207,6 +284,15 @@
     else if (indexPath.row == 3 && ([asigurat.tipPersoana isEqualToString:@"juridica"]))
     {
         [self showCoduriCaen:indexPath];
+    }
+    else if (indexPath.row == 3 && ([asigurat.tipPersoana isEqualToString:@"fizica"]))
+    {
+        YTOReduceriViewController *aView ;
+        if (IS_IPHONE_5)
+            aView = [[YTOReduceriViewController alloc] initWithNibName:@"YTOReduceriViewController_R4" bundle:nil];
+        else aView = [[YTOReduceriViewController alloc] initWithNibName:@"YTOReduceriViewController" bundle:nil];
+        aView.asigurat = self.asigurat;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
     }
     else if (indexPath.row == 6)
     {
@@ -218,6 +304,7 @@
             UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
             lblCell.textColor = [UIColor redColor];
             isOK = NO;
+            isWrongAuto = YES;
             
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
             [tv scrollToRowAtIndexPath:indexPath
@@ -251,8 +338,9 @@
             return;
         
         masina.idProprietar  = asigurat.idIntern;
-        [masina updateAutovehicul];
-        [asigurat updatePersoana];
+        
+        [masina updateAutovehicul:NO];
+        [asigurat updatePersoana:NO];
         
         [self calculeaza];
     }
@@ -276,7 +364,9 @@
 	//btnDone.enabled = YES;
 	activeTextField = textField;
 	
-	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+	UITableViewCell *currentCell;
+    if (IS_OS_7_OR_LATER) currentCell = (UITableViewCell *) textField.superview.superview.superview;
+    else currentCell =  (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
 	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -313,6 +403,7 @@
 	activeTextField = nil;
     tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
 	[self deleteBarButton];
+    
 }
 
 - (void) addBarButton {
@@ -330,49 +421,76 @@
 {
     NSArray *topLevelObjectsProdus = [[NSBundle mainBundle] loadNibNamed:@"CellProdusAsigurareHeader" owner:self options:nil];
     cellHeader = [topLevelObjectsProdus objectAtIndex:0];
-    UIImageView * img = (UIImageView *)[cellHeader viewWithTag:1];
-    img.image = [UIImage imageNamed:@"calculator-rca.png"];
+    UIImageView * img = (UIImageView *)[cellHeader viewWithTag:100];
+    img.image = nil;
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        img.image = [UIImage imageNamed:@"asig-rca-hu.png"];
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        img.image = [UIImage imageNamed:@"asig-rca-en.png"];
+    else img.image = [UIImage imageNamed:@"asig-rca"];
+
+    
+    UILabel * lblView1 = (UILabel *) [cellHeader viewWithTag:11];
+    UILabel * lblView2 = (UILabel *) [cellHeader viewWithTag:22];
+    lblView1.backgroundColor = [YTOUtils colorFromHexString:verde];
+    lblView2.backgroundColor = [YTOUtils colorFromHexString:verde];
+    
+    UILabel *lbl1 = (UILabel *) [cellHeader viewWithTag:1];
+    UILabel *lbl2 = (UILabel *) [cellHeader viewWithTag:2];
+    UILabel *lbl3 = (UILabel *) [cellHeader viewWithTag:3];
+    lbl1.textColor = [YTOUtils colorFromHexString:verde];
+    
+    lbl1.text = NSLocalizedStringFromTable(@"i758", [YTOUserDefaults getLanguage],@"Asigurare RCA");
+    lbl2.text = NSLocalizedStringFromTable(@"i759", [YTOUserDefaults getLanguage],@"● Tarife direct de la companii");
+    lbl3.text = NSLocalizedStringFromTable(@"i760", [YTOUserDefaults getLanguage],@"● Livrare gratuita prin curier rapid");
+        lbl1.adjustsFontSizeToFitWidth = YES;
+        lbl2.adjustsFontSizeToFitWidth = YES;
+        lbl3.adjustsFontSizeToFitWidth = YES;
+    cellHeader.userInteractionEnabled = NO;
+    
+//    if ([YTOUserDefaults isRedus])
+//        lbl3.hidden = YES;
     
     NSArray *topLevelObjectsMarca = [[NSBundle mainBundle] loadNibNamed:@"CellAutovehicul" owner:self options:nil];
     cellMasina = [topLevelObjectsMarca objectAtIndex:0];
     UILabel * lblCell = (UILabel *)[cellMasina viewWithTag:2];
     lblCell.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCell.text = @"Alege masina";
+    lblCell.text = NSLocalizedStringFromTable(@"i147", [YTOUserDefaults getLanguage],@"Alege autovehicul");
     UILabel * lblCell1 = (UILabel *)[cellMasina viewWithTag:6];
     lblCell1.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCell1.text = @"MASINA ASIGURATA";
+    lblCell1.text = NSLocalizedStringFromTable(@"i158", [YTOUserDefaults getLanguage],@"AUTOVEHICUL ASIGURAT");
     
     
     NSArray *topLevelObjectsProprietar = [[NSBundle mainBundle] loadNibNamed:@"CellPersoana" owner:self options:nil];
     cellProprietar = [topLevelObjectsProprietar objectAtIndex:0];
     UILabel * lblCellP = (UILabel *)[cellProprietar viewWithTag:2];
     lblCellP.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellP.text = @"Alege proprietar";
+    lblCellP.text = NSLocalizedStringFromTable(@"i148", [YTOUserDefaults getLanguage],@"Alege Persoana");
     UILabel * lblCell2 = (UILabel *)[cellProprietar viewWithTag:6];
     lblCell2.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCell2.text = @"PROPRIETAR MASINA (VEZI TALON)";
+    lblCell2.text = NSLocalizedStringFromTable(@"i149", [YTOUserDefaults getLanguage],@"PROPRIETAR AUTOVEHICUL (VEZI TALON)");;
     
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellCalculeaza = [topLevelObjectscalc objectAtIndex:0];
     UILabel * lblCellC = (UILabel *)[cellCalculeaza viewWithTag:2];
     lblCellC.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellC.text = @"Calculeaza";
+    lblCellC.text = NSLocalizedStringFromTable(@"i128", [YTOUserDefaults getLanguage],@"Calculeaza");;
 
     NSArray *topLevelObjectsCodUnic = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellCodUnic = [topLevelObjectsCodUnic objectAtIndex:0];
     UILabel * lblCellCodUnic = (UILabel *)[cellCodUnic viewWithTag:1];
     lblCellCodUnic.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellCodUnic.text = @"Cod numeric personal";
+    lblCellCodUnic.text = NSLocalizedStringFromTable(@"i240", [YTOUserDefaults getLanguage],@"Codul numeric personal");;
     
     NSArray *topLevelObjectsCodCaen = [[NSBundle mainBundle] loadNibNamed:@"CellView_Nomenclator" owner:self options:nil];
     cellPJ = [topLevelObjectsCodCaen objectAtIndex:0];
-    [(UILabel *)[cellPJ viewWithTag:1] setText:@"COD CAEN"];
+    [(UILabel *)[cellPJ viewWithTag:1] setText:NSLocalizedStringFromTable(@"i259", [YTOUserDefaults getLanguage],@"Cod Caen")];
     [YTOUtils setCellFormularStyle:cellPJ];
     
     NSArray *topLevelObjectsDataInceput = [[NSBundle mainBundle] loadNibNamed:@"CellStepper" owner:self options:nil];
     cellDataInceput = [topLevelObjectsDataInceput objectAtIndex:0];
-    ((UILabel *)[cellDataInceput viewWithTag:1]).text = @"Data inceput asigurare";
+    ((UILabel *)[cellDataInceput viewWithTag:1]).text = NSLocalizedStringFromTable(@"i127", [YTOUserDefaults getLanguage],@"Data inceput");;
     UIStepper * stepper = (UIStepper *)[cellDataInceput viewWithTag:3];
     [stepper addTarget:self action:@selector(dateStepper_Changed:) forControlEvents:UIControlEventValueChanged]; 
     [YTOUtils setCellFormularStyle:cellDataInceput];
@@ -440,59 +558,18 @@
         ((UILabel *)[cellProprietar viewWithTag:3]).text = [NSString stringWithFormat:@"%@, %@", a.codUnic, a.judet];
     asigurat = a;
     
-    if (asigurat.codUnic.length == 13 && [asigurat.tipPersoana isEqualToString:@"fizica"])
+    if ([asigurat.tipPersoana isEqualToString:@"fizica"])
     {
         // ?? nu cred ca mai trebuie
         //asigurat.tipPersoana = @"fizica";
-        
-        stepperAnMinimPermis.minimumValue = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
-        stepperAnMinimPermis.maximumValue = [YTOUtils getAnCurent];
-        
-        if (asigurat.dataPermis.length == 0)
-        {
-            stepperAnMinimPermis.value = [[YTOUtils getAnMinimPermis:asigurat.codUnic] intValue];
-            [self setAnPermis:stepperAnMinimPermis.value];
-        }
-        else
-        {
-            if (asigurat.dataPermis.length == 4)
-                [self setAnPermis:[asigurat.dataPermis intValue]];
-            else
-                [self setAnPermis:[YTOUtils getAnFromDate:[YTOUtils getDateFromString:asigurat.dataPermis withFormat:@"yyyy-MM-dd"]]];
-        }
-        
-        if (asigurat.nrBugetari.length == 0)
-            [self setNrBugetari:0];
-        else 
-            [self setNrBugetari:[asigurat.nrBugetari intValue]];
-        
-
-        if (asigurat.casatorit.length == 0)
-            [self setCasatorit:YES];
-        else 
-            [self setCasatorit:[asigurat.casatorit isEqualToString:@"da"]];
-        
-        if (asigurat.copiiMinori.length == 0)
-            [self setCopiiMinori:NO];
-        else 
-            [self setCopiiMinori:[asigurat.copiiMinori isEqualToString:@"da"]];
-        
-        if (asigurat.pensionar.length == 0)
-            [self setPensionar:NO];
-        else 
-            [self setPensionar:[asigurat.pensionar isEqualToString:@"da"]];
-        
-        if (asigurat.handicapLocomotor.length == 0)
-            [self setHandicap:NO];
-        else 
-            [self setHandicap:[asigurat.handicapLocomotor isEqualToString:@"da"]];
         
     }
     else if (asigurat.codUnic.length > 0 && [asigurat.tipPersoana isEqualToString:@"juridica"]) {
         // nu cred ca mai trebuie ??
         //asigurat.tipPersoana = @"juridica";
+        if (!asigurat.codCaen || [asigurat.codCaen isKindOfClass:[NSNull class]]) asigurat.codCaen = nil;
         
-        if (asigurat.codCaen.length == 0)
+        if (asigurat.codCaen || asigurat.codCaen.length == 0)
             asigurat.codCaen = @"01";
         
         [self setCodCaen:asigurat.codCaen];
@@ -536,21 +613,6 @@
     }
 }
 
--(IBAction)checkboxSelected:(id)sender
-{
-    UIButton * btn = (UIButton *)sender;
-    BOOL checkboxSelected = btn.selected;
-    checkboxSelected = !checkboxSelected;
-   // [btn setSelected:checkboxSelected];
-    if (btn.tag  == 1)
-        [self setCasatorit:checkboxSelected];
-    else if (btn.tag == 2)
-        [self setCopiiMinori:checkboxSelected];
-    else if (btn.tag == 3)
-        [self setPensionar:checkboxSelected];
-    else [self setHandicap:checkboxSelected];
-}
-
 /*
 - (IBAction)chkTipPersoana_Selected:(id)sender
 {
@@ -580,17 +642,7 @@
     [self setDataInceput:date];
 }
 
-- (IBAction)nrBugetariSepper_Changed:(id)sender
-{
-    UIStepper * stepper = (UIStepper *)sender;
-    [self setNrBugetari:stepper.value];
-}
 
-- (IBAction)anPermisSepper_Changed:(id)sender
-{
-    UIStepper * stepper = (UIStepper *)sender;
-    [self setAnPermis:stepper.value];    
-}
 
 - (IBAction)calculeaza
 {
@@ -631,6 +683,8 @@
         lblPF.textColor = [UIColor whiteColor];
         lblPJ.textColor = [YTOUtils colorFromHexString:@"#758ca1"];
         asigurat.tipPersoana = @"fizica";
+//        UILabel *lbl = (UILabel *)[cellPF viewWithTag:1];
+//        lbl.text = [self setTextInLabel];
     }
     else {
         img.image = [UIImage imageNamed:@"pj.png"];
@@ -652,78 +706,6 @@
     UILabel * lbl = (UILabel *)[cellDataInceput viewWithTag:2];
     lbl.text = [YTOUtils formatDate:DataInceput withFormat:@"dd.MM.yyyy"];
     oferta.dataInceput = DataInceput;
-}
-
-- (void) setCasatorit:(BOOL)k
-{
-    asigurat.casatorit = (k ? @"da" : @"nu");
-    UIButton * btn = (UIButton *)[cellPF viewWithTag:1];
-    btn.selected = k;
-}
-- (BOOL) getCasatorit
-{
-    return  asigurat.casatorit == @"da";
-}
-
-- (void) setCopiiMinori:(BOOL)k
-{
-    asigurat.copiiMinori = (k ? @"da" : @"nu");
-    UIButton * btn = (UIButton *)[cellPF viewWithTag:2];
-    //btn.selected = k;
-    //[self checkboxSelected:btn];
-    [btn setSelected:k];
-}
-- (BOOL) getCopiiMinori 
-{
-    return asigurat.copiiMinori == @"da" ? YES : NO;
-}
-
-- (void) setPensionar:(BOOL)k 
-{
-    asigurat.pensionar = (k ? @"da" : @"nu");
-    UIButton * btn = (UIButton *)[cellPF viewWithTag:3];
-    btn.selected = k;   
-}
-- (BOOL) getPensionar
-{
-    return asigurat.pensionar == @"da";
-}
-- (void) setHandicap:(BOOL)k
-{
-    asigurat.handicapLocomotor = (k ? @"da" : @"nu");
-    UIButton * btn = (UIButton *)[cellPF viewWithTag:4];
-    btn.selected = k;    
-}
-- (BOOL) getHandicap
-{
-    return asigurat.handicapLocomotor == @"da";
-}
-
-- (void) setNrBugetari:(int)k
-{
-    asigurat.nrBugetari = [NSString stringWithFormat:@"%d", k];
-    UILabel * lbl = (UILabel *)[cellPF viewWithTag:5];
-    lbl.text = asigurat.nrBugetari;
-}
-
-- (void) setAnPermis:(int)k
-{
-    UILabel * lbl = (UILabel *)[cellPF viewWithTag:6];
-    lbl.text = [NSString stringWithFormat:@"%d", k];
-    
-    NSDate * azi = [NSDate date];
-    int anCurent = [YTOUtils getAnFromDate:azi];
-    
-    // Daca anul in care si-a luat permisul este anul curent, pun luna si ziua de ieri
-    // Altfel pun default 1 noiembrie + an
-    if (anCurent == k)
-    {
-        asigurat.dataPermis = [YTOUtils formatDate:[azi dateByAddingTimeInterval: -86400.0] withFormat:@"yyyy-MM-dd"];
-    }
-    else
-    {
-        asigurat.dataPermis = [NSString stringWithFormat:@"%d-11-01", k];
-    }
 }
 
 - (void) setCompanieCasco:(NSString*)v
@@ -800,11 +782,12 @@
     if (_nomenclatorTip == kCompaniiAsigurare)
     {
         listaCompanii = [YTOUtils GETCompaniiAsigurare];
-        [lblTitle setText:@"Alege compania unde ai CASCO"];
+        [lblTitle setText:NSLocalizedStringFromTable(@"i530", [YTOUserDefaults getLanguage],@"Alege compania unde ai CASCO")];
         listOfItems = listaCompanii;
         _nomenclatorNrItems = listaCompanii.count;
         if (masina.cascoLa.length > 0)
             selectedItemIndex = [YTOUtils getKeyList:listaCompanii forValue: masina.cascoLa];
+        else selectedItemIndex = 9;
     }
     
     [scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
@@ -842,7 +825,7 @@
         lbl.frame = CGRectMake(1, 5, 67, 34);
         lbl.backgroundColor = [UIColor clearColor];
         lbl.numberOfLines = 0;
-        [lbl setTextAlignment:UITextAlignmentCenter];
+        [lbl setTextAlignment:NSTextAlignmentCenter];
         lbl.textColor = [YTOUtils colorFromHexString:ColorTitlu];
         lbl.font = [UIFont fontWithName:@"Arial" size:12];
         lbl.text = [[item.value stringByReplacingOccurrencesOfString:@"/" withString:@"/ "] stringByReplacingOccurrencesOfString:@"-" withString:@" - "];
@@ -886,7 +869,9 @@
         else
         {
             KeyValueItem * item = (KeyValueItem *)[listaCompanii objectAtIndex:btn.tag-100];
-            [self setCompanieCasco:item.value];
+            if ([item.value isEqualToString:@"Neasigurat"])
+                [self setCompanieCasco:@""];
+            else [self setCompanieCasco:item.value];
         }
     }
 }

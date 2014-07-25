@@ -11,20 +11,25 @@
 #import "YTOUserDefaults.h"
 #import "YTOAppDelegate.h"
 
+#import "YTOWebViewController.h"
+#import "YTOToast.h"
+
+
+
 @interface YTOFinalizareCalatorieViewController ()
 
 @end
 
 @implementation YTOFinalizareCalatorieViewController
 
-@synthesize oferta, listAsigurati;
+@synthesize oferta, listAsigurati, cotatie;
 @synthesize responseData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Finalizare comanda", @"Finalizare comanda");
+        self.title = NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda");
     }
     return self;
 }
@@ -32,6 +37,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }
+    //self.trackedViewName = @"YTOFinalizareCalatorieViewController";
+    
     // Do any additional setup after loading the view from its nib.
     [self initCells];
 
@@ -44,15 +56,50 @@
         [self setTelefon:proprietar.telefon];
     }
 
-    for (int i=0; i<listAsigurati.count; i++) {
-        YTOPersoana * pers = [listAsigurati objectAtIndex:i];
-        if (pers.serieAct && ![pers.serieAct isEqualToString:@""])
-            [self setSerieAct:pers.serieAct forIndex:i];
-    }
+//    for (int i=0; i<listAsigurati.count; i++) {
+//        YTOPersoana * pers = [listAsigurati objectAtIndex:i];
+//        if (pers.serieAct && ![pers.serieAct isEqualToString:@""])
+//            [self setSerieAct:pers.serieAct forIndex:i];
+//    }
     [self setTipPlata:@"online"];
     [self setTelefon:telefonLivrare];
     [self setEmail:emailLivrare];
     
+    lblCustomAlertNO.text = NSLocalizedStringFromTable(@"i344", [YTOUserDefaults getLanguage],@"NU");
+    
+    lblModPlata.text = NSLocalizedStringFromTable(@"i90", [YTOUserDefaults getLanguage],@"Modalitate de plata");
+    lblSeIncarca.text = NSLocalizedStringFromTable(@"i444", [YTOUserDefaults getLanguage],@"se incarca...");
+    lblOnlineCuCardul.text =NSLocalizedStringFromTable(@"i179", [YTOUserDefaults getLanguage],@"ONLINE, \n cu cardul");
+    
+    [YTOUtils rightImageVodafone:self.navigationItem];
+    
+    UIImageView * img = (UIImageView *)[cellHeader viewWithTag:100];
+    img.image = nil;
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        img.image = [UIImage imageNamed:@"asig-calatorie-hu.png"];
+    else if ([[YTOUserDefaults getLanguage] isEqualToString:@"en"])
+        img.image = [UIImage imageNamed:@"asig-calatorie-en.png"];
+    else img.image = [UIImage imageNamed:@"asig-calatorie.png"];
+    UILabel * lblView1 = (UILabel *) [cellHeader viewWithTag:11];
+    UILabel * lblView2 = (UILabel *) [cellHeader viewWithTag:22];
+    lblView1.backgroundColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    lblView2.backgroundColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    
+    UILabel *lbl1 = (UILabel *) [cellHeader viewWithTag:1];
+    UILabel *lbl2 = (UILabel *) [cellHeader viewWithTag:2];
+    UILabel *lbl3 = (UILabel *) [cellHeader viewWithTag:3];
+    lbl1.textColor = [YTOUtils colorFromHexString:portocaliuCalatorie];
+    
+    lbl1.text = NSLocalizedStringFromTable(@"i794", [YTOUserDefaults getLanguage],@"Finalizare comanda");
+    lbl2.text = NSLocalizedStringFromTable(@"i795", [YTOUserDefaults getLanguage],@"Vei primi polita de asigurare");
+    lbl3.text = NSLocalizedStringFromTable(@"i796", [YTOUserDefaults getLanguage],@"pe adresa ta de e-mail");
+    cellHeader.userInteractionEnabled = NO;
+    
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    if ([[YTOUserDefaults getLanguage] isEqualToString:@"hu"])
+        lbl1.adjustsFontSizeToFitWidth = YES;
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,26 +118,23 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // returnez numarul de asigurati + telefon + email + buton de finalizare
-    return listAsigurati.count + 3;
+    return 4;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 2)
+        return 100;
     return 62;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell * cell;
-    
-    int indexAfter = listAsigurati.count-1;
-    
-    if (indexPath.row < listAsigurati.count)
-    {
-        cell = (UITableViewCell *)[listCells objectAtIndex:indexPath.row];
-    }
-    else if (indexPath.row == (indexAfter+1)) cell = cellTelefon;
-    else if (indexPath.row == (indexAfter+2)) cell = cellEmail;
+
+    if (indexPath.row == 0) cell = cellTelefon;
+    else if (indexPath.row == 1) cell = cellEmail;
+    else if (indexPath.row == 2) cell = cellPlata;
     else cell = cellCalculeaza;
     
     if (indexPath.row % 2 == 0) {
@@ -101,23 +145,26 @@
         bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#fafafa"];
     }
     
+    UIButton * btnPlata = (UIButton*)[cellPlata viewWithTag:2];
+    [btnPlata setSelected:YES];
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == listAsigurati.count + 2)
+    if (indexPath.row == 3)
     {
         [self doneEditing];
-        
-        if (seriePasaport.length == 0)
-        {
-            [txtSerie becomeFirstResponder];
-            return;
-        }
-            
         if (telefonLivrare.length == 0)
         {
+            [txtTelefonLivrare becomeFirstResponder];
+            return;
+        }
+        if (telefonLivrare.length !=10)
+        {
+            [[[[iToast makeText:NSLocalizedString(@"Ai introdus gresit numarul de telefon", @"")]
+               setGravity:iToastGravityCenter] setDuration:iToastDurationShort] show];
             [txtTelefonLivrare becomeFirstResponder];
             return;
         }
@@ -126,8 +173,15 @@
             [txtEmailLivrare becomeFirstResponder];
             return;
         }
+        if (![YTOUtils validateEmail:emailLivrare])
+        {
+            [[[[iToast makeText:NSLocalizedString(@"Ai introdus gresit adresa de e-mail", @"")]
+               setGravity:iToastGravityCenter] setDuration:iToastDurationShort] show];
+            [txtEmailLivrare becomeFirstResponder];
+            return;
+        }
 
-        [self showCustomConfirm:@"Confirmare date" withDescription:@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui, apasa NU." withButtonIndex:100];
+        [self showCustomConfirm:NSLocalizedStringFromTable(@"i451", [YTOUserDefaults getLanguage],@"Confirma date") withDescription:NSLocalizedStringFromTable(@"i452", [YTOUserDefaults getLanguage],@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui apasa NU")withButtonIndex:100];
     }
 
 }
@@ -142,7 +196,9 @@
 {
 	activeTextField = textField;
 	
-	UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+	UITableViewCell *currentCell;
+    if (IS_OS_7_OR_LATER) currentCell = (UITableViewCell *) textField.superview.superview.superview;
+    else currentCell =  (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
     
     activeTextField.tag = indexPath.row;
@@ -168,10 +224,12 @@
 }
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
-    UITableViewCell *currentCell = (UITableViewCell *) [[textField superview] superview];
+    UITableViewCell *currentCell;
+    if (IS_OS_7_OR_LATER) currentCell = (UITableViewCell *) textField.superview.superview.superview;
+    else currentCell =  (UITableViewCell *) [[textField superview] superview];
     NSIndexPath * indexPath = [tableView indexPathForCell:currentCell];
 
-    int indexAfter = listAsigurati.count-1;
+    //int indexAfter = listAsigurati.count-1;
     
     // In cazul in care tastatura este activa si se da back
     int index = 0;
@@ -180,15 +238,11 @@
     else
         index = textField.tag;
     
-    if (index < listAsigurati.count)
-    {
-        [self setSerieAct:textField.text forIndex:index];
-    }
-    else if(index == (indexAfter + 1))
+    if(index == 0)
     {
         [self setTelefon:textField.text];
     }
-    else if (index == (indexAfter + 2))
+    else if (index == 1)
     {
         [self setEmail:textField.text];
     }
@@ -210,28 +264,29 @@
     self.navigationItem.rightBarButtonItem = backButton;
 }
 - (void) deleteBarButton {
-	self.navigationItem.rightBarButtonItem = nil;
+	//self.navigationItem.rightBarButtonItem = nil;
+ [YTOUtils rightImageVodafone:self.navigationItem];
 }
 
 #pragma Others
 - (void) initCells
 {
-    listCells = [[NSMutableArray alloc] init];
-    for (int i=0; i<listAsigurati.count; i++) {
-        YTOPersoana * asigurat = [listAsigurati objectAtIndex:i];
-        NSArray *topLevelObjectAsigurat = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
-        cellSerie = [topLevelObjectAsigurat objectAtIndex:0];
-        [(UILabel *)[cellSerie viewWithTag:1] setText:[NSString stringWithFormat:@"SERIE DOCUMENT %@", [asigurat.nume uppercaseString]]];
-        txtSerie = (UITextField *)[cellSerie viewWithTag:2];
-        [(UITextField *)[cellSerie viewWithTag:2] setPlaceholder:@"seria CI/Pasaport"];
-        [(UITextField *)[cellSerie viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
-        [YTOUtils setCellFormularStyle:cellSerie];
-        [listCells addObject:cellSerie];
-    }
+//    listCells = [[NSMutableArray alloc] init];
+//    for (int i=0; i<listAsigurati.count; i++) {
+//        YTOPersoana * asigurat = [listAsigurati objectAtIndex:i];
+//        NSArray *topLevelObjectAsigurat = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
+//        cellSerie = [topLevelObjectAsigurat objectAtIndex:0];
+//        [(UILabel *)[cellSerie viewWithTag:1] setText:[NSString stringWithFormat:@"SERIE DOCUMENT %@", [asigurat.nume uppercaseString]]];
+//        txtSerie = (UITextField *)[cellSerie viewWithTag:2];
+//        [(UITextField *)[cellSerie viewWithTag:2] setPlaceholder:@"seria CI/Pasaport"];
+//        [(UITextField *)[cellSerie viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeAllCharacters];
+//        [YTOUtils setCellFormularStyle:cellSerie];
+//        [listCells addObject:cellSerie];
+//    }
     
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
-    [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL"];
+    [(UILabel *)[cellEmail viewWithTag:1] setText:NSLocalizedStringFromTable(@"i57", [YTOUserDefaults getLanguage],@"EMAIL")];
     txtEmailLivrare = (UITextField *)[cellEmail viewWithTag:2];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
@@ -240,7 +295,7 @@
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
     txtTelefonLivrare = (UITextField *)[cellTelefon viewWithTag:2];
-    [(UILabel *)[cellTelefon viewWithTag:1] setText:@"TELEFON"];
+    [(UILabel *)[cellTelefon viewWithTag:1] setText:NSLocalizedStringFromTable(@"i63", [YTOUserDefaults getLanguage],@"TELEFON")];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellTelefon];
@@ -251,17 +306,22 @@
     imgComanda.image = [UIImage imageNamed:@"comanda-calatorie.png"];
     UILabel * lblCellC = (UILabel *)[cellCalculeaza viewWithTag:2];
     lblCellC.textColor = [UIColor whiteColor];
-    lblCellC.text = @"COMANDA";
+    lblCellC.text = NSLocalizedStringFromTable(@"i96", [YTOUserDefaults getLanguage],@"COMANDA");
 }
 
 - (void) setSerieAct:(NSString *)serie forIndex:(int)index
 {
     YTOPersoana * asigurat = [listAsigurati objectAtIndex:index];
     asigurat.serieAct = serie;
+    
+    //am adaugat ca nu salva serieAct
+    [asigurat updatePersoana:NO];
+    
     UITextField * txt = (UITextField *)[(UITableViewCell*)[listCells objectAtIndex:index] viewWithTag:2];
     txt.text = serie;
     seriePasaport = serie;
 }
+
 - (void) setEmail:(NSString *)email
 {
     emailLivrare = email;
@@ -284,10 +344,12 @@
 
 - (NSString *) XmlRequest
 {
+    NSString * appVersion = [NSString stringWithFormat:@"%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    
     NSString * xml = [[NSString alloc] initWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                       "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                       "<soap:Body>"
-                      "<CallInregistrareComanda xmlns=\"http://tempuri.org/\">"
+                      "<CallInregistrareComanda5 xmlns=\"http://tempuri.org/\">"
                       "<user>vreaurca</user>"
                       "<password>123</password>"
                       "<oferta_prima>%.2f</oferta_prima>"
@@ -302,14 +364,26 @@
                       "<udid>%@</udid>"
                       "<platforma>%@</platforma>"
                       "<sendEmail>1</sendEmail>"
-                      "</CallInregistrareComanda>"
+                      "<tip_emitere>2</tip_emitere>" // Emitere Automata = 2
+                      "<idReducere>%@</idReducere>"
+                      "<versiune>%@</versiune>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "</CallInregistrareComanda5>"
                       "</soap:Body>"
                       "</soap:Envelope>",
-                      oferta.prima, oferta.companie, oferta.numeAsigurare, oferta.codOferta, [YTOUtils formatDate:oferta.dataInceput withFormat:@"yyyy-MM-dd"],
+                      oferta.prima, oferta.companie, cotatie.TipProdus, oferta.codOferta, [YTOUtils formatDate:oferta.dataInceput withFormat:@"yyyy-MM-dd"],
                       [YTOPersoana getJsonPersoane:listAsigurati],
                       emailLivrare, telefonLivrare, modPlata,
-                      [[UIDevice currentDevice] uniqueIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier], [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                      cotatie.IdReducere,
+                      appVersion,[YTOUserDefaults getUserName],[YTOUserDefaults getPassword]];
     return xml;
+}
+
+- (void)chosenIndexAfterSearch:(NSString *)selected rowIndex:(NSIndexPath *)index forView:(id)view
+{
+    
 }
 
 - (IBAction) callInregistrareComanda {
@@ -327,7 +401,7 @@
 	NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
 	
 	[request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"http://tempuri.org/CallInregistrareComanda" forHTTPHeaderField:@"SOAPAction"];
+	[request addValue:@"http://tempuri.org/CallInregistrareComanda5" forHTTPHeaderField:@"SOAPAction"];
 	[request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPMethod:@"POST"];
 	[request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
@@ -369,12 +443,16 @@
                 [oferta addOferta];
             else
                 [oferta updateOferta];
+            
+            [self showCustomAlert:NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda") withDescription:responseMessage withError:NO withButtonIndex:3];
         }
-        [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:3];
+        else
+            [self showCustomAlert:NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda") withDescription:responseMessage withError:YES withButtonIndex:4];
+        
     }
     else if (succes) {
         if (idOferta == nil || [idOferta isEqualToString:@""])
-            [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:YES withButtonIndex:2];
+            [self showCustomAlert:NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda") withDescription:responseMessage withError:YES withButtonIndex:2];
         else {
             oferta.idExtern = [idOferta intValue];
             
@@ -383,11 +461,11 @@
             else
                 [oferta updateOferta];
             
-            [self showCustomAlert:@"Finalizare comanda" withDescription:responseMessage withError:NO withButtonIndex:1];
+            [self showCustomAlert:NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda") withDescription:responseMessage withError:NO withButtonIndex:1];
         }
 	}
 	else {
-        [self showCustomAlert:@"Finalizare comanda" withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:4];
+        [self showCustomAlert:NSLocalizedStringFromTable(@"i449", [YTOUserDefaults getLanguage],@"Finalizare comanda") withDescription:@"Comanda NU a fost transmisa." withError:YES withButtonIndex:4];
 	}
     
 }
@@ -436,9 +514,10 @@
 {
     self.navigationItem.hidesBackButton = NO;
     [vwLoading setHidden:YES];
+    [YTOUserDefaults setFirstInsuranceRequest:YES];
     if (idOferta && ![idOferta isEqualToString:@""] && [YTOUserDefaults IsFirstInsuranceRequest])
     {
-        [YTOUserDefaults setFirstInsuranceRequest:YES];
+        
         [self showPopupDupaComanda];
     }
 }
@@ -476,6 +555,8 @@
     
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     [delegate.window addSubview:viewTooltip];
+    [iRate sharedInstance].usesCount +=2;
+    [iRate sharedInstance].eventCount+=2;
 }
 
 - (void) closeTooltip
@@ -489,14 +570,27 @@
 {
     self.navigationItem.hidesBackButton = YES;
     
-    if (error)
-        imgError.image = [UIImage imageNamed:@"comanda-eroare.png"];
-    else
-        imgError.image = [UIImage imageNamed:@"comanda-ok.png"];
+    if (error){
+        lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+        lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
+    }else{
+        lblEroare.text = NSLocalizedStringFromTable(@"i809", [YTOUserDefaults getLanguage],@"Comanda a fost inregistrata");
+        lblEroare.textColor = [YTOUtils colorFromHexString:verde];
+        [lblEroare setFont:[UIFont fontWithName:@"Chalkboard SE" size:16]];
+        
+    }
     
     btnCustomAlertOK.tag = index;
 //    btnCustomAlertOK.frame = CGRectMake(124, 239, 73, 42);
 //    lblCustomAlertOK.frame = CGRectMake(150, 249, 42, 21);
+    
+//    if (!error)
+//    {
+//        [btnCustomFacebook setHidden:NO];
+//        [lblCustomFacebook setHidden:NO];
+//        [btnCustomTwitter setHidden:NO];
+//        [lblCustomTwitter setHidden:NO];
+//    }
     [lblCustomAlertOK setText:@"OK"];
     [btnCustomAlertNO setHidden:YES];
     [lblCustomAlertNO setHidden:YES];
@@ -514,7 +608,7 @@
     [vwCustomAlert setHidden:YES];
     if (btn.tag == 1)
     {
-        if ([YTOUserDefaults IsFirstInsuranceRequest])
+        if ([YTOUserDefaults IsFirstInsuranceRequest] && [YTOUserDefaults getUserName] != nil &&  ![[YTOUserDefaults getUserName] isEqualToString:@""])
             [self showPopupDupaComanda];
         else
         [self.navigationController popToRootViewControllerAnimated:YES];
@@ -536,12 +630,17 @@
                           "&udid=%@",
                           LinkAPI,
                           idOferta, emailLivrare, asig1.nume, asig1.adresa, asig1.localitate, asig1.judet, telefonLivrare,
-                          @"Calatorie", oferta.prima, oferta.companie, [[UIDevice currentDevice] uniqueIdentifier]];
+                          @"Calatorie", oferta.prima, oferta.companie, [[UIDevice currentDevice] xUniqueDeviceIdentifier]];
         
         NSURL * nsURL = [[NSURL alloc] initWithString:[url stringByReplacingOccurrencesOfString:@" " withString:@"%20"]];
-        [[UIApplication sharedApplication] openURL:nsURL];
+       
+        YTOWebViewController * aView = [[YTOWebViewController alloc] init];
+        aView.URL = [url stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
+        YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+        [delegate.rcaNavigationController pushViewController:aView animated:YES];
+        //[self.navigationController popToRootViewControllerAnimated:YES];
         
-        [self.navigationController popToRootViewControllerAnimated:YES];
+     //   [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if (btn.tag == 100)
     {
@@ -553,11 +652,12 @@
 {
     self.navigationItem.hidesBackButton = YES;
     
-    imgError.image = [UIImage imageNamed:@"comanda-confirmare-date.png"];
+    lblEroare.text =NSLocalizedStringFromTable(@"i808", [YTOUserDefaults getLanguage],@"Datele sunt corecte ?");
+    lblEroare.textColor = [YTOUtils colorFromHexString:verde];
     btnCustomAlertOK.tag = index;
 //    btnCustomAlertOK.frame = CGRectMake(189, 239, 73, 42);
 //    lblCustomAlertOK.frame = CGRectMake(215, 249, 42, 21);
-    [lblCustomAlertOK setText:@"DA"];
+    [lblCustomAlertOK setText:NSLocalizedStringFromTable(@"i92", [YTOUserDefaults getLanguage],@"DA")];
     
     [btnCustomAlertNO setHidden:NO];
     [lblCustomAlertNO setHidden:NO];
@@ -565,6 +665,133 @@
     lblCustomAlertTitle.text = title;
     lblCustomAlertMessage.text = description;
     [vwCustomAlert setHidden:NO];
+}
+
+//edi for social media
+- (IBAction) hideButtonSocialMedia:(id)sender
+{
+    [btnCustomFacebook setHidden:YES];
+    [lblCustomFacebook setHidden:YES];
+    [btnCustomTwitter setHidden:YES];
+    [lblCustomTwitter setHidden:YES];
+    
+    self.navigationItem.hidesBackButton = NO;
+    UIButton * btn = (UIButton *)sender;
+    [vwCustomAlert setHidden:YES];
+    
+    if (btn.tag == 2) {
+        // share pe Facebook
+        
+        // ca sa vedem pe analytics cate share-uri s-au dat
+        
+//        id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-8624521-11"];
+//        [tracker sendSocial:@"Facebook"
+//                 withAction:@"Share"
+//                 withTarget:@"https://developers.google.com/analytics"];
+        
+        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook]) //check if Facebook Account is linked
+        {
+            mySLComposerSheet = [[SLComposeViewController alloc] init]; //initiate the Social Controller
+            mySLComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook]; //Tell him with what social plattform to use it, e.g. facebook or twitter
+            [mySLComposerSheet setInitialText:@"Smart choice: am cumparat asigurarea de calatorie direct de pe iPhone! :) http://bit.ly/WKhiSD"]; //the message you want to post
+            UIImage * img;
+            UIImage *sharedImg;
+            NSString *text;
+            img= [UIImage imageNamed:@"socialmedia-ios-calatorie.png"];
+            text = [[NSString alloc] initWithFormat:@""];
+            NSString *text2 = [[NSString alloc] initWithFormat:@"  %.2f lei \n  %@",oferta.prima,oferta.companie ];
+            sharedImg = [YTOUtils  drawText:text
+                                    inImage:img
+                                    atPoint:CGPointMake(20, 185)
+                                  drawText2:text2
+                                   atPoint2:CGPointMake(40, 400)];
+            
+            [mySLComposerSheet addImage:sharedImg]; //an image you could post
+            
+            
+            [self presentViewController:mySLComposerSheet animated:YES completion:nil];
+        }
+        [mySLComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+            int output;
+            switch (result) {
+                case SLComposeViewControllerResultCancelled:
+                    output = 0;
+                    break;
+                case SLComposeViewControllerResultDone:
+                    output = 1;
+                    break;
+                default:
+                    break;
+            } //check if everythink worked properly. Give out a message on the state.
+            //            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Facebook" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            //            [alert show];
+            
+            if ([YTOUserDefaults IsFirstInsuranceRequest] && [YTOUserDefaults getUserName] != nil &&  ![[YTOUserDefaults getUserName] isEqualToString:@""]) {
+                if (output)
+                    [self showPopupDupaComanda];
+                else
+                    [self showPopupDupaComanda];
+            }
+        }];
+        
+        
+    }
+    else {
+        
+        // analytics - cate tweet-uri s-au dat
+        
+//        id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:@"UA-8624521-11"];
+//        [tracker sendSocial:@"Twitter"
+//                 withAction:@"Tweet"
+//                 withTarget:@"https://developers.google.com/analytics"];
+        
+        
+        if([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter]) //check if Facebook Account is linked
+        {
+            mySLComposerSheet = [[SLComposeViewController alloc] init]; //initiate the Social Controller
+            mySLComposerSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter]; //Tell him with what social plattform to use it, e.g. facebook or twitter
+            [mySLComposerSheet setInitialText:@"Smart choice: am cumparat asigurarea de calatorie direct de pe iPhone! :) http://bit.ly/WKhiSD"]; //the message you want to post
+            UIImage * img;
+            UIImage *sharedImg;
+            NSString *text;
+            img= [UIImage imageNamed:@"socialmedia-ios-calatorie.png"];
+            text = [[NSString alloc] initWithFormat:@""];
+            NSString *text2 = [[NSString alloc] initWithFormat:@"  %.2f lei \n  %@",oferta.prima,oferta.companie ];
+            sharedImg = [YTOUtils  drawText:text
+                                    inImage:img
+                                    atPoint:CGPointMake(20, 185)
+                                  drawText2:text2
+                                   atPoint2:CGPointMake(40, 400)];
+            
+            [mySLComposerSheet addImage:sharedImg]; //an image you could post
+            
+            
+            [self presentViewController:mySLComposerSheet animated:YES completion:nil];
+        }
+        [mySLComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+            int output;
+            switch (result) {
+                case SLComposeViewControllerResultCancelled:
+                    output = 0;
+                    break;
+                case SLComposeViewControllerResultDone:
+                    output = 1;
+                    break;
+                default:
+                    break;
+            } //check if everythink worked properly. Give out a message on the state.
+            //            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Twitter" message:output delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            //            [alert show];
+            
+           if ([YTOUserDefaults IsFirstInsuranceRequest] && [YTOUserDefaults getUserName] != nil &&  ![[YTOUserDefaults getUserName] isEqualToString:@""]) {
+                if (output)
+                    [self showPopupDupaComanda];
+                else
+                    [self showPopupDupaComanda];
+            }
+        }];
+        
+    }
 }
 
 @end

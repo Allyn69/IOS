@@ -24,7 +24,9 @@
 @property (nonatomic, retain) NSString *        companie;
 @property (nonatomic, retain) NSString *        codOferta;
 @property float                                 prima;
+@property float                                 primaReducere;
 @property (nonatomic, retain) NSString *        moneda;
+@property (nonatomic, retain) NSString *        idReducere;
 @property (nonatomic, retain) NSDate *          dataInceput;
 @property int                                   durataAsigurare;
 @property (nonatomic, retain) NSDate *          dataSfarsit;

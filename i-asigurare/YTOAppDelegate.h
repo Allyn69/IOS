@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iRate.h"
 
-@interface YTOAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@interface YTOAppDelegate : UIResponder <NSXMLParserDelegate, UIApplicationDelegate, UITabBarControllerDelegate>
 {
     NSMutableArray * _persoane;
     NSMutableArray * _masini;
@@ -18,13 +19,27 @@
     UIView * viewTooltip;
     int indexTooltip;
     NSMutableArray * listImgTooltip;
+    
+
+    NSString * version;
+    NSString * pushToken;
+    NSMutableData * responseData;
+	NSMutableString * currentElementValue;
+    
+    NSString * newUdidResult;
+    
+    UIBackgroundTaskIdentifier  bgTask;
+    BOOL hasVisitedSaveDeviceToken;
 }
+
+@property (nonatomic, retain) NSMutableData * responseData;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 @property (nonatomic, strong) UINavigationController * setariNavigationController;
 @property (nonatomic, strong) UINavigationController * rcaNavigationController;
 @property (nonatomic, strong) UINavigationController * alerteNavigationController;
+@property (nonatomic, strong) UINavigationController * contNavigationController;
 @property (nonatomic, strong) UINavigationController * alteleNavigationController;
 
 - (void) writeNewDatabaseCopy;
@@ -36,6 +51,7 @@
 - (void) refreshMasini;
 - (void) refreshLocuinte;
 - (void) refreshAlerte;
+
 
 - (NSMutableArray *) Masini;
 - (NSMutableArray *) Persoane;

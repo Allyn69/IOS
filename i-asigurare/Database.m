@@ -19,12 +19,12 @@ static sqlite3 *database = nil;
     NSMutableArray * marci = [[NSMutableArray alloc] initWithArray:nil];
     
     if (sqlite3_open([[self getDBPath] UTF8String], &database) == SQLITE_OK) {
-		NSString * sqlstring = @"Select Nume from vehicule_marci WHERE NUME not in ('Dacia', 'Opel', 'Volkswagen', 'Ford', 'Daewoo', 'Mercedes', 'Renault', 'Audi', 'Skoda', 'Bmw', 'Peugeot', 'Seat', 'Fiat', 'Toyota', 'Hyundai', 'Citroen', 'Nissan', 'Honda', 'Suzuki', 'Chevrolet', 'Mitsubishi', 'Kia', 'Iveco', 'Volvo', 'Mazda', 'Smart', 'Alfa Romeo')";
+		NSString * sqlstring = @"Select Nume from vehicule_marci WHERE NUME not in ('Dacia', 'Opel', 'Volkswagen', 'Ford', 'Daewoo', 'Mercedes', 'Renault', 'Audi', 'Skoda', 'BMW', 'Peugeot', 'Seat', 'Fiat', 'Toyota', 'Hyundai', 'Citroen', 'Nissan', 'Honda', 'Suzuki', 'Chevrolet', 'Mitsubishi', 'Kia', 'Iveco', 'Volvo', 'Mazda', 'Smart', 'Alfa-Romeo')";
 		const char *sql = [sqlstring UTF8String];
 		sqlite3_stmt *selectstmt;
 		if(sqlite3_prepare_v2(database, sql, -1, &selectstmt, NULL) == SQLITE_OK) {
 			
-            NSArray * top_marci = [[NSArray alloc] initWithObjects:@"Dacia", @"Opel", @"Volkswagen", @"Ford", @"Daewoo", @"Mercedes", @"Renault", @"Audi", @"Skoda", @"Bmw", @"Peugeot", @"Seat", @"Fiat", @"Toyota", @"Hyundai", @"Citroen", @"Nissan", @"Honda", @"Suzuki", @"Chevrolet", @"Mitsubishi", @"Kia", @"Iveco", @"Volvo", @"Mazda", @"Smart", @"Alfa Romeo", nil];
+            NSArray * top_marci = [[NSArray alloc] initWithObjects:@"Dacia", @"Opel", @"Volkswagen", @"Ford", @"Daewoo", @"Mercedes", @"Renault", @"Audi", @"Skoda", @"BMW", @"Peugeot", @"Seat", @"Fiat", @"Toyota", @"Hyundai", @"Citroen", @"Nissan", @"Honda", @"Suzuki", @"Chevrolet", @"Mitsubishi", @"Kia", @"Iveco", @"Volvo", @"Mazda", @"Smart", @"Alfa-Romeo", nil];
             
             [marci addObjectsFromArray:top_marci];
 

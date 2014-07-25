@@ -1,0 +1,135 @@
+else if (indexPath.row == 7)
+    {
+        if (oferta!=nil && oferta.prima > 0)
+        {
+            [self showCustomConfirm:NSLocalizedStringFromTable(@"i451", [YTOUserDefaults getLanguage],@"Confirma date") withDescription:NSLocalizedStringFromTable(@"i452", [YTOUserDefaults getLanguage],@"Apasa DA pentru a confirma ca datele introduse sunt corecte si pentru a plasa comanda. Daca nu doresti sa continui apasa NU")withButtonIndex:100];
+        }else if (asigurat == nil) {
+            
+            UILabel * lblCell = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+            return;
+        }else if (locuinta == nil){
+            UILabel * lblCell = (UILabel *)[cellLocuinta viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+        }else if (!locuinta.sumaAsigurata || locuinta.sumaAsigurata < 20000){
+            [(UITextField *)[cellSumaAsigurata viewWithTag:2] becomeFirstResponder];
+            return;
+        }else if (oferta == nil || oferta.prima == 0)
+        {
+            UILabel * lblCell = (UILabel *)[cellLocuinta viewWithTag:2];
+            lblCell.textColor = [UIColor redColor];
+            UILabel * lblCell1 = (UILabel *)[cellProprietar viewWithTag:2];
+            lblCell1.textColor = [UIColor redColor];
+            
+            
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+            [tv scrollToRowAtIndexPath:indexPath
+                      atScrollPosition:UITableViewScrollPositionTop
+                              animated:YES];
+        }
+        
+    }
+
+
+- (NSString *) XmlRequestInregistrare
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    paramForReq1 = 2;
+    formatter.dateFormat = @"yyyy-MM-dd";
+    YTOPersoana * proprietar = [YTOPersoana Proprietar];
+    YTOPersoana * proprietarPJ = [YTOPersoana ProprietarPJ];
+    NSString *telefon , *emailLivrare;
+    if (proprietar.telefon && proprietar.telefon.length > 0)
+        telefon = proprietar.telefon;
+    else if (proprietarPJ.telefon && proprietarPJ.telefon.length > 0)
+        telefon = proprietar.telefon;
+    if (proprietar.email && proprietar.email.length > 0)
+        emailLivrare = proprietar.email;
+    else if (proprietarPJ.email && proprietarPJ.email.length > 0)
+        emailLivrare = proprietarPJ.email;
+    
+    NSString * xml = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+                      "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                      "<soap:Body>"
+                      "<CallInregistrareComandaCasaMeaSmartphone xmlns=\"http://tempuri.org/\">"
+                      "<user>vreaurca</user>"
+                      "<password>123</password>"
+                      "<udid>%@</udid>"
+                      "<id_intern>%@</id_intern>"
+                      "<nume_asigurat>%@</nume_asigurat>"
+                      "<cod_unic>%@</cod_unic>"
+                      "<data_inceput>%@</data_inceput>"
+                      "<mod_plata>3</mod_plata>"
+                      "<telefon>%@</telefon>"
+                      "<email>%@</email>"
+                      "<platforma>%@</platforma>"
+                      "<cont_user>%@</cont_user>"
+                      "<cont_parola>%@</cont_parola>"
+                      "</CallInregistrareComandaCasaMeaSmartphone>"
+                      "</soap:Body>"
+                      "</soap:Envelope>",
+                      [[UIDevice currentDevice] xUniqueDeviceIdentifier],
+                      locuinta.idIntern,
+                      asigurat.nume,
+                      asigurat.codUnic,
+                      _DataInceput,
+                      telefon,
+                      emailLivrare,
+                      [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                      [YTOUserDefaults getUserName],
+                      [YTOUserDefaults getPassword]
+                      ];
+    
+    return [xml stringByReplacingOccurrencesOfString:@"'" withString:@""];
+}
+
+
+
+- (void) callInregistrareComanda {
+    
+	NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@gothaer.asmx", LinkAPI]];
+    paramForReq1 = 2;
+    VerifyNet * vn = [[VerifyNet alloc] init];
+    if ([vn hasConnectivity]) {
+        
+        [vwLoading setHidden:NO];
+        [self showLoading];
+        
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url
+                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                            timeoutInterval:30.0];
+        
+        NSString * parameters = [[NSString alloc] initWithString:[self XmlRequestInregistrare]];
+        NSLog(@"Request=%@", parameters);
+        NSString * msgLength = [NSString stringWithFormat:@"%d", [parameters length]];
+        
+        [request addValue:@"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [request addValue:@"http://tempuri.org/CallInregistrareComandaCasaMeaSmartphone" forHTTPHeaderField:@"SOAPAction"];
+        [request addValue:msgLength forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:[parameters dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        if (connection) {
+            self->responseData = [NSMutableData data];
+            NSLog(@"%@",responseData);
+        }
+    }
+    else {
+        [self showPopupServiciu:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !") ];// andDescription:eroare_ws];
+        
+        
+    }
+    
+}

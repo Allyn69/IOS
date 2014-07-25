@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface YTOAlerteViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UIView          * vwPopup;
@@ -17,6 +18,12 @@
     IBOutlet UITableView     * tableView;
     NSMutableArray           * listAlerte;
     int counter;
+    
+    IBOutlet UILabel * lblPentruAlerte;
+    IBOutlet UILabel * lblZeroAlerte;
+    IBOutlet UITableViewCell * cellHead;
+    
+    IBOutlet UILabel * lblCumAlerte;
 }
 
 @property (nonatomic, retain) UIViewController * controller;

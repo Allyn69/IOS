@@ -8,6 +8,11 @@
 
 #import "YTOUtils.h"
 #import "KeyValueItem.h"
+#import "YTOObiectAsigurat.h"
+#import "YTOAppDelegate.h"
+#import "YTOAutovehicul.h"
+#import <CommonCrypto/CommonDigest.h> // Need to import for CC_MD5 access
+
 
 @implementation YTOUtils
 
@@ -40,6 +45,23 @@
     float alpha = ((baseValue >> 0) & 0xFF)/255.0f;
     
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+}
+
++ (void) deleteWhenLogOff;
+{
+    [YTOObiectAsigurat deleteAllRecordsFromObiectAsigurat];
+    YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
+//    for (int ii = 0; ii<delegate.Masini.count; ii++) {
+//        YTOAutovehicul * masina = [delegate.Masini objectAtIndex:ii];
+//        if ([masina.savedInCont isEqualToString:@"da"])
+//            [masina deleteAutovehicul2];
+//    }
+    [delegate.Alerte removeAllObjects];
+    [delegate.Masini removeAllObjects];
+    [delegate.Persoane removeAllObjects];
+    [delegate.Locuinte removeAllObjects];
+    [delegate setAlerteBadge];
+   // [YTO]
 }
 
 + (void) setCellFormularStyle:(UITableViewCell *) cell 
@@ -80,9 +102,15 @@
     return [UIImage imageNamed:value];
 }
 
-+ (NSString *) getAnMinimPermis:(NSString *)cnp
++ (NSString *) getVarsta:(NSString *)cnp
 {
-    NSString * c1 = [NSString stringWithFormat:@"19%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
+    if (cnp.length < 3) return 0;
+    NSString * c0 = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:0]];
+    NSString * c1;
+    if ([c0 isEqualToString:@"1"] || [c0 isEqualToString:@"2"])
+        c1 = [NSString stringWithFormat:@"19%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
+    else
+        c1 = [NSString stringWithFormat:@"20%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
     //NSString * c2 = [NSString stringWithFormat:@"%c%c",[cnp characterAtIndex:3],[cnp characterAtIndex:4]];
     int an_cnp = [c1 intValue];
     
@@ -95,9 +123,40 @@
     
     int varsta = an_curent - an_cnp;
     
+    return [NSString stringWithFormat:@"%d", varsta];
+    
+}
+
++ (NSString *) getAnMinimPermis:(NSString *)cnp
+{
+    //NSString * c1 = [NSString stringWithFormat:@"19%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
+    //NSString * c2 = [NSString stringWithFormat:@"%c%c",[cnp characterAtIndex:3],[cnp characterAtIndex:4]];
+    
+    NSString * c0 = [NSString stringWithFormat:@"%c",[cnp characterAtIndex:0]];
+    NSString * c1;
+    if ([c0 isEqualToString:@"1"] || [c0 isEqualToString:@"2"] || [c0 isEqualToString:@"7"] || [c0 isEqualToString:@"8"] || [c0 isEqualToString:@"9"])
+        c1 = [NSString stringWithFormat:@"19%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
+    else
+        c1 = [NSString stringWithFormat:@"20%c%c",[cnp characterAtIndex:1],[cnp characterAtIndex:2]];
+    
+    int an_cnp = [c1 intValue];
+    
+    
+    //int luna_cnp = [c2 intValue];
+    
+    NSDate * azi = [NSDate date];
+    NSCalendar * calendar = [NSCalendar currentCalendar];
+    NSDateComponents *dateComponents = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:azi];
+    int an_curent = [dateComponents year];
+    
+    if (an_cnp > an_curent) an_cnp = an_curent;
+    
+    int varsta = an_curent - an_cnp;
+    
     return [NSString stringWithFormat:@"%d", (an_curent - varsta + 18)];
     
 }
+
 + (int) getAnCurent
 {
     NSDate * azi = [NSDate date];
@@ -128,6 +187,25 @@
         va_end(alist);
     }
     return result;
+}
+
++ (UIImage*) drawText:(NSString*) text inImage:(UIImage*)  image atPoint:(CGPoint)   point drawText2 : (NSString *) text2  atPoint2 :(CGPoint) point2
+{
+    
+    UIFont *font = [UIFont boldSystemFontOfSize:35];
+    UIFont *font2 = [UIFont boldSystemFontOfSize:35];
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+    CGRect rect = CGRectMake(point.x, point.y, image.size.width, image.size.height);
+    CGRect rect2 = CGRectMake(point2.x, point2.y, image.size.width, image.size.height);
+    [[UIColor whiteColor] set];
+    [text drawInRect:CGRectIntegral(rect) withFont:font];
+    [[UIColor blackColor] set];
+    [text2 drawInRect:rect2 withFont:font2];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 + (NSDate *) getDataSfarsitPolita:(NSDate *)dataInceput andDurataInLuni:(int)durata
@@ -278,10 +356,16 @@
     
     KeyValueItem * c9 = [[KeyValueItem alloc] init];
     c9.parentKey = 1;
-    c9.key = 7;
+    c9.key = 8;
     c9.value = @"Uniqa";
     
-    list  = [[NSMutableArray alloc] initWithObjects:c1,c2,c3,c4,c5,c6,c7,c8,c9, nil];
+    KeyValueItem * c10 = [[KeyValueItem alloc] init];
+    c10.parentKey = 1;
+    c10.key = 9;
+    c10.value = @"Neasigurat";
+    
+    
+    list  = [[NSMutableArray alloc] initWithObjects:c1,c2,c3,c4,c5,c6,c7,c8,c9,c10 ,nil];
     return list;
 }
 
@@ -350,6 +434,21 @@
     
     return reversed;
 }
+
++ (NSString *) md5:(NSString *) input
+{
+    const char *cStr = [input UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    CC_MD5( cStr, strlen(cStr), digest ); // This is the md5 call
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return  output;
+}
+
 
 // VALDARI
 #pragma VALIDARI
@@ -474,6 +573,40 @@
     s = [s stringByReplacingOccurrencesOfString:@"O" withString:@"0"];
     s = [s stringByReplacingOccurrencesOfString:@"I" withString:@"1"];
     return s;
+}
+
++ (void) rightImageVodafone :(UINavigationItem *) navBar
+{
+    UIButton *vdf = [UIButton buttonWithType:UIButtonTypeCustom];
+    [vdf setFrame:CGRectMake(10, 0, 50, 44)];
+    [vdf setImage:[UIImage imageNamed:@"powered-by-vdf.png"] forState:UIControlStateNormal];
+    [vdf setImage:[UIImage imageNamed:@"powered-by-vdf.png"] forState:UIControlStateHighlighted];
+    vdf.contentEdgeInsets = (UIEdgeInsets){.right=-10};
+    UIBarButtonItem *btn = [[UIBarButtonItem alloc] initWithCustomView:vdf];
+    
+    navBar.rightBarButtonItem = btn;
+    
+}
+
+
++ (BOOL) isWeekend
+{
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *comps = [gregorian components:NSWeekdayCalendarUnit fromDate:[NSDate date]];
+    int weekday = [comps weekday];
+    NSLog(@"%d",weekday);
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:NSHourCalendarUnit fromDate:now];
+    NSLog(@"%d",[components hour]);
+    int hour = [components hour];
+    if (weekday == 7 || weekday == 1)
+        return YES;
+    if (weekday == 6 && hour >= 16)
+        return YES;
+    if (weekday == 2 && hour < 6)
+        return YES;
+    return NO;
 }
 
 @end

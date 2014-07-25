@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface YTOTermeniViewController : UIViewController<NSXMLParserDelegate, UIWebViewDelegate>
 {
     IBOutlet UIView     * vwLoading;
@@ -25,6 +26,13 @@
     IBOutlet UIView      * vwPopup;
     IBOutlet UILabel     * lblPopupTitle;
     IBOutlet UILabel     * lblPopupDescription;
+    
+    IBOutlet UILabel     * lblNoInternet;
+    IBOutlet UILabel     * lblSeIncarca;
+    IBOutlet UILabel * lblEroare;
+    
+    IBOutlet UITableViewCell * cellHead;
+    
     
     IBOutlet UIWebView * webView;
 }

@@ -35,6 +35,7 @@
 @property (nonatomic, retain) NSString * handicapLocomotor;
 @property (nonatomic, retain) NSString * serieAct;
 @property (nonatomic, retain) NSString * elevStudent;
+@property (nonatomic, retain) NSString * varsta;
 @property (nonatomic, retain) NSString * boliNeuro;
 @property (nonatomic, retain) NSString * boliCardio;
 @property (nonatomic, retain) NSString * boliInterne;
@@ -45,10 +46,11 @@
 @property (nonatomic, retain) NSString * telefon;
 @property (nonatomic, retain) NSString * email;
 @property (nonatomic, retain) NSString * proprietar;
+@property (nonatomic, retain) NSString * codPostal;
 @property BOOL _isDirty;
 
-- (void) addPersoana;
-- (void) updatePersoana;
+- (void) addPersoana:(BOOL) local;
+- (void) updatePersoana:(BOOL) local;
 - (void) deletePersoana;
 + (YTOPersoana *) getPersoana:(NSString *)_idIntern;
 + (YTOPersoana *) getPersoanaByCodUnic:(NSString *)_codUnic;
@@ -64,6 +66,14 @@
 - (void) refresh;
 + (NSString *) getJsonPersoane:(NSMutableArray *) list;
 
+// pentru atentionari date gresite
+- (NSString *) mesajOneFieldWrong;
+- (NSString *) mesajOneFieldWrongCalatorie;
+- (NSString *) mesajOneFieldWrongMyTravels;
+- (int) getWrongLabel;
+
 - (BOOL) isValidForCompute;
+- (BOOL) isValidForComputeCalatorie;
+- (BOOL) isValidForGothaer;
 
 @end

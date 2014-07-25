@@ -9,6 +9,7 @@
 #import "YTOListaLocuinteViewController.h"
 #import "YTOAppDelegate.h"
 #import "YTOCalculatorViewController.h"
+#import "YTOCasaMeaViewController.h"
 #import "YTOCasaViewController.h"
 #import "YTOAsiguratViewController.h"
 #import "YTOLocuintaViewController.h"
@@ -17,6 +18,8 @@
 #import "YTOLocuinta.h"
 #import "YTOFormAlertaViewController.h"
 #import "YTOAsigurareViewController.h"
+#import "YTOUserDefaults.h"
+#import "UILabel+dynamicSizeMe.h"
 
 @interface YTOListaLocuinteViewController ()
 
@@ -30,7 +33,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Lista locuinte", @"Lista locuinte");
+        self.title = NSLocalizedStringFromTable(@"i361", [YTOUserDefaults getLanguage],@"Lista locuinte");
     }
     return self;
 }
@@ -38,14 +41,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+    //self.trackedViewName = @"YTOListaLocuinteViewController";
 
     YTOAppDelegate * delegate = (YTOAppDelegate *)[[UIApplication sharedApplication] delegate];
     listaLocuinte = [delegate Locuinte];
     
     ((UILabel *)[vwEmpty viewWithTag:11]).textColor = [YTOUtils colorFromHexString:@"#0071bc"];
     ((UILabel *)[vwEmpty viewWithTag:10]).textColor = [YTOUtils colorFromHexString:@"#4d4d4d"];
+    lblEditeaza.textColor = [YTOUtils colorFromHexString:@"#78a9b9"];
+    lblAdauga.textColor = [YTOUtils colorFromHexString:@"#78a9b9"];
+    lblWvEmpty1.text = NSLocalizedStringFromTable(@"i362", [YTOUserDefaults getLanguage],@"Nu exista locuinte salvate. Pentru a adauga o noua locuinta, apasa butonul de mai sus "Adauga locuinta"");
+    lblWvEmpty2.text = NSLocalizedStringFromTable(@"i167", [YTOUserDefaults getLanguage],@"Adauga locuinta");
+    lblAdaugaLocuinta.text =  NSLocalizedStringFromTable(@"i363", [YTOUserDefaults getLanguage],@"Adauga locuinta");
+    [lblAdaugaLocuinta resizeToFit];
 
     [self verifyViewMode];
+    [YTOUtils rightImageVodafone:self.navigationItem];
+    tableView.allowsSelectionDuringEditing = YES;
 }
 
 - (void) verifyViewMode
@@ -68,6 +85,8 @@
             btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnEdit;
     }
+    if (![controller isKindOfClass:[YTOSetariViewController class]])
+        [YTOUtils rightImageVodafone:self.navigationItem];
 }
 
 - (void) viewWillDisappear:(BOOL)animated
@@ -111,13 +130,27 @@
     }
     
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    cell.textLabel.font = [UIFont fontWithName:@"Myriad Pro" size:20];
+    if (!editingMode){
+        cell.textLabel.font = [UIFont fontWithName:@"Arial-Regular" size:20];
+    }else{
+        cell.textLabel.font = [UIFont fontWithName:@"Arial-ItalicMT" size:17];
+    }
     cell.textLabel.textColor = [YTOUtils colorFromHexString:@"#3e3e3e"];
     cell.detailTextLabel.textColor = [YTOUtils colorFromHexString:@"#888888"];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"Myriad Pro" size:16];
+    if (!editingMode){
+        cell.detailTextLabel.font = [UIFont fontWithName:@"Arial" size:16];
+    }else{
+        cell.detailTextLabel.font = [UIFont fontWithName:@"Arial-ItalicMT" size:16];
+    }
     cell.imageView.image = [UIImage imageNamed:@"icon-foto-casa-xs.png"];
     YTOLocuinta * loc = (YTOLocuinta *)[listaLocuinte objectAtIndex:indexPath.row];
-    cell.textLabel.text = loc.tipLocuinta;
+
+    if ([loc.tipLocuinta isEqualToString:@"apartament-in-bloc"])
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i377", [YTOUserDefaults getLanguage],@"Apartament in bloc");
+    else if ([loc.tipLocuinta isEqualToString:@"casa-vila-comuna"])
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i378", [YTOUserDefaults getLanguage],@"Casa - vila comuna");
+    else if ([loc.tipLocuinta isEqualToString:@"casa-vila-individuala"])
+        cell.textLabel.text = NSLocalizedStringFromTable(@"i379", [YTOUserDefaults getLanguage],@"Casa - vila individuala");
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@, %@, %d mp", loc.judet, loc.localitate, loc.suprafataUtila];
     
     if (indexPath.row % 2 != 0 && indexPath.row != 0) {
@@ -128,18 +161,26 @@
         bgColor.backgroundColor = [YTOUtils colorFromHexString:@"#fafafa"];
     }
     
-    UIProgressView *progressv = [[UIProgressView alloc] initWithFrame:CGRectMake(8, 56, 47, 9)];
+    UIProgressView *progressv ;
+    if(IS_OS_7_OR_LATER) progressv = [[UIProgressView alloc] initWithFrame:CGRectMake(16, 56, 47, 9)];
+    else progressv= [[UIProgressView alloc] initWithFrame:CGRectMake(8, 56, 47, 9)];
     float completedPercent =[loc CompletedPercent];
     [progressv setProgress:completedPercent];
    // progressv.progressTintColor = [YTOUtils colorFromHexString:];
     progressv.alpha=0.6;
     
-    UILabel * lblPercent = [[UILabel alloc] initWithFrame:CGRectMake(8, 46, 47, 30)];
+    UILabel * lblPercent;
+    if (IS_OS_7_OR_LATER) lblPercent = [[UILabel alloc] initWithFrame:CGRectMake(16, 46, 47, 30)];
+    else lblPercent = [[UILabel alloc] initWithFrame:CGRectMake(8, 46, 47, 30)];
     lblPercent.font = [UIFont fontWithName:@"Arial" size:9]; lblPercent.textAlignment = UITextAlignmentCenter;
     lblPercent.text = [[NSString stringWithFormat:@"%.0f", completedPercent*100] stringByAppendingString:@" %"];
     lblPercent.backgroundColor = [UIColor clearColor];
-    [cell addSubview:progressv];
-    [cell addSubview:lblPercent];
+    if (!IS_OS_7_OR_LATER){
+        [cell addSubview:progressv];
+        [cell addSubview:lblPercent];
+    }
+    if (editingMode)
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 
@@ -188,13 +229,32 @@
 {
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     YTOLocuinta * locuinta = [listaLocuinte objectAtIndex:indexPath.row];
-    
-    if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+    if (!editingMode && ([self.controller isKindOfClass:[YTOCasaMeaViewController class]] || [self.controller isKindOfClass:[YTOCasaMeaViewController class]]))
+    {
+        YTOCasaViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+        else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
+        aView.controller = self.controller;
+        aView.locuinta = locuinta;
+        [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+    }else if ([self.controller isKindOfClass:[YTOSetariViewController class]])
+    {
+        YTOLocuinta * pAux = [YTOLocuinta getLocuinta:locuinta.idIntern];
+        YTOCasaViewController * aView;
+        if (IS_IPHONE_5)
+            aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+        else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
+        aView.controller = self;
+        aView.locuinta = pAux;
+        [appDelegate.setariNavigationController pushViewController:aView animated:YES];
+    }
+    else if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
     {
 
         YTOLocuintaViewController * parent = (YTOLocuintaViewController *)self.controller;
         
-        if ([locuinta isValidForLocuinta]) {
+        if (!editingMode && [locuinta isValidForLocuinta]) {
             [parent setLocuinta:locuinta];
             [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
         }
@@ -203,7 +263,25 @@
             if (IS_IPHONE_5)
                 aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
             else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
-            aView.controller = self;
+            aView.controller = self.controller;
+            aView.locuinta = locuinta;
+            [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
+        }
+    }else if ([self.controller isKindOfClass:[YTOCasaMeaViewController class]])
+    {
+        
+        YTOCasaMeaViewController * parent = (YTOCasaMeaViewController *)self.controller;
+        
+        if (!editingMode && [locuinta isValidForGothaer]) {
+            parent.locuinta = locuinta;
+            [appDelegate.rcaNavigationController popViewControllerAnimated:YES];
+        }
+        else {
+            YTOCasaViewController * aView;
+            if (IS_IPHONE_5)
+                aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
+            else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
+            aView.controller = self.controller;
             aView.locuinta = locuinta;
             [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
         }
@@ -245,13 +323,16 @@
 
 - (IBAction)adaugaLocuinta:(id)sender
 {
+    editingMode = NO;
+    [tableView setEditing:NO];
+    
     YTOCasaViewController * aView;
     if (IS_IPHONE_5)
         aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController_R4" bundle:nil];
     else aView = [[YTOCasaViewController alloc] initWithNibName:@"YTOCasaViewController" bundle:nil];
     YTOAppDelegate * appDelegate = (YTOAppDelegate*)[[UIApplication sharedApplication] delegate];
     
-    if ([self.controller isKindOfClass:[YTOLocuintaViewController class]])
+    if ([self.controller isKindOfClass:[YTOLocuintaViewController class]] || [self.controller isKindOfClass:[YTOCasaMeaViewController class]])
     {
         aView.controller = (YTOLocuintaViewController *)self.controller;
         [appDelegate.rcaNavigationController pushViewController:aView animated:YES];
@@ -281,29 +362,36 @@
             [parent reloadData];
         }
     }
+    if (listaLocuinte.count > 0)
+        [YTOUtils rightImageVodafone:self.navigationItem];
     [tableView reloadData];
     [self verifyViewMode];
 }
 
-- (void) callEditItems
+- (IBAction) callEditItems
 {
     if (!editingMode)
     {
         editingMode = YES;
         [tableView setEditing:YES];
+         [tableView reloadData];
         UIBarButtonItem *btnDone = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"checked.png"]
                                                                     style:UIBarButtonItemStylePlain
                                                                    target:self
                                                                    action:@selector(callEditItems)];
         self.navigationItem.rightBarButtonItem = btnDone;
         [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStyleDone];
+        lblEditeaza.font = [UIFont fontWithName:@"ChalkboardSE-Bold" size:14];
     }
     else
     {
         editingMode = NO;
         [tableView setEditing:NO];
-        UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
-        self.navigationItem.rightBarButtonItem = btnEdit;
+        [tableView reloadData];
+   //     UIBarButtonItem *btnEdit = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(callEditItems)];
+//        self.navigationItem.rightBarButtonItem = btnEdit;
+        [YTOUtils rightImageVodafone:self.navigationItem];
+        lblEditeaza.font = [UIFont fontWithName:@"ChalkboardSE-Regular" size:14];
         [self.navigationItem.leftBarButtonItem setStyle:UIBarButtonItemStylePlain];
     }
 }

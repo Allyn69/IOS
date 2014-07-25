@@ -29,7 +29,6 @@
     //YTOPersoana * asigurat;
     YTOAutovehicul * masina;
     YTOOferta * oferta;
-    
     UITextField * activeTextField;
     
     UITableViewCell * cellHeader;
@@ -37,22 +36,28 @@
     UITableViewCell * cellProprietar;
     UITableViewCell * cellCalculeaza;
     UITableViewCell * cellCodUnic;
-    
-    IBOutlet UIStepper * stepperAnMinimPermis;
+
     IBOutlet UIView *   vwNomenclator;
     
     BOOL cautLegaturaDintreMasinaSiAsigurat;
+    
+    IBOutlet UILabel * lblInfoReduceri;
+    IBOutlet UILabel * lblAlegeCasco;
+    
 }
-
 @property (nonatomic, retain) YTOPersoana *  asigurat;
 @property (nonatomic, retain) NSDate *   DataInceput;
 @property (nonatomic, retain) NSString * Durata;
+
+
 
 // START for vwNomenclator
 @property int _nomenclatorNrItems;
 @property int _nomenclatorSelIndex;
 @property (readwrite) Nomenclatoare _nomenclatorTip;
 @property (nonatomic, retain) NSMutableArray * listaCompanii;
+
+@property BOOL isWrongAuto;
 - (IBAction)checkboxCompanieCascoSelected:(id)sender;
 - (void) showNomenclator;
 - (IBAction) hideNomenclator;
@@ -60,14 +65,10 @@
 // END for vwNomenclator
 
 - (IBAction)selectPersoana:(id)sender;
-- (void)setAsigurat:(YTOPersoana *) a;
+//- (void)setAsigurat:(YTOPersoana *) a;
 - (void)setAutovehicul:(YTOAutovehicul *)a;
-- (IBAction)checkboxSelected:(id)sender;
-- (IBAction)chkTipPersoana_Selected:(id)sender;
-- (IBAction)chkDurata_Selected:(id)sender;
+
 - (IBAction)dateStepper_Changed:(id)sender;
-- (IBAction)nrBugetariSepper_Changed:(id)sender;
-- (IBAction)anPermisSepper_Changed:(id)sender;
 
 - (void) showCoduriCaen:(NSIndexPath *)index;
 
@@ -82,18 +83,8 @@
 
 - (void) setPersoanaFizica:(BOOL)k;
 - (void) setCodCaen:(NSString *)k;
-- (void) setDurata6Luni:(BOOL)k;
 - (void) setDataInceput:(NSDate *)DataInceput;
-- (void) setCasatorit:(BOOL)k;
-- (BOOL) getCasatorit;
-- (void) setCopiiMinori:(BOOL)k;
-- (BOOL) getCopiiMinori;
-- (void) setPensionar:(BOOL)k;
-- (BOOL) getPensionar;
-- (void) setHandicap:(BOOL)k;
-- (BOOL) getHandicap;
-- (void) setNrBugetari:(int)k;
-- (void) setAnPermis:(int)k;
+
 - (void) setCompanieCasco:(NSString*)v;
 
 

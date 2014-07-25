@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "YTOAutovehicul.h"
 
-@interface YTOValabilitateRCAViewController : UIViewController<NSXMLParserDelegate>
+
+@interface YTOValabilitateRCAViewController : UIViewController<NSXMLParserDelegate, UIWebViewDelegate>
 {
     IBOutlet UILabel * lblMasina;
     IBOutlet UILabel * lblSerie;
@@ -47,6 +48,23 @@
     
     IBOutlet UILabel     * lblTitlu;
     IBOutlet UILabel     * lblExpira;
+    
+    IBOutlet UILabel     * lbl2;
+    IBOutlet UILabel     * lbl3;
+    IBOutlet UILabel     * lblAlege;
+    IBOutlet UILabel     * lblVerifica;
+    
+    IBOutlet UIWebView   * webView;
+    
+    IBOutlet UILabel * lblMultumim1;
+    IBOutlet UILabel * lblMultumim2;
+    IBOutlet UILabel * lblSorry1;
+    IBOutlet UILabel * lblSorry2;
+    IBOutlet UILabel * lblDetaliiErr1;
+    IBOutlet UILabel * lblEroare;
+
+    
+    IBOutlet UITableViewCell * cellHead;
 }
 @property (nonatomic, retain) NSMutableData * responseData;
 @property (nonatomic, retain) YTOAutovehicul * masina;

@@ -8,6 +8,7 @@
 
 #import "YTOTrimiteMesajViewController.h"
 #import "YTOUtils.h"
+#import "YTOUserDefaults.h"
 #import "VerifyNet.h"
 
 @interface YTOTrimiteMesajViewController ()
@@ -22,7 +23,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Trimite mesaj", @"Trimite mesaj");
+        self.title = NSLocalizedStringFromTable(@"i496", [YTOUserDefaults getLanguage],@"Trimite mesaj");
     }
     return self;
 }
@@ -30,15 +31,47 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (IS_OS_7_OR_LATER){
+        self.edgesForExtendedLayout=UIRectEdgeNone;
+        self.extendedLayoutIncludesOpaqueBars=NO;
+        self.automaticallyAdjustsScrollViewInsets=NO;
+    }else [tableView setBackgroundView: nil];
+    //self.trackedViewName = @"YTOTrimiteMesajViewController";
     
     [self initCells];
+    lblNoInternet.text = NSLocalizedStringFromTable(@"i450", [YTOUserDefaults getLanguage],@"Ne pare rau! \nCererea nu a fost trimisa pentru ca nu esti conectat la internet. \nTe rugam sa te asiguri ca ai o conexiune la internet activa si sa incerci din nou.\n Iti multumim!");
     
     proprietar = [YTOPersoana Proprietar];
     if (proprietar)
     {
         //[self setTelefon:proprietar.telefon];
-        //[self setEmail:proprietar.email];
+        [self setEmail:proprietar.email];
+        [self setTelefon:proprietar.telefon];
     }
+     [YTOUtils rightImageVodafone:self.navigationItem];
+    UILabel *lbl11 = (UILabel * ) [cellHead viewWithTag:11];
+    UILabel *lbl22 = (UILabel * ) [cellHead viewWithTag:22];
+    
+    NSString *string1 =  NSLocalizedStringFromTable(@"i715", [YTOUserDefaults getLanguage],@"Mesajul");
+    NSString *string2 =  NSLocalizedStringFromTable(@"i716", [YTOUserDefaults getLanguage],@"tau");
+    NSString *string  =  [[NSString alloc] initWithFormat:@"%@ %@",string1,string2];
+    
+    
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0")){
+        NSMutableAttributedString* attributedString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributedString beginEditing];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:galbenMesaj] range:NSMakeRange(0, string1.length+1)];
+        [attributedString addAttribute:NSForegroundColorAttributeName value:[YTOUtils colorFromHexString:ColorTitlu] range:NSMakeRange(string1.length+1, string2.length)];
+        [attributedString beginEditing];
+        
+        [lbl11 setAttributedText:attributedString];
+    }else{
+        [lbl11 setText:string];
+        [lbl11 setTextColor:[YTOUtils colorFromHexString:galbenMesaj]];
+    }
+    lbl22.text = NSLocalizedStringFromTable(@"i717", [YTOUserDefaults getLanguage],@"comunica cu echipa i-Asigurare");
+    lblEroare.text = NSLocalizedStringFromTable(@"i799", [YTOUserDefaults getLanguage],@"Eroare !");
+    lblEroare.textColor = [YTOUtils colorFromHexString:rosuTermeni];
 }
 
 - (void)didReceiveMemoryWarning
@@ -153,7 +186,7 @@
     
     activeTextField.tag = indexPath.row;
     
-	tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
+	//tableView.contentInset = UIEdgeInsetsMake(65, 0, 210, 0);
     if (indexPath)
 	[tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     
@@ -212,7 +245,8 @@
     self.navigationItem.rightBarButtonItem = backButton;
 }
 - (void) deleteBarButton {
-	self.navigationItem.rightBarButtonItem = nil;
+	//self.navigationItem.rightBarButtonItem = nil;
+     [YTOUtils rightImageVodafone:self.navigationItem];
 }
 
 #pragma METHODS
@@ -222,7 +256,7 @@
     NSArray *topLevelObjectsEmail = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellEmail = [topLevelObjectsEmail objectAtIndex:0];
     txtEmail = (UITextField *)[cellEmail viewWithTag:2];
-    [(UILabel *)[cellEmail viewWithTag:1] setText:@"EMAIL-UL TAU"];
+    [(UILabel *)[cellEmail viewWithTag:1] setText:NSLocalizedStringFromTable(@"i25", [YTOUserDefaults getLanguage],@"EMAIL-UL TAU")];
     [(UITextField *)[cellEmail viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellEmail viewWithTag:2] setKeyboardType:UIKeyboardTypeEmailAddress];
     [(UITextField *)[cellEmail viewWithTag:2] setAutocapitalizationType:UITextAutocapitalizationTypeNone];
@@ -231,7 +265,7 @@
     NSArray *topLevelObjectsTelefon = [[NSBundle mainBundle] loadNibNamed:@"CellView_Numeric" owner:self options:nil];
     cellTelefon = [topLevelObjectsTelefon objectAtIndex:0];
     txtTelefon = (UITextField *)[cellTelefon viewWithTag:2];
-    [(UILabel *)[cellTelefon viewWithTag:1] setText:@"NUMARUL TAU DE TELEFON"];
+    [(UILabel *)[cellTelefon viewWithTag:1] setText:NSLocalizedStringFromTable(@"i26", [YTOUserDefaults getLanguage],@"NUMARUL TAU DE TELEFON")];
     [(UITextField *)[cellTelefon viewWithTag:2] setPlaceholder:@""];
     [(UITextField *)[cellTelefon viewWithTag:2] setKeyboardType:UIKeyboardTypeNumberPad];
     [YTOUtils setCellFormularStyle:cellTelefon];
@@ -239,9 +273,11 @@
     NSArray *topLevelObjectsSubiect = [[NSBundle mainBundle] loadNibNamed:@"CellView_String" owner:self options:nil];
     cellSubiect = [topLevelObjectsSubiect objectAtIndex:0];
     txtSubiect = (UITextField *)[cellSubiect viewWithTag:2];
-    [(UILabel *)[cellSubiect viewWithTag:1] setText:@"SUBIECT MESAJ"];
+    [(UILabel *)[cellSubiect viewWithTag:1] setText:NSLocalizedStringFromTable(@"i27", [YTOUserDefaults getLanguage],@"SUBIECT MESAJ")];
     [(UITextField *)[cellSubiect viewWithTag:2] setPlaceholder:@"..."];    
     [YTOUtils setCellFormularStyle:cellSubiect];
+    
+    lblMsgTau.text = NSLocalizedStringFromTable(@"i29", [YTOUserDefaults getLanguage],@"MESAJUL TAU");
     
     NSArray *topLevelObjectscalc = [[NSBundle mainBundle] loadNibNamed:@"CellCalculeaza" owner:self options:nil];
     cellTrimite = [topLevelObjectscalc objectAtIndex:0];    
@@ -249,7 +285,7 @@
     imgComanda.image = [UIImage imageNamed:@"trimite-mesaj-buton.png"];
     UILabel * lblCellC = (UILabel *)[cellTrimite viewWithTag:2];
     lblCellC.textColor = [YTOUtils colorFromHexString:ColorTitlu];
-    lblCellC.text = @"Trimite";
+    lblCellC.text = NSLocalizedStringFromTable(@"i30", [YTOUserDefaults getLanguage],@"Trimite");
 }
 
 - (void) setEmail:(NSString *)v
@@ -260,7 +296,7 @@
 
 - (void) setTelefon:(NSString *)v
 {
-    txtDescriere.text = v;
+    txtTelefon.text = v;
     telefon = v;
 }
 
@@ -293,7 +329,7 @@
                         "</CallContactSmartphone>"
                       "</soap:Body>"
                       "</soap:Envelope>",
-                      email, telefon, subiect, descriere, [[UIDevice currentDevice] uniqueIdentifier],
+                      email, telefon, subiect, descriere, [[UIDevice currentDevice] xUniqueDeviceIdentifier],
                       [[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
     return xml;
 }
@@ -331,7 +367,7 @@
     }
     else {
         
-        [self showPopupError:@"Atentie"];
+        [self showPopupError:NSLocalizedStringFromTable(@"i123", [YTOUserDefaults getLanguage],@"Atentie !")];
         //vwErrorAlert.hidden = NO;
         
     }
@@ -358,7 +394,7 @@
 	BOOL succes = [xmlParser parse];
 	
 	if (succes) {
-        [self showPopup:@"Mesajul a fost trimis" withDescription:jsonResponse];
+        [self showPopup:NSLocalizedStringFromTable(@"i564", [YTOUserDefaults getLanguage],@"Mesajul a fost trimis.") withDescription:jsonResponse];
     }
 	else {
 
@@ -399,7 +435,7 @@
     [btnLoadingOk setHidden:YES];
     [lblLoadingOk setHidden:YES];
     [lblLoadingDescription setHidden:YES];
-    [lblLoadingTitlu setText:@"Trimitem mesajul..."];
+    [lblLoadingTitlu setText:NSLocalizedStringFromTable(@"i497", [YTOUserDefaults getLanguage],@"se trimite mesajul...")];
     [loading setHidden:NO];
     [vwLoading setHidden:NO];
 }

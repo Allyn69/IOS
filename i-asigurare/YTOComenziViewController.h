@@ -9,13 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "YTOOferta.h"
 
-@interface YTOComenziViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@interface YTOComenziViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;
     NSMutableArray       * list;
     
     IBOutlet UIView      * vwEmpty;
-    BOOL editingMode;    
+    BOOL editingMode;
+    
+    IBOutlet UITableViewCell * cellHead;
+    
+    IBOutlet UILabel * lblZeroComenzi;
 }
 
 @property (nonatomic, retain) UIViewController * controller;

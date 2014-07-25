@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface YTOContactViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     IBOutlet UITableView * tableView;
@@ -16,6 +17,8 @@
     IBOutlet UIView  *      vwPopup;
     IBOutlet UILabel *      lblPopupTitle;
     IBOutlet UILabel *      lblPopupDescription;
+    
+    IBOutlet UITableViewCell * cellHead;
 }
 
 - (void) showPopupWithTitle:(NSString *)title andDescription:(NSString *)description;

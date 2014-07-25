@@ -11,17 +11,22 @@
 #import "YTOAutovehiculViewController.h"
 #import "YTOCasaViewController.h"
 #import "KeyValueItem.h"
+#import "YTOUserDefaults.h"
 
 @implementation PickerVCSearch
 
 @synthesize tableView, delegate, titlu, listOfItems, _indexPath;
 @synthesize copListOfItems;
 @synthesize nomenclator;
+@synthesize controller;
 @synthesize listValoriMultipleIndecsi;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (IS_OS_7_OR_LATER)
+        self = [super initWithNibName:@"PickerVCSearch7" bundle:nibBundleOrNil];
+    else
+        self = [super initWithNibName:@"PickerVCSearch" bundle:nibBundleOrNil];
     if (self) {
         self.title = titlu;
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
@@ -45,7 +50,8 @@
     // Do any additional setup after loading the view from its nib.
     
     navBar.title = titlu;
-    
+    backBtn.title = NSLocalizedStringFromTable(@"i595", [YTOUserDefaults getLanguage],@"Inapoi");
+    searchBar.placeholder = NSLocalizedStringFromTable(@"i72", [YTOUserDefaults getLanguage],@"Cauta");
     //Initialize the copy array.
     copListOfItems = [[NSMutableArray alloc] init];
 
@@ -197,7 +203,7 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
+    //static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:nil];
     if (cell == nil) {
@@ -334,7 +340,7 @@
         if (nomenclator == kJudete)
         {
             listOfItems = [Database Localitati:selectedValue];
-            navBar.title = [NSString stringWithFormat:@"Localitati %@", selectedValue];
+            navBar.title = [NSString stringWithFormat:@"%@ %@",NSLocalizedStringFromTable(@"i305", [YTOUserDefaults getLanguage],@"Localitati"), selectedValue];
             [searchBar resignFirstResponder];
             judet = selectedValue;
             //[self.delegate chosenIndexAfterSearch:selectedValue rowIndex:_indexPath forView:self];
@@ -365,7 +371,7 @@
     {
         listOfItems = [Database Judete];
         nomenclator = kJudete;
-        navBar.title = @"Judete";
+        navBar.title = NSLocalizedStringFromTable(@"i304", [YTOUserDefaults getLanguage],@"Judete");
         [tableView reloadData];
     }
     else if (nomenclator == kDescriereLocuinta)

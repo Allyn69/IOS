@@ -15,6 +15,10 @@
 
 @property (nonatomic, retain) NSString * Eroare_ws;
 @property (nonatomic, retain) NSString * Prima;
+@property (nonatomic, retain) NSString * Reducere;
+@property (nonatomic, retain) NSString * PrimaReducere;
+@property (nonatomic, retain) NSString * ProcentReducere;
+@property (nonatomic, retain) NSString * IdReducere;
 @property (nonatomic, retain) NSString * Companie;
 @property (nonatomic, retain) NSString * Cod;
 @property (nonatomic, retain) NSString * Clasa_bm;
@@ -32,5 +36,6 @@
 @property (nonatomic, retain) NSString * LinkConditii;
 @property (nonatomic, retain) NSString * Informatii;
 @property (nonatomic, retain) NSString * ConditiiHint;
+@property (nonatomic, retain) NSString * PromoVodafone;
 
 @end

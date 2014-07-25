@@ -19,6 +19,8 @@
 
 @interface YTOObiectAsigurat : NSObject
 
+
+
 @property (nonatomic, retain) NSString * IdIntern;
 @property int                            TipObiect;
 @property (nonatomic, retain) NSString * JSONText;
@@ -27,7 +29,9 @@
 - (void) addObiectAsigurat;
 - (void) updateObiectAsigurat;
 - (void) deleteObiectAsigurat;
++ (void) deleteAllRecordsFromObiectAsigurat;
 + (YTOObiectAsigurat *) getObiectAsigurat:(NSString *)idIntern;
 + (NSMutableArray *) getListaByTipObiect:(int)tip;
+
 
 @end
